@@ -84,6 +84,8 @@
       <HintPath>..\packages\StackExchange.Redis.StrongName.1.0.322\lib\net45\StackExchange.Redis.StrongName.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -125,10 +127,44 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\FrontEnd.dll" />
+    <Content Include="bin\FrontEnd.pdb" />
+    <Content Include="bin\Microsoft.AspNet.SignalR.Core.dll" />
+    <Content Include="bin\Microsoft.AspNet.SignalR.SystemWeb.dll" />
+    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll" />
+    <Content Include="bin\Microsoft.Owin.dll" />
+    <Content Include="bin\Microsoft.Owin.Host.SystemWeb.dll" />
+    <Content Include="bin\Microsoft.Owin.Security.dll" />
+    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="bin\Newtonsoft.Json.dll" />
+    <Content Include="bin\Owin.dll" />
+    <Content Include="bin\roslyn\csc.exe" />
+    <Content Include="bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.dll" />
+    <Content Include="bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll" />
+    <Content Include="bin\roslyn\System.Collections.Immutable.dll" />
+    <Content Include="bin\roslyn\System.Reflection.Metadata.dll" />
+    <Content Include="bin\roslyn\vbc.exe" />
+    <Content Include="bin\roslyn\VBCSCompiler.exe" />
+    <Content Include="bin\StackExchange.Redis.StrongName.dll" />
+    <Content Include="bin\System.Web.Helpers.dll" />
+    <Content Include="bin\System.Web.Mvc.dll" />
+    <Content Include="bin\System.Web.Razor.dll" />
+    <Content Include="bin\System.Web.Webpages.Deployment.dll" />
+    <Content Include="bin\System.Web.Webpages.dll" />
+    <Content Include="bin\System.Web.Webpages.Razor.dll" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\img\arquero.jpg" />
+    <Content Include="Content\img\Barracks4.png" />
+    <Content Include="Content\img\cuartel.jpg" />
+    <Content Include="Content\img\granja.jpg" />
+    <Content Include="Content\img\grass.jpg" />
+    <Content Include="Content\img\soldado.jpg" />
+    <Content Include="Content\Site.css" />
     <Content Include="Content\ui-bootstrap-csp.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -153,6 +189,10 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\angular-route.min.js.map" />
+    <Content Include="bin\FrontEnd.dll.config" />
+    <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
+    <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
+    <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
     <None Include="Properties\PublishProfiles\tsi1frontoffice.pubxml" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
@@ -160,16 +200,62 @@
     <Content Include="Scripts\jquery.signalR-2.1.2.js" />
     <Content Include="Scripts\jquery.signalR-2.1.2.min.js" />
     <Content Include="Chat.html" />
+    <None Include="Service References\ServiceEntidades\configuration.svcinfo" />
+    <None Include="Service References\ServiceEntidades\configuration91.svcinfo" />
+    <None Include="Service References\ServiceEntidades\item.disco" />
+    <None Include="Service References\ServiceEntidades\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference1.cs</LastGenOutput>
+    </None>
+    <Content Include="SPA\app.js" />
+    <Content Include="SPA\backOffice\ImagenesSubidas\arquero.jpg" />
+    <Content Include="SPA\backOffice\ImagenesSubidas\Barracks4.png" />
+    <Content Include="SPA\backOffice\ImagenesSubidas\cuartel.jpg" />
+    <Content Include="SPA\backOffice\ImagenesSubidas\granja.jpg" />
+    <Content Include="SPA\backOffice\ImagenesSubidas\madera.jpg" />
+    <Content Include="SPA\backOffice\ImagenesSubidas\oro.jpg" />
+    <Content Include="SPA\backOffice\ImagenesSubidas\soldado.jpg" />
+    <Content Include="SPA\frontOffice\arquero.jpg" />
+    <Content Include="SPA\frontOffice\Asociar.html" />
+    <Content Include="SPA\frontOffice\controllers\edificio.controller.js" />
+    <Content Include="SPA\frontOffice\controllers\juego.controller.js" />
+    <Content Include="SPA\frontOffice\controllers\recurso.controller.js" />
+    <Content Include="SPA\frontOffice\controllers\unidad.controller.js" />
+    <Content Include="SPA\frontOffice\crear.html" />
+    <Content Include="SPA\frontOffice\CrearCanvas.js" />
+    <Content Include="SPA\frontOffice\cuartel.jpg" />
+    <Content Include="SPA\frontOffice\directives\templateGameCanvas.html" />
+    <Content Include="SPA\frontOffice\granja.jpg" />
+    <Content Include="SPA\frontOffice\modulos.js" />
+    <Content Include="SPA\frontOffice\services\edificios.service.js" />
+    <Content Include="SPA\frontOffice\services\juego.service.js" />
+    <Content Include="SPA\frontOffice\services\recursos.service.js" />
+    <Content Include="SPA\frontOffice\services\unidades.service.js" />
+    <Content Include="SPA\frontOffice\soldado.jpg" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\EntidadesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="ChatHub.cs" />
+    <Compile Include="Hubs\AtlasHub.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\ServiceEntidades\Reference.cs" />
+    <Compile Include="Service References\ServiceEntidades\Reference1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +263,19 @@
     <Content Include="packages.config" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-2.2.3.min.map" />
+    <Content Include="Service References\ServiceEntidades\FrontEnd.ServiceEntidades.TipoEdificio.datasource" />
+    <Content Include="Service References\ServiceEntidades\FrontEnd.ServiceEntidades.TipoUnidad.datasource" />
+    <None Include="Service References\ServiceEntidades\item.wsdl" />
+    <None Include="Service References\ServiceEntidades\item.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceEntidades\item1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceEntidades\item2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceEntidades\ServiceEntidades.wsdl" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
