@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://localhost:8835/tsi1/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://localhost:8835/tsi1/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://localhost:8835/tsi1/Imports">
+      <xsd:import schemaLocation="http://localhost:8835/tsi/?xsd=xsd0" namespace="http://localhost:8835/tsi1/" />
+      <xsd:import schemaLocation="http://localhost:8835/tsi/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:8835/tsi/?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Shared.Entities" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IServiceEntidades_AltaTipoEdificio_InputMessage">
+    <wsdl:part name="parameters" element="tns:AltaTipoEdificio" />
+  </wsdl:message>
+  <wsdl:message name="IServiceEntidades_AltaTipoEdificio_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AltaTipoEdificioResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceEntidades_AltaTipoUnidad_InputMessage">
+    <wsdl:part name="parameters" element="tns:AltaTipoUnidad" />
+  </wsdl:message>
+  <wsdl:message name="IServiceEntidades_AltaTipoUnidad_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AltaTipoUnidadResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceEntidades_GetAllTipoEdificios_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTipoEdificios" />
+  </wsdl:message>
+  <wsdl:message name="IServiceEntidades_GetAllTipoEdificios_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTipoEdificiosResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceEntidades_GetAllTipoUnidades_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTipoUnidades" />
+  </wsdl:message>
+  <wsdl:message name="IServiceEntidades_GetAllTipoUnidades_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTipoUnidadesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceEntidades_AsociarEdificioUnidad_InputMessage">
+    <wsdl:part name="parameters" element="tns:AsociarEdificioUnidad" />
+  </wsdl:message>
+  <wsdl:message name="IServiceEntidades_AsociarEdificioUnidad_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AsociarEdificioUnidadResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IServiceEntidades">
+    <wsdl:operation name="AltaTipoEdificio">
+      <wsdl:input wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoEdificio" message="tns:IServiceEntidades_AltaTipoEdificio_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoEdificioResponse" message="tns:IServiceEntidades_AltaTipoEdificio_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AltaTipoUnidad">
+      <wsdl:input wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoUnidad" message="tns:IServiceEntidades_AltaTipoUnidad_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoUnidadResponse" message="tns:IServiceEntidades_AltaTipoUnidad_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllTipoEdificios">
+      <wsdl:input wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoEdificios" message="tns:IServiceEntidades_GetAllTipoEdificios_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoEdificiosResponse" message="tns:IServiceEntidades_GetAllTipoEdificios_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllTipoUnidades">
+      <wsdl:input wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoUnidades" message="tns:IServiceEntidades_GetAllTipoUnidades_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoUnidadesResponse" message="tns:IServiceEntidades_GetAllTipoUnidades_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AsociarEdificioUnidad">
+      <wsdl:input wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/AsociarEdificioUnidad" message="tns:IServiceEntidades_AsociarEdificioUnidad_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/AsociarEdificioUnidadResponse" message="tns:IServiceEntidades_AsociarEdificioUnidad_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>
