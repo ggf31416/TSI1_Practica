@@ -21,17 +21,13 @@ namespace ConsoleApplication1
             IDALConstruccion iDALConstruccion = new DALConstruccionMongo();
             Prueba prueba = new Prueba();
             prueba.Nombre = "Pelado2";
+            iDALConstruccion.DeletePrueba(prueba.Nombre);
             iDALConstruccion.AddPrueba(prueba);
             Console.WriteLine("agregado Pelado2");
             Prueba prueba1 = iDALConstruccion.GetPrueba("Pelado2");
             Console.WriteLine(prueba1.Nombre);
             prueba1.Nombre = "Pelado3";
             iDALConstruccion.UpdatePrueba(prueba1);
-            //prueba1 = iDALConstruccion.GetPrueba("Pelado3");
-            //Console.WriteLine(prueba1.Nombre);
-            //iDALConstruccion.DeletePrueba("Pelado3");
-            //prueba1 = iDALConstruccion.GetPrueba("Pelado3");
-            //Console.WriteLine(prueba1.Nombre);
             Console.ReadLine();
         }
     }
