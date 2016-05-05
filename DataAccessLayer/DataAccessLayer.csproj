@@ -53,6 +53,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DALConstruccionMongo.cs" />
+    <Compile Include="Entities\Cliente.cs" />
+    <Compile Include="Entities\Construccion.cs" />
+    <Compile Include="Entities\Edificio.cs" />
+    <Compile Include="Entities\Estadisticas.cs" />
     <Compile Include="Entities\Prueba.cs" />
     <Compile Include="IDALConstruccion.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
