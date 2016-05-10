@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entities
 {
-    class Construcciones
+    public class Estadisticas
     {
+        double Ataque;
+        double Defensa;
+        double Vida;
+        double TiempoConstruccion;
     }
 }

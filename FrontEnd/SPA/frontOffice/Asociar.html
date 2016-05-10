@@ -1,0 +1,36 @@
+﻿<div>
+    <div class="row">
+        <h2>{{title}}</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <h4>Nombre</h4>
+                <input ng-model="nombre" />
+            </div>
+            <div class="row">
+                <h4>Vida</h4>
+                <input ng-model="vida" />
+            </div>
+            <div class="row">
+                <h4>Ptos. ataque</h4>
+                <input ng-model="ataque" />
+            </div>
+            <div class="row">
+                <h4>Ptos. defensa</h4>
+                <input ng-model="defensa" />
+            </div>
+            <div class="row">
+                <h4>Tasa de produccion</h4>
+                <input ng-model="tasa" />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-2"><img width="50" height="50" ng-src="{{user.avatar}}" /></div>
+            <input type="file" class="" file-model="user.avatar" />
+        </div>
+    </div>
+    <div class="row">
+        <button class="btn btn-success" ng-click="darDeAlta()">Save</button>
+    </div>
+</div>

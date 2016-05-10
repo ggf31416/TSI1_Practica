@@ -1,0 +1,35 @@
+﻿<div>   <div class="row">
+        <h2>Crear {{title}}</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <h4>Nombre</h4>
+                <input ng-model="entidad.nombre" />
+            </div>
+            <div class="row">
+                <h4>Vida</h4>
+                <input ng-model="entidad.vida" />
+            </div>
+            <div class="row">
+                <h4>Ptos. ataque</h4>
+                <input ng-model="entidad.ataque" />
+            </div>
+            <div class="row">
+                <h4>Ptos. defensa</h4>
+                <input ng-model="entidad.defensa" />
+            </div>
+            <div class="row">
+                <h4>Tiempo de contruccion</h4>
+                <input ng-model="entidad.tiempoContruccion" />
+            </div>
+        </div>
+        <div class="form-group col-sm-6">
+            <img ng-src="data:image/jpeg;base64,{{entidad.imagen}}" id="photo-id" />
+            <input type="file" name="file" onchange="angular.element(this).scope().uploadFile(this)" id="photo-upload" />
+        </div>
+    </div>
+    <div class="row" style="margin-top:50px;">
+        <button class="btn btn-success" ng-click="darDeAlta()">Save</button>
+    </div>
+</div>

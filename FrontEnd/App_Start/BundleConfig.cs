@@ -27,15 +27,21 @@ namespace FrontEnd
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
 
-           
+
 
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
-                      "~/Scripts/angular.min.js",
-                      "~/Scripts/angular-route.min.js",
-                      "~/SPA/employees/employee.module.js",
-                      "~/SPA/employees/services/employees.service.js",
-                      "~/SPA/employees/controllers/employee.controller.js",
-                      "~/SPA/app.js"));
+                        "~/Scripts/angular.min.js",
+                        "~/Scripts/angular-route.min.js",
+                        "~/SPA/frontOffice/modulos.js",
+                        "~/SPA/frontOffice/services/juego.service.js",
+                        "~/SPA/frontOffice/controllers/juego.controller.js",
+                        "~/SPA/frontOffice/services/recursos.service.js",
+                        "~/SPA/frontOffice/controllers/recurso.controller.js",
+                        "~/SPA/frontOffice/services/edificios.service.js",
+                        "~/SPA/frontOffice/controllers/edificio.controller.js",
+                        "~/SPA/frontOffice/services/unidades.service.js",
+                        "~/SPA/frontOffice/controllers/unidad.controller.js",
+                        "~/SPA/app.js"));
         }
     }
 }

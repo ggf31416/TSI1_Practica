@@ -54,7 +54,9 @@
   <ItemGroup>
     <Compile Include="DALConstruccionMongo.cs" />
     <Compile Include="Entities\Cliente.cs" />
-    <Compile Include="Entities\Construcciones.cs" />
+    <Compile Include="Entities\Construccion.cs" />
+    <Compile Include="Entities\Edificio.cs" />
+    <Compile Include="Entities\Estadisticas.cs" />
     <Compile Include="Entities\Prueba.cs" />
     <Compile Include="IDALConstruccion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
