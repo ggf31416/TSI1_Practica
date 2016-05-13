@@ -2,9 +2,16 @@
     'use strict';
     angular.module('juego').controller("juegoCtrl", ["juegoService", "edificiosService", '$scope', '$rootScope',
 
+
     function (juegoService, edificiosService, $scope, $rootScope) {
 
         $rootScope.nombreJuego = "Atlas2";
+
+
+        $scope.posicionarEdificio = function (nombre) {
+            // llama a la funcion iniciarCustomDrag en el CrearCanvas.js
+            iniciarCustomDrag(nombre);
+        };
 
         $rootScope.listaEdificios = edificiosService.getAllTipoEdificios();
             /*[
@@ -57,4 +64,17 @@
         ];
     }
     ]);
+
+
+    angular.module('juego').directive('gameCanvas', function ($injector) {
+        var linkFn = function (scope, ele, attrs) {
+            window.createGame(scope, $injector);
+        };
+
+        return {
+            scope: true,
+            templateUrl: "/SPA/frontOffice/directives/templateGameCanvas.html",
+            link: linkFn
+        }
+    });
 })();

@@ -12,13 +12,11 @@ var buildings;
 
 window.createGame = function (scope, injector) {
     // Create our phaser game
-   game = new Phaser.Game(anchoJuego, altoJuego, Phaser.AUTO, 'divJuego', { preload: preload, create: create, update: update });
+    game = new Phaser.Game(anchoJuego, altoJuego, Phaser.AUTO, 'divJuego', { preload: function () { preload(scope, injector); }, create: create, update: update });
 };
 
 function cargarSprites() {
-    $scope.listaEdificios.foreach(function (e) {
-        game.load.image(e.Nombre, e.Imagen);
-    });
+
 }
 
 function crearInternalMenu() {
@@ -31,7 +29,7 @@ function crearInternalMenu() {
 }
 
 
-function preload() {
+function preload(scope,injector) {
 
     //  You can fill the preloader with as many assets as your game requires
 
@@ -40,17 +38,35 @@ function preload() {
 
     //  The second parameter is the URL of the image (relative)
     // por ahora harcodeado
+    //game.load.json('jsonEdificios', '/Entidades/GetAllTipoEdificios');
+    console.log("preload");
+
+    // activa la carga desde cualquier dominio (se puede restringir al dominio del servidor de imagenes)
+    game.load.crossOrigin = 'anonymous';
+
     game.load.image('grass', '/Content/img/grass.jpg');
     game.load.image('cuartel', '/Content/img/Barracks4.png');
     game.load.image('cuartelMenu', '/Content/img/cuartel.jpg');
-    //cargarSprites();
+
+
+    scope.listaEdificios.forEach(function (e) {
+        if (e.Imagen != null) {
+            game.load.image(e.Nombre,  e.Imagen);
+        }
+    });
 }
 
 
 
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE)
+    // setea el tamaño del tablero en pixeles en 2000x2000 
     game.world.resize(2000, 2000);
+
+    // disableVisibilityChange intenta que el juego siga corriendo aunque pierda el foco
+    // no es posible en todos los casos (por ejemplo puede no funcionar al cambiar a otro tab dependiendo del navegador)
+    // pero deberia permitir que siga funcionando al hacer click afuera, lo que reduce problemas de UI
+    game.stage.disableVisibilityChange = true; 
 
     //  The deadzone is a Rectangle that defines the limits at which the camera will start to scroll
     //  It does NOT keep the target sprite within the rectangle, all it does is control the boundary
@@ -72,13 +88,32 @@ function create() {
     buildings = game.add.physicsGroup();
 
     cursors = game.input.keyboard.createCursorKeys();
-    crearInternalMenu();
+    //crearInternalMenu();
    
-
+    var phaserJSON = game.cache.getJSON('jsonEdificios');
+    console.log(phaserJSON);
 
 }
 
+function iniciarCustomDrag(nombreEdificio) {
+    nombreEntidadDragged = nombreEdificio;
+    if (spriteDragged != null) {
+        spriteDragged.destroy();
+        spriteDragged = null;
+    }
+}
 
+var nombreEntidadDragged = null;
+var spriteDragged = null;
+
+function accionMouseOver() {
+    console.log("Mouse Over: spriteDragged=" + spriteDragged);
+    if (nombreEntidadDragged != null) {
+        game.canvas.focus();
+        crearDragEdificio(nombreEntidadDragged);
+        nombreEntidadDragged = null;
+    }
+}
 
 
 function activarSeguirMouse() {
@@ -98,49 +133,24 @@ function crearDragEdificio(imagen) {
 
     cuartel.height = tile_size;
     cuartel.width = tile_size;
-    cuartel.anchor.x = 0.5;
-    cuartel.anchor.y = 0.5;
+    
     cuartel.inputEnabled = true;
     cuartel.input.enableDrag();
-    // tam_grilla_x,tam_grilla_y, ajustar a grilla al: arrastrar, soltar
-    cuartel.input.enableSnap(tile_size, tile_size, true, true);
 
-    cuartel.events.onDragStart.add(onDragStartBuild, this);
-    cuartel.events.onDragStop.add(onDragStopBuild, this);
-    cuartel.events.onDragUpdate.add(onDragUpdateBuild);
+    // al final lo hago manualmente en el update
+    // tam_grilla_x,tam_grilla_y, ajustar a grilla al: arrastrar, soltar
+    //cuartel.input.enableSnap(tile_size, tile_size, true, true);
+    
+    cuartel.events.onDragStop.add(aceptarPosicionEdificio, this);
 
     game.physics.arcade.enable(cuartel);
-    cuartel.input.startDrag(this.game.input.activePointer);
-    //var cuadrado = crearCuadrado(cuartel);
-    //cuadrado.bringToTop();
-    //cuartel.addChild(cuadrado);
+    cuartel.anchor.x = 0;
+    cuartel.anchor.y = 0;
 
-}
-
-function crearCuadrado(sprite) {
-    var r = new Phaser.Rectangle(sprite.x, sprite.y, tile_size, tile_size);
-    return r;
-    /*var drawnObject;
-    var width = 2 * sprite.body.width; // example;
-    var height = 2 * sprite.body.height; // example;
-    var bmd = game.add.bitmapData(width, height);
-
-    bmd.ctx.beginPath();
-    bmd.ctx.rect(0, 0, width, height);
-    bmd.ctx.fillStyle = '#00ff00';
-    bmd.ctx.fill();
-    drawnObject = game.add.sprite(sprite,sprite.camera.y, bmd);
-    drawnObject.anchor.setTo(0, 0);
-    return drawnObject;*/
+    spriteDragged = cuartel;
 
 
 }
-
-
-function onDragStartBuild(sprite, pointer) {
-
-}
-
 
 function onDragUpdateBuild(sprite, pointer) {
     //game.debug.body(sprite);
@@ -159,12 +169,18 @@ function onDragUpdateBuild(sprite, pointer) {
 
 }
 
-function construccion(sprite) {
+function sobreponerCuadrado(sprite, color, alpha) {
+    alpha = alpha || 0.5; // 0.5 sino se pasa alpha
     var completionSprite = game.add.graphics(0, 0);
-    completionSprite.beginFill(0xFFFF00, 0.5);
+    completionSprite.beginFill(color, alpha);
     completionSprite.bounds = new PIXI.Rectangle(sprite.x, sprite.y, sprite.width, sprite.height);
-    completionSprite.drawRect(sprite.x - sprite.width / 2, sprite.y - sprite.height / 2, sprite.width, sprite.height);
-    construir(sprite, completionSprite, 5);
+    completionSprite.drawRect(sprite.x - sprite.width * sprite.anchor.x, sprite.y - sprite.height * sprite.anchor.y, sprite.width, sprite.height);
+    return completionSprite;
+}
+
+function construccion(sprite) {
+    var c = sobreponerCuadrado(sprite, 0xFFFF00,0.5)
+    construir(sprite, c, 5);
 }
 
 function construir(sprite, rec, segundos) {
@@ -177,29 +193,27 @@ function construir(sprite, rec, segundos) {
 }
 
 
-function onDragStopBuild(sprite, pointer) {
+function aceptarPosicionEdificio(sprite, pointer) {
+    console.log("aceptarPosicionEdificio");
     if (!game.physics.arcade.overlap(sprite, buildings)) {
         if (!checkOverlap(sprite, menuCuartel)) {
             sprite.input.draggable = false;
             buildings.add(sprite);
-
-
             game.debug.reset();
             sprite.alpha = 0.8;
             //sprite.tint = 0xFFFF00;
             construccion(sprite);
         }
-
     }
     else {
         sprite.destroy();
         game.debug.reset();
     }
-
+    spriteDragged = null;
 }
 
 function checkOverlap(spriteA, spriteB) {
-
+    if (spriteA == null || spriteB == null) return false;
     var boundsA = spriteA.getBounds();
     var boundsB = spriteB.getBounds();
 
@@ -226,6 +240,25 @@ function update() {
     }
     else if (cursors.right.isDown) {
         game.camera.x += 4;
+    }
+
+    if (spriteDragged != null ) {
+        spriteDragged.x = Math.floor( game.input.activePointer.worldX / tile_size) * tile_size;
+        spriteDragged.y = Math.floor(game.input.activePointer.worldY / tile_size) * tile_size
+
+        if (game.physics.arcade.overlap(spriteDragged, buildings)) {
+            spriteDragged.tint = 0xFF0000;
+            game.debug.body(spriteDragged, 'rgba(255, 0, 0, 0.5)');
+        }
+        else {
+            spriteDragged.tint = 0x00FF00;
+            game.debug.body(spriteDragged);
+        }
+    }
+    game.debug.text(game.input.activePointer.x,200,32);
+    game.debug.text(game.input.activePointer.y, 200, 64);
+    if (spriteDragged != null) {
+        game.debug.text("isDragged: " + spriteDragged.input.isDragged, 200, 96);
     }
 
 }
