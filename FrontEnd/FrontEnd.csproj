@@ -243,7 +243,6 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\Startup1.cs" />
     <Compile Include="Controllers\TableroController.cs" />
     <Compile Include="Controllers\EntidadesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -290,6 +289,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\chat\" />
     <Folder Include="Views\Entidades\" />
     <Folder Include="Views\Tablero\" />
   </ItemGroup>
@@ -298,8 +298,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\ServiceEntidades\" />
-    <Folder Include="Models\" />
-    <Folder Include="Views\chat\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

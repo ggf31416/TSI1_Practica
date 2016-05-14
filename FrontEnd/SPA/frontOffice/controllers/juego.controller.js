@@ -1,11 +1,13 @@
 ﻿(function () {
     'use strict';
-    angular.module('juego').controller("juegoCtrl", ["juegoService", "edificiosService", '$scope', '$rootScope',
+    angular.module('juego').controller("juegoCtrl", ["juegoService", "edificiosService", "unidadesService",'$scope', '$rootScope',
 
 
     function (juegoService, edificiosService, $scope, $rootScope) {
 
         $rootScope.nombreJuego = "Atlas2";
+
+        
 
 
         $scope.posicionarEdificio = function (nombre) {
@@ -33,7 +35,8 @@
                 }
         ];*/
 
-        $rootScope.listaUnidades = [
+        $rootScope.listaUnidades = unidadesService.getAllTipoUnidades();
+        /*[
                 {
                     Nombre: "Soldado",
                     Imagen: "/SPA/backOffice/soldado.jpg",
@@ -50,7 +53,7 @@
                     Defensa: 10,
                     TiempoConstruccion: "100/s"
                 }
-        ];
+        ];*/
 
         $rootScope.listaRecursos = [
                 {
@@ -62,11 +65,6 @@
                     Imagen: "/SPA/backOffice/arquero.jpg"
                 }
         ];
-<<<<<<< HEAD
-    }
-    ]);
-
-=======
 
         $scope.estadoJuego = {
             edificios: [
@@ -80,7 +78,9 @@
                     posX: 12,
                     posY: 20
                 }
-            ]
+            ],
+            unidades_desplegadas: [],
+            unidades: []
         }
 
 
@@ -115,6 +115,7 @@
         }*/
 
         function mostrarUnidades(b) {
+            $('#divEdificios').toggle(!b);
             $('#divUnidades').toggle(b);
         }
 
@@ -230,12 +231,19 @@
 
         var nombreEntidadDragged = null;
         var spriteDragged = null;
+        var esUnidad = false;
 
         $scope.accionMouseOver = function () {
             console.log("Mouse Over: spriteDragged=" + spriteDragged);
             if (nombreEntidadDragged != null) {
                 $scope.game.canvas.focus();
-                crearDragEdificio(nombreEntidadDragged);
+                if (esUnidad) {
+                    crearDragUnidad(nombreEntidadDragged);
+                }
+                else {
+                    crearDragEdificio(nombreEntidadDragged);
+                }
+                
                 nombreEntidadDragged = null;
             }
         }
@@ -247,34 +255,44 @@
             $scope.game.camera.deadzone = new Phaser.Rectangle(borde, borde, anchoJuego - borde, altoJuego - borde);
         }
 
-        function crearDragEdificio(imagen) {
+
+        function crearDrag(imagen, size, stepSize, stopFunc) {
             // worldX,Y obtienen la posicion del puntero en relacion al mundo
             // x,y solos obtienen en relacion a la camara
-
             var input_x = $scope.game.input.activePointer.worldX;
             var input_y = $scope.game.input.activePointer.worldY;
 
-            var cuartel = $scope.game.add.sprite(input_x, input_y, imagen);
+            var entidad = $scope.game.add.sprite(input_x, input_y, imagen);
+            entidad.height = size;
+            entidad.width = size;
 
-            cuartel.height = tile_size;
-            cuartel.width = tile_size;
-
-            cuartel.inputEnabled = true;
-            cuartel.input.enableDrag();
-
-            // al final lo hago manualmente en el update
             // tam_grilla_x,tam_grilla_y, ajustar a grilla al: arrastrar, soltar
-            cuartel.input.enableSnap(tile_size, tile_size, true, true);
+            entidad.input.enableSnap(tile_size, tile_size, true, true);
 
-            cuartel.events.onDragStop.add(aceptarPosicionEdificio, this);
+            entidad.events.onDragStop.add(stopFunc, this);
 
             $scope.game.physics.arcade.enable(cuartel);
-            cuartel.anchor.x = 0;
-            cuartel.anchor.y = 0;
+            entidad.anchor.x = 0;
+            entidad.anchor.y = 0;
 
-            spriteDragged = cuartel;
+            spriteDragged = entidad;
+        }
+
+        function crearDragEdificio(imagen) {
+            crearDrag(imagen, tile_size, tile_size, aceptarPosicionEdificio);
+        }
 
 
+        function crearDragUnidad(imagen) {
+            crearDrag(imagen, unit_size, unit_size, posicionarUnidad);
+        }
+
+        function posicionarUnidad() {
+            spriteDragged.tint = 0xFF0000;
+        }
+
+        function moverUnidad(sprite, x_destino, y_destino) {
+            $scope.game.add.tween(sprite).to({ x: x_destino, y: y_destino });
         }
 
         function onDragUpdateBuild(sprite, pointer) {
@@ -426,7 +444,7 @@
         //ev.target.appendChild(document.getElementById(data));
         //crearDragEdificio(data);
     }
->>>>>>> 5151f2779c6df306111364bcf56d878e34fab818
+
 
     angular.module('juego').directive('gameCanvas', function ($injector) {
         var linkFn = function (scope, ele, attrs) {
