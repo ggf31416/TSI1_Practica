@@ -48,7 +48,7 @@
 <div id="divEdificios">
     <ul ng-repeat="e in listaEdificios | filter:{Imagen: ''}">
     <li>
-        <div draggable="true" ng-click="posicionarEdificio(e.Nombre)" ng-mousedown="posicionarEdificio(e.Nombre)">
+        <div draggable="true" ng-click="posicionarEdificio(e.Id)" ng-mousedown="posicionarEdificio(e.Id)">
             <img width="50" height="50" ng-src="http://localhost:56662/{{e.Imagen}}" alt="{{e.Nombre}}"  />
             <span class="caption">{{e.Nombre}}</span>
             <span class="caption">{{e.TiempoConstruccion}}s</span>

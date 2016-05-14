@@ -10,6 +10,8 @@ var tile_size = 128;
 var mouse_sprite;
 var buildings;
 
+var info_edificios = {}
+
 window.createGame = function (scope, injector) {
     // Create our phaser game
     game = new Phaser.Game(anchoJuego, altoJuego, Phaser.AUTO, 'divJuego', { preload: function () { preload(scope, injector); }, create: create, update: update });
@@ -51,7 +53,8 @@ function preload(scope,injector) {
 
     scope.listaEdificios.forEach(function (e) {
         if (e.Imagen != null) {
-            game.load.image(e.Nombre,  e.Imagen);
+            game.load.image(e.Id, e.Imagen);
+            info_edificios[e.id] = e;
         }
     });
 }
@@ -109,6 +112,7 @@ var spriteDragged = null;
 function accionMouseOver() {
     console.log("Mouse Over: spriteDragged=" + spriteDragged);
     if (nombreEntidadDragged != null) {
+        console.log("Nombre: " + [spriteDragged].Nombre);
         game.canvas.focus();
         crearDragEdificio(nombreEntidadDragged);
         nombreEntidadDragged = null;
