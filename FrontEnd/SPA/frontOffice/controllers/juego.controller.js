@@ -62,6 +62,11 @@
                     Imagen: "/SPA/backOffice/arquero.jpg"
                 }
         ];
+<<<<<<< HEAD
+    }
+    ]);
+
+=======
 
         $scope.estadoJuego = {
             edificios: [
@@ -421,6 +426,7 @@
         //ev.target.appendChild(document.getElementById(data));
         //crearDragEdificio(data);
     }
+>>>>>>> 5151f2779c6df306111364bcf56d878e34fab818
 
     angular.module('juego').directive('gameCanvas', function ($injector) {
         var linkFn = function (scope, ele, attrs) {
