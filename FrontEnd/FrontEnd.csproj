@@ -187,7 +187,6 @@
     <Content Include="SPA\frontOffice\controllers\recurso.controller.js" />
     <Content Include="SPA\frontOffice\controllers\unidad.controller.js" />
     <Content Include="SPA\frontOffice\crear.html" />
-    <Content Include="SPA\frontOffice\CrearCanvas.js" />
     <Content Include="SPA\frontOffice\cuartel.jpg" />
     <Content Include="SPA\frontOffice\directives\templateGameCanvas.html" />
     <Content Include="SPA\frontOffice\granja.jpg" />

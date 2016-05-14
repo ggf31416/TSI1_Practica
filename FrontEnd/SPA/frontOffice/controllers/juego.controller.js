@@ -116,7 +116,7 @@
 
             $scope.listaEdificios.forEach(function (e) {
                 if (e.Imagen != null) {
-                    $scope.game.load.image(e.Nombre, e.Imagen);
+                    $scope.game.load.image(e.Id, e.Imagen);
                 }
             });
         }
