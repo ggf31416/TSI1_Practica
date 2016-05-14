@@ -63,6 +63,22 @@
                 }
         ];
 
+        $scope.estadoJuego = {
+            edificios: [
+                {
+                    id: 3,
+                    posX: 12,
+                    posY: 8
+                },
+                {
+                    id: 22,
+                    posX: 12,
+                    posY: 20
+                }
+            ]
+        }
+
+
         var altoJuego = 600;
         var anchoJuego = 800;
 
@@ -71,7 +87,10 @@
 
         var menuCuartel;
         var cursors;
-        var tile_size = 128;
+        
+        var unit_size = 20;
+        var tile_size = unit_size * 4;
+        var tablero_size = 10 * tile_size;
         var mouse_sprite;
         var buildings;
 
@@ -80,19 +99,48 @@
             $scope.game = new Phaser.Game(anchoJuego, altoJuego, Phaser.AUTO, 'divJuego', { preload: $scope.preload, create: create, update: update });
         };
 
-        function cargarSprites() {
 
-        }
-
-        function crearInternalMenu() {
+        /*function crearInternalMenu() {
             menuCuartel = $scope.game.add.sprite(0, 0, 'cuartelMenu');
             menuCuartel.width = 64;
             menuCuartel.height = 64;
             menuCuartel.inputEnabled = true;
             menuCuartel.events.onInputDown.add(function () { crearDragEdificio('cuartel'); }, this);
             menuCuartel.fixedToCamera = true;
+        }*/
+
+        function mostrarUnidades(b) {
+            $('#divUnidades').toggle(b);
         }
 
+        function crearEdificioInmediato(data) {
+            var idSprite =  data.id;
+            var edificio = $scope.game.add.sprite(data.posX * unit_size, data.posY * unit_size, idSprite);
+            edificio.height = tile_size;
+            edificio.width = tile_size;
+            edificio.inputEnabled = true;
+            clickVisibleUnidades(edificio, true);
+            buildings.add(edificio);
+        }
+
+        $scope.cargarDesdeEstado = function () {
+            if (buildings){
+                // quita todos los edificios
+                buildings.removeAll(true);
+            }
+            if (unidades_desplegadas) {
+                unidades.unidades_desplegadas.removeAll(true);
+            }
+            $scope.estadoJuego.edificios.forEach (function (e) {
+                crearEdificioInmediato(e);
+            });
+            $scope.estadoJuego.unidades_desplegadas.forEach(function (e) {
+                
+            });
+        };
+
+            
+        
 
         $scope.preload = function() {
 
@@ -113,20 +161,24 @@
             $scope.game.load.image('cuartel', '/Content/img/Barracks4.png');
             $scope.game.load.image('cuartelMenu', '/Content/img/cuartel.jpg');
 
-
+            
             $scope.listaEdificios.forEach(function (e) {
                 if (e.Imagen != null) {
+                    console.log(e);
                     $scope.game.load.image(e.Id, e.Imagen);
                 }
             });
         }
 
 
+        function clickVisibleUnidades(sprite, b) {
+            sprite.events.onInputDown.add(function () { mostrarUnidades(b) }, this);
+        }
 
         function create() {
             $scope.game.physics.startSystem(Phaser.Physics.ARCADE)
             // setea el tamaño del tablero en pixeles en 2000x2000 
-            $scope.game.world.resize(2000, 2000);
+            $scope.game.world.resize(tablero_size, tablero_size);
 
             // disableVisibilityChange intenta que el juego siga corriendo aunque pierda el foco
             // no es posible en todos los casos (por ejemplo puede no funcionar al cambiar a otro tab dependiendo del navegador)
@@ -142,12 +194,14 @@
 
             mouse_sprite = $scope.game.add.sprite($scope.game.world.centerX, $scope.game.world.centerY, "grass");
             mouse_sprite.alpha = 0;
-            $scope.game.physics.arcade.enable(mouse_sprite);
+            $scope.game.physics.arcade.enable(mouse_sprite,this);
 
             //seguirMouse();
 
             var tile = $scope.game.add.tileSprite(0, 0, $scope.game.world.width, $scope.game.world.height, "grass");
             tile.tileScale = new PIXI.Point(0.25, 0.25);
+            tile.inputEnabled = true;
+            clickVisibleUnidades(tile, false);
 
 
             buildings = $scope.game.add.physicsGroup();
@@ -158,6 +212,7 @@
             var phaserJSON = $scope.game.cache.getJSON('jsonEdificios');
             console.log(phaserJSON);
 
+            $scope.cargarDesdeEstado();
         }
 
         function iniciarCustomDrag(nombreEdificio) {
@@ -204,7 +259,7 @@
 
             // al final lo hago manualmente en el update
             // tam_grilla_x,tam_grilla_y, ajustar a grilla al: arrastrar, soltar
-            //cuartel.input.enableSnap(tile_size, tile_size, true, true);
+            cuartel.input.enableSnap(tile_size, tile_size, true, true);
 
             cuartel.events.onDragStop.add(aceptarPosicionEdificio, this);
 
@@ -253,6 +308,7 @@
                 rec.destroy();
                 sprite.alpha = 1;
                 sprite.tint = 0xFFFFFF;
+                clickVisibleUnidades(sprite, true);
                 //enviarSignalR();
             }, this);
         }
