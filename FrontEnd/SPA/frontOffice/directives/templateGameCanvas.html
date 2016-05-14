@@ -1,23 +1,5 @@
-﻿<div id="divJuego" ondrop="drop(event)" ondragover="allowDrop(event)" ondropenter="dragEnter(event)" onmouseover="accionMouseOver()"></div>
+﻿<div id="divJuego" ondrop="drop(event)" ondragover="allowDrop(event)" ondropenter="dragEnter(event)" ng-mouseover="accionMouseOver()"></div>
 
 <script>
-   function allowDrop(ev) {
-        ev.preventDefault();
-        //focusCanvas(); 
-        return false;
-    }
-
-    function focusCanvas() {
-        $("#divJuego canvas").focus();
-    }
-
-    function drop(ev) {
-        ev.preventDefault();
-        accionMouseOver();
-        //var data = ev.dataTransfer.getData("text");
-        //ev.target.appendChild(document.getElementById(data));
-        //crearDragEdificio(data);
-    }
-
-
+   
 </script>
