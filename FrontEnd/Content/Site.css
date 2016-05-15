@@ -19,4 +19,4 @@ list-style-type: none;
 }
 
 
- #divJuego, #divEdificios { float: left; }
+ .barraLateralJuego, #divEdificios { float: left; }
