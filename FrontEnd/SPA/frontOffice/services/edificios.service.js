@@ -3,7 +3,6 @@
     angular.module('edificios').service('edificiosService', ["$http", "$q", edificioService]);
 
 
-
     function edificioService($http, $q) {
         this.getAllTipoEdificios = function () {
             var ret = "";
@@ -23,6 +22,21 @@
             });
             return ret;
         };
+
+        this.getAllTipoEdificiosP = function () {
+            var ret = "";
+            var defered = $q.defer();
+            var promise = defered.promise;
+
+            $http.get("Entidades/GetAllTipoEdificios").
+                success(function (response) {
+                    defered.resolve(response.ret);
+                })
+                .error(function (err) {
+                    defered.reject(err)
+                });
+            return promise;
+        }
 
         this.altaTipoEntidad = function (entidad) {
             var ret = "";

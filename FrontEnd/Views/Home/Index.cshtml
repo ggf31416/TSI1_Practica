@@ -46,7 +46,7 @@
         });
     </script>
 
-<div id="divEdificios">
+<div id="divEdificios" class="barraLateralJuego">
     <ul ng-repeat="e in listaEdificios | filter:{Imagen: ''}">
     <li>
         <div draggable="true" ng-click="posicionarEdificio(e.Id)" ng-mousedown="posicionarEdificio(e.Id)">
@@ -58,10 +58,10 @@
     </ul>
 </div>
 
-<div id="divUnidades">
-    <ul ng-repeat="e in listaUnidades | filter:{Imagen: ''}"  style="visibility:hidden">
+<div id="divUnidades" class="barraLateralJuego">
+    <ul ng-repeat="e in listaUnidades | filter:{Imagen: ''}">
         <li>
-            <div>
+            <div ng-mousedown="posicionarUnidad(e.Id)">
                 <img width="50" height="50" ng-src="http://localhost:56662/{{e.Imagen}}" alt="{{e.Nombre}}" />
                 <span class="caption">{{e.Nombre}}</span>
             </div>
@@ -73,11 +73,14 @@
 
 <script> 
     $(document).ready(function () {
-        $('divUnidades').hide();
+        $('#divUnidades').toggle(false);
     })
 </script>
 
 <game-canvas></game-canvas>
+
+
+
 
 
 <!-- <div id="divJuego"  ondrop = "drop(event)" ondragover = "allowDrop(event)"></div> -->

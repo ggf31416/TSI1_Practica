@@ -3,39 +3,56 @@
     angular.module('juego').controller("juegoCtrl", ["juegoService", "edificiosService", "unidadesService",'$scope', '$rootScope',
 
 
-    function (juegoService, edificiosService, $scope, $rootScope) {
+    function (juegoService, edificiosService, unidadesService, $scope, $rootScope) {
 
         $rootScope.nombreJuego = "Atlas2";
 
         
-
-
-        $scope.posicionarEdificio = function (nombre) {
+        $scope.posicionarUnidad= function (id) {
             // llama a la funcion iniciarCustomDrag en el CrearCanvas.js
-            iniciarCustomDrag(nombre);
+            esUnidad = true;
+            iniciarCustomDrag(id);
+        };
+
+        $scope.posicionarEdificio = function (id) {
+            // llama a la funcion iniciarCustomDrag en el CrearCanvas.js
+            esUnidad = false;
+            iniciarCustomDrag(id);
         };
 
         $rootScope.listaEdificios = edificiosService.getAllTipoEdificios();
-            /*[
-                {
-                    Nombre: "Cuartel",
-                    Imagen: "/SPA/backOffice/cuartel.jpg",
-                    Vida: 500,
-                    Ataque: 12,
-                    Defensa: 30,
-                    TiempoConstruccion: "20/s"
-                },
-                {
-                    Nombre: "Granja",
-                    Imagen: "/SPA/backOffice/granja.jpg",
-                    Vida: 450,
-                    Ataque: 0,
-                    Defensa: 10,
-                    TiempoConstruccion: "100/s"
-                }
-        ];*/
+        /*[
+            {
+                Nombre: "Cuartel",
+                Imagen: "/SPA/backOffice/cuartel.jpg",
+                Vida: 500,
+                Ataque: 12,
+                Defensa: 30,
+                TiempoConstruccion: "20/s"
+            },
+            {
+                Nombre: "Granja",
+                Imagen: "/SPA/backOffice/granja.jpg",
+                Vida: 450,
+                Ataque: 0,
+                Defensa: 10,
+                TiempoConstruccion: "100/s"
+            }
+    ];*/
 
-        $rootScope.listaUnidades = unidadesService.getAllTipoUnidades();
+        /*unidadesService.getAllTipoUnidades().
+            then(function (data) {
+                $rootScope.listaUnidades = data;
+                console.log("Lista unidades:")
+                console.log(data)
+            })
+            .catch(function(err) {
+                alert(err);
+            })
+        */
+        $rootScope.listaUnidades = unidadesService.getAllTipoUnidadesSync();
+
+        
         /*[
                 {
                     Nombre: "Soldado",
@@ -98,6 +115,8 @@
         var tablero_size = 10 * tile_size;
         var mouse_sprite;
         var buildings;
+        var unidades_desplegadas;
+        var unidades_desplegadas;
 
         window.createGame = function (scope, injector) {
             // Create our phaser $scope.game
@@ -135,7 +154,7 @@
                 buildings.removeAll(true);
             }
             if (unidades_desplegadas) {
-                unidades.unidades_desplegadas.removeAll(true);
+                unidades_desplegadas.removeAll(true);
             }
             $scope.estadoJuego.edificios.forEach (function (e) {
                 crearEdificioInmediato(e);
@@ -169,6 +188,13 @@
 
             
             $scope.listaEdificios.forEach(function (e) {
+                if (e.Imagen != null) {
+                    console.log(e);
+                    $scope.game.load.image(e.Id, e.Imagen);
+                }
+            });
+
+            $scope.listaUnidades.forEach(function (e) {
                 if (e.Imagen != null) {
                     console.log(e);
                     $scope.game.load.image(e.Id, e.Imagen);
@@ -211,6 +237,7 @@
 
 
             buildings = $scope.game.add.physicsGroup();
+            unidades_desplegadas = $scope.game.add.physicsGroup();
 
             cursors = $scope.game.input.keyboard.createCursorKeys();
             //crearInternalMenu();
@@ -266,12 +293,14 @@
             entidad.height = size;
             entidad.width = size;
 
+            entidad.inputEnabled = true;
             // tam_grilla_x,tam_grilla_y, ajustar a grilla al: arrastrar, soltar
-            entidad.input.enableSnap(tile_size, tile_size, true, true);
+            entidad.input.draggable = true;
+            entidad.input.enableSnap(stepSize, stepSize, true, true);
 
             entidad.events.onDragStop.add(stopFunc, this);
 
-            $scope.game.physics.arcade.enable(cuartel);
+            $scope.game.physics.arcade.enable(entidad);
             entidad.anchor.x = 0;
             entidad.anchor.y = 0;
 
@@ -288,7 +317,18 @@
         }
 
         function posicionarUnidad() {
-            spriteDragged.tint = 0xFF0000;
+            if (!$scope.game.physics.arcade.overlap(spriteDragged, buildings)
+                && !$scope.game.physics.arcade.overlap(spriteDragged, unidades_desplegadas)) {
+                unidades_desplegadas.add(spriteDragged);
+                spriteDragged.tint = 0xFFFFFF;
+                spriteDragged.draggable = false;
+                spriteDragged = null;
+
+            }
+            else {
+                spriteDragged.destroy();
+            }
+            $scope.game.debug.reset();
         }
 
         function moverUnidad(sprite, x_destino, y_destino) {
@@ -387,10 +427,12 @@
             }
 
             if (spriteDragged != null) {
-                spriteDragged.x = Math.floor($scope.game.input.activePointer.worldX / tile_size) * tile_size;
-                spriteDragged.y = Math.floor($scope.game.input.activePointer.worldY / tile_size) * tile_size
+                var s = esUnidad ? unit_size : tile_size;
+                spriteDragged.x = Math.floor($scope.game.input.activePointer.worldX / s) * s;
+                spriteDragged.y = Math.floor($scope.game.input.activePointer.worldY / s) * s
 
-                if ($scope.game.physics.arcade.overlap(spriteDragged, buildings)) {
+                if ($scope.game.physics.arcade.overlap(spriteDragged, buildings)
+                    || $scope.game.physics.arcade.overlap(spriteDragged, unidades_desplegadas)) {
                     spriteDragged.tint = 0xFF0000;
                     $scope.game.debug.body(spriteDragged, 'rgba(255, 0, 0, 0.5)');
                 }
