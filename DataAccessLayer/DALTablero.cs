@@ -17,7 +17,7 @@ namespace DataAccessLayer
     {
         public void JugarUnidad(Shared.Entities.InfoCelda infoCelda)
         {
-            //....
+            
         }
     }
 }

@@ -1,9 +1,12 @@
-﻿using DataAccessLayer; 
+﻿using DataAccessLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServiceStack.Redis;
+using Microsoft.AspNet.SignalR.Client.Hubs;
+using System.ServiceModel;
 
 namespace BusinessLogicLayer
 {
@@ -18,21 +21,13 @@ namespace BusinessLogicLayer
 
         public void JugarUnidad(Shared.Entities.InfoCelda infoCelda)
         {
-            _dal.JugarUnidad(infoCelda);
+            //_dal.JugarUnidad(infoCelda);
+
+            BLServiceClient serviceClient = new BLServiceClient();
+            ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
+
+            client.Send("{Id:" + infoCelda.Id + ",PosX:" + infoCelda.PosX + ",PosY:" + infoCelda.PosY + "}");
         }
 
-        //public double CalcPartTimeEmployeeSalary(int idEmployee, int hours)
-        //{
-        //    //throw new NotImplementedException();
-        //    Shared.Entities.Employee emp = GetEmployee(idEmployee);
-        //    if(emp == null || (emp.GetType() == typeof(Shared.Entities.FullTimeEmployee)))
-        //    {
-        //        throw new Exception("Empleado no es Part time o no existe");
-        //    }
-        //    else
-        //    {
-        //        return hours * ((Shared.Entities.PartTimeEmployee)emp).HourlyRate;
-        //    }
-        //}
     }
 }
