@@ -50,7 +50,7 @@ namespace BusinessLogicLayer
             BLServiceClient serviceClient = new BLServiceClient();
             ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
 
-            client.Send("{Id:" + infoCelda.Id + ",PosX:" + infoCelda.PosX + ",PosY:" + infoCelda.PosY + "}");
+            client.Send("{\"Id\":" + infoCelda.Id + ",\"PosX\":" + infoCelda.PosX + ",\"PosY\":" + infoCelda.PosY + "}");
 
 
             

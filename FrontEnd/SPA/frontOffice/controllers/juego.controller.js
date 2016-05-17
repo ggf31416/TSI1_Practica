@@ -174,7 +174,7 @@
                 crearEdificioInmediato(e);
             });
             $scope.estadoJuego.unidades_desplegadas.forEach(function (e) {
-                crearUnidadInmediato(e);
+              //  crearUnidadInmediato(e);
             });
         };
 
@@ -186,7 +186,7 @@
                 var msjJSON = JSON.parse(message);
                 //$scope.estadoJuego.edificios = msjJSON.edificios;
                 //$scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;
-                $scope.estadoJuego.edificios = msjJSON;
+                $scope.estadoJuego.edificios.push(msjJSON);
                 $scope.cargarDesdeEstado();
             };
             // Get the user name and store it to prepend to messages.
@@ -224,8 +224,8 @@
             $scope.listaEdificios.forEach(function (e) {
                 if (e.Imagen != null) {
                     console.log(e);
-                    $scope.game.load.image(e.Id, 'http://localhost:56662' + e.Imagen);
-                    //$scope.game.load.image(e.Id,  e.Imagen);
+                   // $scope.game.load.image(e.Id, 'http://localhost:56662' + e.Imagen);
+                    $scope.game.load.image(e.Id,  e.Imagen);
                 }
             });
 
