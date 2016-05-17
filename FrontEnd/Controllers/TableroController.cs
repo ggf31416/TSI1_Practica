@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using ServiceStack.Redis;
+using Microsoft.AspNet.SignalR;
 
 namespace FrontEnd.Controllers
 {
@@ -24,6 +26,14 @@ namespace FrontEnd.Controllers
                 sharedInfoCelda.PosY = infoCelda.PosY;
 
                 client.JugarUnidad(sharedInfoCelda);
+
+                //var redisClient = new RedisClient("40.84.2.155", 6379, "gabilo2016!");
+
+                //redisClient.PublishMessage("ChatChannel", "HOLAHOLA");
+
+                //var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
+
+                //context.Clients.All.broadcastMessage("chuareService", "koalaService");
 
                 return Json(new { success = true,
                                   responseText = "Unidad Jugada",
