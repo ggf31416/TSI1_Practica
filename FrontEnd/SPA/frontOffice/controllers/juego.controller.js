@@ -116,7 +116,6 @@
         var mouse_sprite;
         var buildings;
         var unidades_desplegadas;
-        var unidades_desplegadas;
 
         window.createGame = function (scope, injector) {
             // Create our phaser $scope.game
@@ -139,13 +138,23 @@
         }
 
         function crearEdificioInmediato(data) {
-            var idSprite =  data.id;
-            var edificio = $scope.game.add.sprite(data.posX * unit_size, data.posY * unit_size, idSprite);
+            var idSprite =  data.Id;
+            var edificio = $scope.game.add.sprite(data.PosX * tile_size, data.PosY * tile_size, idSprite);
             edificio.height = tile_size;
             edificio.width = tile_size;
             edificio.inputEnabled = true;
             clickVisibleUnidades(edificio, true);
             buildings.add(edificio);
+        }
+
+        function crearUnidadInmediato(data) {
+            var idSprite = data.Id;
+            var unit = $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
+            unit.height = tile_size;
+            unit.width = tile_size;
+            unit.inputEnabled = true;
+            clickVisibleUnidades(unit, true);
+            unidades_desplegadas.add(unit);
         }
 
         $scope.cargarDesdeEstado = function () {
@@ -160,12 +169,31 @@
                 crearEdificioInmediato(e);
             });
             $scope.estadoJuego.unidades_desplegadas.forEach(function (e) {
+                crearUnidadInmediato(e);
+            });
+        };
+
+        $scope.iniciarSignalR = function () {
+            // Declare a proxy to reference the hub.
+            $scope.tablero_signalR = $.connection.chatHub;
+            // Create a function that the hub can call to broadcast messages.
+            $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
+                var msjJSON = JSON.parse(message);
+                $scope.estadoJuego.edificios = msjJSON.edificios;
+                $scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;
+                $scope.cargarDesdeEstado();
+            };
+            // Get the user name and store it to prepend to messages.
+           // $('#displayname').val(prompt('Enter your name:', ''));
+            // Set initial focus to message input box.
+           // $('#message').focus();
+            // Start the connection.
+            $.connection.hub.start().done(function () {
                 
             });
         };
 
-            
-        
+        $scope.iniciarSignalR();
 
         $scope.preload = function() {
 
@@ -290,6 +318,7 @@
             var input_y = $scope.game.input.activePointer.worldY;
 
             var entidad = $scope.game.add.sprite(input_x, input_y, imagen);
+            entidad.id = imagen;
             entidad.height = size;
             entidad.width = size;
 
@@ -305,32 +334,39 @@
             entidad.anchor.y = 0;
 
             spriteDragged = entidad;
+
         }
 
         function crearDragEdificio(imagen) {
-            crearDrag(imagen, tile_size, tile_size, aceptarPosicionEdificio);
+            crearDrag(imagen, tile_size, tile_size, $scope.aceptarPosicionEdificio);
         }
 
 
         function crearDragUnidad(imagen) {
-            crearDrag(imagen, unit_size, unit_size, posicionarUnidad);
+            crearDrag(imagen, unit_size, unit_size, $scope.aceptarPosicionUnidad);
         }
 
-        function posicionarUnidad() {
-            if (!$scope.game.physics.arcade.overlap(spriteDragged, buildings)
-                && !$scope.game.physics.arcade.overlap(spriteDragged, unidades_desplegadas)) {
-                unidades_desplegadas.add(spriteDragged);
-                spriteDragged.tint = 0xFFFFFF;
-                spriteDragged.draggable = false;
-                spriteDragged = null;
-
+        $scope.aceptarPosicionUnidad = function (sprite, pointer) {
+            console.log("aceptarPosicionUnidad");
+            if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
+                var input_x = $scope.game.input.activePointer.worldX / tile_size;
+                var input_y = $scope.game.input.activePointer.worldY / tile_size;
+                if (!checkOverlap(sprite, menuCuartel) && juegoService.crearEdificioEnTablero(sprite.id, input_x, input_y)) {
+                    sprite.input.draggable = false;
+                    unidades_desplegadas.add(sprite);
+                    $scope.game.debug.reset();
+                    sprite.alpha = 0.8;
+                    //sprite.tint = 0xFFFF00;
+                    construccion(sprite);
+                }
             }
             else {
-                spriteDragged.destroy();
+                sprite.destroy();
+                $scope.game.debug.reset();
             }
-            $scope.game.debug.reset();
+            spriteDragged = null;
         }
-
+       
         function moverUnidad(sprite, x_destino, y_destino) {
             $scope.game.add.tween(sprite).to({ x: x_destino, y: y_destino });
         }
@@ -377,10 +413,13 @@
         }
 
 
-        function aceptarPosicionEdificio(sprite, pointer) {
+        $scope.aceptarPosicionEdificio = function(sprite, pointer) {
             console.log("aceptarPosicionEdificio");
-            if (!$scope.game.physics.arcade.overlap(sprite, buildings)) {
-                if (!checkOverlap(sprite, menuCuartel)) {
+            if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
+                var input_x = $scope.game.input.activePointer.worldX / tile_size;
+                var input_y = $scope.game.input.activePointer.worldY / tile_size;
+                console.debug(sprite);
+                if (!checkOverlap(sprite, menuCuartel) && juegoService.crearEdificioEnTablero(sprite.id, input_x, input_y)) {
                     sprite.input.draggable = false;
                     buildings.add(sprite);
                     $scope.game.debug.reset();
@@ -405,13 +444,6 @@
         }
 
         function update() {
-            /*if ($scope.game.input.mousePointer.isDown) {
-                activarSeguirMouse();
-                seguirMouse();
-            }
-            else {
-                $scope.game.camera.unfollow();
-            }*/
             if (cursors.up.isDown) {
                 $scope.game.camera.y -= 4;
             }
@@ -469,24 +501,9 @@
     }
     ]);
 
-    function allowDrop(ev) {
-        ev.preventDefault();
-        //focusCanvas(); 
-        return false;
-    }
-
     function focusCanvas() {
         $("#divJuego canvas").focus();
     }
-
-    function drop(ev) {
-        ev.preventDefault();
-        accionMouseOver();
-        //var data = ev.dataTransfer.getData("text");
-        //ev.target.appendChild(document.getElementById(data));
-        //crearDragEdificio(data);
-    }
-
 
     angular.module('juego').directive('gameCanvas', function ($injector) {
         var linkFn = function (scope, ele, attrs) {
