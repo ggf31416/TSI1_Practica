@@ -14,5 +14,6 @@ namespace BusinessLogicLayer
         public int tipo_id { get; set; }
         public int sizeX { get; set; } = 4;
         public int sizeY { get; set; } = 4;
+        public string jugador { get; set; }
     }
 }
