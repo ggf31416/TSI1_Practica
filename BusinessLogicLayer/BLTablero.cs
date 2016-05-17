@@ -1,23 +1,40 @@
 ﻿using DataAccessLayer;
 using EpPathFinding;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace BusinessLogicLayer
 {
     public class BLTablero : IBLTablero
     {
         private IDALTablero _dal;
-        private List<Edificio> edificios;
+        private List<Edificio> edificios = new List<Edificio>();
         private string jugadorDefensor;
-        private Dictionary<String,List<Unidad>> unidadesPorJugador;
+        private Dictionary<String, List<Unidad>> unidadesPorJugador = new Dictionary<string, List<Unidad>>();
         private static int edificio_size = 4;
         private static int tablero_size = 10;
         private int sizeX = tablero_size * edificio_size;
         private int sizeY = tablero_size * edificio_size;
+        private float velocidad = 5;
+
+        public void agregarUnidades(String jugador,IEnumerable<Unidad> unidades)
+        {
+            if (!unidadesPorJugador.ContainsKey(jugador)){
+                unidadesPorJugador.Add(jugador, new List<Unidad>());
+            }
+            unidadesPorJugador[jugador].AddRange(unidades);
+
+        }
+
+        public void agregarEdificios(IEnumerable<Edificio> lst)
+        {
+            edificios.AddRange(lst);
+        }
 
         public BLTablero(IDALTablero dal)
         {
@@ -27,6 +44,8 @@ namespace BusinessLogicLayer
         public void JugarUnidad(Shared.Entities.InfoCelda infoCelda)
         {
             _dal.JugarUnidad(infoCelda);
+
+            
         }
 
         BaseGrid crearTableroPF()
@@ -140,7 +159,14 @@ namespace BusinessLogicLayer
             if (near_u == null)
             {
                 Edificio e = buscarEdificioEnemigoMasCercano(u);
-                return new GridPos(e.posX, e.posY);
+                if (e != null)
+                {
+                    return new GridPos(e.posX, e.posY);
+                }
+                else
+                {
+                    return new GridPos(u.posX, u.posY);
+                }
             }
             return new GridPos(near_u.posX, near_u.posY);
         }
@@ -175,6 +201,34 @@ namespace BusinessLogicLayer
             BaseGrid grilla = crearTableroPF();
             JumpPointParam param = parametrosBusqueda(grilla);
             return param;
+        }
+
+        void atacarUnidad(Unidad ataq,Unidad def)
+        {
+            if (ataq.distancia(def) < ataq.rango)
+            {
+                float daño = 10.0f * ataq.ataque / def.defensa;
+                ataq.vida -= daño;
+                if (ataq.vida < 0) { matar(def); }
+            }
+        }
+
+        string generarJson()
+        {
+            return JsonConvert.SerializeObject(this) ;
+        }
+
+        private void matar(Unidad def)
+        {
+            unidadesPorJugador[def.jugador].Remove(def);
+        }
+
+        void tickTiempo()
+        {
+            ResultadoBusqPath[]  res  = buscarRutaHaciaEnemigosCercanos();
+
+
+
         }
 
         //public double CalcPartTimeEmployeeSalary(int idEmployee, int hours)

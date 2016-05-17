@@ -220,7 +220,7 @@
             $scope.listaEdificios.forEach(function (e) {
                 if (e.Imagen != null) {
                     console.log(e);
-                    $scope.game.load.image(e.Id, e.Imagen);
+                    $scope.game.load.image(e.Id, 'http://localhost:56662' + e.Imagen);
                 }
             });
 
