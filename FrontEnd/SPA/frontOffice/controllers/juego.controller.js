@@ -331,10 +331,10 @@
                 && !$scope.game.physics.arcade.overlap(spriteDragged, unidades_desplegadas)) {
                 unidades_desplegadas.add(spriteDragged);
                 spriteDragged.tint = 0xFFFFFF;
-                spriteDragged.draggable = false;
-              
+                spriteDragged.input.draggable = false;
+                spriteDragged.events.onDragStop.removeAll();
                 $//scope.game.physics.arcade.moveToXY(a,100, 100, 100, 1000);
-                
+                   
                 spriteDragged = null;
             }
             else {
@@ -358,8 +358,8 @@
 
                 tweenAnterior = tween;
             }
-            spriteDragged.body.velocity.x = 1;
-            spriteDragged.body.velocity.y = 1;
+            //spriteDragged.body.velocity.x = 1;
+            //spriteDragged.body.velocity.y = 1;
             primerTween.start();
             $scope.animaciones.push(primerTween);
         }
