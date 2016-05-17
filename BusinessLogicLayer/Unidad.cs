@@ -12,5 +12,6 @@ namespace BusinessLogicLayer
         public int posY { get; set; }
         public int id { get; set; }
         public int tipo_id { get; set; }
+        public string jugador { get; set; }
     }
 }

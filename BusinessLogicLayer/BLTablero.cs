@@ -12,7 +12,8 @@ namespace BusinessLogicLayer
     {
         private IDALTablero _dal;
         private List<Edificio> edificios;
-        private List<Unidad> unidades;
+        private string jugadorDefensor;
+        private Dictionary<String,List<Unidad>> unidadesPorJugador;
         private static int edificio_size = 4;
         private static int tablero_size = 10;
         private int sizeX = tablero_size * edificio_size;
@@ -81,19 +82,99 @@ namespace BusinessLogicLayer
             
         }
 
-        public ResultadoBusqPath[] buscarTodos(Dictionary<Unidad,GridPos> destinos)
+        private int euclides2(int dx,int dy)
         {
-            BaseGrid grilla = crearTableroPF();
-            JumpPointParam param = parametrosBusqueda(grilla);
-            var res = new List<ResultadoBusqPath>();
-            foreach (var p in destinos)
+            return dx * dx + dy * dy;
+        }
+
+        public Unidad buscarEnemigoMasCercano(Unidad u)
+        {
+            int distancia = 0;
+            Unidad nearest = null;
+            foreach (String j in this.unidadesPorJugador.Keys)
+            { 
+                if (!j.Equals(u.jugador))
+                {
+                    var enemigos = this.unidadesPorJugador[j];
+                    foreach(Unidad e in enemigos){
+                        int d = euclides2(u.posX - e.posX, u.posY - e.posY);
+                        if (d < distancia)
+                        {
+                            d = distancia;
+                            nearest = e;
+                        }
+                    }
+                }
+            }
+            return nearest;
+        }
+
+        
+
+        public Edificio buscarEdificioEnemigoMasCercano(Unidad u)
+        {
+            int distancia = 0;
+            Edificio nearest = null;
+            if (!u.jugador.Equals(jugadorDefensor))
             {
+                foreach (Edificio ed in this.edificios)
+                {
+                    if (!ed.jugador.Equals(u.jugador))
+                    {
+                        int d = euclides2(u.posX - ed.posX, u.posY - ed.posY);
+                        if (d < distancia)
+                        {
+                            d = distancia;
+                            nearest = ed;
+                        }
+                    }
+                }
                 
-                var r_path = buscarPath(p.Key, param, p.Value);
-                var r = new ResultadoBusqPath() { id_unidad = p.Key.id, path = r_path.ToArray() };
+            }
+            return nearest;
+        }
+
+        GridPos buscarMasCercano(Unidad u)
+        {
+            Unidad near_u = buscarEnemigoMasCercano(u);
+            if (near_u == null)
+            {
+                Edificio e = buscarEdificioEnemigoMasCercano(u);
+                return new GridPos(e.posX, e.posY);
+            }
+            return new GridPos(near_u.posX, near_u.posY);
+        }
+
+
+        
+        public ResultadoBusqPath[]  buscarRutaHaciaEnemigosCercanos()
+        {
+            Dictionary<Unidad, GridPos> tmp = new Dictionary<Unidad, GridPos>();
+            var unidades = unidadesPorJugador.Values.SelectMany(lst => lst);
+            JumpPointParam param = configurar();
+
+            var res = new List<ResultadoBusqPath>();
+            foreach (var u in unidades)
+            {
+                GridPos pos = buscarMasCercano(u);
+                var r =  buscar(u, pos, param);
                 res.Add(r);
             }
             return res.ToArray();
+        }
+
+        public ResultadoBusqPath buscar(Unidad u, GridPos destino,JumpPointParam param)
+        {
+            var r_path = buscarPath(u, param, destino);
+            var r = new ResultadoBusqPath() { id_unidad = u.id, path = r_path.ToArray() };
+            return r;
+        }
+
+        JumpPointParam configurar()
+        {
+            BaseGrid grilla = crearTableroPF();
+            JumpPointParam param = parametrosBusqueda(grilla);
+            return param;
         }
 
         //public double CalcPartTimeEmployeeSalary(int idEmployee, int hours)

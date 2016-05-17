@@ -118,6 +118,8 @@
         var unidades_desplegadas;
         var unidades_desplegadas;
 
+        $scope.animaciones = []
+
         window.createGame = function (scope, injector) {
             // Create our phaser $scope.game
             $scope.game = new Phaser.Game(anchoJuego, altoJuego, Phaser.AUTO, 'divJuego', { preload: $scope.preload, create: create, update: update });
@@ -316,14 +318,24 @@
             crearDrag(imagen, unit_size, unit_size, posicionarUnidad);
         }
 
+        var paths = [
+            {x: 5, y: 5, s: 4},
+            {x: 3, y : 3, s: 2},
+            {x: 9, y : 9, s: 8}
+        ]
+
+       
+
         function posicionarUnidad() {
             if (!$scope.game.physics.arcade.overlap(spriteDragged, buildings)
                 && !$scope.game.physics.arcade.overlap(spriteDragged, unidades_desplegadas)) {
                 unidades_desplegadas.add(spriteDragged);
                 spriteDragged.tint = 0xFFFFFF;
                 spriteDragged.draggable = false;
+              
+                $//scope.game.physics.arcade.moveToXY(a,100, 100, 100, 1000);
+                
                 spriteDragged = null;
-
             }
             else {
                 spriteDragged.destroy();
@@ -331,8 +343,25 @@
             $scope.game.debug.reset();
         }
 
-        function moverUnidad(sprite, x_destino, y_destino) {
-            $scope.game.add.tween(sprite).to({ x: x_destino, y: y_destino });
+        function moverUnidad(sprite, paths) {
+            var tweenAnterior = null;
+            var primerTween = null;
+            for (var i in paths) {
+
+                var tween = $scope.game.add.tween(a).to({ x: paths[i].x * unit_size, y: paths[i].y * unit_size }, paths[i].s * 1000, Phaser.Easing.Linear.None, false);
+                if (tweenAnterior) {
+                    tweenAnterior.chain(tween)
+                }
+                else {
+                    primerTween = tween;
+                }
+
+                tweenAnterior = tween;
+            }
+            spriteDragged.body.velocity.x = 1;
+            spriteDragged.body.velocity.y = 1;
+            primerTween.start();
+            $scope.animaciones.push(primerTween);
         }
 
         function onDragUpdateBuild(sprite, pointer) {
@@ -446,8 +475,11 @@
             if (spriteDragged != null) {
                 $scope.game.debug.text("isDragged: " + spriteDragged.input.isDragged, 200, 96);
             }
+            $scope.game.physics.arcade.collide(unidades_desplegadas, buildings,function(){console.log("Colision")});
 
         }
+
+
 
         function seguirMouse() {
             sprite = mouse_sprite;
