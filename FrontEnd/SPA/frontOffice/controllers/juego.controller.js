@@ -2,6 +2,7 @@
     'use strict';
     angular.module('juego').controller("juegoCtrl", ["juegoService", "edificiosService", "unidadesService",'$scope', '$rootScope',
 
+   
 
     function (juegoService, edificiosService, unidadesService, $scope, $rootScope) {
 
@@ -117,7 +118,9 @@
         var buildings;
         var unidades_desplegadas;
 
-        $scope.animaciones = []
+        var estaEnBatalla = false;
+
+        $scope.animaciones = {}
 
         window.createGame = function (scope, injector) {
             // Create our phaser $scope.game
@@ -181,8 +184,9 @@
             // Create a function that the hub can call to broadcast messages.
             $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
                 var msjJSON = JSON.parse(message);
-                $scope.estadoJuego.edificios = msjJSON.edificios;
-                $scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;
+                //$scope.estadoJuego.edificios = msjJSON.edificios;
+                //$scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;
+                $scope.estadoJuego.edificios = msjJSON;
                 $scope.cargarDesdeEstado();
             };
             // Get the user name and store it to prepend to messages.
@@ -359,13 +363,14 @@
             if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
                 var input_x = $scope.game.input.activePointer.worldX / tile_size;
                 var input_y = $scope.game.input.activePointer.worldY / tile_size;
+                sprite.input.draggable = false;
+                unidades_desplegadas.add(sprite);
+                $scope.game.debug.reset();
+                sprite.alpha = 1.0;
+                sprite.tint = 0xFFFFFF;
                 if (!checkOverlap(sprite, menuCuartel) && juegoService.crearEdificioEnTablero(sprite.id, input_x, input_y)) {
-                    sprite.input.draggable = false;
-                    unidades_desplegadas.add(sprite);
-                    $scope.game.debug.reset();
-                    sprite.alpha = 0.8;
-                    //sprite.tint = 0xFFFF00;
-                    construccion(sprite);
+
+                    //construccion(sprite);
                 }
             }
             else {

@@ -16,13 +16,20 @@ namespace BusinessLogicLayer
             foreach (ConjuntoUnidades cu in jug.Unidades)
             {
                 Unidad x = getUnidadPorId(cu.UnidadId);
-                IEnumerable<Unidad> lst = Enumerable.Repeat(x, cu.Cantidad).ToList(); ;
+                IEnumerable<Unidad> lst = Enumerable.Repeat(x, cu.Cantidad).ToList();
+                Random r = new Random();
+                
+                foreach(Unidad u in lst)
+                {
+                    u.id = r.Next(1, Int32.MaxValue);
+                }
                 tablero.agregarUnidades(jug.Identificador, lst);
             }
         }
 
         void crearBatalla(Jugador atacante,Jugador defensor)
         {
+            tablero = new BLTablero(null);
             agregarUnidades(atacante);
             agregarUnidades(defensor);
             tablero.agregarEdificios(defensor.Edificios);

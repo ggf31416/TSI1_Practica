@@ -43,7 +43,10 @@ namespace BusinessLogicLayer
 
         public void JugarUnidad(Shared.Entities.InfoCelda infoCelda)
         {
-            _dal.JugarUnidad(infoCelda);
+            if (_dal != null)
+            {
+                _dal.JugarUnidad(infoCelda);
+            }
 
             
         }

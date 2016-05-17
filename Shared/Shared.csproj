@@ -44,6 +44,9 @@
   <ItemGroup>
     <Compile Include="Entities\InfoCelda.cs" />
     <Compile Include="Entities\Prueba.cs" />
+    <Compile Include="Entities\TipoEdificio.cs" />
+    <Compile Include="Entities\TipoEntidad.cs" />
+    <Compile Include="Entities\TipoUnidad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

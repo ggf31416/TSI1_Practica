@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0c468bf4717744318a63298f18a03344" Name="Diagram1" ZoomLevel="82">
+        <EntityTypeShape EntityType="frontofficedbModel.Disenador" Width="1.5" PointX="0.5" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="frontofficedbModel.Raza" Width="1.5" PointX="5.75" PointY="3.25" />
+        <EntityTypeShape EntityType="frontofficedbModel.TipoEntidad" Width="1.875" PointX="2.375" PointY="0.5" />
+        <EntityTypeShape EntityType="frontofficedbModel.Accion" Width="1.5" PointX="7.75" PointY="3.25" />
+        <EntityTypeShape EntityType="frontofficedbModel.TipoRecurso" Width="1.875" PointX="7.5" PointY="0.5" />
+        <EntityTypeShape EntityType="frontofficedbModel.TipoEdificio" Width="1.5" PointX="3.875" PointY="3.625" />
+        <EntityTypeShape EntityType="frontofficedbModel.TipoUnidad" Width="1.5" PointX="1.25" PointY="3.625" />
+        <AssociationConnector Association="frontofficedbModel.edificio_unidad1" />
+        <InheritanceConnector EntityType="frontofficedbModel.TipoEdificio" />
+        <InheritanceConnector EntityType="frontofficedbModel.TipoUnidad" />
+        <EntityTypeShape EntityType="frontofficedbModel.EntidadRecursoCostos" Width="1.875" PointX="4.875" PointY="0.5" />
+        <AssociationConnector Association="frontofficedbModel.FK__entidad_r__id_en__6FE99F9F" />
+        <AssociationConnector Association="frontofficedbModel.FK__entidad_r__id_re__70DDC3D8" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,410 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="frontofficedbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="accion">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="nombre" Type="varchar" MaxLength="255" />
+          <Property Name="id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="disenador">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="nombre" Type="varchar" MaxLength="255" />
+          <Property Name="id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="edificio_unidad">
+          <Key>
+            <PropertyRef Name="id_edificio" />
+            <PropertyRef Name="id_unidad" />
+          </Key>
+          <Property Name="id_edificio" Type="int" Nullable="false" />
+          <Property Name="id_unidad" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="entidad_recurso_costos">
+          <Key>
+            <PropertyRef Name="id_entidad" />
+            <PropertyRef Name="id_recurso" />
+            <PropertyRef Name="costo" />
+          </Key>
+          <Property Name="id_entidad" Type="int" Nullable="false" />
+          <Property Name="id_recurso" Type="int" Nullable="false" />
+          <Property Name="costo" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="raza">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="nombre" Type="varchar" MaxLength="255" />
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="imagen" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="tipo_edificio">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tipo_entidad">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="nombre" Type="varchar" MaxLength="255" />
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="vida" Type="int" />
+          <Property Name="defensa" Type="int" />
+          <Property Name="imagen" Type="varchar" MaxLength="255" />
+          <Property Name="ataque" Type="int" />
+          <Property Name="tasa" Type="int" />
+        </EntityType>
+        <EntityType Name="tipo_recurso">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="nombre" Type="varchar" MaxLength="255" />
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="fijo_acum" Type="bit" />
+          <Property Name="tope" Type="int" />
+          <Property Name="imagen" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="tipo_unidad">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__edificio___id_ed__693CA210">
+          <End Role="tipo_edificio" Type="Self.tipo_edificio" Multiplicity="1" />
+          <End Role="edificio_unidad" Type="Self.edificio_unidad" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_edificio">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="edificio_unidad">
+              <PropertyRef Name="id_edificio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__edificio___id_un__6A30C649">
+          <End Role="tipo_unidad" Type="Self.tipo_unidad" Multiplicity="1" />
+          <End Role="edificio_unidad" Type="Self.edificio_unidad" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_unidad">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="edificio_unidad">
+              <PropertyRef Name="id_unidad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__entidad_r__id_en__6FE99F9F">
+          <End Role="tipo_entidad" Type="Self.tipo_entidad" Multiplicity="1" />
+          <End Role="entidad_recurso_costos" Type="Self.entidad_recurso_costos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_entidad">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="entidad_recurso_costos">
+              <PropertyRef Name="id_entidad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__entidad_r__id_re__70DDC3D8">
+          <End Role="tipo_recurso" Type="Self.tipo_recurso" Multiplicity="1" />
+          <End Role="entidad_recurso_costos" Type="Self.entidad_recurso_costos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_recurso">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="entidad_recurso_costos">
+              <PropertyRef Name="id_recurso" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tipo_edifici__id__66603565">
+          <End Role="tipo_entidad" Type="Self.tipo_entidad" Multiplicity="1" />
+          <End Role="tipo_edificio" Type="Self.tipo_edificio" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_entidad">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tipo_edificio">
+              <PropertyRef Name="id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tipo_unidad__id__6383C8BA">
+          <End Role="tipo_entidad" Type="Self.tipo_entidad" Multiplicity="1" />
+          <End Role="tipo_unidad" Type="Self.tipo_unidad" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_entidad">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tipo_unidad">
+              <PropertyRef Name="id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="frontofficedbModelStoreContainer">
+          <EntitySet Name="accion" EntityType="Self.accion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="disenador" EntityType="Self.disenador" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="edificio_unidad" EntityType="Self.edificio_unidad" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="entidad_recurso_costos" EntityType="Self.entidad_recurso_costos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="raza" EntityType="Self.raza" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tipo_edificio" EntityType="Self.tipo_edificio" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tipo_entidad" EntityType="Self.tipo_entidad" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tipo_recurso" EntityType="Self.tipo_recurso" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tipo_unidad" EntityType="Self.tipo_unidad" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__edificio___id_ed__693CA210" Association="Self.FK__edificio___id_ed__693CA210">
+            <End Role="tipo_edificio" EntitySet="tipo_edificio" />
+            <End Role="edificio_unidad" EntitySet="edificio_unidad" />
+          </AssociationSet>
+          <AssociationSet Name="FK__edificio___id_un__6A30C649" Association="Self.FK__edificio___id_un__6A30C649">
+            <End Role="tipo_unidad" EntitySet="tipo_unidad" />
+            <End Role="edificio_unidad" EntitySet="edificio_unidad" />
+          </AssociationSet>
+          <AssociationSet Name="FK__entidad_r__id_en__6FE99F9F" Association="Self.FK__entidad_r__id_en__6FE99F9F">
+            <End Role="tipo_entidad" EntitySet="tipo_entidad" />
+            <End Role="entidad_recurso_costos" EntitySet="entidad_recurso_costos" />
+          </AssociationSet>
+          <AssociationSet Name="FK__entidad_r__id_re__70DDC3D8" Association="Self.FK__entidad_r__id_re__70DDC3D8">
+            <End Role="tipo_recurso" EntitySet="tipo_recurso" />
+            <End Role="entidad_recurso_costos" EntitySet="entidad_recurso_costos" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tipo_edifici__id__66603565" Association="Self.FK__tipo_edifici__id__66603565">
+            <End Role="tipo_entidad" EntitySet="tipo_entidad" />
+            <End Role="tipo_edificio" EntitySet="tipo_edificio" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tipo_unidad__id__6383C8BA" Association="Self.FK__tipo_unidad__id__6383C8BA">
+            <End Role="tipo_entidad" EntitySet="tipo_entidad" />
+            <End Role="tipo_unidad" EntitySet="tipo_unidad" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="frontofficedbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Disenador">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="id" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="frontofficedbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Disenadores" EntityType="frontofficedbModel.Disenador" />
+          <EntitySet Name="Razas" EntityType="frontofficedbModel.Raza" />
+          <EntitySet Name="TipoEntidades" EntityType="frontofficedbModel.TipoEntidad" />
+          <EntitySet Name="Acciones" EntityType="frontofficedbModel.Accion" />
+          <EntitySet Name="TipoRecursos" EntityType="frontofficedbModel.TipoRecurso" />
+          <AssociationSet Name="edificio_unidad1" Association="frontofficedbModel.edificio_unidad1">
+            <End Role="TipoEdificio" EntitySet="TipoEntidades" />
+            <End Role="TipoUnidad" EntitySet="TipoEntidades" />
+          </AssociationSet>
+          <EntitySet Name="EntidadRecursoCostos" EntityType="frontofficedbModel.EntidadRecursoCostos" />
+          <AssociationSet Name="FK__entidad_r__id_en__6FE99F9F" Association="frontofficedbModel.FK__entidad_r__id_en__6FE99F9F">
+            <End Role="TipoEntidad" EntitySet="TipoEntidades" />
+            <End Role="entidad_recurso_costos" EntitySet="EntidadRecursoCostos" />
+          </AssociationSet>
+          <AssociationSet Name="FK__entidad_r__id_re__70DDC3D8" Association="frontofficedbModel.FK__entidad_r__id_re__70DDC3D8">
+            <End Role="TipoRecurso" EntitySet="TipoRecursos" />
+            <End Role="entidad_recurso_costos" EntitySet="EntidadRecursoCostos" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Raza">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="imagen" Type="String" />
+        </EntityType>
+        <EntityType Name="TipoEntidad" Abstract="true">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Vida" Type="Int32" />
+          <Property Name="Ataque" Type="Int32" />
+          <Property Name="Defensa" Type="Int32" />
+          <Property Name="Imagen" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
+          <Property Name="TiempoConstruccion" Type="Int32" />
+          <NavigationProperty Name="EntidadRecursoCostos" Relationship="frontofficedbModel.FK__entidad_r__id_en__6FE99F9F" FromRole="TipoEntidad" ToRole="entidad_recurso_costos" />
+          </EntityType>
+        <EntityType Name="Accion">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="id" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TipoRecurso">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="EsFijo" Type="Boolean" />
+          <Property Name="Tope" Type="Int32" />
+          <Property Name="Imagen" Type="String" />
+          <NavigationProperty Name="EntidadRecursoCostos" Relationship="frontofficedbModel.FK__entidad_r__id_re__70DDC3D8" FromRole="TipoRecurso" ToRole="entidad_recurso_costos" />
+        </EntityType>
+        <EntityType Name="TipoEdificio" BaseType="frontofficedbModel.TipoEntidad">
+          <NavigationProperty Name="TiposUnidades" Relationship="frontofficedbModel.edificio_unidad1" FromRole="TipoEdificio" ToRole="TipoUnidad" />
+        </EntityType>
+        <EntityType Name="TipoUnidad" BaseType="frontofficedbModel.TipoEntidad">
+          <NavigationProperty Name="TiposEdificios" Relationship="frontofficedbModel.edificio_unidad1" FromRole="TipoUnidad" ToRole="TipoEdificio" />
+        </EntityType>
+        <Association Name="edificio_unidad1">
+          <End Type="frontofficedbModel.TipoEdificio" Role="TipoEdificio" Multiplicity="*" />
+          <End Type="frontofficedbModel.TipoUnidad" Role="TipoUnidad" Multiplicity="*" />
+        </Association>
+        <EntityType Name="EntidadRecursoCostos">
+          <Key>
+            <PropertyRef Name="IdEdificio" />
+            <PropertyRef Name="IdRecurso" />
+            <PropertyRef Name="Costo" />
+          </Key>
+          <Property Name="IdEdificio" Type="Int32" Nullable="false" />
+          <Property Name="IdRecurso" Type="Int32" Nullable="false" />
+          <Property Name="Costo" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TipoEntidad" Relationship="frontofficedbModel.FK__entidad_r__id_en__6FE99F9F" FromRole="entidad_recurso_costos" ToRole="TipoEntidad" />
+          <NavigationProperty Name="TipoRecurso" Relationship="frontofficedbModel.FK__entidad_r__id_re__70DDC3D8" FromRole="entidad_recurso_costos" ToRole="TipoRecurso" />
+        </EntityType>
+        <Association Name="FK__entidad_r__id_en__6FE99F9F">
+          <End Type="frontofficedbModel.TipoEntidad" Role="TipoEntidad" Multiplicity="1" />
+          <End Type="frontofficedbModel.EntidadRecursoCostos" Role="entidad_recurso_costos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoEntidad">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="entidad_recurso_costos">
+              <PropertyRef Name="IdEdificio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__entidad_r__id_re__70DDC3D8">
+          <End Type="frontofficedbModel.TipoRecurso" Role="TipoRecurso" Multiplicity="1" />
+          <End Type="frontofficedbModel.EntidadRecursoCostos" Role="entidad_recurso_costos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TipoRecurso">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="entidad_recurso_costos">
+              <PropertyRef Name="IdRecurso" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="frontofficedbModelStoreContainer" CdmEntityContainer="frontofficedbEntities">
+          <EntitySetMapping Name="Disenadores">
+            <EntityTypeMapping TypeName="frontofficedbModel.Disenador">
+              <MappingFragment StoreEntitySet="disenador">
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Razas">
+            <EntityTypeMapping TypeName="frontofficedbModel.Raza">
+              <MappingFragment StoreEntitySet="raza">
+                <ScalarProperty Name="imagen" ColumnName="imagen" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TipoEntidades">
+            <EntityTypeMapping TypeName="IsTypeOf(frontofficedbModel.TipoEntidad)">
+              <MappingFragment StoreEntitySet="tipo_entidad">
+                <ScalarProperty Name="Imagen" ColumnName="imagen" />
+                <ScalarProperty Name="Id" ColumnName="id" />
+                <ScalarProperty Name="TiempoConstruccion" ColumnName="tasa" />
+                <ScalarProperty Name="Ataque" ColumnName="ataque" />
+                <ScalarProperty Name="Defensa" ColumnName="defensa" />
+                <ScalarProperty Name="Vida" ColumnName="vida" />
+                <ScalarProperty Name="Nombre" ColumnName="nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="IsTypeOf(frontofficedbModel.TipoEdificio)" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+              <MappingFragment StoreEntitySet="tipo_edificio">
+                <ScalarProperty Name="Id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="IsTypeOf(frontofficedbModel.TipoUnidad)" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+              <MappingFragment StoreEntitySet="tipo_unidad">
+                <ScalarProperty Name="Id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            </EntitySetMapping>
+          <EntitySetMapping Name="Acciones">
+            <EntityTypeMapping TypeName="frontofficedbModel.Accion">
+              <MappingFragment StoreEntitySet="accion">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TipoRecursos">
+            <EntityTypeMapping TypeName="frontofficedbModel.TipoRecurso">
+              <MappingFragment StoreEntitySet="tipo_recurso">
+                <ScalarProperty Name="Imagen" ColumnName="imagen" />
+                <ScalarProperty Name="Tope" ColumnName="tope" />
+                <ScalarProperty Name="EsFijo" ColumnName="fijo_acum" />
+                <ScalarProperty Name="Id" ColumnName="id" />
+                <ScalarProperty Name="Nombre" ColumnName="nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="edificio_unidad1" TypeName="frontofficedbModel.edificio_unidad1" StoreEntitySet="edificio_unidad" >
+            <EndProperty Name="TipoUnidad">
+              <ScalarProperty Name="Id" ColumnName="id_unidad" />
+            </EndProperty>
+            <EndProperty Name="TipoEdificio">
+              <ScalarProperty Name="Id" ColumnName="id_edificio" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="EntidadRecursoCostos">
+            <EntityTypeMapping TypeName="frontofficedbModel.EntidadRecursoCostos">
+              <MappingFragment StoreEntitySet="entidad_recurso_costos">
+                <ScalarProperty Name="Costo" ColumnName="costo" />
+                <ScalarProperty Name="IdRecurso" ColumnName="id_recurso" />
+                <ScalarProperty Name="IdEdificio" ColumnName="id_entidad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
