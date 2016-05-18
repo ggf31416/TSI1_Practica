@@ -4,7 +4,7 @@
 
 
     function edificioService($http, $q) {
-        this.getAllTipoEdificios = function () {
+        this.getAllTipoEdificiosSync = function () {
             var ret = "";
 
             $.ajax({
@@ -23,17 +23,13 @@
             return ret;
         };
 
-        this.getAllTipoEdificiosP = function () {
-            var ret = "";
-            var defered = $q.defer();
-            var promise = defered.promise;
-
-            $http.get("Entidades/GetAllTipoEdificios").
-                success(function (response) {
-                    defered.resolve(response.ret);
-                })
-                .error(function (err) {
-                    defered.reject(err)
+        this.getAllTipoEdificios = function () {
+            var promise = $http.get("Entidades/GetAllTipoEdificios").then(
+                function (data) {
+                    return data.data.ret;
+                },
+                function (err) {
+                    alert(err);
                 });
             return promise;
         }

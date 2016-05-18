@@ -1,10 +1,10 @@
 ﻿(function () {
     'use strict';
-    angular.module('juego').controller("juegoCtrl", ["juegoService", "edificiosService", "unidadesService",'$scope', '$rootScope',
+    angular.module('juego').controller("juegoCtrl", ["$http", "$q","juegoService", "edificiosService", "unidadesService",'$scope', '$rootScope',
 
    
 
-    function (juegoService, edificiosService, unidadesService, $scope, $rootScope) {
+    function ($http,$q,juegoService, edificiosService, unidadesService, $scope, $rootScope) {
 
         $rootScope.nombreJuego = "Atlas2";
 
@@ -21,7 +21,16 @@
             iniciarCustomDrag(id);
         };
 
-        $rootScope.listaEdificios = edificiosService.getAllTipoEdificios();
+        
+        $q.all([
+            edificiosService.getAllTipoEdificios(),
+            unidadesService.getAllTipoUnidades()
+        ]).then(function (data) {
+            $rootScope.listaEdificios = data[0];
+            $rootScope.listaUnidades = data[1];
+            window.createGame();
+        });
+
         /*[
             {
                 Nombre: "Cuartel",
@@ -51,7 +60,8 @@
                 alert(err);
             })
         */
-        $rootScope.listaUnidades = unidadesService.getAllTipoUnidadesSync();
+
+        
 
         
         /*[
@@ -174,7 +184,7 @@
                 crearEdificioInmediato(e);
             });
             $scope.estadoJuego.unidades_desplegadas.forEach(function (e) {
-              //  crearUnidadInmediato(e);
+                crearUnidadInmediato(e);
             });
         };
 
@@ -541,7 +551,7 @@
 
     angular.module('juego').directive('gameCanvas', function ($injector) {
         var linkFn = function (scope, ele, attrs) {
-            window.createGame(scope, $injector);
+            
         };
 
         return {

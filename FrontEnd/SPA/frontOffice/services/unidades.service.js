@@ -27,17 +27,14 @@
         };
 
         this.getAllTipoUnidades = function () {
-            var ret = "";
-            var defered = $q.defer();
-            var promise = defered.promise;
-
-
-            $http.get("Entidades/GetAllTipoUnidades").then(
-                function (response) {
-                        /* handle response then */
-                        return response.ret;
+            var promise = $http.get("Entidades/GetAllTipoUnidades").then(
+                function (data) {
+                    return data.data.ret;
+                },
+                function (err) {
+                    alert(err);
                 });
-
+            return promise;
         }
 
     }
