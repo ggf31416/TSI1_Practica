@@ -369,6 +369,58 @@
          {x: 9, y : 9, s: 8}
         ]
 
+
+        $scope.aceptarPosicionEdificio = function (sprite, pointer) {
+            console.log("aceptarPosicionEdificio");
+            if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
+                var input_x = sprite.x / tile_size;
+                var input_y = sprite.y / tile_size;
+                console.debug(sprite);
+
+                sprite.input.draggable = false;
+                buildings.add(sprite);
+                $scope.game.debug.reset();
+                sprite.alpha = 0.8;
+                //sprite.tint = 0xFFFF00;
+                construccion(sprite);
+
+                juegoService.crearEdificioEnTablero(sprite.id, input_x, input_y).then(function () {
+                    // hacer algo
+                });
+            }
+            else {
+                sprite.destroy();
+                $scope.game.debug.reset();
+            }
+            spriteDragged = null;
+        }
+
+        $scope.aceptarPosicionEdificio = function (sprite, pointer) {
+            console.log("aceptarPosicionEdificio");
+            if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
+                var input_x = sprite.x / tile_size;
+                var input_y = sprite.y / tile_size;
+                console.debug(sprite);
+
+                sprite.input.draggable = false;
+                buildings.add(sprite);
+                $scope.game.debug.reset();
+                sprite.alpha = 0.8;
+                //sprite.tint = 0xFFFF00;
+                construccion(sprite);
+
+                juegoService.crearEdificioEnTablero(sprite.id, input_x, input_y).then(function () {
+                    // hacer algo
+                });
+            }
+            else {
+                sprite.destroy();
+                $scope.game.debug.reset();
+            }
+            spriteDragged = null;
+        }
+
+
         $scope.aceptarPosicionUnidad = function (sprite, pointer) {
             console.log("aceptarPosicionUnidad");
             if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
@@ -379,10 +431,9 @@
                 $scope.game.debug.reset();
                 sprite.alpha = 1.0;
                 sprite.tint = 0xFFFFFF;
-                if (!checkOverlap(sprite, menuCuartel) && juegoService.crearEdificioEnTablero(sprite.id, input_x, input_y)) {
-
-                    //construccion(sprite);
-                }
+                juegoService.crearEdificioEnTablero(sprite.id, input_x, input_y).then(function () {
+                    //hacer algo
+                });
             }
             else {
                 sprite.destroy();
@@ -453,28 +504,6 @@
             }, this);
         }
 
-
-        $scope.aceptarPosicionEdificio = function(sprite, pointer) {
-            console.log("aceptarPosicionEdificio");
-            if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
-                var input_x = $scope.game.input.activePointer.worldX / tile_size;
-                var input_y = $scope.game.input.activePointer.worldY / tile_size;
-                console.debug(sprite);
-                if (!checkOverlap(sprite, menuCuartel) && juegoService.crearEdificioEnTablero(sprite.id, input_x, input_y)) {
-                    sprite.input.draggable = false;
-                    buildings.add(sprite);
-                    $scope.game.debug.reset();
-                    sprite.alpha = 0.8;
-                    //sprite.tint = 0xFFFF00;
-                    construccion(sprite);
-                }
-            }
-            else {
-                sprite.destroy();
-                $scope.game.debug.reset();
-            }
-            spriteDragged = null;
-        }
 
         function checkOverlap(spriteA, spriteB) {
             if (spriteA == null || spriteB == null) return false;
