@@ -372,8 +372,8 @@
         $scope.aceptarPosicionUnidad = function (sprite, pointer) {
             console.log("aceptarPosicionUnidad");
             if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
-                var input_x = $scope.game.input.activePointer.worldX / tile_size;
-                var input_y = $scope.game.input.activePointer.worldY / tile_size;
+                var input_x = sprite.worldX / tile_size;
+                var input_y = sprite.worldY / tile_size;
                 sprite.input.draggable = false;
                 unidades_desplegadas.add(sprite);
                 $scope.game.debug.reset();

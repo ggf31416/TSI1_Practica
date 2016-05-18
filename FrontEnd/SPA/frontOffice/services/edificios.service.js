@@ -26,8 +26,11 @@
         this.getAllTipoEdificios = function () {
             var promise = $http.get("Entidades/GetAllTipoEdificios").then(
                 function (data) {
+                    if (data.data.success == false) {
+                        throw new Error(data.data.responseText);
+                    }
                     return data.data.ret;
-                },
+                }).catch(
                 function (err) {
                     alert(err);
                 });

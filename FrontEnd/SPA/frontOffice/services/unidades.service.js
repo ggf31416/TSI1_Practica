@@ -29,12 +29,15 @@
         this.getAllTipoUnidades = function () {
             var promise = $http.get("Entidades/GetAllTipoUnidades").then(
                 function (data) {
+                    if (data.data.success == false) {
+                        throw new Error(data.data.responseText);
+                    }
                     return data.data.ret;
-                },
-                function (err) {
-                    alert(err);
+                }).catch(
+                    function (err) {
+                        alert(err);
                 });
-            return promise;
+             return promise;
         }
 
     }
