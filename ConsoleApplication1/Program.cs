@@ -13,21 +13,19 @@ namespace ConsoleApplication1
     {
         static void Main(string[] args)
         {
-            if (!BsonClassMap.IsClassMapRegistered(typeof(Prueba)))
+            if (!BsonClassMap.IsClassMapRegistered(typeof(TableroConstruccion)))
             {
-                BsonClassMap.RegisterClassMap<Prueba>();
+                BsonClassMap.RegisterClassMap<TableroConstruccion>();
             }
             Console.WriteLine("inicio");
             IDALConstruccion iDALConstruccion = new DALConstruccionMongo();
-            Prueba prueba = new Prueba();
-            prueba.Nombre = "Pelado2";
-            iDALConstruccion.DeletePrueba(prueba.Nombre);
-            iDALConstruccion.AddPrueba(prueba);
-            Console.WriteLine("agregado Pelado2");
-            Prueba prueba1 = iDALConstruccion.GetPrueba("Pelado2");
-            Console.WriteLine(prueba1.Nombre);
-            prueba1.Nombre = "Pelado3";
-            iDALConstruccion.UpdatePrueba(prueba1);
+            InfoCelda infoCelda1 = new InfoCelda();
+            infoCelda1.Id = 1;
+            infoCelda1.PosX = 1;
+            infoCelda1.PosY = 2;
+            //iDALConstruccion.InicializarConstruccion(1);
+            iDALConstruccion.AddInfoCelda(1, infoCelda1);
+            Console.WriteLine("agregado infocelda");
             Console.ReadLine();
         }
     }

@@ -9,57 +9,143 @@ using MongoDB.Driver.Core;
 using MongoDB.Driver.Linq;
 using MongoDB.Bson.Serialization;
 using DataAccessLayer.Entities;
+using DataAccessLayer.Exceptions;
 
 namespace DataAccessLayer
 {
     public class DALConstruccionMongo : IDALConstruccion
     {
         const string connectionstring = "mongodb://40.84.2.155";
-        protected static IMongoClient _client = new MongoClient(connectionstring);
-        protected static IMongoDatabase _database = _client.GetDatabase("frontoffice");
-        protected static IMongoCollection<Prueba> collection = _database.GetCollection<Prueba>("construccion");
+        private static IMongoClient _client = new MongoClient(connectionstring);
+        private static IMongoDatabase _database = _client.GetDatabase("frontoffice");
+        private static IMongoCollection<TableroConstruccion> collection = _database.GetCollection<TableroConstruccion>("construccion");
 
-        public void AddPrueba(Prueba prueba)
+        public void InicializarConstruccion(int idUsuario)
         {
-            collection.InsertOne(prueba);
+            TableroConstruccion tableroConstruccionInicial = new TableroConstruccion(idUsuario);
+            collection.InsertOne(tableroConstruccionInicial);
         }
 
-        public void DeletePrueba(String nombre)
+        public TableroConstruccion getTableroConstruccion(int idUsuario)
         {
-            collection.DeleteOne(prueba => prueba.Nombre == nombre);
+            var query = from tablero in collection.AsQueryable<TableroConstruccion>()
+                        where tablero.idUsuario == idUsuario
+                        select tablero;
+            if (query.Count() > 0)
+                return query.First();
+            else
+                throw new DALConstruccionException("ERROR:No existe el usuario " + idUsuario);
         }
 
-        public void UpdatePrueba(Prueba pruebaUpdate)
-        {
-            collection.ReplaceOne(prueba => prueba.Nombre == pruebaUpdate.Nombre, pruebaUpdate);
-        }
-
-
-        public List<Prueba> GetAllPrueba()
-        {
-            var collection = _database.GetCollection<BsonDocument>("construccion");
-            List<Prueba> result = new List<Prueba>();
-            List<BsonDocument> mongoResult = collection.AsQueryable<BsonDocument>().ToList();
-            foreach (var prueba in mongoResult)
+        private InfoCelda getInfoCelda(TableroConstruccion tableroConstruccion, int posX, int posY) {
+            foreach (var infoCelda in tableroConstruccion.lstInfoCelda)
             {
-                try
+                if (infoCelda.PosX == posX && infoCelda.PosY == posY)
+                    return infoCelda;
+            }
+            return null;
+        }
+
+        public void AddInfoCelda(int idUsuario, InfoCelda infoCelda)
+        {
+            TableroConstruccion tableroConstruccion = null;
+            try
+            {
+                tableroConstruccion = getTableroConstruccion(idUsuario);
+            } catch (DALConstruccionException ex)
+            {
+                throw new DALConstruccionException("ERROR:Imposible insertar edificio " + infoCelda.Id +
+                    "en la posicion(" + infoCelda.PosX + "," + infoCelda.PosY +
+                    "). No existe el usuario " + idUsuario);
+            }
+            InfoCelda celda = getInfoCelda(tableroConstruccion, infoCelda.PosX, infoCelda.PosY);
+            if (celda != null)
+                throw new DALConstruccionException("ERROR:Imposible insertar edificio " + infoCelda.Id + 
+                    "en la posicion(" + infoCelda.PosX + "," + infoCelda.PosY + 
+                    "). Ya existe un edificio de id " + celda.Id + " en dicho lugar");
+            tableroConstruccion.lstInfoCelda.Add(infoCelda);
+            collection.ReplaceOne(tablero => tablero.idUsuario == tableroConstruccion.idUsuario, tableroConstruccion);
+        }
+
+        public void DeleteInfoCelda(int idUsuario, InfoCelda infoCelda)
+        {
+            TableroConstruccion tableroConstruccion = getTableroConstruccion(idUsuario);
+            if (tableroConstruccion == null)
+                throw new DALConstruccionException("ERROR:Imposible insertar edificio " + infoCelda.Id +
+                    "en la posicion(" + infoCelda.PosX + "," + infoCelda.PosY +
+                    "). No existe el usuario " + idUsuario);
+            InfoCelda celda = getInfoCelda(tableroConstruccion, infoCelda.PosX, infoCelda.PosY);
+            if (celda != null)
+                throw new DALConstruccionException("ERROR:Imposible insertar edificio " + infoCelda.Id +
+                    "en la posicion(" + infoCelda.PosX + "," + infoCelda.PosY +
+                    "). Ya existe un edificio de id " + celda.Id + " en dicho lugar");
+            tableroConstruccion.lstInfoCelda.Remove(infoCelda);
+            collection.ReplaceOne(tablero => tablero.idUsuario == tableroConstruccion.idUsuario, tableroConstruccion);
+        }
+
+        public void Refresh(int idUsuario, Shared.Entities.Juego juego)
+        {
+            TableroConstruccion tableroConstruccion = getTableroConstruccion(idUsuario);
+            if (tableroConstruccion == null)
+                throw new DALConstruccionException("ERROR:No existe el usuario " + idUsuario);
+            DateTime now = new DateTime();
+            bool necesitaUpdate = false;
+            foreach (var infoCelda in tableroConstruccion.lstInfoCelda)
+            {
+                if (!infoCelda.terminado)
                 {
-                    result.Add(BsonSerializer.Deserialize<Prueba>(prueba));
-                }
-                catch (Exception ex)
-                {
-                    //ignore
+                    int segundosConstruyendo = now.Subtract(infoCelda.FechaCreacion).Seconds;
+                    //if (seungosConstruyendo >= juego.edificio.segundos)
+                    //  infoCelda.terminado = true;
+                    //  necesitaUpdate = true;
                 }
             }
-            return result;
+            if (necesitaUpdate)
+                collection.ReplaceOne(tablero => tablero.idUsuario == tableroConstruccion.idUsuario, tableroConstruccion);
         }
 
-        public Prueba GetPrueba(String nombre)
-        {
-            var prueba = from p in collection.AsQueryable<Prueba>()
-                                     where p.Nombre == nombre
-                                     select p;
-            return prueba.First();
-        }
+        //public void AddPrueba(Prueba prueba)
+        //{
+        //    collection.InsertOne(prueba);
+        //}
+
+        //public void DeletePrueba(String nombre)
+        //{
+        //    collection.DeleteOne(prueba => prueba.Nombre == nombre);
+        //}
+
+        //public void UpdatePrueba(Prueba pruebaUpdate)
+        //{
+        //    collection.ReplaceOne(prueba => prueba.Nombre == pruebaUpdate.Nombre, pruebaUpdate);
+        //}
+
+
+        //public List<Prueba> GetAllPrueba()
+        //{
+        //    var collection = _database.GetCollection<BsonDocument>("construccion");
+        //    List<Prueba> result = new List<Prueba>();
+        //    List<BsonDocument> mongoResult = collection.AsQueryable<BsonDocument>().ToList();
+        //    foreach (var prueba in mongoResult)
+        //    {
+        //        try
+        //        {
+        //            result.Add(BsonSerializer.Deserialize<Prueba>(prueba));
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            //ignore
+        //        }
+        //    }
+        //    return result;
+        //}
+
+        //public Prueba GetPrueba(String nombre)
+        //{
+        //    var prueba = from p in collection.AsQueryable<Prueba>()
+        //                             where p.Nombre == nombre
+        //                             select p;
+        //    return prueba.First();
+        //}
+
     }
 }

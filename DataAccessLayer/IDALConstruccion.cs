@@ -5,20 +5,31 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer.Entities;
 
+
 namespace DataAccessLayer
 {
     public interface IDALConstruccion
     {
 
-        void AddPrueba(Prueba prueba);
+        void InicializarConstruccion(int idUsuario);
 
-        void DeletePrueba(String nombre);
+        TableroConstruccion getTableroConstruccion(int idUsuario);
 
-        void UpdatePrueba(Prueba pruebaUpdate);
+        void AddInfoCelda(int idUsuario, InfoCelda infoCelda);
 
-        List<Prueba> GetAllPrueba();
+        void DeleteInfoCelda(int idUsuario, InfoCelda infoCelda);
 
-        Prueba GetPrueba(String nombre);
+        void Refresh(int idUsuario, Shared.Entities.Juego juego);
+
+        //void AddPrueba(Prueba prueba);
+
+        //void DeletePrueba(String nombre);
+
+        //void UpdatePrueba(Prueba pruebaUpdate);
+
+        //List<Prueba> GetAllPrueba();
+
+        //Prueba GetPrueba(String nombre);
 
     }
 }
