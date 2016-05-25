@@ -14,5 +14,8 @@ namespace ServiceLayer
     {
         [OperationContract]
         void JugarUnidad(InfoCelda infoCelda);
+
+        [OperationContract]
+        void Accion(String json);
     }
 }

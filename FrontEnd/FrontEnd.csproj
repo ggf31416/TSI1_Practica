@@ -219,6 +219,10 @@
     <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
     <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
     <None Include="Properties\PublishProfiles\tsi1frontoffice.pubxml" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
@@ -231,6 +235,13 @@
     <None Include="Service References\ServiceEntidades\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference1.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ServiceTablero\item.disco" />
+    <None Include="Service References\ServiceTablero\configuration91.svcinfo" />
+    <None Include="Service References\ServiceTablero\configuration.svcinfo" />
+    <None Include="Service References\ServiceTablero\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <Content Include="SPA\app.js" />
     <Content Include="SPA\backOffice\ImagenesSubidas\arquero.jpg" />
@@ -247,7 +258,6 @@
     <Content Include="SPA\frontOffice\controllers\recurso.controller.js" />
     <Content Include="SPA\frontOffice\controllers\unidad.controller.js" />
     <Content Include="SPA\frontOffice\crear.html" />
-    <Content Include="SPA\frontOffice\CrearCanvas.js" />
     <Content Include="SPA\frontOffice\cuartel.jpg" />
     <Content Include="SPA\frontOffice\directives\templateGameCanvas.html" />
     <Content Include="SPA\frontOffice\granja.jpg" />
@@ -274,14 +284,23 @@
     <Compile Include="Models\InfoCeldaModel.cs" />
     <Compile Include="Models\TipoEntidadModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Service References\ServiceEntidades\Reference.cs" />
     <Compile Include="Service References\ServiceEntidades\Reference1.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\ServiceTablero\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="ServiceEntidades.cs" />
-    <Compile Include="ServiceTablero.cs" />
     <Compile Include="App_Start\Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -302,6 +321,17 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServiceEntidades\ServiceEntidades.wsdl" />
+    <None Include="Service References\ServiceTablero\item.wsdl" />
+    <None Include="Service References\ServiceTablero\item.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceTablero\item1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceTablero\item2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceTablero\ServiceTablero.wsdl" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -320,6 +350,7 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\ServiceEntidades\" />
+    <WCFMetadataStorage Include="Service References\ServiceTablero\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BusinessLogicLayer\BusinessLogicLayer.csproj">
@@ -330,6 +361,9 @@
       <Project>{5b2ce531-8a15-496c-96af-ec949d43c850}</Project>
       <Name>DataAccessLayer</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

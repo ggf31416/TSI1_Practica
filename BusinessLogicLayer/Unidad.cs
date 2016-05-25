@@ -10,7 +10,7 @@ namespace BusinessLogicLayer
     {
         public int posX { get; set; }
         public int posY { get; set; }
-        public int id { get; set; }
+        public string id { get; set; }
         public int tipo_id { get; set; }
         public string jugador { get; set; }
         public int ataque { get; set; } = 10;

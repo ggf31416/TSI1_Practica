@@ -10,5 +10,6 @@ namespace BusinessLogicLayer
     public interface IBLTablero
     {
         void JugarUnidad(InfoCelda infoCelda);
+        void Accion(string json);
     }
 }

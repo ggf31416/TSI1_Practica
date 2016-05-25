@@ -23,5 +23,10 @@ namespace ServiceLayer
         public void JugarUnidad(InfoCelda infoCelda) {
             blHandler.JugarUnidad(infoCelda);
         }
+
+        public void Accion(string json)
+        {
+            blHandler.Accion(json);
+        }
     }
 }

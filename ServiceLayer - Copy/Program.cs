@@ -38,7 +38,7 @@ namespace ServiceLayer
                 smb.HttpGetEnabled = true;
                 selfHost.Description.Behaviors.Add(smb);
                 selfHost.Open();
-                Console.WriteLine("Hola2");
+                Console.WriteLine("ServiceLayer2");
                 Console.ReadLine();
                 selfHost.Close();
             }catch (CommunicationException ce)

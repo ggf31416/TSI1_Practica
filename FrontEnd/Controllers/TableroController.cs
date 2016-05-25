@@ -6,11 +6,27 @@ using System.Web;
 using System.Web.Mvc;
 using ServiceStack.Redis;
 using Microsoft.AspNet.SignalR;
+using FrontEnd.ServiceTablero;
 
 namespace FrontEnd.Controllers
 {
     public class TableroController : Controller
     {
+
+        [HttpPost]
+        public ActionResult Accion(string json)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+                client.Accion(json);
+                return Json(new { sucess = true });
+            }
+            catch (Exception e)
+            {
+                return Json(new { sucess = false });
+            }
+        }
 
         [HttpPost]
         public ActionResult JugarUnidad(Models.InfoCeldaModel infoCelda)
@@ -19,7 +35,7 @@ namespace FrontEnd.Controllers
             {
                 ServiceTableroClient client = new ServiceTableroClient();
 
-                Shared.Entities.InfoCelda sharedInfoCelda = new Shared.Entities.InfoCelda();
+                InfoCelda sharedInfoCelda = new InfoCelda();
 
                 sharedInfoCelda.Id = infoCelda.Id;
                 sharedInfoCelda.PosX = infoCelda.PosX;

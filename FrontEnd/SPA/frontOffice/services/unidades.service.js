@@ -35,6 +35,7 @@
                     return data.data.ret;
                 }).catch(
                     function (err) {
+                        console.log(err);
                         alert(err);
                 });
              return promise;

@@ -7,19 +7,28 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer
 {
-    class Batalla
+    public class Batalla
     {
         private Dictionary<int, TipoUnidad> tiposUnidades = new Dictionary<int, TipoUnidad>();
         private Dictionary<int, TipoEdificio> tiposEdificios = new Dictionary<int, TipoEdificio>();
         private DataAccessLayer.Relacional.IDALEntidadesRO _dalRO;
         public string canalSignalR { get; set; }
-        public BLTablero tablero;
+        public Tablero tablero;
 
-        void inicializar()
+        public void inicializar()
         {
+            /*_dalRO = new DataAccessLayer.Relacional.DALEntidades();
             tiposUnidades = _dalRO.GetAllTipoUnidades().ToDictionary(x => x.Id);
-            tiposEdificios = _dalRO.GetAllTipoEdificios().ToDictionary(x => x.Id);
+            tiposEdificios = _dalRO.GetAllTipoEdificios().ToDictionary(x => x.Id);*/
         }
+
+        public Batalla(string atacante,string defensor)
+        {
+            inicializar();
+            this.tablero = new Tablero();
+
+        }
+
 
         private void agregarUnidades(Jugador jug)
         {
@@ -31,16 +40,27 @@ namespace BusinessLogicLayer
                 
                 foreach(Unidad u in lst)
                 {
-                    u.id = r.Next(1, Int32.MaxValue);
+                    //u.id = r.Next(1, Int32.MaxValue);
                     u.jugador = jug.Identificador;
                 }
                 tablero.agregarUnidades(jug.Identificador, lst);
             }
         }
 
+        public int agregarUnidad(int idUnidad,String jugador)
+        {
+            Unidad u = getUnidadPorId( idUnidad);
+
+             tablero.agregarUnidad(jugador,u);
+            //return id;
+            return 0;
+        }
+
+        
+
         void crearBatalla(Jugador atacante,Jugador defensor)
         {
-            tablero = new BLTablero(null);
+            tablero = new Tablero();
             agregarUnidades(atacante);
             agregarUnidades(defensor);
             tablero.agregarEdificios(defensor.Edificios);
@@ -48,16 +68,18 @@ namespace BusinessLogicLayer
 
         private Unidad getUnidadPorId(int tipoId)
         {
-            TipoUnidad tu = tiposUnidades[tipoId];
-            Unidad u = new Unidad { ataque = tu.Ataque.Value, defensa = tu.Defensa.Value, tipo_id = tu.Id, vida = tu.Vida.Value };
+            //TipoUnidad tu = tiposUnidades[tipoId];
+
+            //Unidad u = new Unidad { ataque = tu.Ataque.Value, defensa = tu.Defensa.Value, tipo_id = tu.Id, vida = tu.Vida.Value };
+            Unidad u = new Unidad { ataque = 10, defensa = 10, tipo_id = tipoId, vida = 100 };
             u.rango = 8; // hardcodeado;
             return u;
         }
 
         private Edificio getEdificioPorId(int tipoId, int pX, int pY,string j)
         {
-            TipoEdificio te = tiposEdificios[tipoId];
-            Edificio e = new Edificio { tipo_id = te.Id, posX = pX, posY = pY, jugador = j };
+            //TipoEdificio te = tiposEdificios[tipoId];
+            Edificio e = new Edificio { tipo_id = tipoId, posX = pX, posY = pY, jugador = j };
             return e;
         }
     }

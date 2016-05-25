@@ -6,8 +6,12 @@
 
     function ($http,$q,juegoService, edificiosService, unidadesService, $scope, $rootScope) {
 
+
+        var selectedUnit = null;
+
         $rootScope.nombreJuego = "Atlas2";
 
+        $scope.contador = 1;
         
         $scope.posicionarUnidad= function (id) {
             // llama a la funcion iniciarCustomDrag en el CrearCanvas.js
@@ -127,6 +131,9 @@
         var mouse_sprite;
         var buildings;
         var unidades_desplegadas;
+        var unidadesPorId = {}
+
+        var nombreJugador;
 
         var estaEnBatalla = false;
 
@@ -135,7 +142,15 @@
         window.createGame = function (scope, injector) {
             // Create our phaser $scope.game
             $scope.game = new Phaser.Game(anchoJuego, altoJuego, Phaser.AUTO, 'divJuego', { preload: $scope.preload, create: create, update: update });
+            pedirNombre();
         };
+
+        function pedirNombre() {
+            var nombreJugador = window.prompt("Jugador?", "");
+
+        }
+
+        
 
 
         /*function crearInternalMenu() {
@@ -163,13 +178,21 @@
         }
 
         function crearUnidadInmediato(data) {
-            var idSprite = data.Id;
-            var unit = $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
-            unit.height = tile_size;
-            unit.width = tile_size;
-            unit.inputEnabled = true;
-            clickVisibleUnidades(unit, true);
-            unidades_desplegadas.add(unit);
+            if (!unidadesPorId[data.Unit_id]) {
+                var idSprite = data.Id;
+                var unit = $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
+                unit.height = tile_size;
+                unit.width = tile_size;
+                unit.inputEnabled = true;
+                clickVisibleUnidades(unit, true);
+                unit.Unit_id = data.Unit_id;
+                unidades_desplegadas.add(unit);
+                unidadesPorId[unit.Unit_id] = unit;
+                console.log("Unidad agregada desde remoto json:" + data);
+            }
+            else {
+                console.log("Unidad ya estaba json:" + data);
+            }
         }
 
         $scope.cargarDesdeEstado = function () {
@@ -194,10 +217,23 @@
             // Create a function that the hub can call to broadcast messages.
             $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
                 var msjJSON = JSON.parse(message);
+                if (msjJSON.A == "AddEd") {
+                    crearEdificioInmediato(msjJSON);
+                }
+                if (msjJSON.A == "AddUn") {
+                    crearUnidadInmediato(msjJSON);
+                }
+                if (msjJSON.A == "MoveUnit") {
+                    var unit = unidadesPorId[msjJSON.Unit_id];
+                    if (unit) {
+                        moverUnidad(unit, msjJSON.Path);
+                    }
+                    
+                }
                 //$scope.estadoJuego.edificios = msjJSON.edificios;
                 //$scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;
                 $scope.estadoJuego.edificios.push(msjJSON);
-                $scope.cargarDesdeEstado();
+                //$scope.cargarDesdeEstado();
             };
             // Get the user name and store it to prepend to messages.
            // $('#displayname').val(prompt('Enter your name:', ''));
@@ -369,30 +405,11 @@
          {x: 9, y : 9, s: 8}
         ]
 
+        function hacerSeleccionableUnidad(sprite) {
+            sprite.inputEnabled = true;
+            sprite.events.onInputDown.add(function (sprite, pointer) {
 
-        $scope.aceptarPosicionEdificio = function (sprite, pointer) {
-            console.log("aceptarPosicionEdificio");
-            if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
-                var input_x = sprite.x / tile_size;
-                var input_y = sprite.y / tile_size;
-                console.debug(sprite);
-
-                sprite.input.draggable = false;
-                buildings.add(sprite);
-                $scope.game.debug.reset();
-                sprite.alpha = 0.8;
-                //sprite.tint = 0xFFFF00;
-                construccion(sprite);
-
-                juegoService.crearEdificioEnTablero(sprite.id, input_x, input_y).then(function () {
-                    // hacer algo
-                });
-            }
-            else {
-                sprite.destroy();
-                $scope.game.debug.reset();
-            }
-            spriteDragged = null;
+            });
         }
 
         $scope.aceptarPosicionEdificio = function (sprite, pointer) {
@@ -409,7 +426,7 @@
                 //sprite.tint = 0xFFFF00;
                 construccion(sprite);
 
-                juegoService.crearEdificioEnTablero(sprite.id, input_x, input_y).then(function () {
+                juegoService.crearEdificioEnTablero(sprite.id, input_x, input_y,nombreJugador).then(function () {
                     // hacer algo
                 });
             }
@@ -424,15 +441,21 @@
         $scope.aceptarPosicionUnidad = function (sprite, pointer) {
             console.log("aceptarPosicionUnidad");
             if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
-                var input_x = sprite.worldX / tile_size;
-                var input_y = sprite.worldY / tile_size;
+                var input_x = sprite.x / tile_size;
+                var input_y = sprite.y / tile_size;
                 sprite.input.draggable = false;
                 unidades_desplegadas.add(sprite);
                 $scope.game.debug.reset();
                 sprite.alpha = 1.0;
                 sprite.tint = 0xFFFFFF;
-                juegoService.crearEdificioEnTablero(sprite.id, input_x, input_y).then(function () {
-                    //hacer algo
+                hacerSeleccionableUnidad(sprite);
+                sprite.unit_id = nombreJugador + "#" + $scope.contador;
+                unidadesPorId[sprite.unit_id] = sprite;
+                //sprite.id_logico = $scope.contador--; // asigno un id automatico que luego cambio}
+                juegoService.posicionarUnidad(sprite.id, sprite.unit_id, input_x, input_y,nombreJugador).then(function (data) {
+                    //sprite.id_logico = data.data.ret;
+                    //unidadesPorId[sprite.id_logico] = sprite;
+                    
                 });
             }
             else {
