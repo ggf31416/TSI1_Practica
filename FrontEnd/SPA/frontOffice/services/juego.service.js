@@ -5,18 +5,24 @@
     function juegoService($http, $q) {
         //var jugador = "jugador1";
 
-        this.crearEdificioEnTablero = function (id, input_x, input_y,jugador) {
-            return $http.post("Tablero/JugarUnidad", JSON.stringify({ "Id": id, "PosX": input_x, "PosY": input_y }));
-            //return $http.post("Tablero/Accion", JSON.stringify({ "A": "AddEdificio", "J": jugador , "Id": id, "PosX": input_x, "PosY": input_y}));
-        }
-
-        this.posicionarUnidad = function (idTipo, idUnidad,input_x, input_y,jugador){
+        function postAccion(json) {
             return $http({
                 method: 'POST',
                 dataType: 'text',
                 url: "Tablero/Accion",
-                data: { data:  JSON.stringify({ "A": "AddUnidad", "J": jugador, "Id": idTipo, "IdUn": idUnidad, "PosX": input_x, "PosY": input_y }) }
+                data: { data: JSON.stringify(json) }
             });
+        }
+
+        this.crearEdificioEnTablero = function (id, input_x, input_y,jugador) {
+            //return $http.post("Tablero/JugarUnidad", JSON.stringify({ "Id": id, "PosX": input_x, "PosY": input_y }));
+            return postAccion({ "A": "AddEd", "J": jugador, "Id": id, "PosX": input_x, "PosY": input_y });
+        }
+
+
+
+        this.posicionarUnidad = function (idTipo, idUnidad,input_x, input_y,jugador){
+            return postAccion({ "A": "AddUnidad", "J": jugador, "Id": idTipo, "IdUn": idUnidad, "PosX": input_x, "PosY": input_y });
         }
 
         this.moverUnidad = function (id, input_x, input_y,jugador){

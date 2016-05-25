@@ -169,7 +169,7 @@
 
         function crearEdificioInmediato(data) {
             var idSprite =  data.Id;
-            var edificio = $scope.game.add.sprite(data.PosX * tile_size, data.PosY * tile_size, idSprite);
+            var edificio = $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
             edificio.height = tile_size;
             edificio.width = tile_size;
             edificio.inputEnabled = true;
@@ -181,8 +181,8 @@
             if (!unidadesPorId[data.Unit_id]) {
                 var idSprite = data.Id;
                 var unit = $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
-                unit.height = tile_size;
-                unit.width = tile_size;
+                unit.height = unit_size;
+                unit.width = unit_size;
                 unit.inputEnabled = true;
                 clickVisibleUnidades(unit, true);
                 unit.Unit_id = data.Unit_id;

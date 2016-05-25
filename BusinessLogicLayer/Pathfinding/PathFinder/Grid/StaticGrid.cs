@@ -51,6 +51,12 @@ namespace EpPathFinding
 
         private Node[][] m_nodes;
 
+        public List<Node> buscarUnwalkables()
+        {
+            return this.m_nodes.SelectMany(n => n).Where(n => n.walkable == false).
+                OrderBy(n => n.x).OrderBy(n => n.y).ToList();
+        }
+
         public StaticGrid(int iWidth, int iHeight, bool[][] iMatrix = null):base()
         {
             width = iWidth;

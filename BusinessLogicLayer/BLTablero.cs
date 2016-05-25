@@ -36,14 +36,20 @@ namespace BusinessLogicLayer
             }
         }
 
+        public void agregarEdificio(AccionMsg msg)
+        {
+            BLServiceClient serviceClient = new BLServiceClient();
+            ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
+            Batalla b = obtenerBatalla(msg.Jugador);
+            b.tablero.agregarEdificio(new Edificio { tipo_id = msg.Id, jugador = msg.Jugador, posX = msg.PosX, posY = msg.PosY });
+            AccionMsg msgSend = new AccionMsg { Accion = "AddEd", Id = msg.Id, PosX = msg.PosX, PosY =msg.PosY };
+            client.Send(JsonConvert.SerializeObject(msgSend));
+
+        }
+
         // es jugarEdificio
         public void JugarUnidad(Shared.Entities.InfoCelda infoCelda)
         {  //_dal.JugarUnidad(infoCelda);
-
-            BLServiceClient serviceClient = new BLServiceClient();
-            ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
-            string jugador = "jugador1"; // TODO: DESHARCODEAR
-
 
             //client.Send("{\"Id\":" + infoCelda.Id + ",\"PosX\":" + infoCelda.PosX + ",\"PosY\":" + infoCelda.PosY + "}");
         }
@@ -52,7 +58,7 @@ namespace BusinessLogicLayer
         {
             /* 
              * propertyName es el nombre de la propiedad en el JSON
-             * si no se tiene la propiedad el valor es null
+             * si no se me pasa la propiedad el valor es null o default(tipo) si no es nullable
              * 
              */
 
@@ -74,7 +80,6 @@ namespace BusinessLogicLayer
             [JsonProperty(propertyName: "PosY")]
             public int PosY { get; set; }
 
-
         }
 
         private void agregarUnidad(string jugador, int tipo_id, string unit_id, int posX, int posY)
@@ -82,11 +87,7 @@ namespace BusinessLogicLayer
 
             BLServiceClient serviceClient = new BLServiceClient();
             ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
-            if (!batallas.ContainsKey(jugador))
-            {
-                batallas.Add(jugador, new Batalla(jugador, ""));
-            }
-            Batalla b = batallas[jugador];
+            Batalla b = obtenerBatalla(jugador);
             b.agregarUnidad(tipo_id, jugador, unit_id, posX, posY);
 
 
@@ -98,6 +99,16 @@ namespace BusinessLogicLayer
             dynamic jsonObj2 = new { A = "MoveUnit", Id = tipo_id, Unit_id = unit_id, PosX = posX, PosY = posY, Path = path.path };
             string s2 = JsonConvert.SerializeObject(jsonObj2);
             client.Send(s2);
+        }
+
+        private Batalla obtenerBatalla(string jugador)
+        {
+            if (!batallas.ContainsKey(jugador))
+            {
+                batallas.Add(jugador, new Batalla(jugador, ""));
+            }
+            Batalla b = batallas[jugador];
+            return b;
         }
 
         public void Accion(string json)
@@ -113,6 +124,10 @@ namespace BusinessLogicLayer
                 int posX = (int)Math.Round((double)obj.PosX);
                 int posY = (int)Math.Round((double)obj.PosY);
                 agregarUnidad(obj.Jugador, tipoId, obj.IdUnidad, posX, posY);
+            }
+            else if (accion.Equals("AddEd"))
+            {
+                agregarEdificio(obj);
             }
         }
 

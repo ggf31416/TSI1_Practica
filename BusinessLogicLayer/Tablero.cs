@@ -33,11 +33,20 @@ namespace BusinessLogicLayer
             param = configurar();
         }
 
-        // agregar parametros
+        // agregar edificios masivo
+        public void agregarEdificios(IEnumerable<Edificio> lst)
+        {
+            edificios.AddRange(lst);
+
+        }
+
+        // agrega edificio (que ya debe tener posicion) y actualiza la grilla
         public void agregarEdificio(Edificio ed)
         {
             edificios.Add(ed);
-            param = configurar();
+            walkableFalse(ed);
+            
+           
         }
         
 
@@ -62,14 +71,14 @@ namespace BusinessLogicLayer
             {
                 unidadesPorJugador.Add(jugador, new List<Unidad>());
             }
+
             unidadesPorJugador[jugador].AddRange(unidades);
 
         }
 
-        public void agregarEdificios(IEnumerable<Edificio> lst)
-        {
-            edificios.AddRange(lst);
-        }
+        
+
+        
 
   
      
@@ -101,22 +110,38 @@ namespace BusinessLogicLayer
 
         }
 
+        void walkableFalse(Edificio e)
+        {
+            for (int i = 0; i < e.sizeX; i++)
+            {
+                for (int j = 0; j < e.sizeY; j++)
+                {
+                   this.param.SearchGrid.SetWalkableAt(e.posX + i,e.posY + j, false);
+                }
+            }
+        }
+
         JumpPointParam parametrosBusqueda(BaseGrid grilla)
         {
             bool cruzarJuntoObstaculo = false;
             bool cruzarPorDiagonal = false;
             HeuristicMode heuristica_distancia = HeuristicMode.MIXTA15; // Diagonales valen 1.5
-            JumpPointParam param = new JumpPointParam(grilla, new GridPos(0, 0), new GridPos(0, 0), true, cruzarJuntoObstaculo, cruzarPorDiagonal, heuristica_distancia);
+            JumpPointParam param = new JumpPointParam(grilla, new GridPos(0, 0), new GridPos(0, 1), true, cruzarJuntoObstaculo, cruzarPorDiagonal, heuristica_distancia);
             return param;
         }
 
-        public List<GridPos> buscarPath(Unidad u, JumpPointParam param, GridPos dest)
+        public List<GridPos> buscarPath(Unidad u, GridPos dest)
         {
-            param.StartNode.x = u.posX;
-            param.StartNode.y = u.posY;
-            param.EndNode.x = dest.x;
-            param.EndNode.y = dest.y;
+            GridPos start = new GridPos(u.posX, u.posY);
+            this.param = new JumpPointParam(param.SearchGrid, start, dest, param.AllowEndNodeUnWalkable, param.CrossCorner, param.CrossAdjacentPoint, HeuristicMode.MIXTA15);
             List<GridPos> res = JumpPointFinder.FindPath(param);
+            List<Node> nodosUnwalk = ((StaticGrid)this.param.SearchGrid).buscarUnwalkables();
+            if (!param.SearchGrid.IsWalkableAt(dest.x, dest.y))
+            {
+                Console.WriteLine("Is walkable at " + dest.x + "," + dest.y + "? : " + false);
+            }
+
+            param.SearchGrid.Reset();
             return res;
         }
 
@@ -211,15 +236,15 @@ namespace BusinessLogicLayer
             foreach (var u in unidades)
             {
                 GridPos pos = buscarMasCercano(u);
-                var r = buscar(u, pos, param);
+                var r = buscar(u, pos);
                 res.Add(r);
             }
             return res.ToArray();
         }
 
-        public ResultadoBusqPath buscar(Unidad u, GridPos destino, JumpPointParam param)
+        public ResultadoBusqPath buscar(Unidad u, GridPos destino)
         {
-            var r_path = buscarPath(u, param, destino);
+            var r_path = buscarPath(u,  destino);
             var r = new ResultadoBusqPath() { id_unidad = u.id, path = r_path.ToArray() };
             return r;
         }
@@ -260,7 +285,7 @@ namespace BusinessLogicLayer
         {
             GridPos d = new GridPos(destinoX, destinoY);
             Unidad u = unidades[unidadId];
-            return buscar(u, d, this.param);
+            return buscar(u, d);
         }
     }
 }
