@@ -146,7 +146,7 @@
         };
 
         function pedirNombre() {
-            var nombreJugador = window.prompt("Jugador?", "");
+            nombreJugador = window.prompt("Jugador?", "");
 
         }
 
@@ -415,8 +415,8 @@
         $scope.aceptarPosicionEdificio = function (sprite, pointer) {
             console.log("aceptarPosicionEdificio");
             if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
-                var input_x = sprite.x / tile_size;
-                var input_y = sprite.y / tile_size;
+                var input_x = sprite.x / unit_size;
+                var input_y = sprite.y / unit_size;
                 console.debug(sprite);
 
                 sprite.input.draggable = false;
@@ -441,15 +441,15 @@
         $scope.aceptarPosicionUnidad = function (sprite, pointer) {
             console.log("aceptarPosicionUnidad");
             if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
-                var input_x = sprite.x / tile_size;
-                var input_y = sprite.y / tile_size;
+                var input_x = sprite.x / unit_size;
+                var input_y = sprite.y / unit_size;
                 sprite.input.draggable = false;
                 unidades_desplegadas.add(sprite);
                 $scope.game.debug.reset();
                 sprite.alpha = 1.0;
                 sprite.tint = 0xFFFFFF;
                 hacerSeleccionableUnidad(sprite);
-                sprite.unit_id = nombreJugador + "#" + $scope.contador;
+                sprite.unit_id = nombreJugador + "#" + $scope.contador++;
                 unidadesPorId[sprite.unit_id] = sprite;
                 //sprite.id_logico = $scope.contador--; // asigno un id automatico que luego cambio}
                 juegoService.posicionarUnidad(sprite.id, sprite.unit_id, input_x, input_y,nombreJugador).then(function (data) {
@@ -469,8 +469,8 @@
             var tweenAnterior = null;
             var primerTween = null;
             for (var i in paths) {
-
-                var tween = $scope.game.add.tween(a).to({ x: paths[i].x * unit_size, y: paths[i].y * unit_size }, paths[i].s * 1000, Phaser.Easing.Linear.None, false);
+                var tiempo = 1000; // paths[i].s * 1000;
+                var tween = $scope.game.add.tween(sprite).to({ x: paths[i].x * unit_size, y: paths[i].y * unit_size }, tiempo , Phaser.Easing.Linear.None, false);
                 if (tweenAnterior) {
                     tweenAnterior.chain(tween)
                 }
@@ -483,7 +483,7 @@
             //spriteDragged.body.velocity.x = 1;
             //spriteDragged.body.velocity.y = 1;
             primerTween.start();
-            $scope.animaciones.push(primerTween);
+            $scope.animaciones[sprite.Unit_id] = primerTween;
         }
 
         function onDragUpdateBuild(sprite, pointer) {

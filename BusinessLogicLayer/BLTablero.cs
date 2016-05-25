@@ -48,17 +48,49 @@ namespace BusinessLogicLayer
             //client.Send("{\"Id\":" + infoCelda.Id + ",\"PosX\":" + infoCelda.PosX + ",\"PosY\":" + infoCelda.PosY + "}");
         }
 
+        public class AccionMsg
+        {
+            /* 
+             * propertyName es el nombre de la propiedad en el JSON
+             * si no se tiene la propiedad el valor es null
+             * 
+             */
 
-        private void agregarUnidad(string jugador,int tipo_id,string unit_id,int posX,int posY)
+            [JsonProperty(propertyName: "A")]
+            public string Accion { get; set; }
+
+            [JsonProperty(propertyName: "J")]
+            public string Jugador { get; set; }
+
+            [JsonProperty(propertyName: "Id")]
+            public int Id { get; set; }
+
+            [JsonProperty(propertyName: "IdUn")]
+            public string IdUnidad { get; set; }
+
+            [JsonProperty(propertyName: "PosX")]
+            public int PosX { get; set; }
+
+            [JsonProperty(propertyName: "PosY")]
+            public int PosY { get; set; }
+
+
+        }
+
+        private void agregarUnidad(string jugador, int tipo_id, string unit_id, int posX, int posY)
         {
 
             BLServiceClient serviceClient = new BLServiceClient();
             ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
+            if (!batallas.ContainsKey(jugador))
+            {
+                batallas.Add(jugador, new Batalla(jugador, ""));
+            }
             Batalla b = batallas[jugador];
-             b.agregarUnidad(tipo_id, jugador);
+            b.agregarUnidad(tipo_id, jugador, unit_id, posX, posY);
 
 
-            dynamic jsonObj = new { A = "AddUn", Id = tipo_id, PosX = posX, PosY = posY,Unit_id = unit_id };
+            dynamic jsonObj = new { A = "AddUn", Id = tipo_id, PosX = posX, PosY = posY, Unit_id = unit_id };
             string s = JsonConvert.SerializeObject(jsonObj);
             client.Send(s);
 
@@ -70,12 +102,17 @@ namespace BusinessLogicLayer
 
         public void Accion(string json)
         {
-            dynamic obj = JsonConvert.DeserializeObject(json);
-            string jugador = obj.J;
-            string accion = obj.A;
+            var obj = JsonConvert.DeserializeObject<AccionMsg>(json);
+            string accion = obj.Accion;
+
             if (accion.Equals("AddUnidad"))
             {
+                //string nombreTipo = "Tipo: " + (obj.Id.GetType().FullName);
 
+                int tipoId = (int)obj.Id; ;
+                int posX = (int)Math.Round((double)obj.PosX);
+                int posY = (int)Math.Round((double)obj.PosY);
+                agregarUnidad(obj.Jugador, tipoId, obj.IdUnidad, posX, posY);
             }
         }
 

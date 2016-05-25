@@ -14,12 +14,12 @@ namespace FrontEnd.Controllers
     {
 
         [HttpPost]
-        public ActionResult Accion(string json)
+        public ActionResult Accion(string data)
         {
             try
             {
                 ServiceTableroClient client = new ServiceTableroClient();
-                client.Accion(json);
+                client.Accion(data);
                 return Json(new { sucess = true });
             }
             catch (Exception e)

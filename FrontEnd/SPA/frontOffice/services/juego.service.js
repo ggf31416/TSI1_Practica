@@ -15,7 +15,7 @@
                 method: 'POST',
                 dataType: 'text',
                 url: "Tablero/Accion",
-                data: { "A": "AddUnidad", "J": jugador, "Id": idTipo, "IdUn": idUnidad, "PosX": input_x, "PosY": input_y }
+                data: { data:  JSON.stringify({ "A": "AddUnidad", "J": jugador, "Id": idTipo, "IdUn": idUnidad, "PosX": input_x, "PosY": input_y }) }
             });
         }
 

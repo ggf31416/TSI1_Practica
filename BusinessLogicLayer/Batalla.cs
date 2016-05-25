@@ -47,10 +47,12 @@ namespace BusinessLogicLayer
             }
         }
 
-        public int agregarUnidad(int idUnidad,String jugador)
+        public int agregarUnidad(int idUnidad,String jugador,string unitId,int posX,int posY)
         {
             Unidad u = getUnidadPorId( idUnidad);
-
+            u.id = unitId;
+            u.posX = posX;
+            u.posY = posY;
              tablero.agregarUnidad(jugador,u);
             //return id;
             return 0;
