@@ -138,6 +138,7 @@
     <Compile Include="Pathfinding\PathFinder\Heuristic.cs" />
     <Compile Include="Pathfinding\PathFinder\JumpPointFinder.cs" />
     <Compile Include="Pathfinding\PathFinder\NodePool.cs" />
+    <Compile Include="Planificador.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceInteraccion.cs" />
     <Compile Include="Tablero.cs" />

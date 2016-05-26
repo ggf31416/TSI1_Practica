@@ -16,7 +16,10 @@ namespace ServiceLayer
         static void Main(string[] args)
         {
             SetupDependencies();
+            BusinessLogicLayer.Planificador.getInstancia().iniciar();
             SetupService();
+           
+
         }
 
         private static void SetupDependencies()
@@ -46,6 +49,10 @@ namespace ServiceLayer
                 Console.Write("An exception ocurred: ", ce.ToString());
                 Console.ReadLine();
                 selfHost.Abort();
+            }
+            finally
+            {
+                BusinessLogicLayer.Planificador.getInstancia().finalizar();
             }
         }
     }
