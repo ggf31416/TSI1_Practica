@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\InfoCelda.cs" />
+    <Compile Include="Entities\Juego.cs" />
     <Compile Include="Entities\Prueba.cs" />
     <Compile Include="Entities\TipoEdificio.cs" />
     <Compile Include="Entities\TipoEntidad.cs" />

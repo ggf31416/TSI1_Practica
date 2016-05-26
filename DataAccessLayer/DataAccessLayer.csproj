@@ -80,6 +80,8 @@
     <Compile Include="Entities\Estadisticas.cs" />
     <Compile Include="Entities\InfoCelda.cs" />
     <Compile Include="Entities\Prueba.cs" />
+    <Compile Include="Entities\TableroConstruccion.cs" />
+    <Compile Include="Exceptions\DALConstruccionException.cs" />
     <Compile Include="IDALTablero.cs" />
     <Compile Include="IDALConstruccion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

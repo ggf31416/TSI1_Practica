@@ -10,7 +10,9 @@ namespace DataAccessLayer.Entities
     public class InfoCelda
     {
         public int Id { get; set; }
-        public Nullable<int> PosX { get; set; }
-        public Nullable<int> PosY { get; set; }
+        public int PosX { get; set; }
+        public int PosY { get; set; }
+        public DateTime FechaCreacion { get; set; }
+        public bool terminado { get; set; }
     }
 }
