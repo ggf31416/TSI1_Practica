@@ -24,6 +24,14 @@ namespace BusinessLogicLayer
         }
 
 
+        public void ejecutarBatallasEnCurso()
+        {
+            foreach(Batalla b in batallas.Values)
+            {
+                b.ejecutarTurno();
+            }
+        }
+
         public Dictionary<string, Batalla> batallas = new Dictionary<string, Batalla>();
 
         private void crearBatalla(string jugador)
@@ -133,18 +141,6 @@ namespace BusinessLogicLayer
 
 
 
-        //public double CalcPartTimeEmployeeSalary(int idEmployee, int hours)
-        //{
-        //    //throw new NotImplementedException();
-        //    Shared.Entities.Employee emp = GetEmployee(idEmployee);
-        //    if(emp == null || (emp.GetType() == typeof(Shared.Entities.FullTimeEmployee)))
-        //    {
-        //        throw new Exception("Empleado no es Part time o no existe");
-        //    }
-        //    else
-        //    {
-        //        return hours * ((Shared.Entities.PartTimeEmployee)emp).HourlyRate;
-        //    }
-        //}
+
     }
 }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using ServiceStack.Redis;
 using Microsoft.AspNet.SignalR.Client.Hubs;
 using System.ServiceModel;
+using System.Diagnostics;
 
 namespace BusinessLogicLayer
 {
@@ -21,16 +22,23 @@ namespace BusinessLogicLayer
         private string jugadorDefensor;
         private Dictionary<String, List<Unidad>> unidadesPorJugador = new Dictionary<string, List<Unidad>>();
         private Dictionary<string, Unidad> unidades = new Dictionary<string, Unidad>();
+        private Dictionary<string, ResultadoBusqPath> paths = new Dictionary<string, ResultadoBusqPath>();
         private static int edificio_size = 4;
         private static int tablero_size = 10;
         private int sizeX = tablero_size * edificio_size;
         private int sizeY = tablero_size * edificio_size;
         private float velocidad = 5;
         JumpPointParam param = null;
+        private Stopwatch sw;
+        private long nanosPrevio;
+
+        private int turno = 0;
 
         public Tablero()
         {
             param = configurar();
+            sw = Stopwatch.StartNew();
+            nanosPrevio = sw.ElapsedMilliseconds;
         }
 
         // agregar edificios masivo
@@ -101,7 +109,7 @@ namespace BusinessLogicLayer
                 {
                     for (int j = 0; j < e.sizeY; j++)
                     {
-                        matrix[e.posX + i][e.posY + j] = false;
+                        matrix[e.posXr + i][e.posYr + j] = false;
                     }
                 }
             }
@@ -116,7 +124,7 @@ namespace BusinessLogicLayer
             {
                 for (int j = 0; j < e.sizeY; j++)
                 {
-                   this.param.SearchGrid.SetWalkableAt(e.posX + i,e.posY + j, false);
+                   this.param.SearchGrid.SetWalkableAt(e.posXr + i,e.posYr + j, false);
                 }
             }
         }
@@ -132,7 +140,7 @@ namespace BusinessLogicLayer
 
         public List<GridPos> buscarPath(Unidad u, GridPos dest)
         {
-            GridPos start = new GridPos(u.posX, u.posY);
+            GridPos start = new GridPos((int)Math.Round(u.posX), (int)Math.Round(u.posY));
             this.param = new JumpPointParam(param.SearchGrid, start, dest, param.AllowEndNodeUnWalkable, param.CrossCorner, param.CrossAdjacentPoint, HeuristicMode.MIXTA15);
             List<GridPos> res = JumpPointFinder.FindPath(param);
             List<Node> nodosUnwalk = ((StaticGrid)this.param.SearchGrid).buscarUnwalkables();
@@ -147,20 +155,25 @@ namespace BusinessLogicLayer
 
         public class ResultadoBusqPath
         {
-            public string id_unidad { get; set; }
+            //public string id_unidad { get; set; }
             public GridPos[] path { get; set; }
-
+            public int idxActual = 0;
 
         }
 
-        private int euclides2(int dx, int dy)
+        private float euclides2(float dx, float dy)
         {
             return dx * dx + dy * dy;
         }
 
+        private double euclides(float dx, float dy)
+        {
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
         public Unidad buscarEnemigoMasCercano(Unidad u)
         {
-            int distancia = 0;
+            double  distancia = 0;
             Unidad nearest = null;
             foreach (String j in this.unidadesPorJugador.Keys)
             {
@@ -169,7 +182,7 @@ namespace BusinessLogicLayer
                     var enemigos = this.unidadesPorJugador[j];
                     foreach (Unidad e in enemigos)
                     {
-                        int d = euclides2(u.posX - e.posX, u.posY - e.posY);
+                        double d = euclides2(u.posX - e.posX, u.posY - e.posY);
                         if (d < distancia)
                         {
                             d = distancia;
@@ -185,7 +198,7 @@ namespace BusinessLogicLayer
 
         public Edificio buscarEdificioEnemigoMasCercano(Unidad u)
         {
-            int distancia = 0;
+            float distancia = 0;
             Edificio nearest = null;
             if (!u.jugador.Equals(jugadorDefensor))
             {
@@ -193,7 +206,7 @@ namespace BusinessLogicLayer
                 {
                     if (!ed.jugador.Equals(u.jugador))
                     {
-                        int d = euclides2(u.posX - ed.posX, u.posY - ed.posY);
+                        float d = euclides2(u.posX - ed.posX, u.posY - ed.posY);
                         if (d < distancia)
                         {
                             d = distancia;
@@ -214,16 +227,21 @@ namespace BusinessLogicLayer
                 Edificio e = buscarEdificioEnemigoMasCercano(u);
                 if (e != null)
                 {
-                    return new GridPos(e.posX, e.posY);
+                    return pos(e);
                 }
                 else
                 {
-                    return new GridPos(u.posX, u.posY);
+                    return pos(u);
                 }
             }
-            return new GridPos(near_u.posX, near_u.posY);
+            return pos(near_u);
         }
 
+
+        GridPos pos(Entidad u)
+        {
+            return new GridPos(u.posXr, u.posYr);
+        }
 
 
         public ResultadoBusqPath[] buscarRutaHaciaEnemigosCercanos()
@@ -245,7 +263,8 @@ namespace BusinessLogicLayer
         public ResultadoBusqPath buscar(Unidad u, GridPos destino)
         {
             var r_path = buscarPath(u,  destino);
-            var r = new ResultadoBusqPath() { id_unidad = u.id, path = r_path.ToArray() };
+            var r = new ResultadoBusqPath() { path = r_path.ToArray() };
+            paths.Add(u.id, r);
             return r;
         }
 
@@ -256,12 +275,12 @@ namespace BusinessLogicLayer
             return param;
         }
 
-        void atacarUnidad(Unidad ataq, Unidad def)
+        void atacarEntidad(Entidad ataq, Entidad def,long deltaT)
         {
-            if (ataq.distancia(def) < ataq.rango)
+            if (ataq.enRango(def))
             {
-                float daño = 10.0f * ataq.ataque / def.defensa;
-                ataq.vida -= daño;
+                float daño = (deltaT / 1000.0f) * 10 *  ataq.ataque / (float)def.defensa;
+                def.vida -= daño;
                 if (ataq.vida < 0) { matar(def); }
             }
         }
@@ -271,14 +290,68 @@ namespace BusinessLogicLayer
             return JsonConvert.SerializeObject(this);
         }
 
-        private void matar(Unidad def)
+        private void matar(Entidad def)
         {
-            unidadesPorJugador[def.jugador].Remove(def);
+            unidades.Remove(def.id);
+            if (def is Unidad)
+            {
+                unidadesPorJugador[def.jugador].Remove((Unidad)def);
+            }
+        }
+        
+
+        public void tickTiempo()
+        {
+            //ResultadoBusqPath[] res = buscarRutaHaciaEnemigosCercanos();
+            // mover unidades
+            long deltaT = sw.ElapsedMilliseconds - nanosPrevio;
+            nanosPrevio += deltaT;
+
+            foreach (var p in paths)
+            {
+                Unidad u = unidades[p.Key];
+                // actualizo las posiciones de las unidades en funcion de sus movientos
+                if (u.target != null)
+                {
+                    simularMovimiento(deltaT, p);
+                }
+                // ya mandamos los paths, no es necesario mandar los valores de x,y actuales
+                if (turno % 5 == 0)
+                {
+                    // buscar target mas cercano
+                }
+                
+                if (u.target != null) {
+                    Entidad target = unidades[u.target];
+                    atacarEntidad(u, target, deltaT);
+                }
+
+
+            }
+
+
+
         }
 
-        void tickTiempo()
+        private void simularMovimiento(long deltaT, KeyValuePair<string, ResultadoBusqPath> p)
         {
-            ResultadoBusqPath[] res = buscarRutaHaciaEnemigosCercanos();
+            GridPos[] path = p.Value.path;
+            int idx = p.Value.idxActual;
+            double t_restante = deltaT;
+            Unidad u = unidades[p.Key];
+            while (t_restante > 0 && p.Value.idxActual < path.Length)
+            {
+
+                GridPos prox = path[idx];
+                float dif_x = prox.x - u.posX;
+                float dif_y = prox.x - u.posY;
+                double prox_dist = euclides(dif_x, dif_y);
+                double prox_eta = prox_dist / u.velocidad;
+                float avance = (float)Math.Min(t_restante / prox_eta, 1);
+                u.posX += avance * dif_x;
+                u.posY += avance * dif_y;
+                t_restante -= prox_eta;
+            }
         }
 
         public ResultadoBusqPath ordenMoverUnidad(string unidadId, int destinoX, int destinoY)

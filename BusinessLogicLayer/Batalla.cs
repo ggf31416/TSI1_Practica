@@ -84,6 +84,11 @@ namespace BusinessLogicLayer
             Edificio e = new Edificio { tipo_id = tipoId, posX = pX, posY = pY, jugador = j };
             return e;
         }
+
+        public void ejecutarTurno()
+        {
+            tablero.tickTiempo();
+        }
     }
 }
 

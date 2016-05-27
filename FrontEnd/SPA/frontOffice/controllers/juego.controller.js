@@ -35,57 +35,7 @@
             window.createGame();
         });
 
-        /*[
-            {
-                Nombre: "Cuartel",
-                Imagen: "/SPA/backOffice/cuartel.jpg",
-                Vida: 500,
-                Ataque: 12,
-                Defensa: 30,
-                TiempoConstruccion: "20/s"
-            },
-            {
-                Nombre: "Granja",
-                Imagen: "/SPA/backOffice/granja.jpg",
-                Vida: 450,
-                Ataque: 0,
-                Defensa: 10,
-                TiempoConstruccion: "100/s"
-            }
-    ];*/
-
-        /*unidadesService.getAllTipoUnidades().
-            then(function (data) {
-                $rootScope.listaUnidades = data;
-                console.log("Lista unidades:")
-                console.log(data)
-            })
-            .catch(function(err) {
-                alert(err);
-            })
-        */
-
-        
-
-        
-        /*[
-                {
-                    Nombre: "Soldado",
-                    Imagen: "/SPA/backOffice/soldado.jpg",
-                    Vida: 500,
-                    Ataque: 12,
-                    Defensa: 30,
-                    TiempoConstruccion: "20/s"
-                },
-                {
-                    Nombre: "Arquero",
-                    Imagen: "/SPA/backOffice/arquero.jpg",
-                    Vida: 450,
-                    Ataque: 0,
-                    Defensa: 10,
-                    TiempoConstruccion: "100/s"
-                }
-        ];*/
+     
 
         $rootScope.listaRecursos = [
                 {
@@ -216,20 +166,31 @@
             $scope.tablero_signalR = $.connection.chatHub;
             // Create a function that the hub can call to broadcast messages.
             $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
-                var msjJSON = JSON.parse(message);
-                if (msjJSON.A == "AddEd") {
-                    crearEdificioInmediato(msjJSON);
+                var msg = JSON.parse(message);
+                if (msg.A == "AddEd") {
+                    crearEdificioInmediato(msg);
                 }
-                if (msjJSON.A == "AddUn") {
-                    crearUnidadInmediato(msjJSON);
+                if (msg.A == "AddUn") {
+                    crearUnidadInmediato(msg);
                 }
-                if (msjJSON.A == "MoveUnit") {
-                    var unit = unidadesPorId[msjJSON.Unit_id];
+                if (msg.A == "MoveUnit") {
+                    var unit = unidadesPorId[msg.Unit_id];
                     if (unit) {
-                        moverUnidad(unit, msjJSON.Path);
+                        moverUnidad(unit, msg.Path);
                     }
-                    
                 }
+                if (msg.A == "TargetUnit") {
+                    var unit = unidadesPorId[msg.Unit_id];
+                    if (unit) {
+                        unit.target = msg.Target;
+                    }
+                }
+                if (msg.A == "UpdateHP") {
+                    var unit = unidadesPorId[msg.Unit_id];
+                    // setear vida
+                }
+
+
                 //$scope.estadoJuego.edificios = msjJSON.edificios;
                 //$scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;
                 $scope.estadoJuego.edificios.push(msjJSON);
@@ -265,6 +226,7 @@
             $scope.game.load.image('grass', '/Content/img/grass.jpg');
             $scope.game.load.image('cuartel', '/Content/img/Barracks4.png');
             $scope.game.load.image('cuartelMenu', '/Content/img/cuartel.jpg');
+            $scope.game.load.image('default_proyectil', '/Content/img/Crystal_Arrow.gif');
 
             
             $scope.listaEdificios.forEach(function (e) {
@@ -321,6 +283,8 @@
             unidades_desplegadas = $scope.game.add.physicsGroup();
 
             cursors = $scope.game.input.keyboard.createCursorKeys();
+
+            proyectiles = $scope.game.add.physicsGroup();
             //crearInternalMenu();
 
             var phaserJSON = $scope.game.cache.getJSON('jsonEdificios');
@@ -573,6 +537,41 @@
             }
             $scope.game.physics.arcade.collide(unidades_desplegadas, buildings,function(){console.log("Colision")});
 
+        }
+
+
+
+        function disparar(spriteAt, spriteDest) {
+            var proyectil = $scope.game.add.sprite("default_proyectil", spriteAt.x, spriteAt.y);
+            proyectil.targetSprite = spriteDest;
+            //proyectiles.add(proyectil);
+
+            animacionProyectil = $scope.game.add.tween(proyectil);
+            animacionProyectil.to({ x: spriteDest.x, y: spriteDest.y }, 500, 'Linear', true);
+
+            // destruye el proyectil cuando alcanza el objetivo
+            animacionProyectil.onComplete.add(function(sprite, tween) { sprite.destroy(); }, this);
+            
+
+        }
+
+        function detenerMovimiento(sprite) {
+            var tw = $scope.animaciones[sprite.Unit_id];
+            if (tw) {
+                game.tween.remove(tw);
+                delete $scope.animaciones[sprite.Unit_id];
+            }
+        }
+
+        function verificarDistancia(spriteAt,spriteDef) {
+            var distancia = $scope.game.physics.arcade.distanceBetween(spriteAt, spriteDef);
+            if (distancia < spriteAt.stats.rango) {
+                detenerMovimiento();
+            }
+        }
+
+        function animacionAtaque(spriteAtaq) {
+            
         }
 
 
