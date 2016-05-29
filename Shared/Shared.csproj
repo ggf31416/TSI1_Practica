@@ -42,11 +42,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Accion.cs" />
+    <Compile Include="Entities\AccionModificarAtributo.cs" />
+    <Compile Include="Entities\Costo.cs" />
     <Compile Include="Entities\InfoCelda.cs" />
     <Compile Include="Entities\Juego.cs" />
     <Compile Include="Entities\Prueba.cs" />
+    <Compile Include="Entities\Raza.cs" />
+    <Compile Include="Entities\RecursoAsociado.cs" />
+    <Compile Include="Entities\Tablero.cs" />
+    <Compile Include="Entities\TableroCelda.cs" />
+    <Compile Include="Entities\Tecnologia.cs" />
+    <Compile Include="Entities\TecnologiaDependencia.cs" />
+    <Compile Include="Entities\TecnologiaRecursoCosto.cs" />
     <Compile Include="Entities\TipoEdificio.cs" />
     <Compile Include="Entities\TipoEntidad.cs" />
+    <Compile Include="Entities\TipoRecurso.cs" />
     <Compile Include="Entities\TipoUnidad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -8,8 +8,13 @@ using System.Runtime.Serialization;
 namespace Shared.Entities
 {
     [DataContract]
-    public class TipoUnidad : TipoEntidad
+    public class Costo
     {
-        public List<int> TipoEdificios { get; set; }
+        [DataMember]
+        public int IdEntidad { get; set; }
+        [DataMember]
+        public int IdRecurso { get; set; }
+        [DataMember]
+        public int Valor { get; set; }
     }
 }

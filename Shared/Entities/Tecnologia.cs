@@ -8,27 +8,25 @@ using System.Runtime.Serialization;
 namespace Shared.Entities
 {
     [DataContract]
-    [KnownType(typeof(TipoEdificio))]
-    [KnownType(typeof(TipoUnidad))]
-    public abstract class TipoEntidad
+    public class Tecnologia
     {
-        [DataMember]
-        public string Nombre { get; set; }
         [DataMember]
         public int Id { get; set; }
         [DataMember]
-        public Nullable<int> Vida { get; set; }
-        [DataMember]
-        public Nullable<int> Defensa { get; set; }
+        public string Nombre { get; set; }
         [DataMember]
         public string Imagen { get; set; }
         [DataMember]
-        public Nullable<int> Ataque { get; set; }
+        public int Tiempo { get; set; }
         [DataMember]
-        public Nullable<int> TiempoConstruccion { get; set; }
+        public int IdEdificio { get; set; }
         [DataMember]
         public int IdJuego { get; set; }
         [DataMember]
-        public List<Costo> Costos { get; set; }
+        public List<TecnologiaRecursoCosto> TecnologiaRecursoCostos { get; set; }
+        [DataMember]
+        public List<TecnologiaDependencia> TecnologiaDependencias { get; set; }
+        [DataMember]
+        public List<Accion> AccionesAsociadas { get; set; }
     }
 }
