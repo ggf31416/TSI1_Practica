@@ -232,6 +232,8 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference1.cs</LastGenOutput>
     </None>
+    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
+    <Content Include="Scripts\phaser.min.js" />
     <Content Include="SPA\app.js" />
     <Content Include="SPA\backOffice\ImagenesSubidas\arquero.jpg" />
     <Content Include="SPA\backOffice\ImagenesSubidas\Barracks4.png" />
