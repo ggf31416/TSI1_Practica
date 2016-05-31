@@ -253,6 +253,7 @@
     <Content Include="SPA\backOffice\ImagenesSubidas\soldado.jpg" />
     <Content Include="SPA\frontOffice\arquero.jpg" />
     <Content Include="SPA\frontOffice\Asociar.html" />
+    <Content Include="SPA\frontOffice\controllers\aldea.controller.js" />
     <Content Include="SPA\frontOffice\controllers\edificio.controller.js" />
     <Content Include="SPA\frontOffice\controllers\juego.controller.js" />
     <Content Include="SPA\frontOffice\controllers\recurso.controller.js" />
@@ -263,6 +264,7 @@
     <Content Include="SPA\frontOffice\granja.jpg" />
     <Content Include="SPA\frontOffice\models\unidad.js" />
     <Content Include="SPA\frontOffice\modulos.js" />
+    <Content Include="SPA\frontOffice\services\aldeas.service.js" />
     <Content Include="SPA\frontOffice\services\edificios.service.js" />
     <Content Include="SPA\frontOffice\services\juego.service.js" />
     <Content Include="SPA\frontOffice\services\recursos.service.js" />
@@ -333,6 +335,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServiceTablero\ServiceTablero.wsdl" />
+    <Content Include="Views\Home\Aldea.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

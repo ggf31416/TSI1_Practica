@@ -13,5 +13,11 @@ namespace FrontEnd.Controllers
         {
             return View();
         }
+
+        // GET: Aldea
+        public ActionResult Aldea()
+        {
+            return View();
+        }
     }
 }

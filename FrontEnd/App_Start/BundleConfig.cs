@@ -41,6 +41,8 @@ namespace FrontEnd
                         "~/SPA/frontOffice/controllers/edificio.controller.js",
                         "~/SPA/frontOffice/services/unidades.service.js",
                         "~/SPA/frontOffice/controllers/unidad.controller.js",
+                        "~/SPA/frontOffice/services/aldeas.service.js",
+                        "~/SPA/frontOffice/controllers/aldea.controller.js",
                         "~/SPA/app.js"));
         }
     }
