@@ -1,4 +1,7 @@
-﻿(function () {
+/// <reference path="~/SPA/frontOffice/models/unidad.js" />
+
+
+(function () {
     'use strict';
     angular.module('juego').controller("juegoCtrl", ["$http", "$q","juegoService", "edificiosService", "unidadesService",'$scope', '$rootScope',
 
@@ -97,8 +100,8 @@
 
         function pedirNombre() {
             nombreJugador = window.prompt("Jugador?", "");
-
         }
+
 
         
 
@@ -135,9 +138,9 @@
                 unit.width = unit_size;
                 unit.inputEnabled = true;
                 clickVisibleUnidades(unit, true);
-                unit.Unit_id = data.Unit_id;
+                unit.info.unit_id = data.Unit_id;
                 unidades_desplegadas.add(unit);
-                unidadesPorId[unit.Unit_id] = unit;
+                unidadesPorId[unit.info.unit_id] = unit;
                 console.log("Unidad agregada desde remoto json:" + data);
             }
             else {
@@ -161,33 +164,47 @@
             });
         };
 
+        var MsgA = {
+            AddEdificio: "AddEd",
+            AddUnidad: "AddUn",
+            MoveUnit: "MoveUnit",
+            TargetUnit: "TargetUnit",
+            UpdateHP: "UpdateHP"
+        };
+
         $scope.iniciarSignalR = function () {
             // Declare a proxy to reference the hub.
             $scope.tablero_signalR = $.connection.chatHub;
             // Create a function that the hub can call to broadcast messages.
             $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
                 var msg = JSON.parse(message);
-                if (msg.A == "AddEd") {
+                if (msg.A == MsgA.AddEdificio) {
                     crearEdificioInmediato(msg);
                 }
-                if (msg.A == "AddUn") {
+                if (msg.A == MsgA.AddUnidad) {
                     crearUnidadInmediato(msg);
                 }
-                if (msg.A == "MoveUnit") {
+                if (msg.A == MsgA.MoveUnit) {
                     var unit = unidadesPorId[msg.Unit_id];
                     if (unit) {
                         moverUnidad(unit, msg.Path);
                     }
                 }
-                if (msg.A == "TargetUnit") {
+                if (msg.A == MsgA.Target) {
                     var unit = unidadesPorId[msg.Unit_id];
                     if (unit) {
-                        unit.target = msg.Target;
+                        unit.info.target = msg.Target;
                     }
                 }
-                if (msg.A == "UpdateHP") {
+                if (msg.A == MsgA.UpdateHP) {
                     var unit = unidadesPorId[msg.Unit_id];
                     // setear vida
+                    unit.info.hp = msg.VN;
+                    if (msg.VN < 0){
+                        // matar
+                        unit.destroy();
+                    }
+
                 }
 
 
@@ -284,7 +301,7 @@
 
             cursors = $scope.game.input.keyboard.createCursorKeys();
 
-            proyectiles = $scope.game.add.physicsGroup();
+            var proyectiles = $scope.game.add.physicsGroup();
             //crearInternalMenu();
 
             var phaserJSON = $scope.game.cache.getJSON('jsonEdificios');
@@ -413,10 +430,10 @@
                 sprite.alpha = 1.0;
                 sprite.tint = 0xFFFFFF;
                 hacerSeleccionableUnidad(sprite);
-                sprite.unit_id = nombreJugador + "#" + $scope.contador++;
-                unidadesPorId[sprite.unit_id] = sprite;
+                sprite.info.unit_id = nombreJugador + "#" + $scope.contador++;
+                unidadesPorId[sprite.info.unit_id] = sprite;
                 //sprite.id_logico = $scope.contador--; // asigno un id automatico que luego cambio}
-                juegoService.posicionarUnidad(sprite.id, sprite.unit_id, input_x, input_y,nombreJugador).then(function (data) {
+                juegoService.posicionarUnidad(sprite.id, sprite.info.unit_id, input_x, input_y,nombreJugador).then(function (data) {
                     //sprite.id_logico = data.data.ret;
                     //unidadesPorId[sprite.id_logico] = sprite;
                     
@@ -447,7 +464,7 @@
             //spriteDragged.body.velocity.x = 1;
             //spriteDragged.body.velocity.y = 1;
             primerTween.start();
-            $scope.animaciones[sprite.Unit_id] = primerTween;
+            $scope.animaciones[sprite.info.unit_id] = primerTween;
         }
 
         function onDragUpdateBuild(sprite, pointer) {
@@ -556,22 +573,26 @@
         }
 
         function detenerMovimiento(sprite) {
-            var tw = $scope.animaciones[sprite.Unit_id];
+            var tw = $scope.animaciones[sprite.info.unit_id];
             if (tw) {
                 game.tween.remove(tw);
-                delete $scope.animaciones[sprite.Unit_id];
-            }
-        }
-
-        function verificarDistancia(spriteAt,spriteDef) {
-            var distancia = $scope.game.physics.arcade.distanceBetween(spriteAt, spriteDef);
-            if (distancia < spriteAt.stats.rango) {
-                detenerMovimiento();
+                delete $scope.animaciones[sprite.info.unit_id];
             }
         }
 
         function animacionAtaque(spriteAtaq) {
+            var def = unidadesPorId[spriteAtaq.info.target];
+            var distancia = $scope.game.physics.arcade.distanceBetween(spriteAt, def);
+            if (distancia <= spriteAt.info.rango) {
+                detenerMovimiento(spriteAtaq);
+                if (!spriteAtaq.info.prox_ataque || game.time.now() > spriteAtaq.info.prox_ataque){
+                    disparar(spriteAtaq,def);
+                    spriteAtaq.info.prox_ataque = game.time.now() + 500;
+                }
+            }
             
+
+
         }
 
 

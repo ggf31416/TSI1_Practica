@@ -261,6 +261,7 @@
     <Content Include="SPA\frontOffice\cuartel.jpg" />
     <Content Include="SPA\frontOffice\directives\templateGameCanvas.html" />
     <Content Include="SPA\frontOffice\granja.jpg" />
+    <Content Include="SPA\frontOffice\models\unidad.js" />
     <Content Include="SPA\frontOffice\modulos.js" />
     <Content Include="SPA\frontOffice\services\edificios.service.js" />
     <Content Include="SPA\frontOffice\services\juego.service.js" />

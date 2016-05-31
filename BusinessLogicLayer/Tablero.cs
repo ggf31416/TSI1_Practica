@@ -31,6 +31,8 @@ namespace BusinessLogicLayer
         JumpPointParam param = null;
         private Stopwatch sw;
         private long nanosPrevio;
+        private List<AccionMsg> acciones = new List<AccionMsg>();
+
 
         private int turno = 0;
 
@@ -275,14 +277,25 @@ namespace BusinessLogicLayer
             return param;
         }
 
-        void atacarEntidad(Entidad ataq, Entidad def,long deltaT)
+        bool atacarEntidad(Entidad ataq, Entidad def, long deltaT)
         {
             if (ataq.enRango(def))
             {
-                float daño = (deltaT / 1000.0f) * 10 *  ataq.ataque / (float)def.defensa;
+                float daño = (deltaT / 1000.0f) * 10 * ataq.ataque / (float)def.defensa;
                 def.vida -= daño;
-                if (ataq.vida < 0) { matar(def); }
+                if (def.vida < 0) {
+                    matar(def);
+                    def.target = null;
+                }
+                AccionMsg notif = new AccionMsg { Accion = "UpdateHP", IdUnidad = def.id ,ValorN = def.vida};
+                this.acciones.Add(notif);
+                return true;
             }
+            else
+            {
+                return false;
+            }
+        
         }
 
         string generarJson()

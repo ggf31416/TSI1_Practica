@@ -18,6 +18,14 @@ namespace BusinessLogicLayer
         public float posX { get; set; }
         public float posY { get; set; }
 
+        public string target { get; set; } = null;
+
+        public virtual bool isActivo()
+        {
+            return this.vida >= 0;
+        }
+
+
         public float distancia(Entidad otra)
         {
             return (posX - otra.posX) * (posX - otra.posX) + (posY - otra.posY) * (posY - otra.posY);
