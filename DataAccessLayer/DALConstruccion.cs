@@ -13,18 +13,18 @@ using DataAccessLayer.Exceptions;
 
 namespace DataAccessLayer
 {
-    public class DALConstruccionMongo : IDALConstruccion
+    public class DALConstruccion : IDALConstruccion
     {
         const string connectionstring = "mongodb://40.84.2.155";
         private static IMongoClient client = new MongoClient(connectionstring);
         private IMongoDatabase database;
         private IMongoCollection<TableroConstruccion> collection;
-        private string juego;
+        private int idJuego;
 
-        public DALConstruccionMongo(string juego)
+        public DALConstruccion(int idJuego)
         {
-            this.juego = juego;
-            database = client.GetDatabase(juego);
+            this.idJuego = idJuego;
+            database = client.GetDatabase(idJuego.ToString());
             collection = database.GetCollection<TableroConstruccion>("construccion");
         }
 
@@ -103,9 +103,19 @@ namespace DataAccessLayer
                 if (!infoCelda.terminado)
                 {
                     int segundosConstruyendo = now.Subtract(infoCelda.FechaCreacion).Seconds;
-                    //if (seungosConstruyendo >= juego.edificio.segundos)
-                    //  infoCelda.terminado = true;
-                    //  necesitaUpdate = true;
+                    foreach (Shared.Entities.TipoEntidad tipoEntidad in juego.tipo_entidad)
+                    {
+                        if (infoCelda.Id == tipoEntidad.Id)
+                        {
+                            if (segundosConstruyendo >= tipoEntidad.TiempoConstruccion)
+                            {
+                                infoCelda.terminado = true;
+                                necesitaUpdate = true;
+                            }
+
+                            break;
+                        }
+                    }
                 }
             }
             if (necesitaUpdate)

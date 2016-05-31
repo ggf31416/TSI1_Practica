@@ -29,9 +29,9 @@ namespace ServiceLayer
             blHandler.Accion(json);
         }
 
-        public void login(Cliente cliente)
+        public void login(Cliente cliente, int idJuego)
         {
-
+            blHandler.login(cliente, idJuego);
         }
 
     }

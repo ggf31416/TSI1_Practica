@@ -19,6 +19,12 @@
   <wsdl:message name="IServiceTablero_Accion_OutputMessage">
     <wsdl:part name="parameters" element="tns:AccionResponse" />
   </wsdl:message>
+  <wsdl:message name="IServiceTablero_login_InputMessage">
+    <wsdl:part name="parameters" element="tns:login" />
+  </wsdl:message>
+  <wsdl:message name="IServiceTablero_login_OutputMessage">
+    <wsdl:part name="parameters" element="tns:loginResponse" />
+  </wsdl:message>
   <wsdl:portType name="IServiceTablero">
     <wsdl:operation name="JugarUnidad">
       <wsdl:input wsaw:Action="http://localhost:8836/tsi1/IServiceTablero/JugarUnidad" message="tns:IServiceTablero_JugarUnidad_InputMessage" />
@@ -27,6 +33,10 @@
     <wsdl:operation name="Accion">
       <wsdl:input wsaw:Action="http://localhost:8836/tsi1/IServiceTablero/Accion" message="tns:IServiceTablero_Accion_InputMessage" />
       <wsdl:output wsaw:Action="http://localhost:8836/tsi1/IServiceTablero/AccionResponse" message="tns:IServiceTablero_Accion_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="login">
+      <wsdl:input wsaw:Action="http://localhost:8836/tsi1/IServiceTablero/login" message="tns:IServiceTablero_login_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8836/tsi1/IServiceTablero/loginResponse" message="tns:IServiceTablero_login_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
 </wsdl:definitions>

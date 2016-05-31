@@ -9,5 +9,6 @@ namespace DataAccessLayer
     public interface IDALUsuario
     {
         void login(Shared.Entities.Cliente client);
+        bool authenticate(Shared.Entities.Cliente client);
     }
 }

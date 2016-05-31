@@ -13,21 +13,21 @@ namespace DataAccessLayer
     {
         const string connectionstring = "mongodb://40.84.2.155";
         private static IMongoClient client = new MongoClient(connectionstring);
-        private string juego;
+        private int idJuego;
         private IMongoDatabase database;
         private IMongoCollection<Cliente> collection;
 
-        public DALUsuario(string juego)
+        public DALUsuario(int idJuego)
         {
-            this.juego = juego;
-            database = client.GetDatabase(juego);
+            this.idJuego = idJuego;
+            database = client.GetDatabase(idJuego.ToString());
             collection = database.GetCollection<Cliente>("usuario");
         }
         
         private void inicializarUsuario(Cliente cliente)
         {
             collection.InsertOne(cliente);
-            IDALConstruccion iDALConstruccion = new DALConstruccionMongo(this.juego);
+            IDALConstruccion iDALConstruccion = new DALConstruccion(this.idJuego);
             iDALConstruccion.InicializarConstruccion(cliente.clienteId);
         }
 
@@ -48,6 +48,14 @@ namespace DataAccessLayer
                 collection.ReplaceOne(cliente => cliente.clienteId == c.clienteId, c);
             }
             
+        }
+
+        public bool authenticate(Shared.Entities.Cliente client)
+        {
+            var query = from usuario in collection.AsQueryable<Cliente>()
+                        where usuario.clienteId == client.clienteId && usuario.token == client.token
+                        select usuario;
+            return query.Count() > 0;
         }
 
     }

@@ -254,7 +254,6 @@
     <Content Include="SPA\frontOffice\arquero.jpg" />
     <Content Include="SPA\frontOffice\Asociar.html" />
     <Content Include="SPA\frontOffice\controllers\edificio.controller.js" />
-    <Content Include="SPA\frontOffice\controllers\home.controller.js" />
     <Content Include="SPA\frontOffice\controllers\juego.controller.js" />
     <Content Include="SPA\frontOffice\controllers\recurso.controller.js" />
     <Content Include="SPA\frontOffice\controllers\unidad.controller.js" />
@@ -265,7 +264,6 @@
     <Content Include="SPA\frontOffice\models\unidad.js" />
     <Content Include="SPA\frontOffice\modulos.js" />
     <Content Include="SPA\frontOffice\services\edificios.service.js" />
-    <Content Include="SPA\frontOffice\services\home.service.js" />
     <Content Include="SPA\frontOffice\services\juego.service.js" />
     <Content Include="SPA\frontOffice\services\recursos.service.js" />
     <Content Include="SPA\frontOffice\services\unidades.service.js" />
@@ -283,6 +281,7 @@
     </Compile>
     <Compile Include="ChatHub.cs" />
     <Compile Include="Hubs\AtlasHub.cs" />
+    <Compile Include="Models\Cliente.cs" />
     <Compile Include="Models\EdificioUnidadModel.cs" />
     <Compile Include="Models\InfoCeldaModel.cs" />
     <Compile Include="Models\TipoEntidadModel.cs" />
@@ -335,6 +334,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServiceTablero\ServiceTablero.wsdl" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -363,6 +363,10 @@
     <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj">
       <Project>{5b2ce531-8a15-496c-96af-ec949d43c850}</Project>
       <Name>DataAccessLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shared\Shared.csproj">
+      <Project>{374d862a-f20a-40c1-a37b-fb7f9d6aef07}</Project>
+      <Name>Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

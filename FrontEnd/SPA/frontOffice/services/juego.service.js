@@ -5,6 +5,15 @@
     function juegoService($http, $q) {
         //var jugador = "jugador1";
 
+        this.loginJuego = function(loginJuegoJson) {
+            return $http.post('Home/login', loginJuegoJson)
+            .then(function(response) {
+                return response.data;
+            }, function(response) {
+                return $q.reject('Error de login');
+            })
+        }
+
         function postAccion(json) {
             return $http({
                 method: 'POST',

@@ -9,102 +9,29 @@
 //------------------------------------------------------------------------------
 
 namespace FrontEnd.ServiceTablero {
-    using System.Runtime.Serialization;
-    using System;
     
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="InfoCelda", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
-    [System.SerializableAttribute()]
-    public partial class InfoCelda : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int IdField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Nullable<int> PosXField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Nullable<int> PosYField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Id {
-            get {
-                return this.IdField;
-            }
-            set {
-                if ((this.IdField.Equals(value) != true)) {
-                    this.IdField = value;
-                    this.RaisePropertyChanged("Id");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Nullable<int> PosX {
-            get {
-                return this.PosXField;
-            }
-            set {
-                if ((this.PosXField.Equals(value) != true)) {
-                    this.PosXField = value;
-                    this.RaisePropertyChanged("PosX");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Nullable<int> PosY {
-            get {
-                return this.PosYField;
-            }
-            set {
-                if ((this.PosYField.Equals(value) != true)) {
-                    this.PosYField = value;
-                    this.RaisePropertyChanged("PosY");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(Namespace="http://localhost:8836/tsi1/", ConfigurationName="ServiceTablero.IServiceTablero")]
     public interface IServiceTablero {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/JugarUnidad", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/JugarUnidadResponse")]
-        void JugarUnidad(FrontEnd.ServiceTablero.InfoCelda infoCelda);
+        void JugarUnidad(Shared.Entities.InfoCelda infoCelda);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/JugarUnidad", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/JugarUnidadResponse")]
-        System.Threading.Tasks.Task JugarUnidadAsync(FrontEnd.ServiceTablero.InfoCelda infoCelda);
+        System.Threading.Tasks.Task JugarUnidadAsync(Shared.Entities.InfoCelda infoCelda);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/Accion", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/AccionResponse")]
         void Accion(string json);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/Accion", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/AccionResponse")]
         System.Threading.Tasks.Task AccionAsync(string json);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/login", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/loginResponse")]
+        void login(Shared.Entities.Cliente cliente, int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/login", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/loginResponse")]
+        System.Threading.Tasks.Task loginAsync(Shared.Entities.Cliente cliente, int idJuego);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -134,11 +61,11 @@ namespace FrontEnd.ServiceTablero {
                 base(binding, remoteAddress) {
         }
         
-        public void JugarUnidad(FrontEnd.ServiceTablero.InfoCelda infoCelda) {
+        public void JugarUnidad(Shared.Entities.InfoCelda infoCelda) {
             base.Channel.JugarUnidad(infoCelda);
         }
         
-        public System.Threading.Tasks.Task JugarUnidadAsync(FrontEnd.ServiceTablero.InfoCelda infoCelda) {
+        public System.Threading.Tasks.Task JugarUnidadAsync(Shared.Entities.InfoCelda infoCelda) {
             return base.Channel.JugarUnidadAsync(infoCelda);
         }
         
@@ -148,6 +75,14 @@ namespace FrontEnd.ServiceTablero {
         
         public System.Threading.Tasks.Task AccionAsync(string json) {
             return base.Channel.AccionAsync(json);
+        }
+        
+        public void login(Shared.Entities.Cliente cliente, int idJuego) {
+            base.Channel.login(cliente, idJuego);
+        }
+        
+        public System.Threading.Tasks.Task loginAsync(Shared.Entities.Cliente cliente, int idJuego) {
+            return base.Channel.loginAsync(cliente, idJuego);
         }
     }
 }

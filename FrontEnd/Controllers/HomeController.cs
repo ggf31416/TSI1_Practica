@@ -17,13 +17,15 @@ namespace FrontEnd.Controllers
         }
 
         [HttpPost]
-        public ActionResult login(Cliente cliente)
+        public ActionResult login(ClienteJuego clienteJuego)
         {
             try
             {
                 ServiceTableroClient client = new ServiceTableroClient();
                 Shared.Entities.Cliente cli = new Shared.Entities.Cliente();
-                client.login(cliente);
+                cli.clienteId = clienteJuego.clienteId;
+                cli.token = clienteJuego.token;
+                client.login(cli, clienteJuego.idJuego);
                 return Json(new { sucess = true });
             }
             catch (Exception e)

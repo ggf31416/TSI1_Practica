@@ -22,8 +22,10 @@ namespace ConsoleApplication1
                 BsonClassMap.RegisterClassMap<Cliente>();
             }
             Console.WriteLine("inicio");
-            IDALUsuario iDALUsuario = new DALUsuario("juego1");
-            Shared.Entities.Cliente cliente = new Shared.Entities.Cliente(1, "token1");
+            IDALUsuario iDALUsuario = new DALUsuario(1);
+            Shared.Entities.Cliente cliente = new Shared.Entities.Cliente();
+            cliente.clienteId = 1;
+            cliente.token = "token1";
             iDALUsuario.login(cliente);
             //IDALConstruccion iDALConstruccion = new DALConstruccionMongo("juego1");
             //InfoCelda infoCelda1 = new InfoCelda();

@@ -6,8 +6,7 @@
         'edificios',
         'juego',
         'recursos',
-        'unidades',
-        'home'
+        'unidades'
     ]);
 
     angular.module('tsi').config(['$routeProvider', '$locationProvider', configFunction]);

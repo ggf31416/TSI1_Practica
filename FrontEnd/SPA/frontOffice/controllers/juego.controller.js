@@ -15,6 +15,17 @@
         $rootScope.nombreJuego = "Atlas2";
 
         $scope.contador = 1;
+
+        $scope.loginJuego = function () {
+            var loginJuegoParams = { "clientId": 2, "token": "abcd", "idJuego": 1 };
+            console.log("entro");
+            juegoService.loginJuego(loginJuegoParams)
+            .then(function (response) {
+                console.log(response);
+            }).catch(function (msjError) {
+                console.log(msjError);
+            });
+        }
         
         $scope.posicionarUnidad= function (id) {
             // llama a la funcion iniciarCustomDrag en el CrearCanvas.js

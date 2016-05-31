@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using ServiceStack.Redis;
 using Microsoft.AspNet.SignalR.Client.Hubs;
 using System.ServiceModel;
-
+using Shared.Entities;
 
 namespace BusinessLogicLayer
 {
@@ -113,8 +113,16 @@ namespace BusinessLogicLayer
             }
         }
 
+        public void login(Cliente cliente, int idJuego)
+        {
+            IDALUsuario iDALUsuario = new DALUsuario(idJuego);
+            iDALUsuario.login(cliente);
+        }
 
-
-
+        public bool authenticate(Cliente cliente, int idJuego)
+        {
+            IDALUsuario iDALUsuario = new DALUsuario(idJuego);
+            return iDALUsuario.authenticate(cliente);
+        }
     }
 }
