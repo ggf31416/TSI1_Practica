@@ -15,6 +15,15 @@ namespace BusinessLogicLayer
 {
     public class BLTablero : IBLTablero
     {
+        private static BLTablero instancia = null;
+        public static BLTablero getInstancia()
+        {
+            if (instancia == null) instancia = new BLTablero(null);
+            return instancia;
+        }
+
+        public Dictionary<string, Batalla> batallas = new Dictionary<string, Batalla>();
+
 
         private IDALTablero _dal;
 
@@ -32,7 +41,6 @@ namespace BusinessLogicLayer
             }
         }
 
-        public Dictionary<string, Batalla> batallas = new Dictionary<string, Batalla>();
 
         private void crearBatalla(string jugador)
         {

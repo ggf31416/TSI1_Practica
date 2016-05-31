@@ -15,7 +15,7 @@ namespace BusinessLogicLayer
         public void Execute(IJobExecutionContext context)
         {
             // ejecutarTurno
-            Console.WriteLine("Q "  + DateTime.Now.Millisecond + " ms");
+            BLTablero.getInstancia().ejecutarBatallasEnCurso();
         }
     }
 
