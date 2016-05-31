@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="DALTablero.cs" />
     <Compile Include="DALConstruccionMongo.cs" />
+    <Compile Include="DALUsuario.cs" />
     <Compile Include="Entities\Cliente.cs" />
     <Compile Include="Entities\Construccion.cs" />
     <Compile Include="Entities\Edificio.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Exceptions\DALConstruccionException.cs" />
     <Compile Include="IDALTablero.cs" />
     <Compile Include="IDALConstruccion.cs" />
+    <Compile Include="IDALUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Relacional\DALEntidades.cs" />
     <Compile Include="Relacional\IDALEntidades.cs" />

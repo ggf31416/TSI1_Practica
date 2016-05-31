@@ -83,27 +83,24 @@
 </script>
 
 <script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '1091835854211637',
-      xfbml      : true,
-      version    : 'v2.6'
-    });
-  };
+  
+  
 
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
 </script>
 
 <game-canvas></game-canvas>
 
 
+<!--
+  Below we include the Login Button social plugin. This button uses
+  the JavaScript SDK to present a graphical Login button that triggers
+  the FB.login() function when clicked.
+-->
+<fb:login-button data-auto-logout-link="true" scope="public_profile,email" onlogin="checkLoginState();">
+</fb:login-button>
 
+<div id="status">
+</div>
 
 
 <!-- <div id="divJuego"  ondrop = "drop(event)" ondragover = "allowDrop(event)"></div> -->

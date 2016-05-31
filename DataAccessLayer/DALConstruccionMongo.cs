@@ -16,9 +16,17 @@ namespace DataAccessLayer
     public class DALConstruccionMongo : IDALConstruccion
     {
         const string connectionstring = "mongodb://40.84.2.155";
-        private static IMongoClient _client = new MongoClient(connectionstring);
-        private static IMongoDatabase _database = _client.GetDatabase("frontoffice");
-        private static IMongoCollection<TableroConstruccion> collection = _database.GetCollection<TableroConstruccion>("construccion");
+        private static IMongoClient client = new MongoClient(connectionstring);
+        private IMongoDatabase database;
+        private IMongoCollection<TableroConstruccion> collection;
+        private string juego;
+
+        public DALConstruccionMongo(string juego)
+        {
+            this.juego = juego;
+            database = client.GetDatabase(juego);
+            collection = database.GetCollection<TableroConstruccion>("construccion");
+        }
 
         public void InicializarConstruccion(int idUsuario)
         {

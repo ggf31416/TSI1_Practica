@@ -17,15 +17,22 @@ namespace ConsoleApplication1
             {
                 BsonClassMap.RegisterClassMap<TableroConstruccion>();
             }
+            if (!BsonClassMap.IsClassMapRegistered(typeof(Cliente)))
+            {
+                BsonClassMap.RegisterClassMap<Cliente>();
+            }
             Console.WriteLine("inicio");
-            IDALConstruccion iDALConstruccion = new DALConstruccionMongo();
-            InfoCelda infoCelda1 = new InfoCelda();
-            infoCelda1.Id = 1;
-            infoCelda1.PosX = 1;
-            infoCelda1.PosY = 2;
+            IDALUsuario iDALUsuario = new DALUsuario("juego1");
+            Shared.Entities.Cliente cliente = new Shared.Entities.Cliente(1, "token1");
+            iDALUsuario.login(cliente);
+            //IDALConstruccion iDALConstruccion = new DALConstruccionMongo("juego1");
+            //InfoCelda infoCelda1 = new InfoCelda();
+            //infoCelda1.Id = 1;
+            //infoCelda1.PosX = 1;
+            //infoCelda1.PosY = 2;
             //iDALConstruccion.InicializarConstruccion(1);
-            iDALConstruccion.AddInfoCelda(1, infoCelda1);
-            Console.WriteLine("agregado infocelda");
+            //iDALConstruccion.AddInfoCelda(1, infoCelda1);
+            Console.WriteLine("agregado usuario");
             Console.ReadLine();
         }
     }

@@ -28,5 +28,11 @@ namespace ServiceLayer
         {
             blHandler.Accion(json);
         }
+
+        public void login(Cliente cliente)
+        {
+
+        }
+
     }
 }

@@ -254,6 +254,7 @@
     <Content Include="SPA\frontOffice\arquero.jpg" />
     <Content Include="SPA\frontOffice\Asociar.html" />
     <Content Include="SPA\frontOffice\controllers\edificio.controller.js" />
+    <Content Include="SPA\frontOffice\controllers\home.controller.js" />
     <Content Include="SPA\frontOffice\controllers\juego.controller.js" />
     <Content Include="SPA\frontOffice\controllers\recurso.controller.js" />
     <Content Include="SPA\frontOffice\controllers\unidad.controller.js" />
@@ -264,6 +265,7 @@
     <Content Include="SPA\frontOffice\models\unidad.js" />
     <Content Include="SPA\frontOffice\modulos.js" />
     <Content Include="SPA\frontOffice\services\edificios.service.js" />
+    <Content Include="SPA\frontOffice\services\home.service.js" />
     <Content Include="SPA\frontOffice\services\juego.service.js" />
     <Content Include="SPA\frontOffice\services\recursos.service.js" />
     <Content Include="SPA\frontOffice\services\unidades.service.js" />

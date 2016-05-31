@@ -17,5 +17,8 @@ namespace ServiceLayer
 
         [OperationContract]
         void Accion(String json);
+
+        [OperationContract]
+        void login(Cliente cliente);
     }
 }

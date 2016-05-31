@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
-using MongoDB.Bson.Serialization.Attributes;
 
-
-namespace DataAccessLayer.Entities
+namespace Shared.Entities
 {
+    [DataContract]
     public class Cliente
     {
-        [BsonId]
+        [DataMember]
         public int clienteId { get; set; }
+        [DataMember]
         public string token { get; set; }
 
-        public Cliente(int clienteId, string token)
-        {
-            this.clienteId = clienteId;
-            this.token = token;
-        }
     }
 }
