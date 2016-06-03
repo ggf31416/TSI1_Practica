@@ -140,7 +140,8 @@ namespace FrontEnd.Controllers
 
                 Shared.Entities.TipoUnidad[] listaTipoEdificios = client.GetAllTipoUnidades();
 
-                List<Models.TipoEntidadModel> ret = new List<Models.TipoEntidadModel>();
+                List<Models.TipoEntidadModel> ret = new List<Models.TipoEntidadModel>(); ;  // new List<Models.TipoEntidadModel>();
+                ret.Add(new Models.TipoEntidadModel() { Ataque = 10, Defensa = 10, Id = 10, Nombre = "Arquero", TiempoConstruccion = 10, Vida = 100, Imagen = "/SPA/backoffice/ImagenesSubidads/arquero.jpg"});
                 foreach (Shared.Entities.TipoUnidad tE in listaTipoEdificios)
                 {
                     Models.TipoEntidadModel newTipoEntidad = new Models.TipoEntidadModel();

@@ -28,5 +28,20 @@ namespace ServiceLayer
         {
             blHandler.Accion(json);
         }
+
+        public List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt)
+        {
+            return blHandler.GetListaDeJugadoresAtacables(jugadorAt);
+        }
+
+        public void RegistrarJugador(string nombre)
+        {
+            blHandler.RegistrarJugador(nombre);
+        }
+
+        public void IniciarAtaque(InfoAtaque info)
+        {
+            blHandler.IniciarAtaque(info);
+        }
     }
 }

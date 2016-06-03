@@ -46,7 +46,7 @@ namespace ServiceLayer
                 selfHost.Close();
             }catch (CommunicationException ce)
             {
-                Console.Write("An exception ocurred: ", ce.ToString());
+                Console.Write("An exception ocurred: " +  ce.ToString());
                 Console.ReadLine();
                 selfHost.Abort();
             }

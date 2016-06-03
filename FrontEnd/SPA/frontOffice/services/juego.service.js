@@ -33,6 +33,32 @@
             return $http.post("Tablero/Accion", JSON.stringify({ "A": "RegistrarJugador", "J": jugador }));
         }
 
+
+        this.getEnemigos = function (jugador,juego) {
+            var promise = $http.get("Tablero/GetListaDeJugadoresAtacables",{params: {"jugador": jugador}}).then(
+                function (data) {
+                    if (data.data.success == false) {
+                        throw new Error(data.data.responseText);
+                        console.log("Error al cargar enemigos atacables: " + data.data.responseText + " msg" + data.data.msg);
+                    }
+                    return data.data.ret;
+                }).catch(
+                    function (err) {
+                        console.log("Error al cargar enemigos atacables: " + err);
+                });
+             return promise;
+        }
+
+        this.iniciarAtaque = function(ataqueJson){
+             return $http({
+                method: 'POST',
+                dataType: 'text',
+                url: "Tablero/iniciarAtaque",
+                data: { data: JSON.stringify(ataqueJson) }
+            });
+
+        }
+
         
     }
 

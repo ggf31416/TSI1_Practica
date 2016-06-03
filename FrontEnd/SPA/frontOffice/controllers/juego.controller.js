@@ -15,6 +15,8 @@
         $rootScope.nombreJuego = "Atlas2";
 
         $scope.contador = 1;
+
+        $scope.listaEnemigos = [];
         
         $scope.posicionarUnidad= function (id) {
             // llama a la funcion iniciarCustomDrag en el CrearCanvas.js
@@ -31,10 +33,11 @@
         
         $q.all([
             edificiosService.getAllTipoEdificios(),
-            unidadesService.getAllTipoUnidades()
+            //unidadesService.getAllTipoUnidades()
         ]).then(function (data) {
             $rootScope.listaEdificios = data[0];
-            $rootScope.listaUnidades = data[1];
+            $rootScope.listaUnidades = [ {Ataque : 10, Defensa : 10, Id : 10, Nombre : "Arquero", TiempoConstruccion : 10, Vida : 100, Imagen : "/SPA/backoffice/ImagenesSubidas/arquero.jpg" }]
+            //data[1];
             window.createGame();
         });
 
@@ -89,7 +92,7 @@
         var nombreJugador;
 
         var estaEnBatalla = false;
-
+       
         $scope.animaciones = {}
 
         window.createGame = function (scope, injector) {
@@ -102,7 +105,9 @@
             nombreJugador = window.prompt("Jugador?", "");
         }
 
-
+        function objetoUnidad(idSprite) {
+           return $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
+        }
         
 
 
@@ -130,15 +135,17 @@
             buildings.add(edificio);
         }
 
+
+
         function crearUnidadInmediato(data) {
             if (!unidadesPorId[data.Unit_id]) {
                 var idSprite = data.Id;
-                var unit = $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
+                var unit = objetoUnidad(idSprite);
                 unit.height = unit_size;
                 unit.width = unit_size;
                 unit.inputEnabled = true;
                 clickVisibleUnidades(unit, true);
-                unit.info.unit_id = data.Unit_id;
+                unit.info = new Unidad_Info(data.Unit_id);
                 unidades_desplegadas.add(unit);
                 unidadesPorId[unit.info.unit_id] = unit;
                 console.log("Unidad agregada desde remoto json:" + data);
@@ -210,7 +217,7 @@
 
                 //$scope.estadoJuego.edificios = msjJSON.edificios;
                 //$scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;
-                $scope.estadoJuego.edificios.push(msjJSON);
+                //$scope.estadoJuego.edificios.push(msjJSON);
                 //$scope.cargarDesdeEstado();
             };
             // Get the user name and store it to prepend to messages.
@@ -430,6 +437,7 @@
                 sprite.alpha = 1.0;
                 sprite.tint = 0xFFFFFF;
                 hacerSeleccionableUnidad(sprite);
+                sprite.info = new Unidad_Info();
                 sprite.info.unit_id = nombreJugador + "#" + $scope.contador++;
                 unidadesPorId[sprite.info.unit_id] = sprite;
                 //sprite.id_logico = $scope.contador--; // asigno un id automatico que luego cambio}
@@ -612,6 +620,23 @@
             /*else {
                 sprite.body.velocity.setTo(0, 0);
             }*/
+        }
+
+
+        function mostrarEnemigos(){
+            juegoService.getListaEnemigos(nombreJugador,$scope.nombreJuego).then(function(data){
+                $scope.listaEnemigos = data;
+                $("#listaEnemigos").toggle(true);
+            });
+        }
+
+        function iniciarAtaque(enemigo){
+            jsonAtaque = {
+                Jugador: nombreJugador,
+                Enemigo: enemigo,
+                Juego: juego
+            };
+            edificiosService.iniciarAtaque(jsonAtaque);
         }
 
     }

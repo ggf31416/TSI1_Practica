@@ -31,7 +31,7 @@ namespace BusinessLogicLayer
         JumpPointParam param = null;
         private Stopwatch sw;
         private long nanosPrevio;
-        private List<AccionMsg> acciones = new List<AccionMsg>();
+        public List<AccionMsg> Acciones { get; private set; } = new List<AccionMsg>();
 
 
         private int turno = 0;
@@ -270,6 +270,17 @@ namespace BusinessLogicLayer
             return r;
         }
 
+
+        public ResultadoBusqPath rutaEnemigoMasCercano(Unidad u)
+        {
+            GridPos destino = buscarMasCercano(u);
+            var r_path = buscarPath(u, destino);
+            var r = new ResultadoBusqPath() { path = r_path.ToArray() };
+            paths.Add(u.id, r);
+            return r;
+        }
+
+
         JumpPointParam configurar()
         {
             BaseGrid grilla = crearTableroPF();
@@ -288,7 +299,7 @@ namespace BusinessLogicLayer
                     def.target = null;
                 }
                 AccionMsg notif = new AccionMsg { Accion = "UpdateHP", IdUnidad = def.id ,ValorN = def.vida};
-                this.acciones.Add(notif);
+                this.Acciones.Add(notif);
                 return true;
             }
             else
@@ -315,19 +326,29 @@ namespace BusinessLogicLayer
 
         public void tickTiempo()
         {
+            Acciones.Clear();
             //ResultadoBusqPath[] res = buscarRutaHaciaEnemigosCercanos();
             // mover unidades
             long deltaT = sw.ElapsedMilliseconds - nanosPrevio;
             nanosPrevio += deltaT;
 
-            foreach (var p in paths)
+            foreach (Unidad u in unidades.Values)
             {
-                Unidad u = unidades[p.Key];
-                // actualizo las posiciones de las unidades en funcion de sus movientos
-                if (u.target != null)
+                if (!paths.ContainsKey(u.id))
                 {
-                    simularMovimiento(deltaT, p);
+                    var p = rutaEnemigoMasCercano(u);
+                    paths.Add(u.id, p);
+                    var accM = new AccionMoverUnidad() { IdUnidad = u.id ,Accion="MoveUnit", PosX = u.posXr, PosY = u.posYr, Path = p.path };
+                    Acciones.Add(accM);
+
                 }
+                if (paths.ContainsKey(u.id))
+                {
+                    var p = paths[u.id];
+                    // actualizo las posiciones de las unidades en funcion de sus movientos
+                    simularMovimiento(deltaT, u,p);
+                }
+              
                 // ya mandamos los paths, no es necesario mandar los valores de x,y actuales
                 if (turno % 5 == 0)
                 {
@@ -346,13 +367,12 @@ namespace BusinessLogicLayer
 
         }
 
-        private void simularMovimiento(long deltaT, KeyValuePair<string, ResultadoBusqPath> p)
+        private void simularMovimiento(long deltaT, Unidad u, ResultadoBusqPath p)
         {
-            GridPos[] path = p.Value.path;
-            int idx = p.Value.idxActual;
+            GridPos[] path = p.path;
+            int idx = p.idxActual;
             double t_restante = deltaT;
-            Unidad u = unidades[p.Key];
-            while (t_restante > 0 && p.Value.idxActual < path.Length)
+            while (t_restante > 0 && p.idxActual < path.Length)
             {
 
                 GridPos prox = path[idx];

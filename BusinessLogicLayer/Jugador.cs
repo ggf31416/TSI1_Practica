@@ -7,13 +7,15 @@ using Shared.Entities;
 
 namespace BusinessLogicLayer
 {
-    class Jugador
+    public class Jugador
     {
-        public string Identificador { get; set; }
+        public string Id { get; set; }
+        public string Clan { get; set; }
         public List<ConjuntoUnidades> Unidades { get; set; } = new List<ConjuntoUnidades>();
         public List<Edificio> Edificios { get; set; } = new List<Edificio>();
         private Dictionary<int, CantidadRecurso> Recursos { get; set; }  // clave Recurso.ID
         private DateTime ultimaActualizacionRecursos;
+
 
 
         public Jugador()
@@ -22,6 +24,7 @@ namespace BusinessLogicLayer
             Recursos = new Dictionary<int, CantidadRecurso>();
 
             ultimaActualizacionRecursos = DateTime.Now;
+
         }
 
         private void actualizarRecursosPorSegundo()
@@ -69,13 +72,13 @@ namespace BusinessLogicLayer
     }
 
 
-    class CantidadRecurso
+    public class CantidadRecurso
     {
         public double porSegundo { get; set; }
         public double acumulado { get; set; }
     }
 
-    class ConjuntoUnidades
+    public class ConjuntoUnidades
     {
         public int UnidadId { get; set; }
         public int Cantidad { get; set; }

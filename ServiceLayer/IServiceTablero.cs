@@ -17,5 +17,14 @@ namespace ServiceLayer
 
         [OperationContract]
         void Accion(String json);
+
+        [OperationContract]
+        List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt);
+
+        [OperationContract]
+        void RegistrarJugador(string nombre);
+
+        [OperationContract]
+        void IniciarAtaque(InfoAtaque info);
     }
 }

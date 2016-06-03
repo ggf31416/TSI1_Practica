@@ -22,6 +22,33 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="GetListaDeJugadoresAtacables">
+      <soap:operation soapAction="http://localhost:8836/tsi1/IServiceTablero/GetListaDeJugadoresAtacables" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RegistrarJugador">
+      <soap:operation soapAction="http://localhost:8836/tsi1/IServiceTablero/RegistrarJugador" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IniciarAtaque">
+      <soap:operation soapAction="http://localhost:8836/tsi1/IServiceTablero/IniciarAtaque" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="ServiceTablero">
     <wsdl:port name="BasicHttpBinding_IServiceTablero" binding="tns:BasicHttpBinding_IServiceTablero">

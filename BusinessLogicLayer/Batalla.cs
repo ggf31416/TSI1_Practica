@@ -13,6 +13,7 @@ namespace BusinessLogicLayer
         private Dictionary<int, TipoEdificio> tiposEdificios = new Dictionary<int, TipoEdificio>();
         private DataAccessLayer.Relacional.IDALEntidadesRO _dalRO;
         public string canalSignalR { get; set; }
+        public bool EnCurso { get; set; }
         public Tablero tablero;
 
         public void inicializar()
@@ -26,6 +27,7 @@ namespace BusinessLogicLayer
         {
             inicializar();
             this.tablero = new Tablero();
+            this.EnCurso = true;
 
         }
 
@@ -41,9 +43,9 @@ namespace BusinessLogicLayer
                 foreach(Unidad u in lst)
                 {
                     //u.id = r.Next(1, Int32.MaxValue);
-                    u.jugador = jug.Identificador;
+                    u.jugador = jug.Id;
                 }
-                tablero.agregarUnidades(jug.Identificador, lst);
+                tablero.agregarUnidades(jug.Id, lst);
             }
         }
 

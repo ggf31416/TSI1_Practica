@@ -42,8 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\InfoAtaque.cs" />
     <Compile Include="Entities\InfoCelda.cs" />
     <Compile Include="Entities\Juego.cs" />
+    <Compile Include="Entities\JugadorBasico.cs" />
     <Compile Include="Entities\Prueba.cs" />
     <Compile Include="Entities\TipoEdificio.cs" />
     <Compile Include="Entities\TipoEntidad.cs" />

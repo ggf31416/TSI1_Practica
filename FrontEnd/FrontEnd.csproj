@@ -218,6 +218,7 @@
     <Content Include="bin\roslyn\Microsoft.CSharp.Core.targets" />
     <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
     <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
+    <Content Include="Properties\DataSources\Shared.Entities.JugadorBasico.datasource" />
     <None Include="Properties\PublishProfiles\tsi1frontoffice.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -361,6 +362,10 @@
     <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj">
       <Project>{5b2ce531-8a15-496c-96af-ec949d43c850}</Project>
       <Name>DataAccessLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shared\Shared.csproj">
+      <Project>{374d862a-f20a-40c1-a37b-fb7f9d6aef07}</Project>
+      <Name>Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

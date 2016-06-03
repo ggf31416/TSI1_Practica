@@ -35,5 +35,11 @@ namespace BusinessLogicLayer
 
         [JsonProperty(propertyName: "VN")]
         public float ValorN { get; set; }
+
+    }
+
+    public class AccionMoverUnidad : AccionMsg
+    {
+        public EpPathFinding.GridPos Path { get; set; }
     }
 }

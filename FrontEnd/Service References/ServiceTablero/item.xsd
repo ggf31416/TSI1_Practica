@@ -8,4 +8,25 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="InfoCelda" nillable="true" type="tns:InfoCelda" />
+  <xs:complexType name="ArrayOfJugadorBasico">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="JugadorBasico" nillable="true" type="tns:JugadorBasico" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfJugadorBasico" nillable="true" type="tns:ArrayOfJugadorBasico" />
+  <xs:complexType name="JugadorBasico">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Nombre" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="JugadorBasico" nillable="true" type="tns:JugadorBasico" />
+  <xs:complexType name="InfoAtaque">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Enemigo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Juego" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Jugador" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="InfoAtaque" nillable="true" type="tns:InfoAtaque" />
 </xs:schema>

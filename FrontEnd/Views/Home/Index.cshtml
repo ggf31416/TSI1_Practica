@@ -69,6 +69,18 @@
     </ul>
 </div>
 
+<div>
+    <input type="button" value="Atacar" ng-onclick="mostrarEnemigos()" />
+</div>
+
+
+<ul id="listaEnemigos" ng-repeat="e in listaEnemigos" hidden>
+    <li>
+        <p ng-mousedown="iniciarAtaque(e.Id)">e.Id</p>
+    </li>
+   
+</ul>
+
 <div
   class="fb-like"
   data-share="true"
