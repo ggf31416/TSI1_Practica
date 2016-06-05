@@ -40,6 +40,6 @@ namespace BusinessLogicLayer
 
     public class AccionMoverUnidad : AccionMsg
     {
-        public EpPathFinding.GridPos Path { get; set; }
+        public EpPathFinding.GridPos[] Path { get; set; }
     }
 }

@@ -70,13 +70,13 @@
 </div>
 
 <div>
-    <input type="button" value="Atacar" ng-onclick="mostrarEnemigos()" />
+    <input type="button" value="Atacar" ng-click="mostrarEnemigos()" />
 </div>
 
 
-<ul id="listaEnemigos" ng-repeat="e in listaEnemigos" hidden>
+<ul id="listaEnemigos" ng-repeat="e in listaEnemigos" >
     <li>
-        <p ng-mousedown="iniciarAtaque(e.Id)">e.Id</p>
+        <p ng-mousedown="iniciarAtaque(e.Id)">{{e.Id}}</p>
     </li>
    
 </ul>
@@ -91,6 +91,7 @@
 <script> 
     $(document).ready(function () {
         $('#divUnidades').toggle(false);
+        $('#listaEnemigos').toggle(false);
     })
 </script>
 

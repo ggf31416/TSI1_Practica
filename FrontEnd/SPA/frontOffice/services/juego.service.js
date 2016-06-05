@@ -30,11 +30,16 @@
         }
 
         this.registrarJugador = function (jugador,juego) {
-            return $http.post("Tablero/Accion", JSON.stringify({ "A": "RegistrarJugador", "J": jugador }));
+            return $http({
+                method: 'POST',
+                dataType: 'text',
+                url: "Tablero/RegistrarJugador",
+                data: { "jugador": jugador }
+            });
         }
 
 
-        this.getEnemigos = function (jugador,juego) {
+        this.getListaEnemigos = function (jugador,juego) {
             var promise = $http.get("Tablero/GetListaDeJugadoresAtacables",{params: {"jugador": jugador}}).then(
                 function (data) {
                     if (data.data.success == false) {

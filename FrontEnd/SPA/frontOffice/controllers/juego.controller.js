@@ -103,9 +103,10 @@
 
         function pedirNombre() {
             nombreJugador = window.prompt("Jugador?", "");
+            juegoService.registrarJugador(nombreJugador, $scope.nombreJuego);
         }
 
-        function objetoUnidad(idSprite) {
+        function objetoUnidad(data,idSprite) {
            return $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
         }
         
@@ -140,7 +141,7 @@
         function crearUnidadInmediato(data) {
             if (!unidadesPorId[data.Unit_id]) {
                 var idSprite = data.Id;
-                var unit = objetoUnidad(idSprite);
+                var unit = objetoUnidad(data,idSprite);
                 unit.height = unit_size;
                 unit.width = unit_size;
                 unit.inputEnabled = true;
@@ -623,12 +624,13 @@
         }
 
 
-        function mostrarEnemigos(){
-            juegoService.getListaEnemigos(nombreJugador,$scope.nombreJuego).then(function(data){
+        $scope.mostrarEnemigos = function () {
+            juegoService.getListaEnemigos(nombreJugador, $scope.nombreJuego).then(function (data) {
                 $scope.listaEnemigos = data;
+                //$scope.$apply();
                 $("#listaEnemigos").toggle(true);
             });
-        }
+        };
 
         function iniciarAtaque(enemigo){
             jsonAtaque = {
