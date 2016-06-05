@@ -282,6 +282,7 @@
     </Compile>
     <Compile Include="ChatHub.cs" />
     <Compile Include="Hubs\AtlasHub.cs" />
+    <Compile Include="Models\Cliente.cs" />
     <Compile Include="Models\EdificioUnidadModel.cs" />
     <Compile Include="Models\InfoCeldaModel.cs" />
     <Compile Include="Models\TipoEntidadModel.cs" />
@@ -334,6 +335,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServiceTablero\ServiceTablero.wsdl" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

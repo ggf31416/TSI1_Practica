@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\InfoAtaque.cs" />
+    <Compile Include="Entities\Cliente.cs" />
     <Compile Include="Entities\InfoCelda.cs" />
     <Compile Include="Entities\Juego.cs" />
     <Compile Include="Entities\JugadorBasico.cs" />

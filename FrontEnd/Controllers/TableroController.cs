@@ -37,7 +37,7 @@ namespace FrontEnd.Controllers
             {
                 ServiceTableroClient client = new ServiceTableroClient();
 
-                InfoCelda sharedInfoCelda = new InfoCelda();
+                Shared.Entities.InfoCelda sharedInfoCelda = new Shared.Entities.InfoCelda();
 
                 sharedInfoCelda.Id = infoCelda.Id;
                 sharedInfoCelda.PosX = infoCelda.PosX;

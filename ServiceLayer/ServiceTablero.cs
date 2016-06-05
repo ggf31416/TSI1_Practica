@@ -29,6 +29,7 @@ namespace ServiceLayer
             blHandler.Accion(json);
         }
 
+
         public List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt)
         {
             return blHandler.GetListaDeJugadoresAtacables(jugadorAt);
@@ -43,5 +44,12 @@ namespace ServiceLayer
         {
             blHandler.IniciarAtaque(info);
         }
+
+        public void login(Cliente cliente, int idJuego)
+        {
+            blHandler.login(cliente, idJuego);
+        }
+
+
     }
 }

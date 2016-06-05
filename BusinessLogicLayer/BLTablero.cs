@@ -124,6 +124,12 @@ namespace BusinessLogicLayer
             }
         }
 
+        public void login(Cliente cliente, int idJuego)
+        {
+            IDALUsuario iDALUsuario = new DALUsuario(idJuego);
+            iDALUsuario.login(cliente);
+        }
+
 
 
         public void RegistrarJugador(string nombre)
@@ -156,6 +162,13 @@ namespace BusinessLogicLayer
             Batalla b = new Batalla(info.Jugador, info.Enemigo);
             batallas[info.Jugador] = b;
             batallas[info.Enemigo]= b;
+		}
+
+        public bool authenticate(Cliente cliente, int idJuego)
+        {
+            IDALUsuario iDALUsuario = new DALUsuario(idJuego);
+            return iDALUsuario.authenticate(cliente);
+
         }
     }
 }
