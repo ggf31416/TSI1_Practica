@@ -26,6 +26,30 @@ namespace FrontEnd.ServiceTablero {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/Accion", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/AccionResponse")]
         System.Threading.Tasks.Task AccionAsync(string json);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetListaDeJugadoresAtacables", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetListaDeJugadoresAtacablesResponse")]
+        Shared.Entities.JugadorBasico[] GetListaDeJugadoresAtacables(string jugadorAt);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetListaDeJugadoresAtacables", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetListaDeJugadoresAtacablesResponse")]
+        System.Threading.Tasks.Task<Shared.Entities.JugadorBasico[]> GetListaDeJugadoresAtacablesAsync(string jugadorAt);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/RegistrarJugador", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/RegistrarJugadorResponse")]
+        void RegistrarJugador(string nombre);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/RegistrarJugador", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/RegistrarJugadorResponse")]
+        System.Threading.Tasks.Task RegistrarJugadorAsync(string nombre);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/IniciarAtaque", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/IniciarAtaqueResponse")]
+        void IniciarAtaque(Shared.Entities.InfoAtaque info);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/IniciarAtaque", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/IniciarAtaqueResponse")]
+        System.Threading.Tasks.Task IniciarAtaqueAsync(Shared.Entities.InfoAtaque info);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/login", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/loginResponse")]
+        void login(Shared.Entities.Cliente cliente, int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/login", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/loginResponse")]
+        System.Threading.Tasks.Task loginAsync(Shared.Entities.Cliente cliente, int idJuego);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -69,6 +93,38 @@ namespace FrontEnd.ServiceTablero {
         
         public System.Threading.Tasks.Task AccionAsync(string json) {
             return base.Channel.AccionAsync(json);
+        }
+        
+        public Shared.Entities.JugadorBasico[] GetListaDeJugadoresAtacables(string jugadorAt) {
+            return base.Channel.GetListaDeJugadoresAtacables(jugadorAt);
+        }
+        
+        public System.Threading.Tasks.Task<Shared.Entities.JugadorBasico[]> GetListaDeJugadoresAtacablesAsync(string jugadorAt) {
+            return base.Channel.GetListaDeJugadoresAtacablesAsync(jugadorAt);
+        }
+        
+        public void RegistrarJugador(string nombre) {
+            base.Channel.RegistrarJugador(nombre);
+        }
+        
+        public System.Threading.Tasks.Task RegistrarJugadorAsync(string nombre) {
+            return base.Channel.RegistrarJugadorAsync(nombre);
+        }
+        
+        public void IniciarAtaque(Shared.Entities.InfoAtaque info) {
+            base.Channel.IniciarAtaque(info);
+        }
+        
+        public System.Threading.Tasks.Task IniciarAtaqueAsync(Shared.Entities.InfoAtaque info) {
+            return base.Channel.IniciarAtaqueAsync(info);
+        }
+        
+        public void login(Shared.Entities.Cliente cliente, int idJuego) {
+            base.Channel.login(cliente, idJuego);
+        }
+        
+        public System.Threading.Tasks.Task loginAsync(Shared.Entities.Cliente cliente, int idJuego) {
+            return base.Channel.loginAsync(cliente, idJuego);
         }
     }
 }

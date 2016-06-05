@@ -134,7 +134,7 @@ namespace BusinessLogicLayer
 
         public void RegistrarJugador(string nombre)
         {
-            if (!jugadores.ContainsKey(nombre))
+            if (nombre != null && !jugadores.ContainsKey(nombre))
             {
                 Jugador j = new Jugador();
                 j.Id = nombre;

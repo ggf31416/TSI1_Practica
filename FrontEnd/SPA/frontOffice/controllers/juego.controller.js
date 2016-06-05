@@ -16,9 +16,9 @@
 
         $scope.contador = 1;
 
-<<<<<<< HEAD
+
         $scope.listaEnemigos = [];
-=======
+
         $scope.loginJuego = function () {
             var loginJuegoParams = { "clientId": 2, "token": "abcd", "idJuego": 1 };
             console.log("entro");
@@ -29,7 +29,7 @@
                 console.log(msjError);
             });
         }
->>>>>>> origin/juego
+
         
         $scope.posicionarUnidad= function (id) {
             // llama a la funcion iniciarCustomDrag en el CrearCanvas.js

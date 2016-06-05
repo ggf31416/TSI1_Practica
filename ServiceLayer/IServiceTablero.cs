@@ -27,6 +27,7 @@ namespace ServiceLayer
         [OperationContract]
         void IniciarAtaque(InfoAtaque info);
 
+        [OperationContract]
         void login(Cliente cliente, int idJuego);
     }
 }
