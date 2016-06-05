@@ -632,11 +632,11 @@
             });
         };
 
-        function iniciarAtaque(enemigo){
+        $scope.iniciarAtaque = function(enemigo){
             jsonAtaque = {
                 Jugador: nombreJugador,
                 Enemigo: enemigo,
-                Juego: juego
+                Juego: $scope.nombreJuego
             };
             edificiosService.iniciarAtaque(jsonAtaque);
         }

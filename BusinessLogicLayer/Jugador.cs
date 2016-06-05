@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Shared.Entities;
+using Newtonsoft.Json;
 
 namespace BusinessLogicLayer
 {
@@ -68,6 +69,24 @@ namespace BusinessLogicLayer
             return puedoConstruir;
         }
 
+
+        public String GenerarJson(bool incluirEdificios,bool incluirRecursos)
+        {
+            Jugador copia = new Jugador();
+            copia.Id = this.Id;
+            copia.Clan = this.Clan;
+            copia.Unidades = this.Unidades;
+            if (incluirEdificios)
+            {
+                copia.Edificios = this.Edificios;
+            }
+            if (incluirRecursos)
+            {
+                copia.Recursos = this.Recursos;
+            }
+            string json  =JsonConvert.SerializeObject(copia);
+            return json;
+        }
 
     }
 
