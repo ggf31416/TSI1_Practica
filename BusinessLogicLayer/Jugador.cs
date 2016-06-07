@@ -12,7 +12,7 @@ namespace BusinessLogicLayer
     {
         public string Id { get; set; }
         public string Clan { get; set; }
-        public List<ConjuntoUnidades> Unidades { get; set; } = new List<ConjuntoUnidades>();
+        public Dictionary<int,ConjuntoUnidades> Unidades { get; set; } = new Dictionary<int, ConjuntoUnidades>();
         public List<Edificio> Edificios { get; set; } = new List<Edificio>();
         private Dictionary<int, CantidadRecurso> Recursos { get; set; }  // clave Recurso.ID
         private DateTime ultimaActualizacionRecursos;
@@ -72,10 +72,10 @@ namespace BusinessLogicLayer
 
         public String GenerarJson(bool incluirEdificios,bool incluirRecursos)
         {
-            Jugador copia = new Jugador();
+            InfoJugador copia = new InfoJugador();
             copia.Id = this.Id;
             copia.Clan = this.Clan;
-            copia.Unidades = this.Unidades;
+            copia.Unidades = new List<ConjuntoUnidades>(this.Unidades.Values);
             if (incluirEdificios)
             {
                 copia.Edificios = this.Edificios;
@@ -88,8 +88,29 @@ namespace BusinessLogicLayer
             return json;
         }
 
+        public void AgregarUnidad(int tipoId)
+        {
+            if (!Unidades.ContainsKey(tipoId))
+            {
+                Unidades.Add(tipoId, new ConjuntoUnidades() { UnidadId = tipoId, Cantidad = 1 });
+            }
+            else
+            {
+                Unidades[tipoId].Cantidad += 1;
+            }
+        }
+
     }
 
+
+    public class InfoJugador
+    {
+        public string Id { get; set; }
+        public string Clan { get; set; }
+        public List< ConjuntoUnidades> Unidades { get; set; } = new List<ConjuntoUnidades>();
+        public List<Edificio> Edificios { get; set; } = new List<Edificio>();
+        public Dictionary<int, CantidadRecurso> Recursos { get; set; }  // clave Recurso.ID
+    }
 
     public class CantidadRecurso
     {
@@ -102,5 +123,7 @@ namespace BusinessLogicLayer
         public int UnidadId { get; set; }
         public int Cantidad { get; set; }
     }
+
+
 }
 

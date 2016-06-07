@@ -12,7 +12,9 @@ namespace BusinessLogicLayer
     {
         private Dictionary<int, TipoUnidad> tiposUnidades = new Dictionary<int, TipoUnidad>();
         private Dictionary<int, TipoEdificio> tiposEdificios = new Dictionary<int, TipoEdificio>();
+        public int JuegoId { get; set; }
         private List<Jugador> jugadores = new List<Jugador>();
+
         private Jugador defensor;
         private DataAccessLayer.Relacional.IDALEntidadesRO _dalRO;
         public string CanalSignalR { get; set; }
@@ -50,7 +52,7 @@ namespace BusinessLogicLayer
 
         private void agregarUnidades(Jugador jug)
         {
-            foreach (ConjuntoUnidades cu in jug.Unidades)
+            foreach (ConjuntoUnidades cu in jug.Unidades.Values)
             {
                 Unidad x = getUnidadPorId(cu.UnidadId);
                 IEnumerable<Unidad> lst = Enumerable.Repeat(x, cu.Cantidad).ToList();
@@ -125,6 +127,7 @@ namespace BusinessLogicLayer
             // tipo de retorno anonimo
             var res = new
             {
+                A = "IniciarAtaque",
                 unidades = new List<Unidad>(),
                 jugadores = new List<String>()
             };

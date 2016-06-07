@@ -64,12 +64,8 @@
         }
 
         this.iniciarAtaque = function(ataqueJson){
-             return $http({
-                method: 'POST',
-                dataType: 'text',
-                url: "Tablero/iniciarAtaque",
-                data: { data: JSON.stringify(ataqueJson) }
-            });
+             return $http.post("Tablero/iniciarAtaque", JSON.stringify(ataqueJson));
+
 
         }
 

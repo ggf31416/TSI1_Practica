@@ -70,11 +70,11 @@
         ];
 
         var EstadoJuego = function() {
-            edificios: [],
-            unidades_desplegadas: [],
-            unidades: [],
-            unidades_desplegables: {}
-        }
+            this.edificios =  [];
+            this.unidades_desplegadas = [];
+            this.unidades = [];
+            this.unidades_desplegables = {};
+        };
 
         $scope.estadoJuego = new EstadoJuego();
 
@@ -187,22 +187,24 @@
         };
 
         function esEsteJugador(json){
-            return json.nombre == nombreJugador;
+            return json.Id == nombreJugador;
         }
 
         function cargarEstado(batalla ){
             $scope.estadoJuego = new EstadoJuego();
             var est = $scope.estadoJuego;
             batalla.jugadores.forEach(function(j){
-                if (esEsteJugador(j)){
-                    j.Unidades.forEach(function(c){
+                var jugador = JSON.parse(j);
+                if (esEsteJugador(jugador)){
+                    var jug_u = jugador.Unidades;
+                    jug_u.forEach(function(c){
                         est.unidades_desplegables[c.UnidadId] = { cantidad : c.cantidad};
                     });
                 }
             });
-            batalla.unidades.forEach(function(u){
-                crearUnidadInmediato(u);
-            });
+            est.unidades_desplegadas = batalla.unidades;
+            $scope.cargarDesdeEstado();
+            console.log("Se termino de cargar batalla");
         }
 
        
@@ -212,12 +214,16 @@
             AddUnidad: "AddUn",
             MoveUnit: "MoveUnit",
             TargetUnit: "TargetUnit",
-            UpdateHP: "UpdateHP"
-            ListaAcciones: "ListaAcciones"
+            UpdateHP: "UpdateHP",
+            ListaAcciones: "ListaAcciones",
+            IniciarAtaque: "IniciarAtaque"
         };
 
         function ejecutarMensaje(msg){
-             if (msg.A == MsgA.AddEdificio) {
+            if (msg.A == MsgA.IniciarAtaque){
+                cargarEstado(msg);
+            }
+            if (msg.A == MsgA.AddEdificio) {
                     crearEdificioInmediato(msg);
             }
             if (msg.A == MsgA.AddUnidad) {
@@ -485,6 +491,8 @@
             var graphics = game.add.graphics(sprite.x,sprite.y);
             crearGraficoUnidad(sprite, graphics);
             sprite.graficos = graphics;
+            sprite.onKilled.add(function(f) {if (sprite.graficos) sprite.graficos.destroy();});
+            sprite.onDestroy.add(function(f) {if (sprite.graficos) sprite.graficos.destroy();});
         }
 
         // se podría permitir personalizar
@@ -721,12 +729,12 @@
         };
 
         $scope.iniciarAtaque = function(enemigo){
-            jsonAtaque = {
+            var jsonAtaque = {
                 Jugador: nombreJugador,
                 Enemigo: enemigo,
                 Juego: $scope.nombreJuego
             };
-            edificiosService.iniciarAtaque(jsonAtaque);
+            juegoService.iniciarAtaque(jsonAtaque);
         }
 
         
