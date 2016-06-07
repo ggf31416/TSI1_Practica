@@ -132,6 +132,13 @@ namespace BusinessLogicLayer
                 int posY = (int)Math.Round((double)obj.PosY);
                 agregarUnidad(obj.Jugador, tipoId, obj.IdUnidad, posX, posY);
             }
+            else if (accion.Equals("BU"))
+            {
+                //string nombreTipo = "Tipo: " + (obj.Id.GetType().FullName);
+
+                int tipoId = (int)obj.Id; ;
+                jugadores[obj.Jugador].AgregarUnidad(tipoId);
+            }
             else if (accion.Equals("AddEd"))
             {
                 agregarEdificio(obj);

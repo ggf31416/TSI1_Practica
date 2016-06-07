@@ -34,6 +34,10 @@
             return postAccion({ "A": "AddUnidad", "J": jugador, "Id": idTipo, "IdUn": idUnidad, "PosX": input_x, "PosY": input_y });
         }
 
+        this.construirUnidad = function (idTipo,jugador){
+            return postAccion({ "A": "BU", "J": jugador, "Id": idTipo});
+        }
+
         this.moverUnidad = function (id, input_x, input_y,jugador){
             return $http.post("Tablero/Accion", JSON.stringify({ "A": "MoveUnidad", "J": jugador , "Id": id, "PosX": input_x, "PosY": input_y}));
         }

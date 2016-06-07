@@ -518,16 +518,23 @@
                 $scope.game.debug.reset();
                 sprite.alpha = 1.0;
                 sprite.tint = 0xFFFFFF;
-                hacerSeleccionableUnidad(sprite);
+                //hacerSeleccionableUnidad(sprite);
                 sprite.info = new Unidad_Info();
                 sprite.info.jugador = nombreJugador;
                 sprite.info.unit_id = nombreJugador + "#" + $scope.contador++;
                 unidadesPorId[sprite.info.unit_id] = sprite;
                 agregarGraficos($scope.game, sprite);
                 //sprite.id_logico = $scope.contador--; // asigno un id automatico que luego cambio}
-                desplegable(sprite.id).cantidad -= 1;
-                $scope.$apply();
-                juegoService.posicionarUnidad(sprite.id, sprite.info.unit_id, input_x, input_y,nombreJugador).then(function (data) {
+                if (estaEnBatalla){
+                    desplegable(sprite.id).cantidad -= 1;
+                    juegoService.posicionarUnidad(sprite.id, sprite.info.unit_id, input_x, input_y,nombreJugador);
+                    $scope.$apply();
+                }
+                else{
+                    juegoService.construirUnidad(sprite.id,nombreJugador);
+                }
+
+
                     //sprite.id_logico = data.data.ret;
                     //unidadesPorId[sprite.id_logico] = sprite;
                     
