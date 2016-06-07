@@ -21,7 +21,7 @@ namespace ServiceLayer
             //http://www.asp.net/signalr/overview/guide-to-the-api/hubs-api-guide-net-client
             var hubConnection = new HubConnection("http://localhost:56927/");
            proxy = hubConnection.CreateHubProxy("ChatHub");
-            //proxy.On<Stock>("UpdateStockPrice", stock => Console.WriteLine("Stock update for {0} new price {1}", stock.Symbol, stock.Price));
+
             hubConnection.Start().Wait();
         }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace BusinessLogicLayer
 {
@@ -11,10 +12,14 @@ namespace BusinessLogicLayer
     {
         private Dictionary<int, TipoUnidad> tiposUnidades = new Dictionary<int, TipoUnidad>();
         private Dictionary<int, TipoEdificio> tiposEdificios = new Dictionary<int, TipoEdificio>();
+        private List<Jugador> jugadores = new List<Jugador>();
+        private Jugador defensor;
         private DataAccessLayer.Relacional.IDALEntidadesRO _dalRO;
-        public string canalSignalR { get; set; }
+        public string CanalSignalR { get; set; }
         public bool EnCurso { get; set; }
         public Tablero tablero;
+
+    
 
         public void inicializar()
         {
@@ -29,6 +34,17 @@ namespace BusinessLogicLayer
             this.tablero = new Tablero();
             this.EnCurso = true;
 
+        }
+
+        public Batalla(Jugador atacante,Jugador defensor)
+        {
+            inicializar();
+            this.tablero = new Tablero();
+            this.tablero.JugadorDefensor = defensor.Id;
+            this.EnCurso = true;
+            this.defensor = defensor;
+            jugadores.Add(atacante);
+            jugadores.Add(defensor);
         }
 
 
@@ -91,6 +107,37 @@ namespace BusinessLogicLayer
         {
             tablero.tickTiempo();
         }
+
+        public string generarListaAccionesTurno()
+        {
+            List<AccionMsg> list = tablero.Acciones;
+            var obj = new
+            {
+                A = "ListaAcciones",
+                L = list
+            };
+            string res = JsonConvert.SerializeObject(obj);
+            return res;
+        }
+
+        public string GenerarJson()
+        {
+            // tipo de retorno anonimo
+            var res = new
+            {
+                unidades = new List<Unidad>(),
+                jugadores = new List<String>()
+            };
+            foreach(Jugador j in jugadores)
+            {
+                bool incluirEdificios = j.Equals(defensor);
+                string jsonJugador = j.GenerarJson(incluirEdificios, false);
+                res.jugadores.Add(jsonJugador);
+            }
+            return JsonConvert.SerializeObject(res);
+        }
+
+
     }
 }
 

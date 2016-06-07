@@ -19,6 +19,8 @@
 
         $scope.listaEnemigos = [];
 
+        //$scope.unidades_desplegables = { };
+
         $scope.loginJuego = function () {
             var loginJuegoParams = { "clientId": 2, "token": "abcd", "idJuego": 1 };
             console.log("entro");
@@ -67,22 +69,14 @@
                 }
         ];
 
-        $scope.estadoJuego = {
-            edificios: [
-                {
-                    id: 3,
-                    posX: 12,
-                    posY: 8
-                },
-                {
-                    id: 22,
-                    posX: 12,
-                    posY: 20
-                }
-            ],
+        var EstadoJuego = function() {
+            edificios: [],
             unidades_desplegadas: [],
-            unidades: []
+            unidades: [],
+            unidades_desplegables: {}
         }
+
+        $scope.estadoJuego = new EstadoJuego();
 
 
         var altoJuego = 600;
@@ -123,6 +117,10 @@
            return $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
         }
         
+
+        function desplegable(sprite_id){
+            return  $scope.estadoJuego.unidades_desplegables[sprite_id];
+        }
 
 
         /*function crearInternalMenu() {
@@ -170,6 +168,7 @@
         }
 
         $scope.cargarDesdeEstado = function () {
+            var estado = $scope.estadoJuego;
             if (buildings){
                 // quita todos los edificios
                 buildings.removeAll(true);
@@ -177,13 +176,36 @@
             if (unidades_desplegadas) {
                 unidades_desplegadas.removeAll(true);
             }
-            $scope.estadoJuego.edificios.forEach (function (e) {
+           estado.edificios.forEach (function (e) {
                 crearEdificioInmediato(e);
             });
-            $scope.estadoJuego.unidades_desplegadas.forEach(function (e) {
+            if (estado.unidades_desplegadas){
+               estado.unidades_desplegadas.forEach(function (e) {
                 crearUnidadInmediato(e);
-            });
+                });
+            }
         };
+
+        function esEsteJugador(json){
+            return json.nombre == nombreJugador;
+        }
+
+        function cargarEstado(batalla ){
+            $scope.estadoJuego = new EstadoJuego();
+            var est = $scope.estadoJuego;
+            batalla.jugadores.forEach(function(j){
+                if (esEsteJugador(j)){
+                    j.Unidades.forEach(function(c){
+                        est.unidades_desplegables[c.UnidadId] = { cantidad : c.cantidad};
+                    });
+                }
+            });
+            batalla.unidades.forEach(function(u){
+                crearUnidadInmediato(u);
+            });
+        }
+
+       
 
         var MsgA = {
             AddEdificio: "AddEd",
@@ -191,7 +213,45 @@
             MoveUnit: "MoveUnit",
             TargetUnit: "TargetUnit",
             UpdateHP: "UpdateHP"
+            ListaAcciones: "ListaAcciones"
         };
+
+        function ejecutarMensaje(msg){
+             if (msg.A == MsgA.AddEdificio) {
+                    crearEdificioInmediato(msg);
+            }
+            if (msg.A == MsgA.AddUnidad) {
+                crearUnidadInmediato(msg);
+            }
+            if (msg.A == MsgA.MoveUnit) {
+                var unit = unidadesPorId[msg.Unit_id];
+                if (unit) {
+                    moverUnidad(unit, msg.Path);
+                }
+            }
+            if (msg.A == MsgA.Target) {
+                var unit = unidadesPorId[msg.Unit_id];
+                if (unit) {
+                    unit.info.target = msg.Target;
+                }
+            }
+            if (msg.A == MsgA.UpdateHP) {
+                var unit = unidadesPorId[msg.Unit_id];
+                // setear vida
+                unit.info.hp = msg.VN;
+                if (msg.VN < 0){
+                    // matar
+
+                    unit.kill();
+                }
+            }
+            if (msg.A == MsgA.ListaAcciones){
+                msg.L.forEach(function(a){
+                    ejecutarMensaje(a);
+                });
+            }
+
+        }
 
         $scope.iniciarSignalR = function () {
             // Declare a proxy to reference the hub.
@@ -199,35 +259,7 @@
             // Create a function that the hub can call to broadcast messages.
             $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
                 var msg = JSON.parse(message);
-                if (msg.A == MsgA.AddEdificio) {
-                    crearEdificioInmediato(msg);
-                }
-                if (msg.A == MsgA.AddUnidad) {
-                    crearUnidadInmediato(msg);
-                }
-                if (msg.A == MsgA.MoveUnit) {
-                    var unit = unidadesPorId[msg.Unit_id];
-                    if (unit) {
-                        moverUnidad(unit, msg.Path);
-                    }
-                }
-                if (msg.A == MsgA.Target) {
-                    var unit = unidadesPorId[msg.Unit_id];
-                    if (unit) {
-                        unit.info.target = msg.Target;
-                    }
-                }
-                if (msg.A == MsgA.UpdateHP) {
-                    var unit = unidadesPorId[msg.Unit_id];
-                    // setear vida
-                    unit.info.hp = msg.VN;
-                    if (msg.VN < 0){
-                        // matar
-                        unit.destroy();
-                    }
-
-                }
-
+                ejecutarMensaje(msg);
 
                 //$scope.estadoJuego.edificios = msjJSON.edificios;
                 //$scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;
@@ -265,13 +297,16 @@
             $scope.game.load.image('cuartel', '/Content/img/Barracks4.png');
             $scope.game.load.image('cuartelMenu', '/Content/img/cuartel.jpg');
             $scope.game.load.image('default_proyectil', '/Content/img/Crystal_Arrow.gif');
-
+            if (!$scope.estadoJuego.unidades_desplegables){
+                $scope.estadoJuego.unidades_desplegables = {};
+            }
             
             $scope.listaEdificios.forEach(function (e) {
                 if (e.Imagen != null) {
                     console.log(e);
                    // $scope.game.load.image(e.Id, 'http://localhost:56662' + e.Imagen);
                     $scope.game.load.image(e.Id,  e.Imagen);
+
                 }
             });
 
@@ -279,6 +314,8 @@
                 if (e.Imagen != null) {
                     console.log(e);
                     $scope.game.load.image(e.Id, e.Imagen);
+                    $scope.estadoJuego.unidades_desplegables[e.Id] = { cantidad: 10};
+                    $scope.estadoJuego.unidades_desplegables[e.Id].cantidad = 10;
                 }
             });
         }
@@ -314,7 +351,7 @@
             var tile = $scope.game.add.tileSprite(0, 0, $scope.game.world.width, $scope.game.world.height, "grass");
             tile.tileScale = new PIXI.Point(0.25, 0.25);
             tile.inputEnabled = true;
-            clickVisibleUnidades(tile, false);
+            //clickVisibleUnidades(tile, false);
 
 
             buildings = $scope.game.add.physicsGroup();
@@ -357,6 +394,10 @@
                 nombreEntidadDragged = null;
             }
         }
+
+        $scope.puedoDesplegarUnidad = function(sprite_id){
+            return desplegable(sprite_id) &&  desplegable(sprite_id).cantidad > 0;
+        };
 
 
         function activarSeguirMouse() {
@@ -440,6 +481,25 @@
         }
 
 
+        function agregarGraficos(game,sprite){
+            var graphics = game.add.graphics(sprite.x,sprite.y);
+            crearGraficoUnidad(sprite, graphics);
+            sprite.graficos = graphics;
+        }
+
+        // se podría permitir personalizar
+        function crearGraficoUnidad(sprite,graphics){
+            var colorCirculo = 0xffffff;
+            if (sprite.info ){
+                colorCirculo = sprite.info.jugador == nombreJugador ? 0x00ff00 : 0xff0000;
+            }
+            // dibuja un circulo del color apropiado
+            graphics.lineStyle(1, colorCirculo, 1);
+            graphics.drawCircle(sprite.width/2,sprite.height / 2, unit_size * 1.5);
+        }
+
+
+
         $scope.aceptarPosicionUnidad = function (sprite, pointer) {
             console.log("aceptarPosicionUnidad");
             if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
@@ -452,9 +512,13 @@
                 sprite.tint = 0xFFFFFF;
                 hacerSeleccionableUnidad(sprite);
                 sprite.info = new Unidad_Info();
+                sprite.info.jugador = nombreJugador;
                 sprite.info.unit_id = nombreJugador + "#" + $scope.contador++;
                 unidadesPorId[sprite.info.unit_id] = sprite;
+                agregarGraficos($scope.game, sprite);
                 //sprite.id_logico = $scope.contador--; // asigno un id automatico que luego cambio}
+                desplegable(sprite.id).cantidad -= 1;
+                $scope.$apply();
                 juegoService.posicionarUnidad(sprite.id, sprite.info.unit_id, input_x, input_y,nombreJugador).then(function (data) {
                     //sprite.id_logico = data.data.ret;
                     //unidadesPorId[sprite.id_logico] = sprite;
@@ -540,6 +604,15 @@
         }
 
         function update() {
+            // actualizo los circulos de las unidades para que coincidan los centros
+            // si lo hago con addChild me escala el circulo y no lo quiero 
+            unidades_desplegadas.forEach(function(u){
+                if (u.graficos){
+                    u.graficos.x  = u.x;
+                    u.graficos.y = u.y;
+                }
+            });
+
             if (cursors.up.isDown) {
                 $scope.game.camera.y -= 4;
             }
@@ -553,6 +626,8 @@
             else if (cursors.right.isDown) {
                 $scope.game.camera.x += 4;
             }
+
+
 
             if (spriteDragged != null) {
                 var s = esUnidad ? unit_size : tile_size;
@@ -653,6 +728,11 @@
             };
             edificiosService.iniciarAtaque(jsonAtaque);
         }
+
+        
+
+
+
 
     }
     ]);

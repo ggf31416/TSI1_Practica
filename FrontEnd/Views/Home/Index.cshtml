@@ -61,8 +61,8 @@
 <div id="divUnidades" class="barraLateralJuego">
     <ul ng-repeat="e in listaUnidades | filter:{Imagen: ''}">
         <li>
-            <div ng-mousedown="posicionarUnidad(e.Id)">
-                <img width="50" height="50" ng-src="http://localhost:56662/{{e.Imagen}}" alt="{{e.Id}}" />
+            <div ng-mousedown="!puedoDesplegarUnidad(e.Id) || posicionarUnidad(e.Id)"  ng-disabled="!puedoDesplegarUnidad(e.Id)">
+                <img width="50" height="50" ng-src="http://localhost:56662/{{e.Imagen}}" alt="{{e.Id}}" ng-disabled="!puedoDesplegarUnidad(e.Id)" />
                 <span class="caption">{{e.Nombre}}</span>
             </div>
         </li>
@@ -90,7 +90,7 @@
 
 <script> 
     $(document).ready(function () {
-        $('#divUnidades').toggle(false);
+        //$('#divUnidades').toggle(false);
         $('#listaEnemigos').toggle(false);
     })
 </script>

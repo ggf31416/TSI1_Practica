@@ -19,7 +19,7 @@ namespace BusinessLogicLayer
         Random r = new Random();
         
         private List<Edificio> edificios = new List<Edificio>();
-        private string jugadorDefensor;
+        public string JugadorDefensor { get; set; }
         private Dictionary<String, List<Unidad>> unidadesPorJugador = new Dictionary<string, List<Unidad>>();
         private Dictionary<string, Unidad> unidades = new Dictionary<string, Unidad>();
         private Dictionary<string, ResultadoBusqPath> paths = new Dictionary<string, ResultadoBusqPath>();
@@ -67,12 +67,11 @@ namespace BusinessLogicLayer
                 unidadesPorJugador.Add(jugador, new List<Unidad>());
             }
             string id = u.id;
-            //while (unidades.Keys.Contains(id)) id = r.Next();
-            //u.id = id;
+
             u.jugador = jugador;
             unidades[id] = u;
             unidadesPorJugador[jugador].Add(u);
-            //return 
+             
         }
 
         public void agregarUnidades(String jugador, IEnumerable<Unidad> unidades)
@@ -202,7 +201,7 @@ namespace BusinessLogicLayer
         {
             float distancia = 0;
             Edificio nearest = null;
-            if (!u.jugador.Equals(jugadorDefensor))
+            if (!u.jugador.Equals(JugadorDefensor))
             {
                 foreach (Edificio ed in this.edificios)
                 {

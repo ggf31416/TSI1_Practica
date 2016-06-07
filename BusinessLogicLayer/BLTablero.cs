@@ -38,9 +38,15 @@ namespace BusinessLogicLayer
 
         public void ejecutarBatallasEnCurso()
         {
+            var client = getCliente();
             foreach(Batalla b in batallas.Values)
             {
-                if (b.EnCurso) b.ejecutarTurno();
+                if (b.EnCurso)
+                {
+                    b.ejecutarTurno();
+                    string jsonAcciones = b.generarListaAccionesTurno();
+                    client.Send(jsonAcciones);
+                }
             }
         }
 
@@ -73,13 +79,19 @@ namespace BusinessLogicLayer
             //client.Send("{\"Id\":" + infoCelda.Id + ",\"PosX\":" + infoCelda.PosX + ",\"PosY\":" + infoCelda.PosY + "}");
         }
 
-      
+
+        private static ServiceInteraccionClient getCliente()
+        {
+            BLServiceClient serviceClient = new BLServiceClient();
+            ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
+            return client;
+        }
+
+
 
         private void agregarUnidad(string jugador, int tipo_id, string unit_id, int posX, int posY)
         {
-
-            BLServiceClient serviceClient = new BLServiceClient();
-            ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
+            ServiceInteraccionClient client = getCliente();
             Batalla b = obtenerBatalla(jugador);
             b.agregarUnidad(tipo_id, jugador, unit_id, posX, posY);
 
@@ -94,11 +106,13 @@ namespace BusinessLogicLayer
             client.Send(s2);*/
         }
 
+
         private Batalla obtenerBatalla(string jugador)
         {
             if (!batallas.ContainsKey(jugador))
             {
                 batallas.Add(jugador, new Batalla(jugador, ""));
+                
             }
             Batalla b = batallas[jugador];
             return b;
@@ -159,9 +173,14 @@ namespace BusinessLogicLayer
 
         public void IniciarAtaque(InfoAtaque info)
         {
-            Batalla b = new Batalla(info.Jugador, info.Enemigo);
+            Jugador jAt = jugadores[info.Jugador];
+            Jugador jDef = jugadores[info.Enemigo];
+            Batalla b = new Batalla(jAt, jDef);
             batallas[info.Jugador] = b;
             batallas[info.Enemigo]= b;
+            var client = getCliente();
+            string infoBatalla = b.GenerarJson();
+            client.Send(infoBatalla);
 		}
 
         public bool authenticate(Cliente cliente, int idJuego)
