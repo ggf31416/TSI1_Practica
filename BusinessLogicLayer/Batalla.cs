@@ -113,12 +113,13 @@ namespace BusinessLogicLayer
         public string generarListaAccionesTurno()
         {
             List<AccionMsg> list = tablero.Acciones;
+            if (list.Count == 0) return "";
             var obj = new
             {
                 A = "ListaAcciones",
                 L = list
             };
-            string res = JsonConvert.SerializeObject(obj);
+            string res = JsonConvert.SerializeObject(obj,new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
             return res;
         }
 

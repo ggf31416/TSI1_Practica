@@ -51,7 +51,7 @@
             //unidadesService.getAllTipoUnidades()
         ]).then(function (data) {
             $rootScope.listaEdificios = data[0];
-            $rootScope.listaUnidades = [ {Ataque : 10, Defensa : 10, Id : 10, Nombre : "Arquero", TiempoConstruccion : 10, Vida : 100, Imagen : "/SPA/backoffice/ImagenesSubidas/arquero.jpg" }]
+            $rootScope.listaUnidades = [ {Ataque : 10, Defensa : 10, Id : 314159, Nombre : "Arquero", TiempoConstruccion : 10, Vida : 100, Imagen : "/SPA/backoffice/ImagenesSubidas/arquero.jpg" }]
             //data[1];
             window.createGame();
         });
@@ -105,6 +105,7 @@
         window.createGame = function (scope, injector) {
             // Create our phaser $scope.game
             $scope.game = new Phaser.Game(anchoJuego, altoJuego, Phaser.AUTO, 'divJuego', { preload: $scope.preload, create: create, update: update });
+            //$scope.game.time.events.add(Phaser.Timer.SECOND * 1, pedirNombre, this);
             pedirNombre();
         };
 
@@ -160,6 +161,7 @@
                 unit.info = new Unidad_Info(data.Unit_id);
                 unidades_desplegadas.add(unit);
                 unidadesPorId[unit.info.unit_id] = unit;
+                agregarGraficos($scope.game, unit);
                 console.log("Unidad agregada desde remoto json:" + data);
             }
             else {
@@ -184,6 +186,7 @@
                 crearUnidadInmediato(e);
                 });
             }
+            $scope.$apply();
         };
 
         function esEsteJugador(json){
@@ -193,12 +196,13 @@
         function cargarEstado(batalla ){
             $scope.estadoJuego = new EstadoJuego();
             var est = $scope.estadoJuego;
+            estaEnBatalla = true;
             batalla.jugadores.forEach(function(j){
                 var jugador = JSON.parse(j);
                 if (esEsteJugador(jugador)){
                     var jug_u = jugador.Unidades;
                     jug_u.forEach(function(c){
-                        est.unidades_desplegables[c.UnidadId] = { cantidad : c.cantidad};
+                        est.unidades_desplegables[c.UnidadId] = { cantidad : c.Cantidad};
                     });
                 }
             });
@@ -223,26 +227,26 @@
             if (msg.A == MsgA.IniciarAtaque){
                 cargarEstado(msg);
             }
-            if (msg.A == MsgA.AddEdificio) {
+            else if (msg.A == MsgA.AddEdificio) {
                     crearEdificioInmediato(msg);
             }
-            if (msg.A == MsgA.AddUnidad) {
+            else if (msg.A == MsgA.AddUnidad) {
                 crearUnidadInmediato(msg);
             }
-            if (msg.A == MsgA.MoveUnit) {
-                var unit = unidadesPorId[msg.Unit_id];
+            else if (msg.A == MsgA.MoveUnit) {
+                var unit = unidadesPorId[msg.IdUn];
                 if (unit) {
                     moverUnidad(unit, msg.Path);
                 }
             }
-            if (msg.A == MsgA.Target) {
-                var unit = unidadesPorId[msg.Unit_id];
+            else if (msg.A == MsgA.Target) {
+                var unit = unidadesPorId[msg.IdUn];
                 if (unit) {
                     unit.info.target = msg.Target;
                 }
             }
-            if (msg.A == MsgA.UpdateHP) {
-                var unit = unidadesPorId[msg.Unit_id];
+            else if (msg.A == MsgA.UpdateHP) {
+                var unit = unidadesPorId[msg.IdUn];
                 // setear vida
                 unit.info.hp = msg.VN;
                 if (msg.VN < 0){
@@ -251,7 +255,7 @@
                     unit.kill();
                 }
             }
-            if (msg.A == MsgA.ListaAcciones){
+            else if (msg.A == MsgA.ListaAcciones){
                 msg.L.forEach(function(a){
                     ejecutarMensaje(a);
                 });
@@ -402,7 +406,7 @@
         }
 
         $scope.puedoDesplegarUnidad = function(sprite_id){
-            return desplegable(sprite_id) &&  desplegable(sprite_id).cantidad > 0;
+            return !estaEnBatalla  || (desplegable(sprite_id) &&  desplegable(sprite_id).cantidad > 0);
         };
 
 
@@ -491,8 +495,8 @@
             var graphics = game.add.graphics(sprite.x,sprite.y);
             crearGraficoUnidad(sprite, graphics);
             sprite.graficos = graphics;
-            sprite.onKilled.add(function(f) {if (sprite.graficos) sprite.graficos.destroy();});
-            sprite.onDestroy.add(function(f) {if (sprite.graficos) sprite.graficos.destroy();});
+            sprite.events.onKilled.add(function(f) {if (sprite.graficos) sprite.graficos.destroy();});
+            sprite.events.onDestroy.add(function(f) {if (sprite.graficos) sprite.graficos.destroy();});
         }
 
         // se podría permitir personalizar
@@ -533,12 +537,7 @@
                 else{
                     juegoService.construirUnidad(sprite.id,nombreJugador);
                 }
-
-
-                    //sprite.id_logico = data.data.ret;
-                    //unidadesPorId[sprite.id_logico] = sprite;
-                    
-                });
+                
             }
             else {
                 sprite.destroy();

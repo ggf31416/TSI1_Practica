@@ -24,7 +24,7 @@ namespace ServiceLayer
 
         private static void SetupDependencies()
         {
-            blHandler = new BLTablero(new DataAccessLayer.DALTablero());
+            blHandler = BLTablero.getInstancia();
         }
 
         private static void SetupService()

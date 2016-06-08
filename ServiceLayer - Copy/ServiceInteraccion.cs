@@ -31,7 +31,19 @@ namespace ServiceLayer
 
 
             //var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
-            proxy.Invoke("send", "Service",msg).Wait();
+            try
+            {
+                proxy.Invoke("send", "Service", msg).Wait();
+            }
+            catch (TimeoutException toEx)
+            {
+                Console.WriteLine("Timeout signlar Date " + DateTime.Now.ToShortTimeString() + " msg: " + msg);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ocurrio un error al enviar signalr: " + ex.ToString());
+            }
+            
             //context.Clients.All.broadcastMessage("Service", msg);
         }
     }

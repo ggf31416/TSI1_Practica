@@ -174,7 +174,7 @@ namespace BusinessLogicLayer
 
         public Unidad buscarEnemigoMasCercano(Unidad u)
         {
-            double  distancia = 0;
+            double  distancia = Double.PositiveInfinity;
             Unidad nearest = null;
             foreach (String j in this.unidadesPorJugador.Keys)
             {
@@ -186,7 +186,7 @@ namespace BusinessLogicLayer
                         double d = euclides2(u.posX - e.posX, u.posY - e.posY);
                         if (d < distancia)
                         {
-                            d = distancia;
+                            distancia = d;
                             nearest = e;
                         }
                     }
@@ -275,7 +275,7 @@ namespace BusinessLogicLayer
             GridPos destino = buscarMasCercano(u);
             var r_path = buscarPath(u, destino);
             var r = new ResultadoBusqPath() { path = r_path.ToArray() };
-            paths.Add(u.id, r);
+            //paths.Add(u.id, r);
             return r;
         }
 
@@ -346,6 +346,8 @@ namespace BusinessLogicLayer
                     var p = paths[u.id];
                     // actualizo las posiciones de las unidades en funcion de sus movientos
                     simularMovimiento(deltaT, u,p);
+                    var acc = new AccionMsg() { Accion="PosUnit", IdUnidad = u.id, PosX = u.posXr, PosY = u.posYr };
+                    Acciones.Add(acc);
                 }
               
                 // ya mandamos los paths, no es necesario mandar los valores de x,y actuales
@@ -371,18 +373,29 @@ namespace BusinessLogicLayer
             GridPos[] path = p.path;
             int idx = p.idxActual;
             double t_restante = deltaT;
+            double epsAvance = 0.001;
+            if (p.idxActual == p.path.Length) return; // salgo rapido para facilitar debugging
             while (t_restante > 0 && p.idxActual < path.Length)
             {
 
                 GridPos prox = path[idx];
+                float avance = 1;
                 float dif_x = prox.x - u.posX;
-                float dif_y = prox.x - u.posY;
+                float dif_y = prox.y - u.posY;
                 double prox_dist = euclides(dif_x, dif_y);
-                double prox_eta = prox_dist / u.velocidad;
-                float avance = (float)Math.Min(t_restante / prox_eta, 1);
-                u.posX += avance * dif_x;
-                u.posY += avance * dif_y;
-                t_restante -= prox_eta;
+                if (prox_dist > 0)
+                {
+                    // si la distancia es 0 las operaciones no estan definidas
+                    double prox_eta = prox_dist / u.velocidad;
+                    avance = (float)Math.Min(t_restante / prox_eta, 1);
+                    u.posX += avance * dif_x;
+                    u.posY += avance * dif_y;
+                    t_restante -= prox_eta;
+                }
+                if (avance > 1 - epsAvance)
+                {
+                    p.idxActual++;
+                }
             }
         }
 
