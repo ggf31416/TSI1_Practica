@@ -14,3 +14,7 @@
     'use strict';
     angular.module('recursos', []);
 })();
+(function () {
+    'use strict';
+    angular.module('aldeas', []);
+})();

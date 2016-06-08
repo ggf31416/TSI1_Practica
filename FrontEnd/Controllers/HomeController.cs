@@ -16,6 +16,7 @@ namespace FrontEnd.Controllers
             return View();
         }
 
+
         [HttpPost]
         public ActionResult login(ClienteJuego clienteJuego)
         {
@@ -32,6 +33,13 @@ namespace FrontEnd.Controllers
             {
                 return Json(new { sucess = false });
             }
+        }
+
+
+        // GET: Aldea
+        public ActionResult Aldea()
+        {
+            return View();
         }
 
     }
