@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\ConjuntoUnidad.cs" />
     <Compile Include="Entities\InfoAtaque.cs" />
     <Compile Include="Entities\Cliente.cs" />
     <Compile Include="Entities\InfoCelda.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Entities\TipoEdificio.cs" />
     <Compile Include="Entities\TipoEntidad.cs" />
     <Compile Include="Entities\TipoUnidad.cs" />
+    <Compile Include="Entities\JugadorShared.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entities\Recurso.cs" />
   </ItemGroup>

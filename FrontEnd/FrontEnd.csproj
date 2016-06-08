@@ -219,6 +219,9 @@
     <Content Include="bin\roslyn\Microsoft.VisualBasic.Core.targets" />
     <Content Include="bin\roslyn\VBCSCompiler.exe.config" />
     <Content Include="Properties\DataSources\Shared.Entities.JugadorBasico.datasource" />
+    <Content Include="Properties\DataSources\Shared.Entities.Juego.datasource" />
+    <Content Include="Properties\DataSources\Shared.Entities.TipoEdificio.datasource" />
+    <Content Include="Properties\DataSources\Shared.Entities.TipoUnidad.datasource" />
     <None Include="Properties\PublishProfiles\tsi1frontoffice.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -230,17 +233,40 @@
     <Content Include="Scripts\jquery.signalR-2.1.2.js" />
     <Content Include="Scripts\jquery.signalR-2.1.2.min.js" />
     <Content Include="Chat.html" />
-    <None Include="Service References\ServiceEntidades\configuration.svcinfo" />
-    <None Include="Service References\ServiceEntidades\configuration91.svcinfo" />
-    <None Include="Service References\ServiceEntidades\item.disco" />
-    <None Include="Service References\ServiceEntidades\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference1.cs</LastGenOutput>
+    <Content Include="Service References\ServiceEntidades\FrontEnd.ServiceEntidades.Tablero.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ServiceEntidades\FrontEnd.ServiceEntidades.Tecnologia.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ServiceEntidades\FrontEnd.ServiceEntidades.TipoRecurso.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Service References\ServiceEntidades\item.wsdl" />
+    <None Include="Service References\ServiceEntidades\item.xsd">
+      <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ServiceEntidades\item1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceEntidades\item2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceEntidades\item3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ServiceEntidades\ServiceAtlas.wsdl" />
     <None Include="Service References\ServiceTablero\item.disco" />
     <None Include="Service References\ServiceTablero\configuration91.svcinfo" />
     <None Include="Service References\ServiceTablero\configuration.svcinfo" />
     <None Include="Service References\ServiceTablero\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ServiceEntidades\item.disco" />
+    <None Include="Service References\ServiceEntidades\configuration91.svcinfo" />
+    <None Include="Service References\ServiceEntidades\configuration.svcinfo" />
+    <None Include="Service References\ServiceEntidades\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
@@ -294,8 +320,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Service References\ServiceEntidades\Reference.cs" />
-    <Compile Include="Service References\ServiceEntidades\Reference1.cs">
+    <Compile Include="Service References\ServiceEntidades\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -313,19 +338,6 @@
     <Content Include="packages.config" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-2.2.3.min.map" />
-    <Content Include="Service References\ServiceEntidades\FrontEnd.ServiceEntidades.TipoEdificio.datasource" />
-    <Content Include="Service References\ServiceEntidades\FrontEnd.ServiceEntidades.TipoUnidad.datasource" />
-    <None Include="Service References\ServiceEntidades\item.wsdl" />
-    <None Include="Service References\ServiceEntidades\item.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceEntidades\item1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceEntidades\item2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceEntidades\ServiceEntidades.wsdl" />
     <None Include="Service References\ServiceTablero\item.wsdl" />
     <None Include="Service References\ServiceTablero\item.xsd">
       <SubType>Designer</SubType>
@@ -337,11 +349,8 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\ServiceTablero\ServiceTablero.wsdl" />
-
     <Content Include="Views\Shared\_Layout.cshtml" />
-
     <Content Include="Views\Home\Aldea.cshtml" />
-
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

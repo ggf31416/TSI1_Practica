@@ -112,17 +112,7 @@ namespace BusinessLogicLayer
         public Dictionary<int, CantidadRecurso> Recursos { get; set; }  // clave Recurso.ID
     }
 
-    public class CantidadRecurso
-    {
-        public double porSegundo { get; set; }
-        public double acumulado { get; set; }
-    }
 
-    public class ConjuntoUnidades
-    {
-        public int UnidadId { get; set; }
-        public int Cantidad { get; set; }
-    }
 
 
 }

@@ -6,9 +6,11 @@ netsh http delete urlacl url=http://+:8836/tsi/
 netsh http delete urlacl url=http://+:8837/tsi/
 netsh http delete urlacl url=http://+:8838/tsi/
 netsh http delete urlacl url=http://+:8839/tsi/
+netsh http delete urlacl url=http://+:8840/tsi/
 
 netsh http add urlacl url=http://+:8835/tsi/ %USER%
 netsh http add urlacl url=http://+:8836/tsi/ %USER%
 netsh http add urlacl url=http://+:8837/tsi/ %USER%
 netsh http add urlacl url=http://+:8838/tsi/ %USER%
 netsh http add urlacl url=http://+:8839/tsi/ %USER%
+netsh http add urlacl url=http://+:8840/tsi/ %USER%

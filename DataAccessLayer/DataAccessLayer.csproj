@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=4.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.2.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -72,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DALJugadorInfo.cs" />
     <Compile Include="DALTablero.cs" />
     <Compile Include="DALConstruccion.cs" />
     <Compile Include="DALUsuario.cs" />
@@ -80,6 +85,7 @@
     <Compile Include="Entities\Edificio.cs" />
     <Compile Include="Entities\Estadisticas.cs" />
     <Compile Include="Entities\InfoCelda.cs" />
+    <Compile Include="Entities\JugadorInfo.cs" />
     <Compile Include="Entities\Prueba.cs" />
     <Compile Include="Entities\TableroConstruccion.cs" />
     <Compile Include="Exceptions\DALConstruccionException.cs" />

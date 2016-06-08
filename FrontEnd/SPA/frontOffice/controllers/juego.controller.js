@@ -47,10 +47,10 @@
 
         
         $q.all([
-            edificiosService.getAllTipoEdificios(),
+            //edificiosService.getAllTipoEdificios(),
             //unidadesService.getAllTipoUnidades()
         ]).then(function (data) {
-            $rootScope.listaEdificios = data[0];
+            $rootScope.listaEdificios = [];//data[0];
             $rootScope.listaUnidades = [ {Ataque : 10, Defensa : 10, Id : 314159, Nombre : "Arquero", TiempoConstruccion : 10, Vida : 100, Imagen : "/SPA/backoffice/ImagenesSubidas/arquero.jpg" }]
             //data[1];
             window.createGame();

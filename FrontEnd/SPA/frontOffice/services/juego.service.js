@@ -18,7 +18,7 @@
             return $http({
                 method: 'POST',
                 dataType: 'text',
-                url: "Tablero/Accion",
+                url: "/Tablero/Accion",
                 data: { data: JSON.stringify(json) }
             });
         }
@@ -39,21 +39,21 @@
         }
 
         this.moverUnidad = function (id, input_x, input_y,jugador){
-            return $http.post("Tablero/Accion", JSON.stringify({ "A": "MoveUnidad", "J": jugador , "Id": id, "PosX": input_x, "PosY": input_y}));
+            return $http.post("/Tablero/Accion", JSON.stringify({ "A": "MoveUnidad", "J": jugador , "Id": id, "PosX": input_x, "PosY": input_y}));
         }
 
         this.registrarJugador = function (jugador,juego) {
             return $http({
                 method: 'POST',
                 dataType: 'text',
-                url: "Tablero/RegistrarJugador",
+                url: "/Tablero/RegistrarJugador",
                 data: { "jugador": jugador }
             });
         }
 
 
         this.getListaEnemigos = function (jugador,juego) {
-            var promise = $http.get("Tablero/GetListaDeJugadoresAtacables",{params: {"jugador": jugador}}).then(
+            var promise = $http.get("/Tablero/GetListaDeJugadoresAtacables",{params: {"jugador": jugador}}).then(
                 function (data) {
                     if (data.data.success == false) {
                         throw new Error(data.data.responseText);
@@ -68,7 +68,7 @@
         }
 
         this.iniciarAtaque = function(ataqueJson){
-             return $http.post("Tablero/iniciarAtaque", JSON.stringify(ataqueJson));
+             return $http.post("/Tablero/iniciarAtaque", JSON.stringify(ataqueJson));
 
 
         }
