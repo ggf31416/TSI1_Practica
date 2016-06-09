@@ -50,7 +50,7 @@
     <ul ng-repeat="e in listaEdificios | filter:{Imagen: ''}">
     <li>
         <div draggable="true" ng-click="posicionarEdificio(e.Id)" ng-mousedown="posicionarEdificio(e.Id)">
-            <img width="50" height="50" ng-src="http://localhost:56662/{{e.Imagen}}" alt="{{e.Id}}"  />
+            <img width="50" height="50" ng-src="{{e.Imagen}}" alt="{{e.Id}}"  />
             <span class="caption">{{e.Nombre}}</span>
             <span class="caption">{{e.TiempoConstruccion}}s</span>
         </div>
@@ -62,7 +62,7 @@
     <ul ng-repeat="e in listaUnidades | filter:{Imagen: ''}">
         <li>
             <div ng-mousedown="!puedoDesplegarUnidad(e.Id) || posicionarUnidad(e.Id)"  ng-disabled="!puedoDesplegarUnidad(e.Id)">
-                <img width="50" height="50" ng-src="http://localhost:56662/{{e.Imagen}}" alt="{{e.Id}}" ng-disabled="!puedoDesplegarUnidad(e.Id)" />
+                <img width="50" height="50" ng-src="{{e.Imagen}}" alt="{{e.Id}}" ng-disabled="!puedoDesplegarUnidad(e.Id)" />
                 <span class="caption">{{e.Nombre}}</span>
             </div>
         </li>
