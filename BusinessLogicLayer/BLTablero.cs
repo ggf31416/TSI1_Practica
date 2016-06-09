@@ -113,13 +113,19 @@ namespace BusinessLogicLayer
             }
         }
 
-        public void login(Cliente cliente, int idJuego)
+        public bool login(ClienteJuego cliente, int idJuego)
         {
             IDALUsuario iDALUsuario = new DALUsuario(idJuego);
-            iDALUsuario.login(cliente);
+            return iDALUsuario.login(cliente);
         }
 
-        public bool authenticate(Cliente cliente, int idJuego)
+        public void register(ClienteJuego cliente, int idJuego)
+        {
+            IDALUsuario iDALUsuario = new DALUsuario(idJuego);
+            iDALUsuario.register(cliente);
+        }
+
+        public bool authenticate(ClienteJuego cliente, int idJuego)
         {
             IDALUsuario iDALUsuario = new DALUsuario(idJuego);
             return iDALUsuario.authenticate(cliente);

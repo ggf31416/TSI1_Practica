@@ -28,13 +28,13 @@ namespace DataAccessLayer
             collection = database.GetCollection<TableroConstruccion>("construccion");
         }
 
-        public void InicializarConstruccion(int idUsuario)
+        public void InicializarConstruccion(string idUsuario)
         {
             TableroConstruccion tableroConstruccionInicial = new TableroConstruccion(idUsuario);
             collection.InsertOne(tableroConstruccionInicial);
         }
 
-        public TableroConstruccion getTableroConstruccion(int idUsuario)
+        public TableroConstruccion getTableroConstruccion(string idUsuario)
         {
             var query = from tablero in collection.AsQueryable<TableroConstruccion>()
                         where tablero.idUsuario == idUsuario
@@ -54,7 +54,7 @@ namespace DataAccessLayer
             return null;
         }
 
-        public void AddInfoCelda(int idUsuario, InfoCelda infoCelda)
+        public void AddInfoCelda(string idUsuario, InfoCelda infoCelda)
         {
             TableroConstruccion tableroConstruccion = null;
             try
@@ -75,7 +75,7 @@ namespace DataAccessLayer
             collection.ReplaceOne(tablero => tablero.idUsuario == tableroConstruccion.idUsuario, tableroConstruccion);
         }
 
-        public void DeleteInfoCelda(int idUsuario, InfoCelda infoCelda)
+        public void DeleteInfoCelda(string idUsuario, InfoCelda infoCelda)
         {
             TableroConstruccion tableroConstruccion = getTableroConstruccion(idUsuario);
             if (tableroConstruccion == null)
@@ -91,7 +91,7 @@ namespace DataAccessLayer
             collection.ReplaceOne(tablero => tablero.idUsuario == tableroConstruccion.idUsuario, tableroConstruccion);
         }
 
-        public void Refresh(int idUsuario, Shared.Entities.Juego juego)
+        public void Refresh(string idUsuario, Shared.Entities.Juego juego)
         {
             TableroConstruccion tableroConstruccion = getTableroConstruccion(idUsuario);
             if (tableroConstruccion == null)

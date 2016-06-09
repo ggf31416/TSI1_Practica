@@ -15,16 +15,48 @@
         $rootScope.nombreJuego = "Atlas2";
 
         $scope.contador = 1;
+        $scope.idJuego = 6;
 
-        $scope.loginJuego = function () {
-            var loginJuegoParams = { "clientId": 2, "token": "abcd", "idJuego": 1 };
-            console.log("entro");
-            juegoService.loginJuego(loginJuegoParams)
-            .then(function (response) {
-                console.log(response);
-            }).catch(function (msjError) {
-                console.log(msjError);
-            });
+        $scope.loginJuego = function (response) {
+            if (response.status === 'connected') {
+                $scope.clienteId = response.authResponse.userID;
+                $scope.token = response.authResponse.accessToken;
+                var loginJuegoParams = {
+                    "clienteId": $scope.clienteId,
+                    "token": $scope.token,
+                    "idJuego": $scope.idJuego
+                };
+                juegoService.loginJuego(loginJuegoParams)
+                .then(function (response) {
+                    console.log(response);
+                }).catch(function (msjError) {
+                    if (msjError === "registrarse") {
+                        $('#modalRegistro').modal('show');
+                    }
+                    
+                });
+            } else if (response.status === 'not_authorized') {
+
+            } else {
+
+            }
+        }
+
+        $scope.submitRegister = function () {
+            var registerJuegoParams = {
+                "clienteId": $scope.clienteId,
+                "token": $scope.token,
+                "idJuego": $scope.idJuego,
+                "username": username_register.value,
+                "nombre": nombre_register.value,
+                "apellido": apellido_register.value
+            };
+            juegoService.registerJuego(registerJuegoParams)
+                .then(function (response) {
+                    $('#modalRegistro').modal('hide');
+                }).catch(function (msjError) {
+                    console.log(msjError);
+                });
         }
         
         $scope.posicionarUnidad= function (id) {
@@ -110,7 +142,7 @@
         };
 
         function pedirNombre() {
-            nombreJugador = window.prompt("Jugador?", "");
+            //nombreJugador = window.prompt("Jugador?", "");
         }
 
 

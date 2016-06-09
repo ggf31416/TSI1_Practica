@@ -281,7 +281,7 @@
     </Compile>
     <Compile Include="ChatHub.cs" />
     <Compile Include="Hubs\AtlasHub.cs" />
-    <Compile Include="Models\Cliente.cs" />
+    <Compile Include="Models\ClienteJuego.cs" />
     <Compile Include="Models\EdificioUnidadModel.cs" />
     <Compile Include="Models\InfoCeldaModel.cs" />
     <Compile Include="Models\TipoEntidadModel.cs" />

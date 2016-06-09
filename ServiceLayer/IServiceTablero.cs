@@ -19,6 +19,9 @@ namespace ServiceLayer
         void Accion(String json);
 
         [OperationContract]
-        void login(Cliente cliente, int idJuego);
+        bool login(ClienteJuego cliente, int idJuego);
+
+        [OperationContract]
+        void register(ClienteJuego cliente, int idJuego);
     }
 }

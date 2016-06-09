@@ -11,25 +11,15 @@ namespace DataAccessLayer
     public interface IDALConstruccion
     {
 
-        void InicializarConstruccion(int idUsuario);
+        void InicializarConstruccion(string idUsuario);
 
-        TableroConstruccion getTableroConstruccion(int idUsuario);
+        TableroConstruccion getTableroConstruccion(string idUsuario);
 
-        void AddInfoCelda(int idUsuario, InfoCelda infoCelda);
+        void AddInfoCelda(string idUsuario, InfoCelda infoCelda);
 
-        void DeleteInfoCelda(int idUsuario, InfoCelda infoCelda);
+        void DeleteInfoCelda(string idUsuario, InfoCelda infoCelda);
 
-        void Refresh(int idUsuario, Shared.Entities.Juego juego);
-
-        //void AddPrueba(Prueba prueba);
-
-        //void DeletePrueba(String nombre);
-
-        //void UpdatePrueba(Prueba pruebaUpdate);
-
-        //List<Prueba> GetAllPrueba();
-
-        //Prueba GetPrueba(String nombre);
+        void Refresh(string idUsuario, Shared.Entities.Juego juego);
 
     }
 }

@@ -28,10 +28,16 @@ namespace FrontEnd.ServiceTablero {
         System.Threading.Tasks.Task AccionAsync(string json);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/login", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/loginResponse")]
-        void login(Shared.Entities.Cliente cliente, int idJuego);
+        bool login(Shared.Entities.ClienteJuego cliente, int idJuego);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/login", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/loginResponse")]
-        System.Threading.Tasks.Task loginAsync(Shared.Entities.Cliente cliente, int idJuego);
+        System.Threading.Tasks.Task<bool> loginAsync(Shared.Entities.ClienteJuego cliente, int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/register", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/registerResponse")]
+        void register(Shared.Entities.ClienteJuego cliente, int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/register", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/registerResponse")]
+        System.Threading.Tasks.Task registerAsync(Shared.Entities.ClienteJuego cliente, int idJuego);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -77,12 +83,20 @@ namespace FrontEnd.ServiceTablero {
             return base.Channel.AccionAsync(json);
         }
         
-        public void login(Shared.Entities.Cliente cliente, int idJuego) {
-            base.Channel.login(cliente, idJuego);
+        public bool login(Shared.Entities.ClienteJuego cliente, int idJuego) {
+            return base.Channel.login(cliente, idJuego);
         }
         
-        public System.Threading.Tasks.Task loginAsync(Shared.Entities.Cliente cliente, int idJuego) {
+        public System.Threading.Tasks.Task<bool> loginAsync(Shared.Entities.ClienteJuego cliente, int idJuego) {
             return base.Channel.loginAsync(cliente, idJuego);
+        }
+        
+        public void register(Shared.Entities.ClienteJuego cliente, int idJuego) {
+            base.Channel.register(cliente, idJuego);
+        }
+        
+        public System.Threading.Tasks.Task registerAsync(Shared.Entities.ClienteJuego cliente, int idJuego) {
+            return base.Channel.registerAsync(cliente, idJuego);
         }
     }
 }

@@ -31,26 +31,36 @@ namespace DataAccessLayer
             iDALConstruccion.InicializarConstruccion(cliente.clienteId);
         }
 
-        public void login(Shared.Entities.Cliente client)
+        public bool login(Shared.Entities.ClienteJuego client)
         {
             var query = from usuario in collection.AsQueryable<Cliente>()
                         where usuario.clienteId == client.clienteId
                         select usuario;
             if (query.Count() == 0)
             {
-                Cliente cliente = new Cliente(client.clienteId, client.token);
-                inicializarUsuario(cliente);
+                return false;
             }
             else
             {
                 Cliente c = query.First();
                 c.token = client.token;
                 collection.ReplaceOne(cliente => cliente.clienteId == c.clienteId, c);
+                return true;
             }
-            
         }
 
-        public bool authenticate(Shared.Entities.Cliente client)
+        public void register(Shared.Entities.ClienteJuego client)
+        {
+            Cliente c = new Cliente();
+            c.clienteId = client.clienteId;
+            c.token = client.token;
+            c.nombre = client.nombre;
+            c.apellido = client.apellido;
+            c.username = client.username;
+            inicializarUsuario(c);
+        }
+
+        public bool authenticate(Shared.Entities.ClienteJuego client)
         {
             var query = from usuario in collection.AsQueryable<Cliente>()
                         where usuario.clienteId == client.clienteId && usuario.token == client.token
@@ -58,5 +68,6 @@ namespace DataAccessLayer
             return query.Count() > 0;
         }
 
+        
     }
 }

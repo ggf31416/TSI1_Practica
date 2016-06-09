@@ -28,12 +28,27 @@
   <xs:element name="login">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Shared.Entities" minOccurs="0" name="cliente" nillable="true" type="q2:Cliente" />
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/Shared.Entities" minOccurs="0" name="cliente" nillable="true" type="q2:ClienteJuego" />
         <xs:element minOccurs="0" name="idJuego" type="xs:int" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="loginResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="loginResult" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="register">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/Shared.Entities" minOccurs="0" name="cliente" nillable="true" type="q3:ClienteJuego" />
+        <xs:element minOccurs="0" name="idJuego" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="registerResponse">
     <xs:complexType>
       <xs:sequence />
     </xs:complexType>

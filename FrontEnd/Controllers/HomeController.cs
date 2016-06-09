@@ -22,15 +22,37 @@ namespace FrontEnd.Controllers
             try
             {
                 ServiceTableroClient client = new ServiceTableroClient();
-                Shared.Entities.Cliente cli = new Shared.Entities.Cliente();
+                Shared.Entities.ClienteJuego cli = new Shared.Entities.ClienteJuego();
                 cli.clienteId = clienteJuego.clienteId;
                 cli.token = clienteJuego.token;
-                client.login(cli, clienteJuego.idJuego);
-                return Json(new { sucess = true });
+                bool result = client.login(cli, clienteJuego.idJuego);
+                return Json(new { status = result });
             }
             catch (Exception e)
             {
-                return Json(new { sucess = false });
+                return Json(new { status = false });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult register(ClienteJuego clienteJuego)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+                Shared.Entities.ClienteJuego cli = new Shared.Entities.ClienteJuego();
+                cli.clienteId = clienteJuego.clienteId;
+                cli.token = clienteJuego.token;
+                cli.apellido = clienteJuego.apellido;
+                cli.idJuego = clienteJuego.idJuego;
+                cli.nombre = clienteJuego.nombre;
+                cli.username = clienteJuego.username;
+                client.register(cli, clienteJuego.idJuego);
+                return Json(new { status = true });
+            }
+            catch (Exception e)
+            {
+                return Json(new { status = false });
             }
         }
 

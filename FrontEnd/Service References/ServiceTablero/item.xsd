@@ -8,11 +8,15 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="InfoCelda" nillable="true" type="tns:InfoCelda" />
-  <xs:complexType name="Cliente">
+  <xs:complexType name="ClienteJuego">
     <xs:sequence>
-      <xs:element minOccurs="0" name="clienteId" type="xs:int" />
+      <xs:element minOccurs="0" name="apellido" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="clienteId" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="idJuego" type="xs:int" />
+      <xs:element minOccurs="0" name="nombre" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="token" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="username" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="Cliente" nillable="true" type="tns:Cliente" />
+  <xs:element name="ClienteJuego" nillable="true" type="tns:ClienteJuego" />
 </xs:schema>

@@ -29,10 +29,14 @@ namespace ServiceLayer
             blHandler.Accion(json);
         }
 
-        public void login(Cliente cliente, int idJuego)
+        public bool login(ClienteJuego cliente, int idJuego)
         {
-            blHandler.login(cliente, idJuego);
+            return blHandler.login(cliente, idJuego);
         }
 
+        public void register(ClienteJuego cliente, int idJuego)
+        {
+            blHandler.register(cliente, idJuego);
+        }
     }
 }
