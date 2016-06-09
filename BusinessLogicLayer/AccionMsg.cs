@@ -36,6 +36,9 @@ namespace BusinessLogicLayer
         [JsonProperty(propertyName: "VN")]
         public float ValorN { get; set; }
 
+        [JsonProperty(propertyName: "T")]
+        public string Target { get; set; }
+
     }
 
     public class AccionMoverUnidad : AccionMsg

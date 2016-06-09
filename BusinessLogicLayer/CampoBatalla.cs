@@ -13,7 +13,7 @@ using System.Diagnostics;
 
 namespace BusinessLogicLayer
 {
-    public class Tablero
+    public class CampoBatalla
     {
 
         Random r = new Random();
@@ -34,9 +34,9 @@ namespace BusinessLogicLayer
         public List<AccionMsg> Acciones { get; private set; } = new List<AccionMsg>();
 
 
-        private int turno = 0;
+        public int Turno { get; private set; }  = 0;
 
-        public Tablero()
+        public CampoBatalla()
         {
             param = configurar();
             sw = Stopwatch.StartNew();
@@ -181,7 +181,7 @@ namespace BusinessLogicLayer
                 if (!j.Equals(u.jugador))
                 {
                     var enemigos = this.unidadesPorJugador[j];
-                    foreach (Unidad e in enemigos)
+                    foreach (Unidad e in enemigos.Where(e => e.estaViva))
                     {
                         double d = euclides2(u.posX - e.posX, u.posY - e.posY);
                         if (d < distancia)
@@ -203,7 +203,7 @@ namespace BusinessLogicLayer
             Edificio nearest = null;
             if (!u.jugador.Equals(JugadorDefensor))
             {
-                foreach (Edificio ed in this.edificios)
+                foreach (Edificio ed in this.edificios.Where(e => e.estaViva))
                 {
                     if (!ed.jugador.Equals(u.jugador))
                     {
@@ -220,7 +220,7 @@ namespace BusinessLogicLayer
             return nearest;
         }
 
-        GridPos buscarMasCercano(Unidad u)
+        Entidad buscarMasCercano(Unidad u)
         {
             Unidad near_u = buscarEnemigoMasCercano(u);
             if (near_u == null)
@@ -228,14 +228,28 @@ namespace BusinessLogicLayer
                 Edificio e = buscarEdificioEnemigoMasCercano(u);
                 if (e != null)
                 {
-                    return pos(e);
+                    return e;
                 }
                 else
                 {
-                    return pos(u);
+                    return null;
                 }
             }
-            return pos(near_u);
+            return near_u;
+        }
+
+        public ResultadoBusqPath buscarRutaHastaEntidad(Unidad u, Entidad target)
+        {
+            GridPos posTarget = pos(target);
+            return buscar(u, posTarget);
+        }
+
+
+        public ResultadoBusqPath buscarRutaHastaTarget(Unidad u, string target)
+        {
+            if (!unidades.ContainsKey(target)) return null;
+            Entidad uTarget = unidades[target];
+            return buscarRutaHastaTarget(u, target);
         }
 
 
@@ -244,8 +258,10 @@ namespace BusinessLogicLayer
             return new GridPos(u.posXr, u.posYr);
         }
 
+        
 
-        public ResultadoBusqPath[] buscarRutaHaciaEnemigosCercanos()
+
+        /*public ResultadoBusqPath[] buscarRutaHaciaEnemigosCercanos()
         {
             Dictionary<Unidad, GridPos> tmp = new Dictionary<Unidad, GridPos>();
             var unidades = unidadesPorJugador.Values.SelectMany(lst => lst);
@@ -254,30 +270,48 @@ namespace BusinessLogicLayer
             var res = new List<ResultadoBusqPath>();
             foreach (var u in unidades)
             {
-                GridPos pos = buscarMasCercano(u);
-                var r = buscar(u, pos);
-                res.Add(r);
+                Entidad target = buscarMasCercano(u);
+                if (target != null)
+                {
+                    u.target = target.id;
+                    var r = buscarRutaHastaTarget(u, target);
+                    res.Add(r);
+                }
             }
             return res.ToArray();
-        }
+        }*/
 
         public ResultadoBusqPath buscar(Unidad u, GridPos destino)
         {
             var r_path = buscarPath(u,  destino);
             var r = new ResultadoBusqPath() { path = r_path.ToArray() };
-            paths.Add(u.id, r);
             return r;
         }
 
-
-        public ResultadoBusqPath rutaEnemigoMasCercano(Unidad u)
+        private ResultadoBusqPath detener(Entidad u)
         {
-            GridPos destino = buscarMasCercano(u);
-            var r_path = buscarPath(u, destino);
-            var r = new ResultadoBusqPath() { path = r_path.ToArray() };
-            //paths.Add(u.id, r);
-            return r;
+            GridPos[] r = { new GridPos(u.posXr, u.posYr) };
+            return new ResultadoBusqPath() { path = r };
         }
+
+
+        public ResultadoBusqPath targetMasCercano(Unidad u)
+        {
+            Entidad destino = buscarMasCercano(u);
+            if (destino != null)
+            {
+                u.target = destino.id;
+                var r_path = buscarRutaHastaEntidad(u, destino); 
+                return r_path;
+            }
+            else
+            {
+                u.target = null;
+                return detener(u);
+            }            
+        }
+
+        
 
 
         JumpPointParam configurar()
@@ -291,11 +325,13 @@ namespace BusinessLogicLayer
         {
             if (ataq.enRango(def))
             {
+                detener((Unidad)ataq);
                 float daño = (deltaT / 1000.0f) * 10 * ataq.ataque / (float)def.defensa;
                 def.vida -= daño;
                 if (def.vida < 0) {
-                    matar(def);
+                    //matar(def);
                     def.target = null;
+                    ataq.target = null;
                 }
                 AccionMsg notif = new AccionMsg { Accion = "UpdateHP", IdUnidad = def.id ,ValorN = def.vida};
                 this.Acciones.Add(notif);
@@ -331,54 +367,65 @@ namespace BusinessLogicLayer
             long deltaT = sw.ElapsedMilliseconds - nanosPrevio;
             nanosPrevio += deltaT;
 
+            var muertas = new List<Entidad>();
+
             foreach (Unidad u in unidades.Values)
             {
-                if (!paths.ContainsKey(u.id))
+                if (u.estaViva)
                 {
-                    var p = rutaEnemigoMasCercano(u);
-                    paths.Add(u.id, p);
-                    var accM = new AccionMoverUnidad() { IdUnidad = u.id ,Accion="MoveUnit", PosX = u.posXr, PosY = u.posYr, Path = p.path };
-                    Acciones.Add(accM);
+                    if (!paths.ContainsKey(u.id) || u.target == null)
+                    {
+                        var p = targetMasCercano(u);
+                        paths[u.id] = p;
+                        var accM = new AccionMoverUnidad() { IdUnidad = u.id, Accion = "MoveUnit", PosX = u.posXr, PosY = u.posYr, Path = p.path, Target = u.target };
+                        Acciones.Add(accM);
 
-                }
-                if (paths.ContainsKey(u.id))
-                {
-                    var p = paths[u.id];
-                    // actualizo las posiciones de las unidades en funcion de sus movientos
-                    simularMovimiento(deltaT, u,p);
-                    var acc = new AccionMsg() { Accion="PosUnit", IdUnidad = u.id, PosX = u.posXr, PosY = u.posYr };
-                    Acciones.Add(acc);
-                }
-              
-                // ya mandamos los paths, no es necesario mandar los valores de x,y actuales
-                if (turno % 5 == 0)
-                {
-                    // buscar target mas cercano
-                }
-                
-                if (u.target != null) {
-                    Entidad target = unidades[u.target];
-                    atacarEntidad(u, target, deltaT);
-                }
+                    }
+                    if (paths.ContainsKey(u.id))
+                    {
+                        var p = paths[u.id];
+                        // actualizo las posiciones de las unidades en funcion de sus movientos
+                        simularMovimiento(deltaT, u, p);
+                        var acc = new AccionMsg() { Accion = "PosUnit", IdUnidad = u.id, PosX = u.posXr, PosY = u.posYr };
+                        Acciones.Add(acc);
+                    }
 
+                    // ya mandamos los paths, no es necesario mandar los valores de x,y actuales
+                    if (Turno % 5 == 0)
+                    {
+                        // buscar target mas cercano
+                    }
+
+                    if (u.target != null)
+                    {
+                        if (unidades.ContainsKey(u.target))
+                        {
+                            Entidad target = unidades[u.target];
+                            atacarEntidad(u, target, deltaT);
+                        }
+                        else
+                        {
+                            u.target = null;
+                        }
+
+                    }
+                }
 
             }
-
-
-
+            Turno++;
         }
 
         private void simularMovimiento(long deltaT, Unidad u, ResultadoBusqPath p)
         {
             GridPos[] path = p.path;
             int idx = p.idxActual;
-            double t_restante = deltaT;
+            double t_restante = deltaT / 1000.0;
             double epsAvance = 0.001;
             if (p.idxActual == p.path.Length) return; // salgo rapido para facilitar debugging
             while (t_restante > 0 && p.idxActual < path.Length)
             {
 
-                GridPos prox = path[idx];
+                GridPos prox = path[p.idxActual];
                 float avance = 1;
                 float dif_x = prox.x - u.posX;
                 float dif_y = prox.y - u.posY;
@@ -386,7 +433,7 @@ namespace BusinessLogicLayer
                 if (prox_dist > 0)
                 {
                     // si la distancia es 0 las operaciones no estan definidas
-                    double prox_eta = prox_dist / u.velocidad;
+                    double prox_eta = 10 * prox_dist / u.velocidad;
                     avance = (float)Math.Min(t_restante / prox_eta, 1);
                     u.posX += avance * dif_x;
                     u.posY += avance * dif_y;
@@ -405,5 +452,25 @@ namespace BusinessLogicLayer
             Unidad u = unidades[unidadId];
             return buscar(u, d);
         }
+
+        public Dictionary<int,int> UnidadesSobrevivientes(Jugador j)
+        {
+
+            var unidadesJ = unidadesPorJugador.GetValueOrDefault(j.Id);
+            var res = new Dictionary<int, int>();
+            if (unidadesJ != null)
+            {
+
+                var cantVivos = unidadesJ.Where(u => u.estaViva).
+                    GroupBy(u => u.tipo_id).
+                    Select(grupo => new { Id = grupo.Key, Cantidad = grupo.Count() });
+                foreach(var c in cantVivos)
+                {
+                    res.Add(c.Id, c.Cantidad);
+                }
+            }
+            return res;
+        }
+
     }
 }

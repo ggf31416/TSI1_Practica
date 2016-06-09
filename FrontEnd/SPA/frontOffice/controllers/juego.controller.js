@@ -124,6 +124,7 @@
         }
 
 
+
         /*function crearInternalMenu() {
             menuCuartel = $scope.game.add.sprite(0, 0, 'cuartelMenu');
             menuCuartel.width = 64;
@@ -220,12 +221,24 @@
             TargetUnit: "TargetUnit",
             UpdateHP: "UpdateHP",
             ListaAcciones: "ListaAcciones",
-            IniciarAtaque: "IniciarAtaque"
+            IniciarAtaque: "IniciarAtaque",
+            PosUnit: "PosUnit"
         };
+
+        function posicionarAbs(sprite,x,y){
+            sprite.x = x * unit_size;
+            sprite.y = y * unit_size;
+        }
 
         function ejecutarMensaje(msg){
             if (msg.A == MsgA.IniciarAtaque){
                 cargarEstado(msg);
+            }
+            else if(msg.A == MsgA.PosUnit){
+                 var unit = unidadesPorId[msg.IdUn];
+                 if(unit){
+                    posicionarAbs(unit,msg.PosX,msg.PosY);
+                 }
             }
             else if (msg.A == MsgA.AddEdificio) {
                     crearEdificioInmediato(msg);
@@ -236,13 +249,14 @@
             else if (msg.A == MsgA.MoveUnit) {
                 var unit = unidadesPorId[msg.IdUn];
                 if (unit) {
-                    moverUnidad(unit, msg.Path);
+                    unit.info.target = msg.T;
+                    //moverUnidad(unit, msg.Path);
                 }
             }
             else if (msg.A == MsgA.Target) {
                 var unit = unidadesPorId[msg.IdUn];
                 if (unit) {
-                    unit.info.target = msg.Target;
+                    unit.info.target = msg.T;
                 }
             }
             else if (msg.A == MsgA.UpdateHP) {
@@ -324,8 +338,8 @@
                 if (e.Imagen != null) {
                     console.log(e);
                     $scope.game.load.image(e.Id, e.Imagen);
-                    $scope.estadoJuego.unidades_desplegables[e.Id] = { cantidad: 10};
-                    $scope.estadoJuego.unidades_desplegables[e.Id].cantidad = 10;
+                    $scope.estadoJuego.unidades_desplegables[e.Id] = { cantidad: 0};
+                    //$scope.estadoJuego.unidades_desplegables[e.Id].cantidad = 10;
                 }
             });
         }
@@ -408,6 +422,10 @@
         $scope.puedoDesplegarUnidad = function(sprite_id){
             return !estaEnBatalla  || (desplegable(sprite_id) &&  desplegable(sprite_id).cantidad > 0);
         };
+
+        $scope.cantUnidad = function(id){
+            return  (desplegable(id)) ? desplegable(id).cantidad : "";
+        }
 
 
         function activarSeguirMouse() {
@@ -495,8 +513,15 @@
             var graphics = game.add.graphics(sprite.x,sprite.y);
             crearGraficoUnidad(sprite, graphics);
             sprite.graficos = graphics;
-            sprite.events.onKilled.add(function(f) {if (sprite.graficos) sprite.graficos.destroy();});
-            sprite.events.onDestroy.add(function(f) {if (sprite.graficos) sprite.graficos.destroy();});
+            sprite.events.onKilled.add(function(f) {
+                console.info(f);
+                if (sprite.graficos) sprite.graficos.destroy();
+                console.info(sprite.info.unit_id + " was kiled");
+            });
+            sprite.events.onDestroy.add(function(f) {
+                if (sprite.graficos) sprite.graficos.destroy();
+                console.info(sprite.info.unit_id + " was destroyed");
+            });
         }
 
         // se podría permitir personalizar
@@ -508,6 +533,12 @@
             // dibuja un circulo del color apropiado
             graphics.lineStyle(1, colorCirculo, 1);
             graphics.drawCircle(sprite.width/2,sprite.height / 2, unit_size * 1.5);
+            /*graphics.beginFill(0x00ff00,1);
+            graphics.vida = graphics.drawRect(0, sprite.height * 0.9,sprite.width,20);
+            graphics.endFill();
+            graphics.beginFill(0xff0000,1);
+            graphics.vidaFaltante = graphics.drawRect(0, sprite.height * 0.9,0,20);
+            graphics.endFill();*/
         }
 
 
@@ -547,10 +578,11 @@
         }
 
         function moverUnidad(sprite, paths) {
+            detenerMovimiento(sprite);
             var tweenAnterior = null;
             var primerTween = null;
             for (var i in paths) {
-                var tiempo = 1000; // paths[i].s * 1000;
+                var tiempo = 2000; // paths[i].s * 1000;
                 var tween = $scope.game.add.tween(sprite).to({ x: paths[i].x * unit_size, y: paths[i].y * unit_size }, tiempo , Phaser.Easing.Linear.None, false);
                 if (tweenAnterior) {
                     tweenAnterior.chain(tween)
@@ -622,8 +654,14 @@
             // si lo hago con addChild me escala el circulo y no lo quiero 
             unidades_desplegadas.forEach(function(u){
                 if (u.graficos){
+
+                    //var porcentaje = u.info.hp / u.info.max_hp;
+                    /*u.graficos.vida.width = u.width *  porcentaje;
+                    u.graficos.vidaFaltante.x = u.graficos.vida.width;
+                    u.graficos.vidaFaltante.width = u.width * (1 - porcentaje);*/
                     u.graficos.x  = u.x;
                     u.graficos.y = u.y;
+                    $scope.game.debug.text(u.info.hp,u.x,u.y + u.height * 1.2);
                 }
             });
 
@@ -686,7 +724,7 @@
         function detenerMovimiento(sprite) {
             var tw = $scope.animaciones[sprite.info.unit_id];
             if (tw) {
-                game.tween.remove(tw);
+                $scope.game.tween.remove(tw);
                 delete $scope.animaciones[sprite.info.unit_id];
             }
         }

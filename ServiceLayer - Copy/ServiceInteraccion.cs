@@ -20,6 +20,7 @@ namespace ServiceLayer
         public ServiceInteraccion(){
             //http://www.asp.net/signalr/overview/guide-to-the-api/hubs-api-guide-net-client
             var hubConnection = new HubConnection("http://localhost:56927/");
+            // proxy si quiero connecciones locales
            proxy = hubConnection.CreateHubProxy("ChatHub");
 
             hubConnection.Start().Wait();
@@ -27,13 +28,14 @@ namespace ServiceLayer
 
         public void Send(String msg)
         {
-            //GlobalHost.DependencyResolver.UseRedis("40.84.2.155", 6379, "gabilo2016!", "ChatChannel");
+            GlobalHost.DependencyResolver.UseRedis("40.84.2.155", 6379, "gabilo2016!", "ChatChannel");
 
 
             //var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
             try
             {
                 proxy.Invoke("send", "Service", msg).Wait();
+                //context.Clients.All.broadcastMessage("Service", msg);
             }
             catch (TimeoutException toEx)
             {
@@ -44,7 +46,7 @@ namespace ServiceLayer
                 Console.WriteLine("Ocurrio un error al enviar signalr: " + ex.ToString());
             }
             
-            //context.Clients.All.broadcastMessage("Service", msg);
+            //
         }
     }
 }

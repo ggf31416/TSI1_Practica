@@ -20,10 +20,11 @@ namespace BusinessLogicLayer
 
         public string target { get; set; } = null;
 
-        public virtual bool isActivo()
+        public virtual bool estaViva
         {
-            return this.vida >= 0;
+            get { return vida >= 0; }
         }
+
 
 
         public float distancia(Entidad otra)
@@ -38,7 +39,7 @@ namespace BusinessLogicLayer
 
         public bool enRango(Entidad enemiga)
         {
-            return distancia2(enemiga) <= this.rango;
+            return distancia2(enemiga) <= this.rango * this.rango;
         }
 
 

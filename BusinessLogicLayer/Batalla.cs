@@ -19,7 +19,8 @@ namespace BusinessLogicLayer
         private DataAccessLayer.Relacional.IDALEntidadesRO _dalRO;
         public string CanalSignalR { get; set; }
         public bool EnCurso { get; set; }
-        public Tablero tablero;
+        public CampoBatalla tablero;
+
 
     
 
@@ -33,7 +34,7 @@ namespace BusinessLogicLayer
         public Batalla(string atacante,string defensor)
         {
             inicializar();
-            this.tablero = new Tablero();
+            this.tablero = new CampoBatalla();
             this.EnCurso = true;
 
         }
@@ -41,7 +42,7 @@ namespace BusinessLogicLayer
         public Batalla(Jugador atacante,Jugador defensor)
         {
             inicializar();
-            this.tablero = new Tablero();
+            this.tablero = new CampoBatalla();
             this.tablero.JugadorDefensor = defensor.Id;
             this.EnCurso = true;
             this.defensor = defensor;
@@ -82,7 +83,7 @@ namespace BusinessLogicLayer
 
         void crearBatalla(Jugador atacante,Jugador defensor)
         {
-            tablero = new Tablero();
+            tablero = new CampoBatalla();
             agregarUnidades(atacante);
             agregarUnidades(defensor);
             tablero.agregarEdificios(defensor.Edificios);
@@ -108,6 +109,10 @@ namespace BusinessLogicLayer
         public void ejecutarTurno()
         {
             tablero.tickTiempo();
+            if (tablero.Turno > 300)
+            {
+                this.EnCurso = false;
+            }
         }
 
         public string generarListaAccionesTurno()
