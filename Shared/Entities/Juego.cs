@@ -5,18 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace Shared.Entities
 {
     [DataContract]
     public class Juego
     {
+        [BsonId(IdGenerator = typeof(CombGuidGenerator))]
+        public Guid _id { get; set; }
         [DataMember]
         public int Id { get; set; }
         [DataMember]
         public string IdJugador { get; set; }
         [DataMember]
-        [BsonId]
         public string Nombre { get; set; }
         [DataMember]
         public string Imagen { get; set; }
