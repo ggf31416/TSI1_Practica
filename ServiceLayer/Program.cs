@@ -30,6 +30,7 @@ namespace ServiceLayer
             blHandler = BLTablero.getInstancia();
             blJuegoHandler = new BLJuego(new DataAccessLayer.DALJuego());
             blConstruccionHandler = new BLConstruccion(new DataAccessLayer.DALConstruccion());
+            blTecnologiaHandler = new BLTecnologia(blJuegoHandler);
         }
 
         private static void SetupService()

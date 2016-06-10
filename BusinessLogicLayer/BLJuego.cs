@@ -22,6 +22,11 @@ namespace BusinessLogicLayer
             _dal = dal;
         }
 
+        public void ActualizarJuego(Juego j)
+        {
+            throw new NotImplementedException();
+        }
+
         public Juego GetAllDataJuego(string tenant)
         {
             return _dal.GetJuego(tenant);
