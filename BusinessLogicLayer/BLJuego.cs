@@ -22,9 +22,9 @@ namespace BusinessLogicLayer
             _dal = dal;
         }
 
-        public Juego GetAllDataJuego(Int32 idJuego)
+        public Juego GetAllDataJuego(string tenant)
         {
-            return _dal.GetJuego(idJuego);
+            return _dal.GetJuego(tenant);
         }
     }
 }

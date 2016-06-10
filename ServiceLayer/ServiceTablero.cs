@@ -54,9 +54,9 @@ namespace ServiceLayer
         }
 
         //DATA JUEGO
-        public Juego GetAllDataJuego(Int32 idJuego)
+        public Juego GetAllDataJuego(string tenant)
         {
-            return blJuegoHandler.GetAllDataJuego(idJuego);
+            return blJuegoHandler.GetAllDataJuego(tenant);
         }
 
         public bool DesarrollarTecnologia(string tenant, string idJugador,int idTecnologia)
