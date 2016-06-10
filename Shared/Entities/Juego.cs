@@ -12,10 +12,9 @@ namespace Shared.Entities
     [DataContract]
     public class Juego
     {
-        [BsonId(IdGenerator = typeof(CombGuidGenerator))]
-        public Guid _id { get; set; }
         [DataMember]
-        public int Id { get; set; }
+        [BsonId]
+        public long Id { get; set; }
         [DataMember]
         public string IdJugador { get; set; }
         [DataMember]

@@ -54,6 +54,7 @@ namespace DataAccessLayer
                 celda.Estado.Estado = Shared.Entities.EstadoData.EstadoEnum.A;
                 celda.Estado.Fin = DateTime.UtcNow;
             }
+            juego.Id = Convert.ToInt64(juego.IdJugador);
             collection.InsertOne(juego);
         }
 
