@@ -11,5 +11,6 @@ namespace DataAccessLayer
         bool login(Shared.Entities.ClienteJuego client);
         void register(Shared.Entities.ClienteJuego client);
         bool authenticate(Shared.Entities.ClienteJuego client);
+        void logout(Shared.Entities.ClienteJuego client);
     }
 }

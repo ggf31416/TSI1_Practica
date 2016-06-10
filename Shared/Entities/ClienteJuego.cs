@@ -22,5 +22,7 @@ namespace Shared.Entities
         public string nombre { get; set; }
         [DataMember]
         public string apellido { get; set; }
+        [DataMember]
+        public DateTime creacion { get; set; }
     }
 }

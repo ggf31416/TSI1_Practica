@@ -22,7 +22,7 @@
                 $scope.clienteId = response.authResponse.userID;
                 $scope.token = response.authResponse.accessToken;
                 var loginJuegoParams = {
-                    "clienteId": $scope.clienteId,
+                    "id": $scope.clienteId,
                     "token": $scope.token,
                     "idJuego": $scope.idJuego
                 };

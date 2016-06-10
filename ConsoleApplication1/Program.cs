@@ -17,9 +17,9 @@ namespace ConsoleApplication1
             {
                 BsonClassMap.RegisterClassMap<TableroConstruccion>();
             }
-            if (!BsonClassMap.IsClassMapRegistered(typeof(Cliente)))
+            if (!BsonClassMap.IsClassMapRegistered(typeof(ClienteJuego)))
             {
-                BsonClassMap.RegisterClassMap<Cliente>();
+                BsonClassMap.RegisterClassMap<ClienteJuego>();
             }
             Console.WriteLine("inicio");
             IDALUsuario iDALUsuario = new DALUsuario(1);
