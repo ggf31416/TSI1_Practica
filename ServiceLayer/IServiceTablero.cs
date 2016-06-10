@@ -14,5 +14,25 @@ namespace ServiceLayer
     {
         [OperationContract]
         void JugarUnidad(InfoCelda infoCelda);
+
+        [OperationContract]
+        void Accion(String json);
+
+        [OperationContract]
+        List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt);
+
+        [OperationContract]
+        void RegistrarJugador(string nombre);
+
+        [OperationContract]
+        void IniciarAtaque(InfoAtaque info);
+
+        [OperationContract]
+        void login(Cliente cliente, int idJuego);
+
+
+        //DATA JUEGO
+        [OperationContract]
+        Juego GetAllDataJuego(Int32 idJuego);
     }
 }

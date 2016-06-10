@@ -10,6 +10,7 @@ namespace FrontEnd
     {
         public void send(string name, string message)
         {
+            Console.WriteLine(name + " -> " + message);
             Clients.All.broadcastMessage(name, message);
             Clients.Caller.broadcastMessage(name, "mensaje enivado");
         }

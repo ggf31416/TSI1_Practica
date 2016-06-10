@@ -38,12 +38,12 @@ namespace ServiceLayer
                 smb.HttpGetEnabled = true;
                 selfHost.Description.Behaviors.Add(smb);
                 selfHost.Open();
-                Console.WriteLine("Hola2");
+                Console.WriteLine("ServiceLayer2");
                 Console.ReadLine();
                 selfHost.Close();
             }catch (CommunicationException ce)
             {
-                Console.Write("An exception ocurred: ", ce.ToString());
+                Console.Write("An exception ocurred: " +  ce.ToString());
                 Console.ReadLine();
                 selfHost.Abort();
             }

@@ -10,5 +10,6 @@ namespace Shared.Entities
     [DataContract]
     public class TipoUnidad : TipoEntidad
     {
+        public List<int> TipoEdificios { get; set; }
     }
 }

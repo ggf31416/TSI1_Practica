@@ -1,4 +1,6 @@
-﻿using System;
+﻿using FrontEnd.Models;
+using FrontEnd.ServiceTablero;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,5 +15,32 @@ namespace FrontEnd.Controllers
         {
             return View();
         }
+
+
+        [HttpPost]
+        public ActionResult login(ClienteJuego clienteJuego)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+                Shared.Entities.Cliente cli = new Shared.Entities.Cliente();
+                cli.clienteId = clienteJuego.clienteId;
+                cli.token = clienteJuego.token;
+                client.login(cli, clienteJuego.idJuego);
+                return Json(new { sucess = true });
+            }
+            catch (Exception e)
+            {
+                return Json(new { sucess = false });
+            }
+        }
+
+
+        // GET: Aldea
+        public ActionResult Aldea()
+        {
+            return View();
+        }
+
     }
 }

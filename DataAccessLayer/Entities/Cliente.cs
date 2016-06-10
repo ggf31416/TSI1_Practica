@@ -8,11 +8,16 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace DataAccessLayer.Entities
 {
-    class Cliente
+    public class Cliente
     {
         [BsonId]
-        string clienteId { get; set; }
-        string login { get; set; }
+        public int clienteId { get; set; }
+        public string token { get; set; }
 
+        public Cliente(int clienteId, string token)
+        {
+            this.clienteId = clienteId;
+            this.token = token;
+        }
     }
 }
