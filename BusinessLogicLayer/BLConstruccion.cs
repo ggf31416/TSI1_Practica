@@ -24,8 +24,41 @@ namespace BusinessLogicLayer
 
         public bool ConstruirEdificio(CEInputData ceid)
         {
-            _dal.ConstruirEdificio(ceid.IdTipoEdificio);
-            if ()
+            ValidarConstruccion vE = _dal.ConstruirEdificio(ceid.IdTipoEdificio);
+
+            //Checkear si la posicion esta vacia
+            bool vacia = false;
+            foreach (var celda in vE.Tablero.Celdas)
+            {
+                if(celda.PosFila == ceid.PosFila && celda.PosColumna == ceid.PosColumna)
+                {
+                    vacia = celda.IdTipoEdificio == -1;
+                    break;
+                }
+            }
+            bool suficientesRecursos = false;
+            foreach(var costo in vE.TipoEdificio.Costos)
+            {
+                //if(vE.recursos[costo.IdRecurso]. >= costo.Valor)
+                //{
+
+                //}
+            }
+
+            if (true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool EntrenarUnidad(EUInputData euid)
+        {
+            ValidarUnidad vE = _dal.EntrenarUnidad(euid.IdTipoUnidad);
+            if (true)
             {
                 return true;
             }

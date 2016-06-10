@@ -119,12 +119,14 @@
   <ItemGroup>
     <Compile Include="AccionMsg.cs" />
     <Compile Include="Batalla.cs" />
+    <Compile Include="BLConstruccion.cs" />
     <Compile Include="BLJuego.cs" />
     <Compile Include="BLTablero.cs" />
     <Compile Include="BLServiceClient.cs" />
     <Compile Include="BLTecnologia.cs" />
     <Compile Include="Edificio.cs" />
     <Compile Include="Entidad.cs" />
+    <Compile Include="IBLConstruccion.cs" />
     <Compile Include="IBLJuego.cs" />
     <Compile Include="IBLTablero.cs" />
     <Compile Include="IBLTecnologia.cs" />

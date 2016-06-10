@@ -239,6 +239,8 @@ namespace FrontEnd.Controllers
 
             return Json(new { success = true, responseText = "Juego: ", ret = ret }, JsonRequestBehavior.AllowGet);
         }
+
+
     }
 
 }

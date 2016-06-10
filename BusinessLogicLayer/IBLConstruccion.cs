@@ -10,5 +10,6 @@ namespace BusinessLogicLayer
     public interface IBLConstruccion
     {
         bool ConstruirEdificio(CEInputData ceid);
+        bool EntrenarUnidad(EUInputData euid);
     }
 }

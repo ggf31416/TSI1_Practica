@@ -17,5 +17,8 @@ namespace BusinessLogicLayer
         List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt);
         void IniciarAtaque(InfoAtaque info);
 
+
+        bool ConstruirEdificio(CEInputData ceid);
+        bool EntrenarUnidad(EUInputData euid);
     }
 }
