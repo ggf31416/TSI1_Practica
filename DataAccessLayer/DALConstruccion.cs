@@ -38,6 +38,14 @@ namespace DataAccessLayer
             Shared.Entities.Juego juego = iDALJuego.GetJuego(this.nombreJuego);
             juego.IdJugador = idUsuario;
             juego.DataJugador = new Shared.Entities.DataActual();
+            juego.DataJugador.UltimaActualizacion = DateTime.Now;
+            foreach(var recurso in juego.TipoRecurso)
+            {
+                Shared.Entities.EstadoRecurso EstadoRecurso = new Shared.Entities.EstadoRecurso();
+                EstadoRecurso.Total = 99999;
+                EstadoRecurso.Produccion = 12345;
+                juego.DataJugador.EstadoRecursos.Add(recurso.Id, EstadoRecurso);
+            }
             collection.InsertOne(juego);
         }
 
