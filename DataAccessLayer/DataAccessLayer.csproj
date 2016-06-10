@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DALJuego.cs" />
     <Compile Include="DALJugadorInfo.cs" />
     <Compile Include="DALTablero.cs" />
     <Compile Include="DALConstruccion.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Entities\Prueba.cs" />
     <Compile Include="Entities\TableroConstruccion.cs" />
     <Compile Include="Exceptions\DALConstruccionException.cs" />
+    <Compile Include="IDALJuego.cs" />
     <Compile Include="IDALTablero.cs" />
     <Compile Include="IDALConstruccion.cs" />
     <Compile Include="IDALUsuario.cs" />
