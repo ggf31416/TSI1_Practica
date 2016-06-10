@@ -35,7 +35,7 @@ namespace ServiceLayer
             blHandler.Accion(json);
         }
 
-        public bool login(ClienteJuego cliente, int idJuego)
+        public bool login(ClienteJuego cliente, string idJuego)
         {
             return blHandler.login(cliente, idJuego);
         }
@@ -50,7 +50,7 @@ namespace ServiceLayer
             blHandler.IniciarAtaque(info);
         }
 
-        public void register(ClienteJuego cliente, int idJuego)
+        public void register(ClienteJuego cliente, string idJuego)
         {
             blHandler.register(cliente, idJuego);
         }

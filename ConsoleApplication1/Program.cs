@@ -24,7 +24,7 @@ namespace ConsoleApplication1
             Console.WriteLine("inicio");
             IDALJuego iDALJuego = new DALJuego();
             Shared.Entities.Juego juego = iDALJuego.GetJuego("AOE");
-            IDALUsuario iDALUsuario = new DALUsuario(1);
+            IDALUsuario iDALUsuario = new DALUsuario("1");
             Shared.Entities.ClienteJuego cliente = new Shared.Entities.ClienteJuego();
             cliente.clienteId = "1";
             cliente.token = "token1";
