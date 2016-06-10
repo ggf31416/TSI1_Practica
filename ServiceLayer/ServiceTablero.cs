@@ -76,6 +76,11 @@ namespace ServiceLayer
             return blJuegoHandler.GetEntidadesActualizadas(tenant, nombreJugador);
         }
 
+        public Juego GetJuegoUsuario(string tenant, string idUsuario)
+        {
+            return blJuegoHandler.GetJuegoUsuario(tenant, idUsuario);
+        }
+
         public bool DesarrollarTecnologia(string tenant, string idJugador,int idTecnologia)
         {
             return blTecnologiaHandler.DesarrollarTecnologia(tenant, idJugador, idTecnologia);
