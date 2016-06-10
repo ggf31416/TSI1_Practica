@@ -43,6 +43,12 @@ namespace BusinessLogicLayer
             nanosPrevio = sw.ElapsedMilliseconds;
         }
 
+        public bool PerdioUnJugador()
+        {
+            // cambiar para clan
+            return unidadesPorJugador.Values.Any(lst => lst.Count > 0 && lst.All(u => false == u.estaViva));
+        }
+
         // agregar edificios masivo
         public void agregarEdificios(IEnumerable<Edificio> lst)
         {

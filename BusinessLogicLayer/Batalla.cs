@@ -109,7 +109,7 @@ namespace BusinessLogicLayer
         public void ejecutarTurno()
         {
             tablero.tickTiempo();
-            if (tablero.Turno > 300)
+            if (tablero.Turno > 300 || tablero.PerdioUnJugador())
             {
                 this.EnCurso = false;
             }

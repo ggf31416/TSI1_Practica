@@ -312,6 +312,7 @@
     <Compile Include="Hubs\AtlasHub.cs" />
     <Compile Include="Models\Cliente.cs" />
     <Compile Include="Models\EdificioUnidadModel.cs" />
+    <Compile Include="Models\IdentificadorSignalR.cs" />
     <Compile Include="Models\InfoCeldaModel.cs" />
     <Compile Include="Models\TipoEntidadModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
