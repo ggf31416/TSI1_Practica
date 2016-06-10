@@ -20,5 +20,8 @@ namespace Shared.Entities
         public Nullable<int> PosColumna { get; set; }
         [DataMember]
         public Nullable<int> IdTablero { get; set; }
+
+        [DataMember]
+        public EstadoData Estado { get; set; }
     }
 }

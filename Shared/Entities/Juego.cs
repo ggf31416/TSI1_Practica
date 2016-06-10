@@ -13,6 +13,8 @@ namespace Shared.Entities
         [DataMember]
         public int Id { get; set; }
         [DataMember]
+        public int IdJugador { get; set; }
+        [DataMember]
         public string Nombre { get; set; }
         [DataMember]
         public string Imagen { get; set; }
@@ -38,5 +40,8 @@ namespace Shared.Entities
         public List<TipoRecurso> TipoRecurso { get; set; }
         [DataMember]
         public Tablero Tablero { get; set; }
+
+        [DataMember]
+        public DataActual DataJugador { get; set; }
     }
 }
