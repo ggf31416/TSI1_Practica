@@ -11,9 +11,9 @@ namespace BusinessLogicLayer
     {
         void JugarUnidad(InfoCelda infoCelda);
         void Accion(string json);
-        bool login(ClienteJuego cliente, int idJuego);
-        void register(ClienteJuego cliente, int idJuego);
-        bool authenticate(ClienteJuego cliente, int idJuego);
+        bool login(ClienteJuego cliente, string nombreJuego);
+        void register(ClienteJuego cliente, string nombreJuego);
+        bool authenticate(ClienteJuego cliente, string nombreJuego);
         List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt);
         void IniciarAtaque(InfoAtaque info);
     }
