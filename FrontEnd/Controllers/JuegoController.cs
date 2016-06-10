@@ -335,15 +335,16 @@ namespace FrontEnd.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetJuegoUsuario(Models.IdentificadorModel identificador)
+        public ActionResult GetJuegoUsuario(string tenant)
         {
             try
             {
+                
                 ServiceTableroClient client = new ServiceTableroClient();
 
                 Models.AllDataJuegoModel ret = new Models.AllDataJuegoModel();
 
-                Juego juego = client.GetJuegoUsuario(identificador.Tenant, identificador.NombreJugador);
+                Juego juego = client.GetJuegoUsuario(tenant, Request.Cookies["clienteId"].Value);
 
                 //Datos Juegos
                 Models.JuegoModel retJuegoModel = new Models.JuegoModel();
@@ -546,7 +547,7 @@ namespace FrontEnd.Controllers
                     eDM.Tiempo = (int)eT.Value.Faltante;
                     eDM.Cantidad = eT.Value.Cantidad;
 
-                    //ret.DataJugador.EstadoTecnologias.Add(eT.Key, eDM);
+                    ret.DataJugador.EstadoTecnologias.Add(eT.Key, eDM);
                 }
 
                 ret.DataJugador.EstadoUnidades = new Dictionary<string, Models.EstadoDataModel>();
@@ -557,7 +558,7 @@ namespace FrontEnd.Controllers
                     eDM.Tiempo = (int)eU.Value.Faltante;
                     eDM.Cantidad = eU.Value.Cantidad;
 
-                    //ret.DataJugador.EstadoUnidades.Add(eU.Key, eDM);
+                    ret.DataJugador.EstadoUnidades.Add(eU.Key, eDM);
                 }
                 ret.DataJugador.UltimaActualizacion = juego.DataJugador.UltimaActualizacion;
 

@@ -13,6 +13,6 @@ namespace Shared.Entities
         [DataMember]
         public TipoUnidad TipoUnidad { get; set; }
         [DataMember]
-        public Dictionary<int,int> Recursos { get; set; }
+        public Dictionary<string,int> Recursos { get; set; }
     }
 }

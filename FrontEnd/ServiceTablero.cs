@@ -593,9 +593,9 @@ namespace Shared.Entities
         
         private System.Collections.Generic.Dictionary<string, Shared.Entities.EstadoRecurso> EstadoRecursosField;
         
-        private System.Collections.Generic.Dictionary<int, Shared.Entities.EstadoData> EstadoTecnologiasField;
+        private System.Collections.Generic.Dictionary<string, Shared.Entities.EstadoData> EstadoTecnologiasField;
         
-        private System.Collections.Generic.Dictionary<int, Shared.Entities.EstadoData> EstadoUnidadesField;
+        private System.Collections.Generic.Dictionary<string, Shared.Entities.EstadoData> EstadoUnidadesField;
         
         private System.DateTime UltimaActualizacionField;
         
@@ -625,7 +625,7 @@ namespace Shared.Entities
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Collections.Generic.Dictionary<int, Shared.Entities.EstadoData> EstadoTecnologias
+        public System.Collections.Generic.Dictionary<string, Shared.Entities.EstadoData> EstadoTecnologias
         {
             get
             {
@@ -638,7 +638,7 @@ namespace Shared.Entities
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Collections.Generic.Dictionary<int, Shared.Entities.EstadoData> EstadoUnidades
+        public System.Collections.Generic.Dictionary<string, Shared.Entities.EstadoData> EstadoUnidades
         {
             get
             {
