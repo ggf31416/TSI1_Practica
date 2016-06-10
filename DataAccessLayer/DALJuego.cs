@@ -78,5 +78,16 @@ namespace DataAccessLayer
         }
 
 
+        public ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador)
+        {
+            ListasEntidades ret = new ListasEntidades();
+
+            Juego juego = GetJuegoUsuario(tenant, nombreJugador);
+
+            ret.TipoEdificios = juego.TipoEdificios;
+            ret.TipoUnidades = juego.TipoUnidades;
+
+            return ret;
+        }
     }
 }

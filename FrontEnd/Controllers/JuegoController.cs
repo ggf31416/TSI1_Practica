@@ -240,7 +240,99 @@ namespace FrontEnd.Controllers
             return Json(new { success = true, responseText = "Juego: ", ret = ret }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public ActionResult GetEntidadesActualizadas(Models.IdentificadorModel identificador)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
 
+                ListasEntidades listasEntidades = client.GetEntidadesActualizadas(identificador.Tenant, identificador.NombreJugador);
+
+                Models.ListasEntidadesModel ret = new Models.ListasEntidadesModel();
+
+                //Datos TipoEdificios
+                ret.TipoEdificios = new List<Models.TipoEntidadModel>();
+
+                foreach (var tE in listasEntidades.TipoEdificios)
+                {
+                    Models.TipoEntidadModel newTipoEntidad = new Models.TipoEntidadModel();
+
+                    newTipoEntidad.IdJuego = tE.IdJuego;
+                    newTipoEntidad.Id = tE.Id;
+                    newTipoEntidad.Nombre = tE.Nombre;
+                    newTipoEntidad.Vida = tE.Vida;
+                    newTipoEntidad.Defensa = tE.Defensa;
+                    newTipoEntidad.Imagen = tE.Imagen;
+                    newTipoEntidad.Ataque = tE.Ataque;
+                    newTipoEntidad.TiempoConstruccion = tE.TiempoConstruccion;
+                    if (tE.UnidadesAsociadas != null)
+                        newTipoEntidad.UnidadesAsociadas = tE.UnidadesAsociadas.ToList();
+                    else
+                        newTipoEntidad.UnidadesAsociadas = new List<int>();
+                    newTipoEntidad.RecursosAsociados = new List<Models.RecursoAsociado>();
+                    if (tE.RecursosAsociados != null)
+                    {
+                        foreach (var c in tE.RecursosAsociados)
+                        {
+                            Models.RecursoAsociado recProd = new Models.RecursoAsociado();
+                            recProd.IdRecurso = c.IdRecurso;
+                            recProd.Value = c.Valor;
+                            newTipoEntidad.RecursosAsociados.Add(recProd);
+                        }
+                    }
+                    newTipoEntidad.Costos = new List<Models.Costo>();
+                    if (tE.Costos != null)
+                    {
+                        foreach (var c in tE.Costos)
+                        {
+                            Models.Costo costo = new Models.Costo();
+                            costo.IdRecurso = c.IdRecurso;
+                            costo.Value = c.Valor;
+                            newTipoEntidad.Costos.Add(costo);
+                        }
+                    }
+                    ret.TipoEdificios.Add(newTipoEntidad);
+                }
+
+                //Datos TipoUnidades
+                ret.TipoUnidades = new List<Models.TipoEntidadModel>();
+
+                foreach (var tU in listasEntidades.TipoUnidades)
+                {
+                    Models.TipoEntidadModel newTipoEntidad = new Models.TipoEntidadModel();
+
+                    newTipoEntidad.IdJuego = tU.IdJuego;
+                    newTipoEntidad.Id = tU.Id;
+                    newTipoEntidad.Nombre = tU.Nombre;
+                    newTipoEntidad.Vida = tU.Vida;
+                    newTipoEntidad.Defensa = tU.Defensa;
+                    newTipoEntidad.Imagen = tU.Imagen;
+                    newTipoEntidad.Ataque = tU.Ataque;
+                    newTipoEntidad.TiempoConstruccion = tU.TiempoConstruccion;
+
+                    newTipoEntidad.Costos = new List<Models.Costo>();
+                    if (tU.Costos != null)
+                    {
+                        foreach (var c in tU.Costos)
+                        {
+                            Models.Costo costo = new Models.Costo();
+                            costo.IdRecurso = c.IdRecurso;
+                            costo.Value = c.Valor;
+                            newTipoEntidad.Costos.Add(costo);
+                        }
+                    }
+
+                    ret.TipoUnidades.Add(newTipoEntidad);
+                }
+
+                return Json(new { success = true, ret = ret });
+            }
+            catch
+            {
+                return Json(new { success = false });
+            }
+        }
     }
 
 }

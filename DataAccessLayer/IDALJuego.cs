@@ -15,7 +15,6 @@ namespace DataAccessLayer
         Task GuardarJuegoUsuarioAsync(Juego juego);
         bool GuardarJuegoUsuarioEsperar(Juego juego);
 
-
-
+        ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador);
     }
 }

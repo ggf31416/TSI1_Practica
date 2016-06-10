@@ -12,5 +12,7 @@ namespace BusinessLogicLayer
         Juego GetAllDataJuego(string tenant);
 
         void ActualizarJuego(Juego j);
+
+        ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador);
     }
 }

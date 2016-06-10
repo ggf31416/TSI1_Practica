@@ -31,5 +31,10 @@ namespace BusinessLogicLayer
         {
             return _dal.GetJuego(tenant);
         }
+
+        public ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador)
+        {
+            return _dal.GetEntidadesActualizadas(tenant, nombreJugador);
+        }
     }
 }
