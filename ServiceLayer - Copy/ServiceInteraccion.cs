@@ -26,6 +26,11 @@ namespace ServiceLayer
             hubConnection.Start().Wait();
         }
 
+        public void Send(String grupo,String msg)
+        {
+
+        }
+
         public void Send(String msg)
         {
             GlobalHost.DependencyResolver.UseRedis("40.84.2.155", 6379, "gabilo2016!", "ChatChannel");

@@ -2197,6 +2197,57 @@ namespace Shared.Entities
             }
         }
     }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ListasEntidades", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    public partial class ListasEntidades : object, System.Runtime.Serialization.IExtensibleDataObject
+    {
+        
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        private Shared.Entities.TipoEdificio[] TipoEdificiosField;
+        
+        private Shared.Entities.TipoUnidad[] TipoUnidadesField;
+        
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+        {
+            get
+            {
+                return this.extensionDataField;
+            }
+            set
+            {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Shared.Entities.TipoEdificio[] TipoEdificios
+        {
+            get
+            {
+                return this.TipoEdificiosField;
+            }
+            set
+            {
+                this.TipoEdificiosField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Shared.Entities.TipoUnidad[] TipoUnidades
+        {
+            get
+            {
+                return this.TipoUnidadesField;
+            }
+            set
+            {
+                this.TipoUnidadesField = value;
+            }
+        }
+    }
 }
 
 
@@ -2222,13 +2273,11 @@ public interface IServiceTablero
     
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/login", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/loginResponse")]
     System.Threading.Tasks.Task<bool> loginAsync(Shared.Entities.ClienteJuego cliente, string nombreJuego);
-    
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/register", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/registerResponse")]
     void register(Shared.Entities.ClienteJuego cliente, string nombreJuego);
     
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/register", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/registerResponse")]
     System.Threading.Tasks.Task registerAsync(Shared.Entities.ClienteJuego cliente, string nombreJuego);
-    
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetListaDeJugadoresAtacables", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetListaDeJugadoresAtacablesResponse")]
     Shared.Entities.JugadorBasico[] GetListaDeJugadoresAtacables(string jugadorAt);
     
@@ -2256,6 +2305,9 @@ public interface IServiceTablero
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/EntrenarUnidad", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/EntrenarUnidadResponse")]
     int EntrenarUnidad(Shared.Entities.EUInputData euid);
     
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetEntidadesActualizadas", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetEntidadesActualizadasResponse")]
+    Shared.Entities.ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador);
+
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/EntrenarUnidad", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/EntrenarUnidadResponse")]
     System.Threading.Tasks.Task<int> EntrenarUnidadAsync(Shared.Entities.EUInputData euid);
     
@@ -2385,6 +2437,11 @@ public partial class ServiceTableroClient : System.ServiceModel.ClientBase<IServ
         return base.Channel.EntrenarUnidad(euid);
     }
     
+    public Shared.Entities.ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador)
+    {
+        return base.Channel.GetEntidadesActualizadas(tenant, nombreJugador);
+    }
+
     public System.Threading.Tasks.Task<int> EntrenarUnidadAsync(Shared.Entities.EUInputData euid)
     {
         return base.Channel.EntrenarUnidadAsync(euid);

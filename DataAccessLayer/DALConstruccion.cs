@@ -43,7 +43,7 @@ namespace DataAccessLayer
             juego.DataJugador = new Shared.Entities.DataActual();
             juego.DataJugador.UltimaActualizacion = DateTime.Now;
             juego.DataJugador.EstadoRecursos = new Dictionary<string, Shared.Entities.EstadoRecurso>();
-            foreach(var recurso in juego.TipoRecurso)
+            foreach (var recurso in juego.TipoRecurso)
             {
                 Shared.Entities.EstadoRecurso EstadoRecurso = new Shared.Entities.EstadoRecurso();
                 EstadoRecurso.Total = 99999;
@@ -197,6 +197,7 @@ namespace DataAccessLayer
                 tableroCelda.IdTipoEdificio = ceid.IdTipoEdificio;
                 tableroCelda.PosColumna = ceid.PosColumna;
                 tableroCelda.PosFila = ceid.PosFila;
+                tableroCelda.Estado = new Shared.Entities.EstadoData();
                 tableroCelda.Estado.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
                 tableroCelda.Estado.Fin = DateTime.Now.AddSeconds((int)TipoEdificio.TiempoConstruccion);
                 juego.Tablero.Celdas.Add(tableroCelda);
