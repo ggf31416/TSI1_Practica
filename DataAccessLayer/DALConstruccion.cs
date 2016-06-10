@@ -31,8 +31,6 @@ namespace DataAccessLayer
             Shared.Entities.Juego juego = iDALJuego.GetJuego(nombreJuego);
             juego.IdJugador = idUsuario;
             juego.DataJugador = new Shared.Entities.DataActual();
-            juego.DataJugador.UltimaActualizacion = DateTime.Now;
-            juego.DataJugador.EstadoRecursos = new Dictionary<string, Shared.Entities.EstadoRecurso>();
             foreach (var recurso in juego.TipoRecurso)
             {
                 Shared.Entities.EstadoRecurso EstadoRecurso = new Shared.Entities.EstadoRecurso();
