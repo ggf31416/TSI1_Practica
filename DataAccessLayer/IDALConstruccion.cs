@@ -23,10 +23,10 @@ namespace DataAccessLayer
 
         Shared.Entities.ValidarConstruccion ConstruirEdificio(int IdEdificio);
 
-        void PersistirEdificio(Shared.Entities.CEInputData ceid);
+        bool PersistirEdificio(Shared.Entities.CEInputData ceid);
 
         Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad);
 
-        void PersistirUnidades(Shared.Entities.EUInputData euid);
+        bool PersistirUnidades(Shared.Entities.EUInputData euid);
     }
 }

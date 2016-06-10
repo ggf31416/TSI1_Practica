@@ -38,7 +38,7 @@ namespace ServiceLayer
         bool ConstruirEdificio(CEInputData ceid);
 
         [OperationContract]
-        bool EntrenarUnidad(EUInputData euid);
+        int EntrenarUnidad(EUInputData euid);
 
         [OperationContract]
         bool DesarrollarTecnologia(string tenant, string idJugador, int idTecnologia);

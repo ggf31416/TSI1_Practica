@@ -36,18 +36,21 @@ namespace BusinessLogicLayer
                     break;
                 }
             }
+
+            //Checkear si tiene recursos suficientes
             bool suficientesRecursos = false;
             foreach(var costo in vE.TipoEdificio.Costos)
             {
-                //if(vE.recursos[costo.IdRecurso]. >= costo.Valor)
-                //{
-
-                //}
+                if (vE.Recursos[costo.IdRecurso] < costo.Valor)
+                {
+                    suficientesRecursos = false;
+                    break;
+                }
             }
 
-            if (true)
+            if(vacia && suficientesRecursos)
             {
-                return true;
+                return _dal.PersistirEdificio(ceid);
             }
             else
             {
@@ -55,17 +58,41 @@ namespace BusinessLogicLayer
             }
         }
 
-        public bool EntrenarUnidad(EUInputData euid)
+        public int EntrenarUnidad(EUInputData euid)
         {
-            ValidarUnidad vE = _dal.EntrenarUnidad(euid.IdTipoUnidad);
-            if (true)
+            //TODO: ACTUALIZAR BASE
+
+            ValidarUnidad vU = _dal.EntrenarUnidad(euid.IdTipoUnidad);
+
+            //Checkear si tiene recursos suficientes
+            int cantidad = 0;
+            Dictionary<int, int> maxUnidadesPorRecurso = new Dictionary<int, int>();
+            foreach (var costo in vU.TipoUnidad.Costos)
             {
-                return true;
+                maxUnidadesPorRecurso[costo.IdRecurso] = vU.Recursos[costo.IdRecurso] / costo.Valor;
+            }
+            List<int> aux = maxUnidadesPorRecurso.Values.ToList();
+            cantidad = aux.Min();
+            if (cantidad > 0)
+            {
+                EUInputData newEUID = new EUInputData();
+                newEUID.IdTipoUnidad = euid.IdTipoUnidad;
+                newEUID.Cantidad = cantidad;
+                if (_dal.PersistirUnidades(newEUID))
+                {
+                    return cantidad;
+                }
+                else
+                {
+                    return 0;
+                }
             }
             else
             {
-                return false;
+                return cantidad;
             }
+
+            //TODO: ACTUALIZAR BASE
         }
     }
 }

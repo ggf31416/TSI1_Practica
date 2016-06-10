@@ -131,9 +131,9 @@ namespace DataAccessLayer
             return null;
         }
 
-        public void PersistirEdificio(Shared.Entities.CEInputData ceid)
+        public bool PersistirEdificio(Shared.Entities.CEInputData ceid)
         {
-
+            return false;
         }
 
         public Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad)
@@ -141,9 +141,9 @@ namespace DataAccessLayer
             return null;
         }
 
-        public void PersistirUnidades(Shared.Entities.EUInputData euid)
+        public bool PersistirUnidades(Shared.Entities.EUInputData euid)
         {
-
+            return false;
         }
 
         //public void AddPrueba(Prueba prueba)

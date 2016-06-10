@@ -66,7 +66,7 @@ namespace ServiceLayer
             return blConstruccionHandler.ConstruirEdificio(ceid);
         }
 
-        public bool EntrenarUnidad(EUInputData euid)
+        public int EntrenarUnidad(EUInputData euid)
         {
             return blConstruccionHandler.EntrenarUnidad(euid);
         }
