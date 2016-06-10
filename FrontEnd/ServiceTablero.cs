@@ -332,11 +332,15 @@ namespace Shared.Entities
         
         private Shared.Entities.Accion[] AccionesField;
         
+        private Shared.Entities.DataActual DataJugadorField;
+        
         private int EstadoField;
         
         private int IdField;
         
         private int IdDisenadorField;
+        
+        private int IdJugadorField;
         
         private string ImagenField;
         
@@ -384,6 +388,19 @@ namespace Shared.Entities
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public Shared.Entities.DataActual DataJugador
+        {
+            get
+            {
+                return this.DataJugadorField;
+            }
+            set
+            {
+                this.DataJugadorField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public int Estado
         {
             get
@@ -419,6 +436,19 @@ namespace Shared.Entities
             set
             {
                 this.IdDisenadorField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdJugador
+        {
+            get
+            {
+                return this.IdJugadorField;
+            }
+            set
+            {
+                this.IdJugadorField = value;
             }
         }
         
@@ -549,6 +579,87 @@ namespace Shared.Entities
             set
             {
                 this.UrlField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="DataActual", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    public partial class DataActual : object, System.Runtime.Serialization.IExtensibleDataObject
+    {
+        
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        private System.Collections.Generic.Dictionary<int, Shared.Entities.EstadoRecurso> EstadoRecursosField;
+        
+        private System.Collections.Generic.Dictionary<int, Shared.Entities.EstadoData> EstadoTecnologiasField;
+        
+        private System.Collections.Generic.Dictionary<int, Shared.Entities.EstadoData> EstadoUnidadesField;
+        
+        private System.DateTime UltimaActualizacionField;
+        
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+        {
+            get
+            {
+                return this.extensionDataField;
+            }
+            set
+            {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.Dictionary<int, Shared.Entities.EstadoRecurso> EstadoRecursos
+        {
+            get
+            {
+                return this.EstadoRecursosField;
+            }
+            set
+            {
+                this.EstadoRecursosField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.Dictionary<int, Shared.Entities.EstadoData> EstadoTecnologias
+        {
+            get
+            {
+                return this.EstadoTecnologiasField;
+            }
+            set
+            {
+                this.EstadoTecnologiasField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.Dictionary<int, Shared.Entities.EstadoData> EstadoUnidades
+        {
+            get
+            {
+                return this.EstadoUnidadesField;
+            }
+            set
+            {
+                this.EstadoUnidadesField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime UltimaActualizacion
+        {
+            get
+            {
+                return this.UltimaActualizacionField;
+            }
+            set
+            {
+                this.UltimaActualizacionField = value;
             }
         }
     }
@@ -1579,6 +1690,135 @@ namespace Shared.Entities
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="EstadoRecurso", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    public partial class EstadoRecurso : object, System.Runtime.Serialization.IExtensibleDataObject
+    {
+        
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        private int ProduccionField;
+        
+        private int TotalField;
+        
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+        {
+            get
+            {
+                return this.extensionDataField;
+            }
+            set
+            {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Produccion
+        {
+            get
+            {
+                return this.ProduccionField;
+            }
+            set
+            {
+                this.ProduccionField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Total
+        {
+            get
+            {
+                return this.TotalField;
+            }
+            set
+            {
+                this.TotalField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="EstadoData", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    public partial class EstadoData : object, System.Runtime.Serialization.IExtensibleDataObject
+    {
+        
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        private int CantidadField;
+        
+        private Shared.Entities.EstadoData.EstadoEnum EstadoField;
+        
+        private int TiempoField;
+        
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+        {
+            get
+            {
+                return this.extensionDataField;
+            }
+            set
+            {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Cantidad
+        {
+            get
+            {
+                return this.CantidadField;
+            }
+            set
+            {
+                this.CantidadField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Shared.Entities.EstadoData.EstadoEnum Estado
+        {
+            get
+            {
+                return this.EstadoField;
+            }
+            set
+            {
+                this.EstadoField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Tiempo
+        {
+            get
+            {
+                return this.TiempoField;
+            }
+            set
+            {
+                this.TiempoField = value;
+            }
+        }
+        
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+        [System.Runtime.Serialization.DataContractAttribute(Name="EstadoData.EstadoEnum", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+        public enum EstadoEnum : int
+        {
+            
+            [System.Runtime.Serialization.EnumMemberAttribute()]
+            A = 0,
+            
+            [System.Runtime.Serialization.EnumMemberAttribute()]
+            C = 1,
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Costo", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
     public partial class Costo : object, System.Runtime.Serialization.IExtensibleDataObject
     {
@@ -1717,6 +1957,8 @@ namespace Shared.Entities
         
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
+        private Shared.Entities.EstadoData EstadoField;
+        
         private int IdField;
         
         private System.Nullable<int> IdTableroField;
@@ -1736,6 +1978,19 @@ namespace Shared.Entities
             set
             {
                 this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Shared.Entities.EstadoData Estado
+        {
+            get
+            {
+                return this.EstadoField;
+            }
+            set
+            {
+                this.EstadoField = value;
             }
         }
         
@@ -1832,6 +2087,9 @@ public interface IServiceTablero
     
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetAllDataJuego", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetAllDataJuegoResponse")]
     Shared.Entities.Juego GetAllDataJuego(int idJuego);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/DesarrollarTecnologia", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/DesarrollarTecnologiaResponse")]
+    bool DesarrollarTecnologia(string tenant, string idJugador, int idTecnologia);
 }
 
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
@@ -1901,5 +2159,10 @@ public partial class ServiceTableroClient : System.ServiceModel.ClientBase<IServ
     public Shared.Entities.Juego GetAllDataJuego(int idJuego)
     {
         return base.Channel.GetAllDataJuego(idJuego);
+    }
+    
+    public bool DesarrollarTecnologia(string tenant, string idJugador, int idTecnologia)
+    {
+        return base.Channel.DesarrollarTecnologia(tenant, idJugador, idTecnologia);
     }
 }
