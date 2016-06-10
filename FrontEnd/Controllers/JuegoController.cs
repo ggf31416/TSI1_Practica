@@ -534,6 +534,7 @@ namespace FrontEnd.Controllers
                 foreach (var eR in juego.DataJugador.EstadoRecursos)
                 {
                     Models.EstadoRecursoModel eRM = new Models.EstadoRecursoModel();
+                    eRM.Id = eR.Value.Id;
                     eRM.Total = (int)eR.Value.Total;
                     eRM.Produccion = eR.Value.Produccion;
 
@@ -544,6 +545,7 @@ namespace FrontEnd.Controllers
                 foreach (var eT in juego.DataJugador.EstadoTecnologias)
                 {
                     Models.EstadoDataModel eDM = new Models.EstadoDataModel();
+                    eDM.Id = eT.Value.Id;
                     eDM.Estado = eT.Value.Estado;
                     eDM.Tiempo = (int)eT.Value.Faltante;
                     eDM.Cantidad = eT.Value.Cantidad;
@@ -555,6 +557,7 @@ namespace FrontEnd.Controllers
                 foreach (var eU in juego.DataJugador.EstadoUnidades)
                 {
                     Models.EstadoDataModel eDM = new Models.EstadoDataModel();
+                    eDM.Id = eU.Value.Id;
                     eDM.Estado = eU.Value.Estado;
                     eDM.Tiempo = (int)eU.Value.Faltante;
                     eDM.Cantidad = eU.Value.Cantidad;

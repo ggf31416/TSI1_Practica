@@ -7,6 +7,7 @@ namespace FrontEnd.Models
 {
     public class EstadoRecursoModel
     {
+        public int Id { get; set; }
         public int Total { get; set; }
         public int Produccion { get; set; }
     }

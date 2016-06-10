@@ -19,6 +19,8 @@ namespace Shared.Entities
         [DataMember]
         public EstadoEnum Estado { get; set; }
 
+        [DataMember]
+        public int Id { get; set; }
 
         [DataMember]
         public int Cantidad { get; set; }

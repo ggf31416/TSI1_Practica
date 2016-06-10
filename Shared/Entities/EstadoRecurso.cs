@@ -10,6 +10,8 @@ namespace Shared.Entities
     [DataContract]
     public class EstadoRecurso
     {
+        [DataMember]
+        public int Id { get; set; }
         // tiene que ser un float o double porque sino donde se calcule con un dT no entero no da bien
         [DataMember]
         public float Total { get; set; }
