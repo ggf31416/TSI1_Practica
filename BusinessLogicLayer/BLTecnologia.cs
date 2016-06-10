@@ -132,7 +132,10 @@ namespace BusinessLogicLayer
 
         private void ActualizarTecnologiasConstruibles(Juego j, Tecnologia tec)
         {
+            if (j.DataJugador.EstadoTecnologias == null)
+                j.DataJugador.EstadoTecnologias = new Dictionary<string, EstadoData>();
             var estado = j.DataJugador.EstadoTecnologias;
+            
             foreach (var id in estado.Keys)
             {
                 if (estado[id].Estado == EstadoData.EstadoEnum.NoPuedo)
@@ -147,7 +150,10 @@ namespace BusinessLogicLayer
 
         public bool CompletarTecnologiasTerminadas(Juego j)
         {
+            if (j.DataJugador.EstadoTecnologias == null)
+                j.DataJugador.EstadoTecnologias = new Dictionary<string, EstadoData>();
             var estado = j.DataJugador.EstadoTecnologias;
+            
             bool algunaTermino = false;
             foreach (var kv in estado)
             {
