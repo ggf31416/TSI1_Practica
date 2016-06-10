@@ -42,12 +42,13 @@ namespace DataAccessLayer
             juego.IdJugador = idUsuario;
             juego.DataJugador = new Shared.Entities.DataActual();
             juego.DataJugador.UltimaActualizacion = DateTime.Now;
+            juego.DataJugador.EstadoRecursos = new Dictionary<string, Shared.Entities.EstadoRecurso>();
             foreach(var recurso in juego.TipoRecurso)
             {
                 Shared.Entities.EstadoRecurso EstadoRecurso = new Shared.Entities.EstadoRecurso();
                 EstadoRecurso.Total = 99999;
                 EstadoRecurso.Produccion = 12345;
-                juego.DataJugador.EstadoRecursos.Add(recurso.Id, EstadoRecurso);
+                juego.DataJugador.EstadoRecursos.Add(recurso.Id.ToString(), EstadoRecurso);
             }
             collection.InsertOne(juego);
         }
@@ -161,7 +162,7 @@ namespace DataAccessLayer
                         break;
                     }
                 }
-                validarConstruccion.Recursos = new Dictionary<int, int>();
+                validarConstruccion.Recursos = new Dictionary<string, int>();
                 foreach(var recur in juego.DataJugador.EstadoRecursos)
                 {
                     validarConstruccion.Recursos.Add(recur.Key, (int)recur.Value.Total);
@@ -199,6 +200,13 @@ namespace DataAccessLayer
                 tableroCelda.Estado.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
                 tableroCelda.Estado.Fin = DateTime.Now.AddSeconds((int)TipoEdificio.TiempoConstruccion);
                 juego.Tablero.Celdas.Add(tableroCelda);
+                Shared.Entities.EstadoRecurso EstRec = new Shared.Entities.EstadoRecurso();
+                foreach (var costo in TipoEdificio.Costos)
+                {
+                    juego.DataJugador.EstadoRecursos.TryGetValue(costo.IdRecurso.ToString(), out EstRec);
+                    EstRec.Total = EstRec.Total - costo.Valor;
+                    juego.DataJugador.EstadoRecursos.Add(costo.IdRecurso.ToString(), EstRec);
+                }
                 var result = collection.ReplaceOne(j => j.IdJugador == juego.IdJugador, juego, new UpdateOptions { IsUpsert = true });
                 return result.ModifiedCount == 1;
             }
@@ -210,12 +218,72 @@ namespace DataAccessLayer
 
         public Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad)
         {
-            return null;
+            var query = from juego in collection.AsQueryable<Shared.Entities.Juego>()
+                        where juego.IdJugador == idUsuario
+                        select juego;
+
+            if (query.Count() > 0)
+            {
+                Shared.Entities.Juego juego = query.First();
+                Shared.Entities.ValidarUnidad validarUnidad = new Shared.Entities.ValidarUnidad();
+                foreach (var tipoUni in juego.TipoUnidades)
+                {
+                    if (tipoUni.Id == IdUnidad)
+                    {
+                        validarUnidad.TipoUnidad = tipoUni;
+                        break;
+                    }
+                }
+                validarUnidad.Recursos = new Dictionary<string, int>();
+                foreach (var recur in juego.DataJugador.EstadoRecursos)
+                {
+                    validarUnidad.Recursos.Add(recur.Key, (int)recur.Value.Total);
+                }
+                return validarUnidad;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public bool PersistirUnidades(Shared.Entities.EUInputData euid)
         {
-            return false;
+            var query = from juego in collection.AsQueryable<Shared.Entities.Juego>()
+                        where juego.IdJugador == idUsuario
+                        select juego;
+
+            if (query.Count() > 0)
+            {
+                Shared.Entities.Juego juego = query.First();
+                Shared.Entities.TipoUnidad TipoUnidad = new Shared.Entities.TipoUnidad();
+                foreach (var tipoUni in juego.TipoUnidades)
+                {
+                    if (tipoUni.Id == euid.IdTipoUnidad)
+                    {
+                        TipoUnidad = tipoUni;
+                        break;
+                    }
+                }
+                Shared.Entities.EstadoData EstadoData = new Shared.Entities.EstadoData();
+                EstadoData.Cantidad = euid.Cantidad;
+                EstadoData.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
+                EstadoData.Fin = DateTime.Now.AddHours((int)TipoUnidad.TiempoConstruccion);
+                juego.DataJugador.EstadoUnidades.Add(TipoUnidad.Id.ToString(), EstadoData);
+                Shared.Entities.EstadoRecurso EstRec = new Shared.Entities.EstadoRecurso();
+                foreach (var costo in TipoUnidad.Costos)
+                {
+                    juego.DataJugador.EstadoRecursos.TryGetValue(costo.IdRecurso.ToString(), out EstRec);
+                    EstRec.Total = EstRec.Total - costo.Valor;
+                    juego.DataJugador.EstadoRecursos.Add(costo.IdRecurso.ToString(), EstRec);
+                }
+                var result = collection.ReplaceOne(j => j.IdJugador == juego.IdJugador, juego, new UpdateOptions { IsUpsert = true });
+                return result.ModifiedCount == 1;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         //public void AddPrueba(Prueba prueba)

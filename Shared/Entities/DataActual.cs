@@ -11,11 +11,11 @@ namespace Shared.Entities
     public class DataActual
     {
         [DataMember]
-        public Dictionary<int,EstadoData> EstadoUnidades { get; set; }
+        public Dictionary<string,EstadoData> EstadoUnidades { get; set; }
         [DataMember]
-        public Dictionary<int, EstadoData> EstadoTecnologias { get; set; }
+        public Dictionary<string, EstadoData> EstadoTecnologias { get; set; }
         [DataMember]
-        public Dictionary<int, EstadoRecurso> EstadoRecursos { get; set; }
+        public Dictionary<string, EstadoRecurso> EstadoRecursos { get; set; }
         [DataMember]
         public DateTime UltimaActualizacion { get; set; }
     }
