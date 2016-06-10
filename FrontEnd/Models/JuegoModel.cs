@@ -9,7 +9,7 @@ namespace FrontEnd.Models
     {
         public string Nombre { get; set; }
         public int Id { get; set; }
-        public int IdJugador { get; set; }
+        public string IdJugador { get; set; }
         public string Imagen { get; set; }
         public int Estado { get; set; }
         public string Url { get; set; }

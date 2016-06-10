@@ -208,7 +208,7 @@ namespace FrontEnd.Controllers
             foreach(var eR in juego.DataJugador.EstadoRecursos)
             {
                 Models.EstadoRecursoModel eRM = new Models.EstadoRecursoModel();
-                eRM.Total = eR.Value.Total;
+                eRM.Total = (int)eR.Value.Total;
                 eRM.Produccion = eR.Value.Produccion;
 
                 ret.DataJugador.EstadoRecursos.Add(eR.Key, eRM);
@@ -219,7 +219,7 @@ namespace FrontEnd.Controllers
             {
                 Models.EstadoDataModel eDM = new Models.EstadoDataModel();
                 eDM.Estado = eT.Value.Estado;
-                eDM.Tiempo = eT.Value.Tiempo;
+                eDM.Tiempo = (int)eT.Value.Faltante;
                 eDM.Cantidad = eT.Value.Cantidad;
 
                 ret.DataJugador.EstadoTecnologias.Add(eT.Key, eDM);
@@ -230,7 +230,7 @@ namespace FrontEnd.Controllers
             {
                 Models.EstadoDataModel eDM = new Models.EstadoDataModel();
                 eDM.Estado = eU.Value.Estado;
-                eDM.Tiempo = eU.Value.Tiempo;
+                eDM.Tiempo = (int)eU.Value.Faltante;
                 eDM.Cantidad = eU.Value.Cantidad;
 
                 ret.DataJugador.EstadoUnidades.Add(eU.Key, eDM);

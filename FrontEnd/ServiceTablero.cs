@@ -336,7 +336,7 @@ namespace Shared.Entities
         
         private int EstadoField;
         
-        private string IdField;
+        private int IdField;
         
         private int IdDisenadorField;
         
@@ -414,7 +414,7 @@ namespace Shared.Entities
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Id
+        public int Id
         {
             get
             {
