@@ -53,10 +53,24 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
+  <xs:element name="GetListaDeJugadoresAtacables">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="jugadorAt" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetListaDeJugadoresAtacablesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Shared.Entities" minOccurs="0" name="GetListaDeJugadoresAtacablesResult" nillable="true" type="q4:ArrayOfJugadorBasico" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="IniciarAtaque">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Shared.Entities" minOccurs="0" name="info" nillable="true" type="q4:InfoAtaque" />
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Shared.Entities" minOccurs="0" name="info" nillable="true" type="q5:InfoAtaque" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -75,7 +89,7 @@
   <xs:element name="GetAllDataJuegoResponse">
     <xs:complexType>
       <xs:sequence>
-        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Shared.Entities" minOccurs="0" name="GetAllDataJuegoResult" nillable="true" type="q5:Juego" />
+        <xs:element xmlns:q6="http://schemas.datacontract.org/2004/07/Shared.Entities" minOccurs="0" name="GetAllDataJuegoResult" nillable="true" type="q6:Juego" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

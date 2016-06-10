@@ -39,6 +39,12 @@ namespace FrontEnd.ServiceTablero {
         [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/register", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/registerResponse")]
         System.Threading.Tasks.Task registerAsync(Shared.Entities.ClienteJuego cliente, int idJuego);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetListaDeJugadoresAtacables", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetListaDeJugadoresAtacablesResponse")]
+        Shared.Entities.JugadorBasico[] GetListaDeJugadoresAtacables(string jugadorAt);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetListaDeJugadoresAtacables", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetListaDeJugadoresAtacablesResponse")]
+        System.Threading.Tasks.Task<Shared.Entities.JugadorBasico[]> GetListaDeJugadoresAtacablesAsync(string jugadorAt);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/IniciarAtaque", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/IniciarAtaqueResponse")]
         void IniciarAtaque(Shared.Entities.InfoAtaque info);
         
@@ -109,6 +115,14 @@ namespace FrontEnd.ServiceTablero {
         
         public System.Threading.Tasks.Task registerAsync(Shared.Entities.ClienteJuego cliente, int idJuego) {
             return base.Channel.registerAsync(cliente, idJuego);
+        }
+        
+        public Shared.Entities.JugadorBasico[] GetListaDeJugadoresAtacables(string jugadorAt) {
+            return base.Channel.GetListaDeJugadoresAtacables(jugadorAt);
+        }
+        
+        public System.Threading.Tasks.Task<Shared.Entities.JugadorBasico[]> GetListaDeJugadoresAtacablesAsync(string jugadorAt) {
+            return base.Channel.GetListaDeJugadoresAtacablesAsync(jugadorAt);
         }
         
         public void IniciarAtaque(Shared.Entities.InfoAtaque info) {

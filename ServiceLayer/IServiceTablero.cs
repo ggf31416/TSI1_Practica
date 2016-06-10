@@ -24,6 +24,7 @@ namespace ServiceLayer
         [OperationContract]
         void register(ClienteJuego cliente, int idJuego);
 
+        [OperationContract]
         List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt);
 
         [OperationContract]
