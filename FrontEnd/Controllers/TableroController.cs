@@ -1,5 +1,4 @@
-﻿using FrontEnd.ServiceEntidades;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -20,7 +19,6 @@ namespace FrontEnd.Controllers
             try
             {
                 ServiceTableroClient client = new ServiceTableroClient();
-                client.
                 client.Accion(data);
                 return Json(new { sucess = true });
             }
