@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer
 {
-    public class Unidad : Entidad
+    public interface IBLTecnologia
     {
-
-        public float velocidad { get; set; } = 10;
-
+        bool DesarrollarTecnologia(string tenant, string idJugador,int idTecnologia);
     }
 }

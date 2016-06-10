@@ -8,7 +8,22 @@ namespace BusinessLogicLayer
 {
     public class Entidad
     {
+
+        public Entidad()
+        {
+
+        }
+
+        public void DesdeTipo(Shared.Entities.TipoEntidad te)
+        {
+            this.tipo_id = te.Id;
+            this.ataque = te.Ataque.GetValueOrDefault();
+            this.defensa = te.Defensa.GetValueOrDefault();
+            this.vida = te.Vida.GetValueOrDefault();
+        }
+
         public string id { get; set; }
+        public int tipo_id { get; set; }
         public string jugador { get; set; }
         public int ataque { get; set; } = 10;
         public float vida { get; set; } = 100;

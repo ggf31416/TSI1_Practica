@@ -13,6 +13,7 @@ namespace ServiceLayer
     {
         public static IBLTablero blHandler;
         public static IBLJuego blJuegoHandler;
+        public static IBLTecnologia blTecnologiaHandler;
 
         static void Main(string[] args)
         {

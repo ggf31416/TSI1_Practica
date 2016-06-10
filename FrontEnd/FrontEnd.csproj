@@ -277,6 +277,7 @@
     <Compile Include="Controllers\JuegoController.cs" />
     <Compile Include="Controllers\TableroController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TecnologiaController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -292,6 +293,7 @@
     <Compile Include="Models\FechaCantidad.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\IdModel.cs" />
+    <Compile Include="Models\IdentificadorSignalR.cs" />
     <Compile Include="Models\InfoCeldaModel.cs" />
     <Compile Include="Models\JuegoModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -350,6 +352,7 @@
     <Folder Include="Views\chat\" />
     <Folder Include="Views\Entidades\" />
     <Folder Include="Views\Tablero\" />
+    <Folder Include="Views\Tecnologia\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
