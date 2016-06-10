@@ -24,6 +24,9 @@ namespace BusinessLogicLayer
 
         public bool ConstruirEdificio(CEInputData ceid, string Tenant, string NombreJugador)
         {
+            BLJuego blJuego = new BLJuego(new DALJuego());
+            blJuego.GetJuegoUsuario(Tenant, NombreJugador);
+
             ValidarConstruccion vE = _dal.ConstruirEdificio(ceid.IdTipoEdificio, Tenant, NombreJugador);
 
             //Checkear si la posicion esta vacia
@@ -60,7 +63,8 @@ namespace BusinessLogicLayer
 
         public int EntrenarUnidad(EUInputData euid, string Tenant, string NombreJugador)
         {
-            //TODO: ACTUALIZAR BASE
+            BLJuego blJuego = new BLJuego(new DALJuego());
+            blJuego.GetJuegoUsuario(Tenant, NombreJugador);
 
             ValidarUnidad vU = _dal.EntrenarUnidad(euid.IdTipoUnidad, Tenant, NombreJugador);
 
@@ -91,8 +95,6 @@ namespace BusinessLogicLayer
             {
                 return cantidad;
             }
-
-            //TODO: ACTUALIZAR BASE
         }
     }
 }
