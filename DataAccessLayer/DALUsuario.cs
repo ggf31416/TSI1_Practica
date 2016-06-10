@@ -30,7 +30,7 @@ namespace DataAccessLayer
         {
             cliente.creacion = DateTime.Now;
             collection.InsertOne(cliente);
-            IDALConstruccion iDALConstruccion = new DALConstruccion(this.nombreJuego, cliente.id);
+            IDALConstruccion iDALConstruccion = new DALConstruccion();
             iDALConstruccion.InicializarConstruccion(cliente.id, this.nombreJuego);
         }
 

@@ -19,26 +19,16 @@ namespace DataAccessLayer
         private static IMongoClient client = new MongoClient(connectionstring);
         private IMongoDatabase database;
         private IMongoCollection<Shared.Entities.Juego> collection;
-        private string nombreJuego = "AOE";
-        private string idUsuario = "10209545762984761";
 
         public DALConstruccion(){
-            database = client.GetDatabase(nombreJuego);
-            collection = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
-        }
-
-        public DALConstruccion(string nombreJuego, string idUsuario)
-        {
-            this.nombreJuego = nombreJuego;
-            this.idUsuario = idUsuario;
-            database = client.GetDatabase(nombreJuego);
-            collection = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
         }
 
         public void InicializarConstruccion(string idUsuario, string nombreJuego)
         {
+            database = client.GetDatabase(nombreJuego);
+            collection = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
             IDALJuego iDALJuego = new DALJuego();
-            Shared.Entities.Juego juego = iDALJuego.GetJuego(this.nombreJuego);
+            Shared.Entities.Juego juego = iDALJuego.GetJuego(nombreJuego);
             juego.IdJugador = idUsuario;
             juego.DataJugador = new Shared.Entities.DataActual();
             juego.DataJugador.UltimaActualizacion = DateTime.Now;
@@ -49,6 +39,12 @@ namespace DataAccessLayer
                 EstadoRecurso.Total = 99999;
                 EstadoRecurso.Produccion = 12345;
                 juego.DataJugador.EstadoRecursos.Add(recurso.Id.ToString(), EstadoRecurso);
+            }
+            foreach (var celda in juego.Tablero.Celdas)
+            {
+                celda.Estado = new Shared.Entities.EstadoData();
+                celda.Estado.Estado = Shared.Entities.EstadoData.EstadoEnum.A;
+                celda.Estado.Fin = DateTime.Now;
             }
             collection.InsertOne(juego);
         }
@@ -143,10 +139,12 @@ namespace DataAccessLayer
 
 
         //SERVICIOS
-        public Shared.Entities.ValidarConstruccion ConstruirEdificio(int IdEdificio)
+        public Shared.Entities.ValidarConstruccion ConstruirEdificio(int IdEdificio, string tenant, string nombreJugador)
         {
+            database = client.GetDatabase(tenant);
+            collection = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
             var query = from juego in collection.AsQueryable<Shared.Entities.Juego>()
-                        where juego.IdJugador == idUsuario
+                        where juego.IdJugador == nombreJugador
                         select juego;
 
             if (query.Count() > 0)
@@ -175,10 +173,12 @@ namespace DataAccessLayer
             }
         }
 
-        public bool PersistirEdificio(Shared.Entities.CEInputData ceid)
+        public bool PersistirEdificio(Shared.Entities.CEInputData ceid, string tenant, string nombreJugador)
         {
+            database = client.GetDatabase(tenant);
+            collection = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
             var query = from juego in collection.AsQueryable<Shared.Entities.Juego>()
-                        where juego.IdJugador == idUsuario
+                        where juego.IdJugador == nombreJugador
                         select juego;
 
             if (query.Count() > 0)
@@ -217,10 +217,12 @@ namespace DataAccessLayer
             }
         }
 
-        public Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad)
+        public Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad, string tenant, string nombreJugador)
         {
+            database = client.GetDatabase(tenant);
+            collection = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
             var query = from juego in collection.AsQueryable<Shared.Entities.Juego>()
-                        where juego.IdJugador == idUsuario
+                        where juego.IdJugador == nombreJugador
                         select juego;
 
             if (query.Count() > 0)
@@ -248,10 +250,12 @@ namespace DataAccessLayer
             }
         }
 
-        public bool PersistirUnidades(Shared.Entities.EUInputData euid)
+        public bool PersistirUnidades(Shared.Entities.EUInputData euid, string tenant, string nombreJugador)
         {
+            database = client.GetDatabase(tenant);
+            collection = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
             var query = from juego in collection.AsQueryable<Shared.Entities.Juego>()
-                        where juego.IdJugador == idUsuario
+                        where juego.IdJugador == nombreJugador
                         select juego;
 
             if (query.Count() > 0)
