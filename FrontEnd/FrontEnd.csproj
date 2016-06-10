@@ -192,7 +192,7 @@
     <Content Include="Content\ui-bootstrap-csp.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Properties\PublishProfiles\tsi1frontoffice.pubxml.user" />
+    <Content Include="Properties\PublishProfiles\tsiatlas2fo.pubxml.user" />
     <Content Include="Scripts\angular-mocks.js" />
     <Content Include="Scripts\angular-route.js" />
     <Content Include="Scripts\angular-route.min.js" />
@@ -222,7 +222,7 @@
     <Content Include="Properties\DataSources\Shared.Entities.Juego.datasource" />
     <Content Include="Properties\DataSources\Shared.Entities.TipoEdificio.datasource" />
     <Content Include="Properties\DataSources\Shared.Entities.TipoUnidad.datasource" />
-    <None Include="Properties\PublishProfiles\tsi1frontoffice.pubxml" />
+    <None Include="Properties\PublishProfiles\tsiatlas2fo.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
