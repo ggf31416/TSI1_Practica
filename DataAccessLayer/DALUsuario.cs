@@ -16,6 +16,7 @@ namespace DataAccessLayer
         private string nombreJuego;
         private IMongoDatabase database;
         private IMongoCollection<ClienteJuego> collection;
+        //private IMongoCollection<JugadorConexion> conexionesJug;
         private IMongoCollection<Shared.Entities.FechaCantidad> collectionFechaCantidad;
 
         public DALUsuario(string nombreJuego)
@@ -23,6 +24,7 @@ namespace DataAccessLayer
             this.nombreJuego = nombreJuego;
             database = client.GetDatabase(nombreJuego);
             collection = database.GetCollection<ClienteJuego>("usuario");
+            //conexionesJug = database.GetCollection<JugadorConexion>("usuario");
             collectionFechaCantidad = database.GetCollection<Shared.Entities.FechaCantidad>("fecha_cantidad");
         }
         

@@ -61,19 +61,24 @@ namespace ServiceLayer
             return blJuegoHandler.GetAllDataJuego(tenant);
         }
 
-        public bool ConstruirEdificio(CEInputData ceid)
+        public bool ConstruirEdificio(CEInputData ceid, string Tenant, string NombreJugador)
         {
-            return blConstruccionHandler.ConstruirEdificio(ceid);
+            return blConstruccionHandler.ConstruirEdificio(ceid, Tenant, NombreJugador);
         }
 
-        public int EntrenarUnidad(EUInputData euid)
+        public int EntrenarUnidad(EUInputData euid, string Tenant, string NombreJugador)
         {
-            return blConstruccionHandler.EntrenarUnidad(euid);
+            return blConstruccionHandler.EntrenarUnidad(euid, Tenant, NombreJugador);
         }
 
         public ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador)
         {
             return blJuegoHandler.GetEntidadesActualizadas(tenant, nombreJugador);
+        }
+
+        public Juego GetJuegoUsuario(string tenant, string idUsuario)
+        {
+            return blJuegoHandler.GetJuegoUsuario(tenant, idUsuario);
         }
 
         public bool DesarrollarTecnologia(string tenant, string idJugador,int idTecnologia)

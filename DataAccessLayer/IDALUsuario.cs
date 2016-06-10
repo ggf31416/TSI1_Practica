@@ -12,5 +12,7 @@ namespace DataAccessLayer
         void register(Shared.Entities.ClienteJuego client);
         bool authenticate(Shared.Entities.ClienteJuego client);
         void logout(Shared.Entities.ClienteJuego client);
+
+        
     }
 }
