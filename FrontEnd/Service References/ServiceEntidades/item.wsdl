@@ -1,62 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://localhost:8835/tsi1/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://localhost:8835/tsi1/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://localhost:8840/tsi1/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://localhost:8840/tsi1/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
-    <xsd:schema targetNamespace="http://localhost:8835/tsi1/Imports">
-      <xsd:import schemaLocation="http://localhost:8835/tsi/?xsd=xsd0" namespace="http://localhost:8835/tsi1/" />
-      <xsd:import schemaLocation="http://localhost:8835/tsi/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-      <xsd:import schemaLocation="http://localhost:8835/tsi/?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Shared.Entities" />
+    <xsd:schema targetNamespace="http://localhost:8840/tsi1/Imports">
+      <xsd:import schemaLocation="http://localhost:8840/tsi/?xsd=xsd0" namespace="http://localhost:8840/tsi1/" />
+      <xsd:import schemaLocation="http://localhost:8840/tsi/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:8840/tsi/?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Shared.Entities" />
+      <xsd:import schemaLocation="http://localhost:8840/tsi/?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
     </xsd:schema>
   </wsdl:types>
-  <wsdl:message name="IServiceEntidades_AltaTipoEdificio_InputMessage">
+  <wsdl:message name="IServiceAtlas_AltaTipoEdificio_InputMessage">
     <wsdl:part name="parameters" element="tns:AltaTipoEdificio" />
   </wsdl:message>
-  <wsdl:message name="IServiceEntidades_AltaTipoEdificio_OutputMessage">
+  <wsdl:message name="IServiceAtlas_AltaTipoEdificio_OutputMessage">
     <wsdl:part name="parameters" element="tns:AltaTipoEdificioResponse" />
   </wsdl:message>
-  <wsdl:message name="IServiceEntidades_AltaTipoUnidad_InputMessage">
+  <wsdl:message name="IServiceAtlas_AltaTipoUnidad_InputMessage">
     <wsdl:part name="parameters" element="tns:AltaTipoUnidad" />
   </wsdl:message>
-  <wsdl:message name="IServiceEntidades_AltaTipoUnidad_OutputMessage">
+  <wsdl:message name="IServiceAtlas_AltaTipoUnidad_OutputMessage">
     <wsdl:part name="parameters" element="tns:AltaTipoUnidadResponse" />
   </wsdl:message>
-  <wsdl:message name="IServiceEntidades_GetAllTipoEdificios_InputMessage">
+  <wsdl:message name="IServiceAtlas_AltaTipoRecurso_InputMessage">
+    <wsdl:part name="parameters" element="tns:AltaTipoRecurso" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_AltaTipoRecurso_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AltaTipoRecursoResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_BajaTipoEntidad_InputMessage">
+    <wsdl:part name="parameters" element="tns:BajaTipoEntidad" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_BajaTipoEntidad_OutputMessage">
+    <wsdl:part name="parameters" element="tns:BajaTipoEntidadResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_BajaTipoRecurso_InputMessage">
+    <wsdl:part name="parameters" element="tns:BajaTipoRecurso" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_BajaTipoRecurso_OutputMessage">
+    <wsdl:part name="parameters" element="tns:BajaTipoRecursoResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_GetAllTipoEdificios_InputMessage">
     <wsdl:part name="parameters" element="tns:GetAllTipoEdificios" />
   </wsdl:message>
-  <wsdl:message name="IServiceEntidades_GetAllTipoEdificios_OutputMessage">
+  <wsdl:message name="IServiceAtlas_GetAllTipoEdificios_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetAllTipoEdificiosResponse" />
   </wsdl:message>
-  <wsdl:message name="IServiceEntidades_GetAllTipoUnidades_InputMessage">
+  <wsdl:message name="IServiceAtlas_GetAllTipoUnidades_InputMessage">
     <wsdl:part name="parameters" element="tns:GetAllTipoUnidades" />
   </wsdl:message>
-  <wsdl:message name="IServiceEntidades_GetAllTipoUnidades_OutputMessage">
+  <wsdl:message name="IServiceAtlas_GetAllTipoUnidades_OutputMessage">
     <wsdl:part name="parameters" element="tns:GetAllTipoUnidadesResponse" />
   </wsdl:message>
-  <wsdl:message name="IServiceEntidades_AsociarEdificioUnidad_InputMessage">
+  <wsdl:message name="IServiceAtlas_GetAllTipoRecursos_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTipoRecursos" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_GetAllTipoRecursos_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTipoRecursosResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_AsociarEdificioUnidad_InputMessage">
     <wsdl:part name="parameters" element="tns:AsociarEdificioUnidad" />
   </wsdl:message>
-  <wsdl:message name="IServiceEntidades_AsociarEdificioUnidad_OutputMessage">
+  <wsdl:message name="IServiceAtlas_AsociarEdificioUnidad_OutputMessage">
     <wsdl:part name="parameters" element="tns:AsociarEdificioUnidadResponse" />
   </wsdl:message>
-  <wsdl:portType name="IServiceEntidades">
+  <wsdl:message name="IServiceAtlas_AltaTecnologia_InputMessage">
+    <wsdl:part name="parameters" element="tns:AltaTecnologia" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_AltaTecnologia_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AltaTecnologiaResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_BajaTecnologia_InputMessage">
+    <wsdl:part name="parameters" element="tns:BajaTecnologia" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_BajaTecnologia_OutputMessage">
+    <wsdl:part name="parameters" element="tns:BajaTecnologiaResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_GetAllTecnologias_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTecnologias" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_GetAllTecnologias_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllTecnologiasResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_AltaJuego_InputMessage">
+    <wsdl:part name="parameters" element="tns:AltaJuego" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_AltaJuego_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AltaJuegoResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_BajaJuego_InputMessage">
+    <wsdl:part name="parameters" element="tns:BajaJuego" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_BajaJuego_OutputMessage">
+    <wsdl:part name="parameters" element="tns:BajaJuegoResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_GetAllJuegos_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllJuegos" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_GetAllJuegos_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllJuegosResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_AsociarJuegoDisenador_InputMessage">
+    <wsdl:part name="parameters" element="tns:AsociarJuegoDisenador" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_AsociarJuegoDisenador_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AsociarJuegoDisenadorResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_PublicarJuego_InputMessage">
+    <wsdl:part name="parameters" element="tns:PublicarJuego" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_PublicarJuego_OutputMessage">
+    <wsdl:part name="parameters" element="tns:PublicarJuegoResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_AltaTablero_InputMessage">
+    <wsdl:part name="parameters" element="tns:AltaTablero" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_AltaTablero_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AltaTableroResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_GetTablero_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetTablero" />
+  </wsdl:message>
+  <wsdl:message name="IServiceAtlas_GetTablero_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetTableroResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IServiceAtlas">
     <wsdl:operation name="AltaTipoEdificio">
-      <wsdl:input wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoEdificio" message="tns:IServiceEntidades_AltaTipoEdificio_InputMessage" />
-      <wsdl:output wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoEdificioResponse" message="tns:IServiceEntidades_AltaTipoEdificio_OutputMessage" />
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoEdificio" message="tns:IServiceAtlas_AltaTipoEdificio_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoEdificioResponse" message="tns:IServiceAtlas_AltaTipoEdificio_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="AltaTipoUnidad">
-      <wsdl:input wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoUnidad" message="tns:IServiceEntidades_AltaTipoUnidad_InputMessage" />
-      <wsdl:output wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoUnidadResponse" message="tns:IServiceEntidades_AltaTipoUnidad_OutputMessage" />
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoUnidad" message="tns:IServiceAtlas_AltaTipoUnidad_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoUnidadResponse" message="tns:IServiceAtlas_AltaTipoUnidad_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AltaTipoRecurso">
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoRecurso" message="tns:IServiceAtlas_AltaTipoRecurso_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoRecursoResponse" message="tns:IServiceAtlas_AltaTipoRecurso_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="BajaTipoEntidad">
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/BajaTipoEntidad" message="tns:IServiceAtlas_BajaTipoEntidad_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/BajaTipoEntidadResponse" message="tns:IServiceAtlas_BajaTipoEntidad_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="BajaTipoRecurso">
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/BajaTipoRecurso" message="tns:IServiceAtlas_BajaTipoRecurso_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/BajaTipoRecursoResponse" message="tns:IServiceAtlas_BajaTipoRecurso_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="GetAllTipoEdificios">
-      <wsdl:input wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoEdificios" message="tns:IServiceEntidades_GetAllTipoEdificios_InputMessage" />
-      <wsdl:output wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoEdificiosResponse" message="tns:IServiceEntidades_GetAllTipoEdificios_OutputMessage" />
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoEdificios" message="tns:IServiceAtlas_GetAllTipoEdificios_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoEdificiosResponse" message="tns:IServiceAtlas_GetAllTipoEdificios_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="GetAllTipoUnidades">
-      <wsdl:input wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoUnidades" message="tns:IServiceEntidades_GetAllTipoUnidades_InputMessage" />
-      <wsdl:output wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoUnidadesResponse" message="tns:IServiceEntidades_GetAllTipoUnidades_OutputMessage" />
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoUnidades" message="tns:IServiceAtlas_GetAllTipoUnidades_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoUnidadesResponse" message="tns:IServiceAtlas_GetAllTipoUnidades_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllTipoRecursos">
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoRecursos" message="tns:IServiceAtlas_GetAllTipoRecursos_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoRecursosResponse" message="tns:IServiceAtlas_GetAllTipoRecursos_OutputMessage" />
     </wsdl:operation>
     <wsdl:operation name="AsociarEdificioUnidad">
-      <wsdl:input wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/AsociarEdificioUnidad" message="tns:IServiceEntidades_AsociarEdificioUnidad_InputMessage" />
-      <wsdl:output wsaw:Action="http://localhost:8835/tsi1/IServiceEntidades/AsociarEdificioUnidadResponse" message="tns:IServiceEntidades_AsociarEdificioUnidad_OutputMessage" />
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AsociarEdificioUnidad" message="tns:IServiceAtlas_AsociarEdificioUnidad_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AsociarEdificioUnidadResponse" message="tns:IServiceAtlas_AsociarEdificioUnidad_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AltaTecnologia">
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTecnologia" message="tns:IServiceAtlas_AltaTecnologia_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTecnologiaResponse" message="tns:IServiceAtlas_AltaTecnologia_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="BajaTecnologia">
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/BajaTecnologia" message="tns:IServiceAtlas_BajaTecnologia_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/BajaTecnologiaResponse" message="tns:IServiceAtlas_BajaTecnologia_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllTecnologias">
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTecnologias" message="tns:IServiceAtlas_GetAllTecnologias_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTecnologiasResponse" message="tns:IServiceAtlas_GetAllTecnologias_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AltaJuego">
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AltaJuego" message="tns:IServiceAtlas_AltaJuego_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AltaJuegoResponse" message="tns:IServiceAtlas_AltaJuego_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="BajaJuego">
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/BajaJuego" message="tns:IServiceAtlas_BajaJuego_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/BajaJuegoResponse" message="tns:IServiceAtlas_BajaJuego_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllJuegos">
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllJuegos" message="tns:IServiceAtlas_GetAllJuegos_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllJuegosResponse" message="tns:IServiceAtlas_GetAllJuegos_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AsociarJuegoDisenador">
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AsociarJuegoDisenador" message="tns:IServiceAtlas_AsociarJuegoDisenador_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AsociarJuegoDisenadorResponse" message="tns:IServiceAtlas_AsociarJuegoDisenador_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="PublicarJuego">
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/PublicarJuego" message="tns:IServiceAtlas_PublicarJuego_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/PublicarJuegoResponse" message="tns:IServiceAtlas_PublicarJuego_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AltaTablero">
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTablero" message="tns:IServiceAtlas_AltaTablero_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTableroResponse" message="tns:IServiceAtlas_AltaTablero_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTablero">
+      <wsdl:input wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/GetTablero" message="tns:IServiceAtlas_GetTablero_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8840/tsi1/IServiceAtlas/GetTableroResponse" message="tns:IServiceAtlas_GetTablero_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
 </wsdl:definitions>

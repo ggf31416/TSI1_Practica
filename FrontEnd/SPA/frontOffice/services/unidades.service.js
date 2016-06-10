@@ -31,11 +31,12 @@
                 function (data) {
                     if (data.data.success == false) {
                         throw new Error(data.data.responseText);
+                        console.log("Error al cargar unidades: " + data.data.responseText + " msg" + data.data.msg);
                     }
                     return data.data.ret;
                 }).catch(
                     function (err) {
-                        alert(err);
+                        console.log("Error al cargar unidades: " + err);
                 });
              return promise;
         }

@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DataAccessLayer
+{
+    public interface IDALUsuario
+    {
+        void login(Shared.Entities.Cliente client);
+        bool authenticate(Shared.Entities.Cliente client);
+    }
+}

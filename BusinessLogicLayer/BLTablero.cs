@@ -9,248 +9,219 @@ using System.Threading.Tasks;
 using ServiceStack.Redis;
 using Microsoft.AspNet.SignalR.Client.Hubs;
 using System.ServiceModel;
-
+using Shared.Entities;
 
 namespace BusinessLogicLayer
 {
     public class BLTablero : IBLTablero
     {
+        private static BLTablero instancia = null;
+        public static BLTablero getInstancia()
+        {
+            if (instancia == null) instancia = new BLTablero(null);
+            return instancia;
+        }
+
+        // representa las batallas en curso en este servidor
+        public Dictionary<string, Batalla> batallasPorJugador = new Dictionary<string, Batalla>();
+        public List<Batalla> batallas = new List<Batalla>();
+
+        public Dictionary<string, Jugador> jugadores { get; private set; } = new Dictionary<string, Jugador>(); 
+
+
         private IDALTablero _dal;
-        private List<Edificio> edificios = new List<Edificio>();
-        private string jugadorDefensor;
-        private Dictionary<String, List<Unidad>> unidadesPorJugador = new Dictionary<string, List<Unidad>>();
-        private static int edificio_size = 4;
-        private static int tablero_size = 10;
-        private int sizeX = tablero_size * edificio_size;
-        private int sizeY = tablero_size * edificio_size;
-        private float velocidad = 5;
+        private bool todaviaEstoyTrabajando = false;
 
-        public void agregarUnidades(String jugador,IEnumerable<Unidad> unidades)
-        {
-            if (!unidadesPorJugador.ContainsKey(jugador)){
-                unidadesPorJugador.Add(jugador, new List<Unidad>());
-            }
-            unidadesPorJugador[jugador].AddRange(unidades);
-
-        }
-
-        public void agregarEdificios(IEnumerable<Edificio> lst)
-        {
-            edificios.AddRange(lst);
-        }
-
-        public BLTablero(IDALTablero dal)
+        private BLTablero(IDALTablero dal)
         {
             _dal = dal;
         }
 
+
+        public void ejecutarBatallasEnCurso()
+        {
+            if (todaviaEstoyTrabajando) return;
+
+            try
+            {
+                todaviaEstoyTrabajando = true;
+                Console.WriteLine(DateTime.Now.ToString("hh:mm:ss.fff tt"));
+                var client = getCliente();
+                var encoladas = new List<string>();
+                foreach (Batalla b in batallas)
+                {
+                    if (b.EnCurso)
+                    {
+                        b.ejecutarTurno();
+                        string jsonAcciones = b.generarListaAccionesTurno();
+                        if (jsonAcciones.Length > 0)
+                        {
+                            encoladas.Add(jsonAcciones);
+                        }
+
+                    }
+                }
+                foreach (var a in encoladas)
+                {
+                    client.Send(a);
+                }
+            }
+            finally
+            {
+                todaviaEstoyTrabajando = false;
+            }
+        }
+
+
+        /*private void crearBatalla(string jugador)
+        {
+            if (!batallasPorJugador.ContainsKey(jugador))
+            {
+                Batalla tmp = new Batalla("", jugador);
+                batallasPorJugador.Add(jugador, tmp);
+                tmp.inicializar();
+            }
+        }*/
+
+        public void agregarEdificio(AccionMsg msg)
+        {
+            BLServiceClient serviceClient = new BLServiceClient();
+            ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
+            Batalla b = obtenerBatalla(msg.Jugador);
+            b.tablero.agregarEdificio(new Edificio { tipo_id = msg.Id, jugador = msg.Jugador, posX = msg.PosX, posY = msg.PosY });
+            AccionMsg msgSend = new AccionMsg { Accion = "AddEd", Id = msg.Id, PosX = msg.PosX, PosY =msg.PosY };
+            client.Send(JsonConvert.SerializeObject(msgSend));
+
+        }
+
+        // es jugarEdificio
         public void JugarUnidad(Shared.Entities.InfoCelda infoCelda)
         {  //_dal.JugarUnidad(infoCelda);
 
+            //client.Send("{\"Id\":" + infoCelda.Id + ",\"PosX\":" + infoCelda.PosX + ",\"PosY\":" + infoCelda.PosY + "}");
+        }
+
+
+        private static ServiceInteraccionClient getCliente()
+        {
             BLServiceClient serviceClient = new BLServiceClient();
             ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
-
-            client.Send("{\"Id\":" + infoCelda.Id + ",\"PosX\":" + infoCelda.PosX + ",\"PosY\":" + infoCelda.PosY + "}");
-
-
-            
+            return client;
         }
 
-        BaseGrid crearTableroPF()
+
+
+        private void agregarUnidad(string jugador, int tipo_id, string unit_id, int posX, int posY)
         {
-            bool[][] matrix = new bool[sizeX][];
-            for(int i = 0; i < sizeX; i++)
+            ServiceInteraccionClient client = getCliente();
+            Batalla b = obtenerBatalla(jugador);
+            b.agregarUnidad(tipo_id, jugador, unit_id, posX, posY);
+
+
+            var jsonObj = new { A = "AddUn", Id = tipo_id, PosX = posX, PosY = posY, Unit_id = unit_id };
+            string s = JsonConvert.SerializeObject(jsonObj);
+            
+            client.Send(s);
+            
+
+
+
+            /*var path = b.tablero.ordenMoverUnidad(unit_id, 20, 15);
+            dynamic jsonObj2 = new { A = "MoveUnit", Id = tipo_id, Unit_id = unit_id, PosX = posX, PosY = posY, Path = path.path };
+            string s2 = JsonConvert.SerializeObject(jsonObj2);
+            client.Send(s2);*/
+        }
+
+
+        private Batalla obtenerBatalla(string jugador)
+        {
+            /*if (!batallasPorJugador.ContainsKey(jugador))
             {
-                matrix[i] = new bool[sizeY];
-                for(int j = 0; j < sizeY; j++){
-                    matrix[i][j] = true;
-                }
-            }
-            
-            foreach(var e in edificios)
-            {
-                for(int i = 0; i < e.sizeX; i++)
-                {
-                    for (int j = 0; j < e.sizeY; j++)
-                    {
-                        matrix[e.posX + i][e.posY + j] = false;
-                    }
-                }
-            }
-            BaseGrid grilla = new StaticGrid(sizeX, sizeY,matrix);
-            return grilla;
-            
-        }
-
-        JumpPointParam parametrosBusqueda(BaseGrid grilla)
-        {
-            bool cruzarJuntoObstaculo = false;
-            bool cruzarPorDiagonal = false;
-            HeuristicMode heuristica_distancia = HeuristicMode.MIXTA15; // Diagonales valen 1.5
-            JumpPointParam param = new JumpPointParam(grilla, true, cruzarJuntoObstaculo, cruzarPorDiagonal, heuristica_distancia);
-            return param;
-        }
-
-        public List<GridPos> buscarPath(Unidad u, JumpPointParam param, GridPos dest)
-        {
-            param.StartNode.x = u.posX;
-            param.StartNode.y = u.posY;
-            param.EndNode.x = dest.x;
-            param.EndNode.y = dest.y;
-            List<GridPos> res = JumpPointFinder.FindPath(param);
-            return res;
-        }
-
-        public class ResultadoBusqPath
-        {
-            public int id_unidad { get; set; }
-            public GridPos[] path { get; set; }
-
-            
-        }
-
-        private int euclides2(int dx,int dy)
-        {
-            return dx * dx + dy * dy;
-        }
-
-        public Unidad buscarEnemigoMasCercano(Unidad u)
-        {
-            int distancia = 0;
-            Unidad nearest = null;
-            foreach (String j in this.unidadesPorJugador.Keys)
-            { 
-                if (!j.Equals(u.jugador))
-                {
-                    var enemigos = this.unidadesPorJugador[j];
-                    foreach(Unidad e in enemigos){
-                        int d = euclides2(u.posX - e.posX, u.posY - e.posY);
-                        if (d < distancia)
-                        {
-                            d = distancia;
-                            nearest = e;
-                        }
-                    }
-                }
-            }
-            return nearest;
-        }
-
-        
-
-        public Edificio buscarEdificioEnemigoMasCercano(Unidad u)
-        {
-            int distancia = 0;
-            Edificio nearest = null;
-            if (!u.jugador.Equals(jugadorDefensor))
-            {
-                foreach (Edificio ed in this.edificios)
-                {
-                    if (!ed.jugador.Equals(u.jugador))
-                    {
-                        int d = euclides2(u.posX - ed.posX, u.posY - ed.posY);
-                        if (d < distancia)
-                        {
-                            d = distancia;
-                            nearest = ed;
-                        }
-                    }
-                }
+                batallasPorJugador.Add(jugador, new Batalla(jugador, ""));
                 
-            }
-            return nearest;
+            }*/
+            Batalla b = batallasPorJugador[jugador];
+            return b;
         }
 
-        GridPos buscarMasCercano(Unidad u)
+        public void Accion(string json)
         {
-            Unidad near_u = buscarEnemigoMasCercano(u);
-            if (near_u == null)
+            var obj = JsonConvert.DeserializeObject<AccionMsg>(json);
+            string accion = obj.Accion;
+
+            if (accion.Equals("AddUnidad"))
             {
-                Edificio e = buscarEdificioEnemigoMasCercano(u);
-                if (e != null)
-                {
-                    return new GridPos(e.posX, e.posY);
-                }
-                else
-                {
-                    return new GridPos(u.posX, u.posY);
-                }
+                //string nombreTipo = "Tipo: " + (obj.Id.GetType().FullName);
+
+                int tipoId = (int)obj.Id; ;
+                int posX = (int)Math.Round((double)obj.PosX);
+                int posY = (int)Math.Round((double)obj.PosY);
+                agregarUnidad(obj.Jugador, tipoId, obj.IdUnidad, posX, posY);
             }
-            return new GridPos(near_u.posX, near_u.posY);
-        }
-
-
-        
-        public ResultadoBusqPath[]  buscarRutaHaciaEnemigosCercanos()
-        {
-            Dictionary<Unidad, GridPos> tmp = new Dictionary<Unidad, GridPos>();
-            var unidades = unidadesPorJugador.Values.SelectMany(lst => lst);
-            JumpPointParam param = configurar();
-
-            var res = new List<ResultadoBusqPath>();
-            foreach (var u in unidades)
+            else if (accion.Equals("BU"))
             {
-                GridPos pos = buscarMasCercano(u);
-                var r =  buscar(u, pos, param);
-                res.Add(r);
+                //string nombreTipo = "Tipo: " + (obj.Id.GetType().FullName);
+
+                int tipoId = (int)obj.Id; ;
+                jugadores[obj.Jugador].AgregarUnidad(tipoId);
             }
-            return res.ToArray();
-        }
-
-        public ResultadoBusqPath buscar(Unidad u, GridPos destino,JumpPointParam param)
-        {
-            var r_path = buscarPath(u, param, destino);
-            var r = new ResultadoBusqPath() { id_unidad = u.id, path = r_path.ToArray() };
-            return r;
-        }
-
-        JumpPointParam configurar()
-        {
-            BaseGrid grilla = crearTableroPF();
-            JumpPointParam param = parametrosBusqueda(grilla);
-            return param;
-        }
-
-        void atacarUnidad(Unidad ataq,Unidad def)
-        {
-            if (ataq.distancia(def) < ataq.rango)
+            else if (accion.Equals("AddEd"))
             {
-                float daño = 10.0f * ataq.ataque / def.defensa;
-                ataq.vida -= daño;
-                if (ataq.vida < 0) { matar(def); }
+                agregarEdificio(obj);
             }
         }
 
-        string generarJson()
+        public void login(Cliente cliente, int idJuego)
         {
-            return JsonConvert.SerializeObject(this) ;
+            IDALUsuario iDALUsuario = new DALUsuario(idJuego);
+            iDALUsuario.login(cliente);
         }
 
-        private void matar(Unidad def)
+
+
+        public void RegistrarJugador(string nombre)
         {
-            unidadesPorJugador[def.jugador].Remove(def);
+            if (nombre != null && !jugadores.ContainsKey(nombre))
+            {
+                Jugador j = new Jugador();
+                j.Id = nombre;
+                j.Clan = nombre;
+                jugadores.Add(j.Id,j);
+
+            }
         }
 
-        void tickTiempo()
+        public List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt)
         {
-            ResultadoBusqPath[]  res  = buscarRutaHaciaEnemigosCercanos();
-
-
-
+            Jugador at = jugadores.GetValueOrDefault(jugadorAt);
+            if (at == null) {
+                // nos pasaron mal el jugador
+                return new List<JugadorBasico>();
+            }
+            // busco jugadores que no sean del mismo clan (por ahora cada jugador es un clan!!!)
+            var posibles = jugadores.Values.Where(j => !j.Clan.Equals(at.Clan))
+                .Select(j => new JugadorBasico { Id = j.Id, Nombre = j.Id });
+            return posibles.ToList();
         }
 
-        //public double CalcPartTimeEmployeeSalary(int idEmployee, int hours)
-        //{
-        //    //throw new NotImplementedException();
-        //    Shared.Entities.Employee emp = GetEmployee(idEmployee);
-        //    if(emp == null || (emp.GetType() == typeof(Shared.Entities.FullTimeEmployee)))
-        //    {
-        //        throw new Exception("Empleado no es Part time o no existe");
-        //    }
-        //    else
-        //    {
-        //        return hours * ((Shared.Entities.PartTimeEmployee)emp).HourlyRate;
-        //    }
-        //}
+        public void IniciarAtaque(InfoAtaque info)
+        {
+            Jugador jAt = jugadores[info.Jugador];
+            Jugador jDef = jugadores[info.Enemigo];
+            Batalla b = new Batalla(jAt, jDef);
+            batallas.Add(b);
+            batallasPorJugador[info.Jugador] = b;
+            batallasPorJugador[info.Enemigo]= b;
+            var client = getCliente();
+            string infoBatalla = b.GenerarJson();
+            client.Send(infoBatalla);
+		}
+
+        public bool authenticate(Cliente cliente, int idJuego)
+        {
+            IDALUsuario iDALUsuario = new DALUsuario(idJuego);
+            return iDALUsuario.authenticate(cliente);
+
+        }
     }
 }

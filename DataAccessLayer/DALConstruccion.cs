@@ -13,12 +13,20 @@ using DataAccessLayer.Exceptions;
 
 namespace DataAccessLayer
 {
-    public class DALConstruccionMongo : IDALConstruccion
+    public class DALConstruccion : IDALConstruccion
     {
         const string connectionstring = "mongodb://40.84.2.155";
-        private static IMongoClient _client = new MongoClient(connectionstring);
-        private static IMongoDatabase _database = _client.GetDatabase("frontoffice");
-        private static IMongoCollection<TableroConstruccion> collection = _database.GetCollection<TableroConstruccion>("construccion");
+        private static IMongoClient client = new MongoClient(connectionstring);
+        private IMongoDatabase database;
+        private IMongoCollection<TableroConstruccion> collection;
+        private int idJuego;
+
+        public DALConstruccion(int idJuego)
+        {
+            this.idJuego = idJuego;
+            database = client.GetDatabase(idJuego.ToString());
+            collection = database.GetCollection<TableroConstruccion>("construccion");
+        }
 
         public void InicializarConstruccion(int idUsuario)
         {
@@ -90,14 +98,24 @@ namespace DataAccessLayer
                 throw new DALConstruccionException("ERROR:No existe el usuario " + idUsuario);
             DateTime now = new DateTime();
             bool necesitaUpdate = false;
+            var dicEntidades = juego.tipo_entidad.ToDictionary(e => e.Id);
             foreach (var infoCelda in tableroConstruccion.lstInfoCelda)
             {
                 if (!infoCelda.terminado)
                 {
                     int segundosConstruyendo = now.Subtract(infoCelda.FechaCreacion).Seconds;
-                    //if (seungosConstruyendo >= juego.edificio.segundos)
-                    //  infoCelda.terminado = true;
-                    //  necesitaUpdate = true;
+                    //foreach (Shared.Entities.TipoEntidad tipoEntidad in juego.tipo_entidad)
+                    if (!dicEntidades.ContainsKey(infoCelda.Id))
+                    {
+                        throw new Exception(infoCelda.Id + " no es un id de entidad en la coleccion de entidades del juego!!!");
+                    }
+                    var tipoEntidad = dicEntidades[infoCelda.Id];
+
+                    if (segundosConstruyendo >= tipoEntidad.TiempoConstruccion)
+                    {
+                        infoCelda.terminado = true;
+                        necesitaUpdate = true;
+                    }
                 }
             }
             if (necesitaUpdate)

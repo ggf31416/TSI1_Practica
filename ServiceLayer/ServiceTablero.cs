@@ -23,5 +23,33 @@ namespace ServiceLayer
         public void JugarUnidad(InfoCelda infoCelda) {
             blHandler.JugarUnidad(infoCelda);
         }
+
+        public void Accion(string json)
+        {
+            blHandler.Accion(json);
+        }
+
+
+        public List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt)
+        {
+            return blHandler.GetListaDeJugadoresAtacables(jugadorAt);
+        }
+
+        public void RegistrarJugador(string nombre)
+        {
+            blHandler.RegistrarJugador(nombre);
+        }
+
+        public void IniciarAtaque(InfoAtaque info)
+        {
+            blHandler.IniciarAtaque(info);
+        }
+
+        public void login(Cliente cliente, int idJuego)
+        {
+            blHandler.login(cliente, idJuego);
+        }
+
+
     }
 }

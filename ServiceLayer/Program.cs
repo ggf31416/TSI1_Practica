@@ -16,12 +16,15 @@ namespace ServiceLayer
         static void Main(string[] args)
         {
             SetupDependencies();
+            BusinessLogicLayer.Planificador.getInstancia().iniciar();
             SetupService();
+           
+
         }
 
         private static void SetupDependencies()
         {
-            blHandler = new BLTablero(new DataAccessLayer.DALTablero());
+            blHandler = BLTablero.getInstancia();
         }
 
         private static void SetupService()
@@ -38,14 +41,18 @@ namespace ServiceLayer
                 smb.HttpGetEnabled = true;
                 selfHost.Description.Behaviors.Add(smb);
                 selfHost.Open();
-                Console.WriteLine("Hola");
+                Console.WriteLine("ServiceLayer");
                 Console.ReadLine();
                 selfHost.Close();
             }catch (CommunicationException ce)
             {
-                Console.Write("An exception ocurred: ", ce.ToString());
+                Console.Write("An exception ocurred: " +  ce.ToString());
                 Console.ReadLine();
                 selfHost.Abort();
+            }
+            finally
+            {
+                BusinessLogicLayer.Planificador.getInstancia().finalizar();
             }
         }
     }

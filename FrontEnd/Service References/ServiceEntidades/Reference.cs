@@ -15,35 +15,18 @@ namespace FrontEnd.ServiceEntidades {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="TipoEntidad", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Costo", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
     [System.SerializableAttribute()]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(FrontEnd.ServiceEntidades.TipoEdificio))]
-    [System.Runtime.Serialization.KnownTypeAttribute(typeof(FrontEnd.ServiceEntidades.TipoUnidad))]
-    public partial class TipoEntidad : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+    public partial class Costo : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
         [System.NonSerializedAttribute()]
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Nullable<int> AtaqueField;
+        private int IdRecursoField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Nullable<int> DefensaField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int IdField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string ImagenField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string NombreField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Nullable<int> TiempoConstruccionField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.Nullable<int> VidaField;
+        private int ValorField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -56,27 +39,250 @@ namespace FrontEnd.ServiceEntidades {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Nullable<int> Ataque {
+        public int IdRecurso {
             get {
-                return this.AtaqueField;
+                return this.IdRecursoField;
             }
             set {
-                if ((this.AtaqueField.Equals(value) != true)) {
-                    this.AtaqueField = value;
-                    this.RaisePropertyChanged("Ataque");
+                if ((this.IdRecursoField.Equals(value) != true)) {
+                    this.IdRecursoField = value;
+                    this.RaisePropertyChanged("IdRecurso");
                 }
             }
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Nullable<int> Defensa {
+        public int Valor {
             get {
-                return this.DefensaField;
+                return this.ValorField;
             }
             set {
-                if ((this.DefensaField.Equals(value) != true)) {
-                    this.DefensaField = value;
-                    this.RaisePropertyChanged("Defensa");
+                if ((this.ValorField.Equals(value) != true)) {
+                    this.ValorField = value;
+                    this.RaisePropertyChanged("Valor");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="RecursoAsociado", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    [System.SerializableAttribute()]
+    public partial class RecursoAsociado : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdRecursoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int ValorField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdRecurso {
+            get {
+                return this.IdRecursoField;
+            }
+            set {
+                if ((this.IdRecursoField.Equals(value) != true)) {
+                    this.IdRecursoField = value;
+                    this.RaisePropertyChanged("IdRecurso");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Valor {
+            get {
+                return this.ValorField;
+            }
+            set {
+                if ((this.ValorField.Equals(value) != true)) {
+                    this.ValorField = value;
+                    this.RaisePropertyChanged("Valor");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="TipoRecurso", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    [System.SerializableAttribute()]
+    public partial class TipoRecurso : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdJuegoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ImagenField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NombreField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Id {
+            get {
+                return this.IdField;
+            }
+            set {
+                if ((this.IdField.Equals(value) != true)) {
+                    this.IdField = value;
+                    this.RaisePropertyChanged("Id");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdJuego {
+            get {
+                return this.IdJuegoField;
+            }
+            set {
+                if ((this.IdJuegoField.Equals(value) != true)) {
+                    this.IdJuegoField = value;
+                    this.RaisePropertyChanged("IdJuego");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Imagen {
+            get {
+                return this.ImagenField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ImagenField, value) != true)) {
+                    this.ImagenField = value;
+                    this.RaisePropertyChanged("Imagen");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Nombre {
+            get {
+                return this.NombreField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NombreField, value) != true)) {
+                    this.NombreField = value;
+                    this.RaisePropertyChanged("Nombre");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Tecnologia", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    [System.SerializableAttribute()]
+    public partial class Tecnologia : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private FrontEnd.ServiceEntidades.Accion[] AccionesAsociadasField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdEdificioField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdJuegoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ImagenField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NombreField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private FrontEnd.ServiceEntidades.TecnologiaDependencia[] TecnologiaDependenciasField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private FrontEnd.ServiceEntidades.TecnologiaRecursoCosto[] TecnologiaRecursoCostosField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int TiempoField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public FrontEnd.ServiceEntidades.Accion[] AccionesAsociadas {
+            get {
+                return this.AccionesAsociadasField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.AccionesAsociadasField, value) != true)) {
+                    this.AccionesAsociadasField = value;
+                    this.RaisePropertyChanged("AccionesAsociadas");
                 }
             }
         }
@@ -90,6 +296,32 @@ namespace FrontEnd.ServiceEntidades {
                 if ((this.IdField.Equals(value) != true)) {
                     this.IdField = value;
                     this.RaisePropertyChanged("Id");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdEdificio {
+            get {
+                return this.IdEdificioField;
+            }
+            set {
+                if ((this.IdEdificioField.Equals(value) != true)) {
+                    this.IdEdificioField = value;
+                    this.RaisePropertyChanged("IdEdificio");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdJuego {
+            get {
+                return this.IdJuegoField;
+            }
+            set {
+                if ((this.IdJuegoField.Equals(value) != true)) {
+                    this.IdJuegoField = value;
+                    this.RaisePropertyChanged("IdJuego");
                 }
             }
         }
@@ -121,27 +353,40 @@ namespace FrontEnd.ServiceEntidades {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Nullable<int> TiempoConstruccion {
+        public FrontEnd.ServiceEntidades.TecnologiaDependencia[] TecnologiaDependencias {
             get {
-                return this.TiempoConstruccionField;
+                return this.TecnologiaDependenciasField;
             }
             set {
-                if ((this.TiempoConstruccionField.Equals(value) != true)) {
-                    this.TiempoConstruccionField = value;
-                    this.RaisePropertyChanged("TiempoConstruccion");
+                if ((object.ReferenceEquals(this.TecnologiaDependenciasField, value) != true)) {
+                    this.TecnologiaDependenciasField = value;
+                    this.RaisePropertyChanged("TecnologiaDependencias");
                 }
             }
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.Nullable<int> Vida {
+        public FrontEnd.ServiceEntidades.TecnologiaRecursoCosto[] TecnologiaRecursoCostos {
             get {
-                return this.VidaField;
+                return this.TecnologiaRecursoCostosField;
             }
             set {
-                if ((this.VidaField.Equals(value) != true)) {
-                    this.VidaField = value;
-                    this.RaisePropertyChanged("Vida");
+                if ((object.ReferenceEquals(this.TecnologiaRecursoCostosField, value) != true)) {
+                    this.TecnologiaRecursoCostosField = value;
+                    this.RaisePropertyChanged("TecnologiaRecursoCostos");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Tiempo {
+            get {
+                return this.TiempoField;
+            }
+            set {
+                if ((this.TiempoField.Equals(value) != true)) {
+                    this.TiempoField = value;
+                    this.RaisePropertyChanged("Tiempo");
                 }
             }
         }
@@ -158,118 +403,926 @@ namespace FrontEnd.ServiceEntidades {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="TipoEdificio", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Accion", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
     [System.SerializableAttribute()]
-    public partial class TipoEdificio : FrontEnd.ServiceEntidades.TipoEntidad {
+    public partial class Accion : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> IdJuegoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> IdTecnologiaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NombreField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private FrontEnd.ServiceEntidades.Tecnologia TecnologiaField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Id {
+            get {
+                return this.IdField;
+            }
+            set {
+                if ((this.IdField.Equals(value) != true)) {
+                    this.IdField = value;
+                    this.RaisePropertyChanged("Id");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<int> IdJuego {
+            get {
+                return this.IdJuegoField;
+            }
+            set {
+                if ((this.IdJuegoField.Equals(value) != true)) {
+                    this.IdJuegoField = value;
+                    this.RaisePropertyChanged("IdJuego");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<int> IdTecnologia {
+            get {
+                return this.IdTecnologiaField;
+            }
+            set {
+                if ((this.IdTecnologiaField.Equals(value) != true)) {
+                    this.IdTecnologiaField = value;
+                    this.RaisePropertyChanged("IdTecnologia");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Nombre {
+            get {
+                return this.NombreField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NombreField, value) != true)) {
+                    this.NombreField = value;
+                    this.RaisePropertyChanged("Nombre");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public FrontEnd.ServiceEntidades.Tecnologia Tecnologia {
+            get {
+                return this.TecnologiaField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TecnologiaField, value) != true)) {
+                    this.TecnologiaField = value;
+                    this.RaisePropertyChanged("Tecnologia");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="TipoUnidad", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="TecnologiaDependencia", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
     [System.SerializableAttribute()]
-    public partial class TipoUnidad : FrontEnd.ServiceEntidades.TipoEntidad {
+    public partial class TecnologiaDependencia : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdRazaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdTecnologiaDependeField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdRaza {
+            get {
+                return this.IdRazaField;
+            }
+            set {
+                if ((this.IdRazaField.Equals(value) != true)) {
+                    this.IdRazaField = value;
+                    this.RaisePropertyChanged("IdRaza");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdTecnologiaDepende {
+            get {
+                return this.IdTecnologiaDependeField;
+            }
+            set {
+                if ((this.IdTecnologiaDependeField.Equals(value) != true)) {
+                    this.IdTecnologiaDependeField = value;
+                    this.RaisePropertyChanged("IdTecnologiaDepende");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="TecnologiaRecursoCosto", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    [System.SerializableAttribute()]
+    public partial class TecnologiaRecursoCosto : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int CostoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdRecursoField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Costo {
+            get {
+                return this.CostoField;
+            }
+            set {
+                if ((this.CostoField.Equals(value) != true)) {
+                    this.CostoField = value;
+                    this.RaisePropertyChanged("Costo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int IdRecurso {
+            get {
+                return this.IdRecursoField;
+            }
+            set {
+                if ((this.IdRecursoField.Equals(value) != true)) {
+                    this.IdRecursoField = value;
+                    this.RaisePropertyChanged("IdRecurso");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Raza", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    [System.SerializableAttribute()]
+    public partial class Raza : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> IdJuegoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ImagenField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Shared.Entities.Juego JuegoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string NombreField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private FrontEnd.ServiceEntidades.TecnologiaDependencia[] TecnologiaDependenciasField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private Shared.Entities.TipoEdificio[] TipoEdificiosField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Id {
+            get {
+                return this.IdField;
+            }
+            set {
+                if ((this.IdField.Equals(value) != true)) {
+                    this.IdField = value;
+                    this.RaisePropertyChanged("Id");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<int> IdJuego {
+            get {
+                return this.IdJuegoField;
+            }
+            set {
+                if ((this.IdJuegoField.Equals(value) != true)) {
+                    this.IdJuegoField = value;
+                    this.RaisePropertyChanged("IdJuego");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Imagen {
+            get {
+                return this.ImagenField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ImagenField, value) != true)) {
+                    this.ImagenField = value;
+                    this.RaisePropertyChanged("Imagen");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Shared.Entities.Juego Juego {
+            get {
+                return this.JuegoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.JuegoField, value) != true)) {
+                    this.JuegoField = value;
+                    this.RaisePropertyChanged("Juego");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Nombre {
+            get {
+                return this.NombreField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.NombreField, value) != true)) {
+                    this.NombreField = value;
+                    this.RaisePropertyChanged("Nombre");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public FrontEnd.ServiceEntidades.TecnologiaDependencia[] TecnologiaDependencias {
+            get {
+                return this.TecnologiaDependenciasField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TecnologiaDependenciasField, value) != true)) {
+                    this.TecnologiaDependenciasField = value;
+                    this.RaisePropertyChanged("TecnologiaDependencias");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Shared.Entities.TipoEdificio[] TipoEdificios {
+            get {
+                return this.TipoEdificiosField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.TipoEdificiosField, value) != true)) {
+                    this.TipoEdificiosField = value;
+                    this.RaisePropertyChanged("TipoEdificios");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Tablero", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    [System.SerializableAttribute()]
+    public partial class Tablero : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> CantColumnasField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> CantFilasField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private FrontEnd.ServiceEntidades.TableroCelda[] CeldasField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> IdJuegoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ImagenFondoField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private string ImagenTerrenoField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<int> CantColumnas {
+            get {
+                return this.CantColumnasField;
+            }
+            set {
+                if ((this.CantColumnasField.Equals(value) != true)) {
+                    this.CantColumnasField = value;
+                    this.RaisePropertyChanged("CantColumnas");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<int> CantFilas {
+            get {
+                return this.CantFilasField;
+            }
+            set {
+                if ((this.CantFilasField.Equals(value) != true)) {
+                    this.CantFilasField = value;
+                    this.RaisePropertyChanged("CantFilas");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public FrontEnd.ServiceEntidades.TableroCelda[] Celdas {
+            get {
+                return this.CeldasField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.CeldasField, value) != true)) {
+                    this.CeldasField = value;
+                    this.RaisePropertyChanged("Celdas");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Id {
+            get {
+                return this.IdField;
+            }
+            set {
+                if ((this.IdField.Equals(value) != true)) {
+                    this.IdField = value;
+                    this.RaisePropertyChanged("Id");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<int> IdJuego {
+            get {
+                return this.IdJuegoField;
+            }
+            set {
+                if ((this.IdJuegoField.Equals(value) != true)) {
+                    this.IdJuegoField = value;
+                    this.RaisePropertyChanged("IdJuego");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ImagenFondo {
+            get {
+                return this.ImagenFondoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ImagenFondoField, value) != true)) {
+                    this.ImagenFondoField = value;
+                    this.RaisePropertyChanged("ImagenFondo");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ImagenTerreno {
+            get {
+                return this.ImagenTerrenoField;
+            }
+            set {
+                if ((object.ReferenceEquals(this.ImagenTerrenoField, value) != true)) {
+                    this.ImagenTerrenoField = value;
+                    this.RaisePropertyChanged("ImagenTerreno");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="TableroCelda", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    [System.SerializableAttribute()]
+    public partial class TableroCelda : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
+        
+        [System.NonSerializedAttribute()]
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private int IdField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> IdTableroField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> IdTipoEdificioField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> PosColumnaField;
+        
+        [System.Runtime.Serialization.OptionalFieldAttribute()]
+        private System.Nullable<int> PosFilaField;
+        
+        [global::System.ComponentModel.BrowsableAttribute(false)]
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
+            get {
+                return this.extensionDataField;
+            }
+            set {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Id {
+            get {
+                return this.IdField;
+            }
+            set {
+                if ((this.IdField.Equals(value) != true)) {
+                    this.IdField = value;
+                    this.RaisePropertyChanged("Id");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<int> IdTablero {
+            get {
+                return this.IdTableroField;
+            }
+            set {
+                if ((this.IdTableroField.Equals(value) != true)) {
+                    this.IdTableroField = value;
+                    this.RaisePropertyChanged("IdTablero");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<int> IdTipoEdificio {
+            get {
+                return this.IdTipoEdificioField;
+            }
+            set {
+                if ((this.IdTipoEdificioField.Equals(value) != true)) {
+                    this.IdTipoEdificioField = value;
+                    this.RaisePropertyChanged("IdTipoEdificio");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<int> PosColumna {
+            get {
+                return this.PosColumnaField;
+            }
+            set {
+                if ((this.PosColumnaField.Equals(value) != true)) {
+                    this.PosColumnaField = value;
+                    this.RaisePropertyChanged("PosColumna");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<int> PosFila {
+            get {
+                return this.PosFilaField;
+            }
+            set {
+                if ((this.PosFilaField.Equals(value) != true)) {
+                    this.PosFilaField = value;
+                    this.RaisePropertyChanged("PosFila");
+                }
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="http://localhost:8835/tsi1/", ConfigurationName="ServiceEntidades.IServiceEntidades")]
-    public interface IServiceEntidades {
+    [System.ServiceModel.ServiceContractAttribute(Namespace="http://localhost:8840/tsi1/", ConfigurationName="ServiceEntidades.IServiceAtlas")]
+    public interface IServiceAtlas {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoEdificio", ReplyAction="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoEdificioResponse")]
-        void AltaTipoEdificio(FrontEnd.ServiceEntidades.TipoEntidad tipoEdificio);
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoEdificio", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoEdificioResponse")]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Shared.Entities.TipoEdificio))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Shared.Entities.TipoUnidad))]
+        int AltaTipoEdificio(Shared.Entities.TipoEntidad tipoEdificio);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoEdificio", ReplyAction="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoEdificioResponse")]
-        System.Threading.Tasks.Task AltaTipoEdificioAsync(FrontEnd.ServiceEntidades.TipoEntidad tipoEdificio);
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoEdificio", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoEdificioResponse")]
+        System.Threading.Tasks.Task<int> AltaTipoEdificioAsync(Shared.Entities.TipoEntidad tipoEdificio);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoUnidad", ReplyAction="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoUnidadResponse")]
-        void AltaTipoUnidad(FrontEnd.ServiceEntidades.TipoEntidad tipoUnidad);
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoUnidad", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoUnidadResponse")]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Shared.Entities.TipoEdificio))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Shared.Entities.TipoUnidad))]
+        int AltaTipoUnidad(Shared.Entities.TipoEntidad tipoUnidad);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoUnidad", ReplyAction="http://localhost:8835/tsi1/IServiceEntidades/AltaTipoUnidadResponse")]
-        System.Threading.Tasks.Task AltaTipoUnidadAsync(FrontEnd.ServiceEntidades.TipoEntidad tipoUnidad);
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoUnidad", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoUnidadResponse")]
+        System.Threading.Tasks.Task<int> AltaTipoUnidadAsync(Shared.Entities.TipoEntidad tipoUnidad);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoEdificios", ReplyAction="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoEdificiosResponse")]
-        FrontEnd.ServiceEntidades.TipoEdificio[] GetAllTipoEdificios();
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoRecurso", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoRecursoResponse")]
+        int AltaTipoRecurso(FrontEnd.ServiceEntidades.TipoRecurso tipoRecurso);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoEdificios", ReplyAction="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoEdificiosResponse")]
-        System.Threading.Tasks.Task<FrontEnd.ServiceEntidades.TipoEdificio[]> GetAllTipoEdificiosAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoRecurso", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AltaTipoRecursoResponse")]
+        System.Threading.Tasks.Task<int> AltaTipoRecursoAsync(FrontEnd.ServiceEntidades.TipoRecurso tipoRecurso);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoUnidades", ReplyAction="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoUnidadesResponse")]
-        FrontEnd.ServiceEntidades.TipoUnidad[] GetAllTipoUnidades();
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/BajaTipoEntidad", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/BajaTipoEntidadResponse")]
+        void BajaTipoEntidad(int idEntidad);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoUnidades", ReplyAction="http://localhost:8835/tsi1/IServiceEntidades/GetAllTipoUnidadesResponse")]
-        System.Threading.Tasks.Task<FrontEnd.ServiceEntidades.TipoUnidad[]> GetAllTipoUnidadesAsync();
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/BajaTipoEntidad", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/BajaTipoEntidadResponse")]
+        System.Threading.Tasks.Task BajaTipoEntidadAsync(int idEntidad);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8835/tsi1/IServiceEntidades/AsociarEdificioUnidad", ReplyAction="http://localhost:8835/tsi1/IServiceEntidades/AsociarEdificioUnidadResponse")]
-        void AsociarEdificioUnidad(FrontEnd.ServiceEntidades.TipoEdificio tipoEdificio, FrontEnd.ServiceEntidades.TipoUnidad tipoUnidad);
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/BajaTipoRecurso", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/BajaTipoRecursoResponse")]
+        void BajaTipoRecurso(int idRecurso);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8835/tsi1/IServiceEntidades/AsociarEdificioUnidad", ReplyAction="http://localhost:8835/tsi1/IServiceEntidades/AsociarEdificioUnidadResponse")]
-        System.Threading.Tasks.Task AsociarEdificioUnidadAsync(FrontEnd.ServiceEntidades.TipoEdificio tipoEdificio, FrontEnd.ServiceEntidades.TipoUnidad tipoUnidad);
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/BajaTipoRecurso", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/BajaTipoRecursoResponse")]
+        System.Threading.Tasks.Task BajaTipoRecursoAsync(int idRecurso);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoEdificios", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoEdificiosResponse")]
+        Shared.Entities.TipoEdificio[] GetAllTipoEdificios(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoEdificios", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoEdificiosResponse")]
+        System.Threading.Tasks.Task<Shared.Entities.TipoEdificio[]> GetAllTipoEdificiosAsync(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoUnidades", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoUnidadesResponse")]
+        Shared.Entities.TipoUnidad[] GetAllTipoUnidades(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoUnidades", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoUnidadesResponse")]
+        System.Threading.Tasks.Task<Shared.Entities.TipoUnidad[]> GetAllTipoUnidadesAsync(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoRecursos", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoRecursosResponse")]
+        FrontEnd.ServiceEntidades.TipoRecurso[] GetAllTipoRecursos(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoRecursos", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/GetAllTipoRecursosResponse")]
+        System.Threading.Tasks.Task<FrontEnd.ServiceEntidades.TipoRecurso[]> GetAllTipoRecursosAsync(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AsociarEdificioUnidad", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AsociarEdificioUnidadResponse")]
+        void AsociarEdificioUnidad(int idEdificio, int[] listaUnidades);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AsociarEdificioUnidad", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AsociarEdificioUnidadResponse")]
+        System.Threading.Tasks.Task AsociarEdificioUnidadAsync(int idEdificio, int[] listaUnidades);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTecnologia", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AltaTecnologiaResponse")]
+        void AltaTecnologia(FrontEnd.ServiceEntidades.Tecnologia tecnologia);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTecnologia", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AltaTecnologiaResponse")]
+        System.Threading.Tasks.Task AltaTecnologiaAsync(FrontEnd.ServiceEntidades.Tecnologia tecnologia);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/BajaTecnologia", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/BajaTecnologiaResponse")]
+        void BajaTecnologia(int idTecnologia);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/BajaTecnologia", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/BajaTecnologiaResponse")]
+        System.Threading.Tasks.Task BajaTecnologiaAsync(int idTecnologia);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTecnologias", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/GetAllTecnologiasResponse")]
+        FrontEnd.ServiceEntidades.Tecnologia[] GetAllTecnologias(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllTecnologias", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/GetAllTecnologiasResponse")]
+        System.Threading.Tasks.Task<FrontEnd.ServiceEntidades.Tecnologia[]> GetAllTecnologiasAsync(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AltaJuego", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AltaJuegoResponse")]
+        void AltaJuego(Shared.Entities.Juego juego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AltaJuego", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AltaJuegoResponse")]
+        System.Threading.Tasks.Task AltaJuegoAsync(Shared.Entities.Juego juego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/BajaJuego", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/BajaJuegoResponse")]
+        void BajaJuego(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/BajaJuego", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/BajaJuegoResponse")]
+        System.Threading.Tasks.Task BajaJuegoAsync(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllJuegos", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/GetAllJuegosResponse")]
+        Shared.Entities.Juego[] GetAllJuegos(int idDisenador);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/GetAllJuegos", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/GetAllJuegosResponse")]
+        System.Threading.Tasks.Task<Shared.Entities.Juego[]> GetAllJuegosAsync(int idDisenador);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AsociarJuegoDisenador", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AsociarJuegoDisenadorResponse")]
+        void AsociarJuegoDisenador(int idJuego, int idDisenador);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AsociarJuegoDisenador", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AsociarJuegoDisenadorResponse")]
+        System.Threading.Tasks.Task AsociarJuegoDisenadorAsync(int idJuego, int idDisenador);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/PublicarJuego", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/PublicarJuegoResponse")]
+        void PublicarJuego(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/PublicarJuego", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/PublicarJuegoResponse")]
+        System.Threading.Tasks.Task PublicarJuegoAsync(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTablero", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AltaTableroResponse")]
+        void AltaTablero(FrontEnd.ServiceEntidades.Tablero tablero);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/AltaTablero", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/AltaTableroResponse")]
+        System.Threading.Tasks.Task AltaTableroAsync(FrontEnd.ServiceEntidades.Tablero tablero);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/GetTablero", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/GetTableroResponse")]
+        FrontEnd.ServiceEntidades.Tablero GetTablero(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8840/tsi1/IServiceAtlas/GetTablero", ReplyAction="http://localhost:8840/tsi1/IServiceAtlas/GetTableroResponse")]
+        System.Threading.Tasks.Task<FrontEnd.ServiceEntidades.Tablero> GetTableroAsync(int idJuego);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface IServiceEntidadesChannel : FrontEnd.ServiceEntidades.IServiceEntidades, System.ServiceModel.IClientChannel {
+    public interface IServiceAtlasChannel : FrontEnd.ServiceEntidades.IServiceAtlas, System.ServiceModel.IClientChannel {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class ServiceEntidadesClient : System.ServiceModel.ClientBase<FrontEnd.ServiceEntidades.IServiceEntidades>, FrontEnd.ServiceEntidades.IServiceEntidades {
+    public partial class ServiceAtlasClient : System.ServiceModel.ClientBase<FrontEnd.ServiceEntidades.IServiceAtlas>, FrontEnd.ServiceEntidades.IServiceAtlas {
         
-        public ServiceEntidadesClient() {
+        public ServiceAtlasClient() {
         }
         
-        public ServiceEntidadesClient(string endpointConfigurationName) : 
+        public ServiceAtlasClient(string endpointConfigurationName) : 
                 base(endpointConfigurationName) {
         }
         
-        public ServiceEntidadesClient(string endpointConfigurationName, string remoteAddress) : 
+        public ServiceAtlasClient(string endpointConfigurationName, string remoteAddress) : 
                 base(endpointConfigurationName, remoteAddress) {
         }
         
-        public ServiceEntidadesClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public ServiceAtlasClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(endpointConfigurationName, remoteAddress) {
         }
         
-        public ServiceEntidadesClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
+        public ServiceAtlasClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress) {
         }
         
-        public void AltaTipoEdificio(FrontEnd.ServiceEntidades.TipoEntidad tipoEdificio) {
-            base.Channel.AltaTipoEdificio(tipoEdificio);
+        public int AltaTipoEdificio(Shared.Entities.TipoEntidad tipoEdificio) {
+            return base.Channel.AltaTipoEdificio(tipoEdificio);
         }
         
-        public System.Threading.Tasks.Task AltaTipoEdificioAsync(FrontEnd.ServiceEntidades.TipoEntidad tipoEdificio) {
+        public System.Threading.Tasks.Task<int> AltaTipoEdificioAsync(Shared.Entities.TipoEntidad tipoEdificio) {
             return base.Channel.AltaTipoEdificioAsync(tipoEdificio);
         }
         
-        public void AltaTipoUnidad(FrontEnd.ServiceEntidades.TipoEntidad tipoUnidad) {
-            base.Channel.AltaTipoUnidad(tipoUnidad);
+        public int AltaTipoUnidad(Shared.Entities.TipoEntidad tipoUnidad) {
+            return base.Channel.AltaTipoUnidad(tipoUnidad);
         }
         
-        public System.Threading.Tasks.Task AltaTipoUnidadAsync(FrontEnd.ServiceEntidades.TipoEntidad tipoUnidad) {
+        public System.Threading.Tasks.Task<int> AltaTipoUnidadAsync(Shared.Entities.TipoEntidad tipoUnidad) {
             return base.Channel.AltaTipoUnidadAsync(tipoUnidad);
         }
         
-        public FrontEnd.ServiceEntidades.TipoEdificio[] GetAllTipoEdificios() {
-            return base.Channel.GetAllTipoEdificios();
+        public int AltaTipoRecurso(FrontEnd.ServiceEntidades.TipoRecurso tipoRecurso) {
+            return base.Channel.AltaTipoRecurso(tipoRecurso);
         }
         
-        public System.Threading.Tasks.Task<FrontEnd.ServiceEntidades.TipoEdificio[]> GetAllTipoEdificiosAsync() {
-            return base.Channel.GetAllTipoEdificiosAsync();
+        public System.Threading.Tasks.Task<int> AltaTipoRecursoAsync(FrontEnd.ServiceEntidades.TipoRecurso tipoRecurso) {
+            return base.Channel.AltaTipoRecursoAsync(tipoRecurso);
         }
         
-        public FrontEnd.ServiceEntidades.TipoUnidad[] GetAllTipoUnidades() {
-            return base.Channel.GetAllTipoUnidades();
+        public void BajaTipoEntidad(int idEntidad) {
+            base.Channel.BajaTipoEntidad(idEntidad);
         }
         
-        public System.Threading.Tasks.Task<FrontEnd.ServiceEntidades.TipoUnidad[]> GetAllTipoUnidadesAsync() {
-            return base.Channel.GetAllTipoUnidadesAsync();
+        public System.Threading.Tasks.Task BajaTipoEntidadAsync(int idEntidad) {
+            return base.Channel.BajaTipoEntidadAsync(idEntidad);
         }
         
-        public void AsociarEdificioUnidad(FrontEnd.ServiceEntidades.TipoEdificio tipoEdificio, FrontEnd.ServiceEntidades.TipoUnidad tipoUnidad) {
-            base.Channel.AsociarEdificioUnidad(tipoEdificio, tipoUnidad);
+        public void BajaTipoRecurso(int idRecurso) {
+            base.Channel.BajaTipoRecurso(idRecurso);
         }
         
-        public System.Threading.Tasks.Task AsociarEdificioUnidadAsync(FrontEnd.ServiceEntidades.TipoEdificio tipoEdificio, FrontEnd.ServiceEntidades.TipoUnidad tipoUnidad) {
-            return base.Channel.AsociarEdificioUnidadAsync(tipoEdificio, tipoUnidad);
+        public System.Threading.Tasks.Task BajaTipoRecursoAsync(int idRecurso) {
+            return base.Channel.BajaTipoRecursoAsync(idRecurso);
+        }
+        
+        public Shared.Entities.TipoEdificio[] GetAllTipoEdificios(int idJuego) {
+            return base.Channel.GetAllTipoEdificios(idJuego);
+        }
+        
+        public System.Threading.Tasks.Task<Shared.Entities.TipoEdificio[]> GetAllTipoEdificiosAsync(int idJuego) {
+            return base.Channel.GetAllTipoEdificiosAsync(idJuego);
+        }
+        
+        public Shared.Entities.TipoUnidad[] GetAllTipoUnidades(int idJuego) {
+            return base.Channel.GetAllTipoUnidades(idJuego);
+        }
+        
+        public System.Threading.Tasks.Task<Shared.Entities.TipoUnidad[]> GetAllTipoUnidadesAsync(int idJuego) {
+            return base.Channel.GetAllTipoUnidadesAsync(idJuego);
+        }
+        
+        public FrontEnd.ServiceEntidades.TipoRecurso[] GetAllTipoRecursos(int idJuego) {
+            return base.Channel.GetAllTipoRecursos(idJuego);
+        }
+        
+        public System.Threading.Tasks.Task<FrontEnd.ServiceEntidades.TipoRecurso[]> GetAllTipoRecursosAsync(int idJuego) {
+            return base.Channel.GetAllTipoRecursosAsync(idJuego);
+        }
+        
+        public void AsociarEdificioUnidad(int idEdificio, int[] listaUnidades) {
+            base.Channel.AsociarEdificioUnidad(idEdificio, listaUnidades);
+        }
+        
+        public System.Threading.Tasks.Task AsociarEdificioUnidadAsync(int idEdificio, int[] listaUnidades) {
+            return base.Channel.AsociarEdificioUnidadAsync(idEdificio, listaUnidades);
+        }
+        
+        public void AltaTecnologia(FrontEnd.ServiceEntidades.Tecnologia tecnologia) {
+            base.Channel.AltaTecnologia(tecnologia);
+        }
+        
+        public System.Threading.Tasks.Task AltaTecnologiaAsync(FrontEnd.ServiceEntidades.Tecnologia tecnologia) {
+            return base.Channel.AltaTecnologiaAsync(tecnologia);
+        }
+        
+        public void BajaTecnologia(int idTecnologia) {
+            base.Channel.BajaTecnologia(idTecnologia);
+        }
+        
+        public System.Threading.Tasks.Task BajaTecnologiaAsync(int idTecnologia) {
+            return base.Channel.BajaTecnologiaAsync(idTecnologia);
+        }
+        
+        public FrontEnd.ServiceEntidades.Tecnologia[] GetAllTecnologias(int idJuego) {
+            return base.Channel.GetAllTecnologias(idJuego);
+        }
+        
+        public System.Threading.Tasks.Task<FrontEnd.ServiceEntidades.Tecnologia[]> GetAllTecnologiasAsync(int idJuego) {
+            return base.Channel.GetAllTecnologiasAsync(idJuego);
+        }
+        
+        public void AltaJuego(Shared.Entities.Juego juego) {
+            base.Channel.AltaJuego(juego);
+        }
+        
+        public System.Threading.Tasks.Task AltaJuegoAsync(Shared.Entities.Juego juego) {
+            return base.Channel.AltaJuegoAsync(juego);
+        }
+        
+        public void BajaJuego(int idJuego) {
+            base.Channel.BajaJuego(idJuego);
+        }
+        
+        public System.Threading.Tasks.Task BajaJuegoAsync(int idJuego) {
+            return base.Channel.BajaJuegoAsync(idJuego);
+        }
+        
+        public Shared.Entities.Juego[] GetAllJuegos(int idDisenador) {
+            return base.Channel.GetAllJuegos(idDisenador);
+        }
+        
+        public System.Threading.Tasks.Task<Shared.Entities.Juego[]> GetAllJuegosAsync(int idDisenador) {
+            return base.Channel.GetAllJuegosAsync(idDisenador);
+        }
+        
+        public void AsociarJuegoDisenador(int idJuego, int idDisenador) {
+            base.Channel.AsociarJuegoDisenador(idJuego, idDisenador);
+        }
+        
+        public System.Threading.Tasks.Task AsociarJuegoDisenadorAsync(int idJuego, int idDisenador) {
+            return base.Channel.AsociarJuegoDisenadorAsync(idJuego, idDisenador);
+        }
+        
+        public void PublicarJuego(int idJuego) {
+            base.Channel.PublicarJuego(idJuego);
+        }
+        
+        public System.Threading.Tasks.Task PublicarJuegoAsync(int idJuego) {
+            return base.Channel.PublicarJuegoAsync(idJuego);
+        }
+        
+        public void AltaTablero(FrontEnd.ServiceEntidades.Tablero tablero) {
+            base.Channel.AltaTablero(tablero);
+        }
+        
+        public System.Threading.Tasks.Task AltaTableroAsync(FrontEnd.ServiceEntidades.Tablero tablero) {
+            return base.Channel.AltaTableroAsync(tablero);
+        }
+        
+        public FrontEnd.ServiceEntidades.Tablero GetTablero(int idJuego) {
+            return base.Channel.GetTablero(idJuego);
+        }
+        
+        public System.Threading.Tasks.Task<FrontEnd.ServiceEntidades.Tablero> GetTableroAsync(int idJuego) {
+            return base.Channel.GetTableroAsync(idJuego);
         }
     }
 }
