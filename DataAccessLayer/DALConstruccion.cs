@@ -34,8 +34,18 @@ namespace DataAccessLayer
             foreach (var recurso in juego.TipoRecurso)
             {
                 Shared.Entities.EstadoRecurso EstadoRecurso = new Shared.Entities.EstadoRecurso();
-                EstadoRecurso.Total = 99999;
-                EstadoRecurso.Produccion = 12345;
+                foreach(var TipoEdificio in juego.TipoEdificios)
+                {
+                    foreach(var costo in TipoEdificio.Costos)
+                    {
+                        if (costo.IdRecurso == recurso.Id)
+                        {
+                            EstadoRecurso.Produccion += costo.Valor;
+                            break;
+                        }
+                    }
+                }
+                EstadoRecurso.Total = 20000;
                 juego.DataJugador.EstadoRecursos.Add(recurso.Id.ToString(), EstadoRecurso);
             }
             foreach (var celda in juego.Tablero.Celdas)
