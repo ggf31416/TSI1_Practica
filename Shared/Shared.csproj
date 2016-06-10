@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\ValidarUnidad.cs" />
+    <Compile Include="Entities\ValidarConstruccion.cs" />
     <Compile Include="Entities\EUInputData.cs" />
     <Compile Include="Entities\CEInputData.cs" />
     <Compile Include="Entities\DataActual.cs" />

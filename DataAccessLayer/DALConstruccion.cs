@@ -124,9 +124,9 @@ namespace DataAccessLayer
 
         
         //SERVICIOS
-        public bool ConstruirEdificio(int IdEdificio)
+        public Shared.Entities.ValidarConstruccion ConstruirEdificio(int IdEdificio)
         {
-            return false;
+            return null;
         }
 
         public void PersistirEdificio(Shared.Entities.CEInputData ceid)
@@ -134,9 +134,9 @@ namespace DataAccessLayer
 
         }
 
-        public bool EntrenarUnidad(int IdUnidad)
+        public Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad)
         {
-            return false;
+            return null;
         }
 
         public void PersistirUnidades(Shared.Entities.EUInputData ceid)
