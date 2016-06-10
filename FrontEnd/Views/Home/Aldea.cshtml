@@ -23,33 +23,43 @@
     <div ng-init="initVariables()" class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="row">
-                <div class="col-sm-2">
+                <div class="col-sm-2 col-md-2 col-lg-2">
                     <button class="btn btn-default" ng-click="listaTecnologias()">Tecnologias</button>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-2 col-md-2 col-lg-2">
                     <button class="btn btn-default" ng-click="listaUnidades()">Tecnologias</button>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-2 col-md-2 col-lg-2">
                     <button class="btn btn-danger" ng-click="listarUsuarios()">Atacar</button>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-2" ng-repeat="rec in $root.listaRecursos">
-                    <img class="recursosTablero" ng-src="{{rec.Imagen}}"
-                         ng-click="editCell(casilla.id)" />{{rec.Valor}}
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <div class="row">
+                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">
+                            <img class="recursosTablero" ng-src="{{rec.Imagen}}"/>{{rec.Valor}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <div class="row">
+                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="uni in $root.listaUnidades">
+                            <img class="recursosTablero" ng-src="{{uni.Imagen}}"/>{{uni.Valor}}
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12 col-sm-12 imagenFondo" ng-style="style">
+                <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12 imagenFondo" ng-style="style">
                     <div class="row" ng-repeat="row in $root.tablero.Columnas">
-                        <img class="col-md-1 col-sm-1 col-xs-1 col-centered columnasTablero handPointer" ng-repeat="casilla in row.Fila" ng-attr-idCasilla="{{casilla.Id}}" ng-src="{{getImgCasilla(casilla.Id)}}"
-                             ng-click="editCell(casilla)" />
+                        <img class="col-xs-1 col-md-1 col-sm-1 col-lg-1 col-centered columnasTablero handPointer" ng-repeat="casilla in row.Fila" ng-attr-idCasilla="{{casilla.Id}}" ng-src="{{getImgCasilla(casilla.Id)}}"
+                             ng-click="editCell($parent.$index, $index, casilla)" />
                     </div>
                 </div>
             </div>
 
 
-            <!-- Modal -->
+            <!-- Modal Construir Edificio-->
             <div class="modal fade" id="dialogoConstruir" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -157,7 +167,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+                            <button type="button" class="btn btn-default" ng-click="entrenarUnidades()" data-dismiss="modal">Save</button>
                         </div>
                     </div>
                 </div>

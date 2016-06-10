@@ -19,10 +19,13 @@ namespace DataAccessLayer
         private static IMongoClient client = new MongoClient(connectionstring);
         private IMongoDatabase database;
         private IMongoCollection<Shared.Entities.Juego> collection;
-        private string nombreJuego;
-        private string idUsuario;
+        private string nombreJuego = "AOE";
+        private string idUsuario = "10209545762984761";
 
-        public DALConstruccion(){}
+        public DALConstruccion(){
+            database = client.GetDatabase(nombreJuego);
+            collection = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
+        }
 
         public DALConstruccion(string nombreJuego, string idUsuario)
         {

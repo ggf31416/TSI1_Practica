@@ -202,7 +202,7 @@ namespace FrontEnd.Controllers
 
                 ret.TipoUnidades.Add(newTipoEntidad);
             }
-
+            /*
             //Datos DataActual
             ret.DataJugador.EstadoRecursos = new Dictionary<int, Models.EstadoRecursoModel>();
             foreach(var eR in juego.DataJugador.EstadoRecursos)
@@ -236,7 +236,7 @@ namespace FrontEnd.Controllers
                 ret.DataJugador.EstadoUnidades.Add(eU.Key, eDM);
             }
             ret.DataJugador.UltimaActualizacion = juego.DataJugador.UltimaActualizacion;
-
+            */
             return Json(new { success = true, responseText = "Juego: ", ret = ret }, JsonRequestBehavior.AllowGet);
         }
 
