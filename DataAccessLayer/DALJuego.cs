@@ -35,5 +35,10 @@ namespace DataAccessLayer
                 return null;
             }
         }
+
+        public Juego GetJuegoUsuario(string tenant, string idUsuario)
+        {
+            return null;
+        }
     }
 }
