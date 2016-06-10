@@ -28,7 +28,7 @@ namespace BusinessLogicLayer
             {
                 this.Recursos.Add(recurso.Id,new CantidadRecurso() { acumulado = 0, porSegundo = 0 });
             }
-            ultimaActualizacionRecursos = DateTime.Now;
+            ultimaActualizacionRecursos = DateTime.UtcNow;
         }
 
         public void CargarEdificios(Tablero miBase)
@@ -54,7 +54,7 @@ namespace BusinessLogicLayer
             // TODO: falta inicializar para cada recurso
             Recursos = new Dictionary<int, CantidadRecurso>();
 
-            ultimaActualizacionRecursos = DateTime.Now;
+            ultimaActualizacionRecursos = DateTime.UtcNow;
 
         }
 
@@ -86,7 +86,7 @@ namespace BusinessLogicLayer
 
         public bool Construir(TipoEdificio e)
         {
-            actualizarRecursos(DateTime.Now);
+            actualizarRecursos(DateTime.UtcNow);
             // tengo la cantidad necesaria para todos los recursos:
             bool puedoConstruir = e.Costos.All(costoRec => Recursos[costoRec.IdRecurso].acumulado >= costoRec.Valor);
             if (puedoConstruir)

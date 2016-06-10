@@ -52,7 +52,7 @@ namespace BusinessLogicLayer
             if (!consumirRecursosSiPuedo(j, j.Tecnologias[idTecnologia])) return false;
             if (estadoT.ContainsKey(idTecnologia.ToString()))
             {
-                EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Fin = DateTime.Now.AddSeconds( j.Tecnologias[idTecnologia].Tiempo) };
+                EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Fin = DateTime.UtcNow. AddSeconds( j.Tecnologias[idTecnologia].Tiempo) };
                 estadoT.Add(idTecnologia.ToString(), estado);
             }
             // guardar juego
@@ -80,7 +80,7 @@ namespace BusinessLogicLayer
 
         private bool estaCompleta(Juego j, int idTecnologia)
         {
-            return j.DataJugador.EstadoTecnologias[idTecnologia.ToString()].Fin > DateTime.Now;
+            return j.DataJugador.EstadoTecnologias[idTecnologia.ToString()].Fin > DateTime.UtcNow;
         }
 
         private void AplicarTecnologia(Juego j ,Tecnologia tec)
@@ -132,7 +132,10 @@ namespace BusinessLogicLayer
 
         private void ActualizarTecnologiasConstruibles(Juego j, Tecnologia tec)
         {
+            if (j.DataJugador.EstadoTecnologias == null)
+                j.DataJugador.EstadoTecnologias = new Dictionary<string, EstadoData>();
             var estado = j.DataJugador.EstadoTecnologias;
+            
             foreach (var id in estado.Keys)
             {
                 if (estado[id].Estado == EstadoData.EstadoEnum.NoPuedo)
@@ -147,13 +150,16 @@ namespace BusinessLogicLayer
 
         public bool CompletarTecnologiasTerminadas(Juego j)
         {
+            if (j.DataJugador.EstadoTecnologias == null)
+                j.DataJugador.EstadoTecnologias = new Dictionary<string, EstadoData>();
             var estado = j.DataJugador.EstadoTecnologias;
+            
             bool algunaTermino = false;
             foreach (var kv in estado)
             {
                 string idTec = kv.Key;
                 EstadoData e = kv.Value;
-                if (e.Estado == EstadoData.EstadoEnum.C && e.Fin < DateTime.Now) 
+                if (e.Estado == EstadoData.EstadoEnum.C && e.Fin < DateTime.UtcNow) 
                 {
                     CompletarTecnologia(j, idTec);
                     algunaTermino = true;

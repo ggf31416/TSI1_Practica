@@ -81,7 +81,6 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                 .then(function (data) {
                                     console.debug(data);
                                     $rootScope.listaEdificios = data.TipoEdificios;
-                                    console.debug($rootScope.listaEdificios);
                                     $rootScope.listaUnidades = data.TipoUnidades;
                                     for (var i = 0; i < $rootScope.listaUnidades.length; i++) {
                                         $rootScope.listaUnidades[i].Valor = (i+1) * 10;
@@ -96,6 +95,8 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                     $rootScope.tablero = data.Tablero;
                                     $rootScope.listaTecnologias = data.Tecnologias;
                                     $rootScope.dataJuego = data.DataJuego;
+                                    $rootScope.dataJugador = data.DataJugador;
+                                    console.debug($rootScope.dataJugador);
 
                                     $scope.style = { "background-image": "url('" + $rootScope.tablero.ImagenFondo + "')" };
 

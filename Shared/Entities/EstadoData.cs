@@ -33,7 +33,7 @@ namespace Shared.Entities
         public long Faltante
         {
             get {
-                return (long)((Fin - DateTime.Now).TotalMilliseconds);
+                return (long)((Fin - DateTime.UtcNow).TotalMilliseconds);
             }
             protected set { }
         }

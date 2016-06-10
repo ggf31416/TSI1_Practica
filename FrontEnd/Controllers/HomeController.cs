@@ -49,7 +49,7 @@ namespace FrontEnd.Controllers
                 cli.token = clienteJuego.token;
 
                 HttpCookie myCookie = new HttpCookie("clienteId");
-                DateTime now = DateTime.Now;
+                DateTime now = DateTime.UtcNow;
 
                 myCookie.Value = cli.clienteId;
                 myCookie.Expires = now.AddMonths(1);

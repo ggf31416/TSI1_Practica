@@ -28,7 +28,7 @@ namespace BusinessLogicLayer
         private List<TipoEdificio> cargarEdificios(Juego j, EstadoData.EstadoEnum estado)
         {
             Tablero miBase = j.Tablero;
-            var ocupadas = miBase.Celdas.Where(c => c.IdTipoEdificio.HasValue && c.IdTipoEdificio >= 0 && c.Estado.Estado == estado);
+            var ocupadas = miBase.Celdas.Where(c => c.IdTipoEdificio.HasValue && c.IdTipoEdificio >= 0 && (c.Estado != null && c.Estado.Estado == estado));
             var res = new List<TipoEdificio>();
             foreach (TableroCelda tc in ocupadas)
             {
@@ -43,6 +43,11 @@ namespace BusinessLogicLayer
         private void actualizarRecursosPorSegundo(Juego j)
         {
             var recursos = j.DataJugador.EstadoRecursos;
+            foreach (var cant in recursos.Values)
+            {
+                if(cant.Total < 0)
+                        cant.Total = 0;
+            }
             var lst = cargarEdificios(j,EstadoData.EstadoEnum.A);
             foreach (var cant in recursos.Values)
             {
@@ -59,7 +64,7 @@ namespace BusinessLogicLayer
 
         private void actualizarRecursos(DataActual data)
         {
-            TimeSpan dif = DateTime.Now - data.UltimaActualizacion;
+            TimeSpan dif = DateTime.UtcNow - data.UltimaActualizacion;
             foreach (var cant in data.EstadoRecursos.Values)
             {
                 cant.Total += (float)(cant.Produccion * dif.TotalSeconds);
@@ -84,15 +89,15 @@ namespace BusinessLogicLayer
         public bool actualizarEdificios(Juego juego)
         {
             bool cambio = true;
-            var edificiosConstruyendo = juego.Tablero.Celdas.Where(c => c.IdTipoEdificio.HasValue && c.IdTipoEdificio >= 0 && c.Estado.Estado == EstadoData.EstadoEnum.A);
+            var edificiosConstruyendo = juego.Tablero.Celdas.Where(c => c.IdTipoEdificio.HasValue && c.IdTipoEdificio >= 0 && (c.Estado != null && c.Estado.Estado == EstadoData.EstadoEnum.C));
             var recursos = juego.DataJugador.EstadoRecursos;
             foreach (var edificio in edificiosConstruyendo)
             {
-                if (edificio.Estado.Fin <= DateTime.Now)
+                if (edificio.Estado.Fin <= DateTime.UtcNow)
                 {
                     edificio.Estado.Estado = EstadoData.EstadoEnum.A;
                     cambio = true;
-                    TimeSpan dif = DateTime.Now - edificio.Estado.Fin;
+                    TimeSpan dif = DateTime.UtcNow - edificio.Estado.Fin;
                     foreach (var prod in juego.TipoEdificios[edificio.Id].RecursosAsociados)
                     {
                         recursos[prod.IdRecurso.ToString()].Total += (float)(prod.Valor * dif.TotalSeconds);
@@ -110,7 +115,7 @@ namespace BusinessLogicLayer
             actualizarRecursosPorSegundo(j);
             IBLTecnologia tec = new BLTecnologia(this);
             tec.CompletarTecnologiasTerminadas(j);
-            j.DataJugador.UltimaActualizacion = DateTime.Now;
+            j.DataJugador.UltimaActualizacion = DateTime.UtcNow;
             
         }
 

@@ -30,7 +30,7 @@ namespace DataAccessLayer
         
         private void inicializarUsuario(ClienteJuego cliente)
         {
-            cliente.creacion = DateTime.Now;
+            cliente.creacion = DateTime.UtcNow;
             collection.InsertOne(cliente);
             IDALConstruccion iDALConstruccion = new DALConstruccion();
             iDALConstruccion.InicializarConstruccion(cliente.id, this.nombreJuego);
@@ -52,7 +52,7 @@ namespace DataAccessLayer
                 collection.ReplaceOne(cliente => cliente.id == c.id, c);
                 Shared.Entities.FechaCantidad fechaCantidad = new Shared.Entities.FechaCantidad();
                 fechaCantidad.cantidad = 1;
-                fechaCantidad.fecha = DateTime.Now;
+                fechaCantidad.fecha = DateTime.UtcNow;
                 collectionFechaCantidad.InsertOne(fechaCantidad);
                 return true;
             }
