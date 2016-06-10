@@ -15,7 +15,8 @@ namespace BusinessLogicLayer
         public void Execute(IJobExecutionContext context)
         {
             // ejecutarTurno
-            Console.WriteLine("Q "  + DateTime.Now.Millisecond + " ms");
+            
+            BLTablero.getInstancia().ejecutarBatallasEnCurso();
         }
     }
 
@@ -44,14 +45,14 @@ namespace BusinessLogicLayer
 
                 IJobDetail turnosJob = JobBuilder.Create<TurnoJub>().WithIdentity("job1", "group1").Build();
                 ITrigger trigger = TriggerBuilder.Create().WithIdentity("trigger1", "group1").StartNow().WithSimpleSchedule(x =>
-                     x.WithInterval(TimeSpan.FromMilliseconds(100)).RepeatForever())
+                     x.WithInterval(TimeSpan.FromMilliseconds(1000)).RepeatForever())
                      .Build();
                 scheduler.ScheduleJob(turnosJob, trigger);
             }
             catch (SchedulerException se)
             {
 
-                Console.WriteLine("Quartz Ex:" + se);
+                Console.WriteLine("Quartz Ex:" + se.ToString());
             }
         }
 
@@ -64,7 +65,7 @@ namespace BusinessLogicLayer
             catch (SchedulerException se)
             {
 
-                Console.WriteLine("Quartz Ex:" + se);
+                Console.WriteLine("Quartz Ex:" + se.ToString());
             }
         }
     }

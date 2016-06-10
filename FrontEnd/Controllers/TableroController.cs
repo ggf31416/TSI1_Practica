@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using ServiceStack.Redis;
 using Microsoft.AspNet.SignalR;
 using FrontEnd.ServiceTablero;
+using Shared.Entities;
 
 namespace FrontEnd.Controllers
 {
@@ -27,6 +28,7 @@ namespace FrontEnd.Controllers
                 return Json(new { sucess = false });
             }
         }
+
 
         [HttpPost]
         public ActionResult JugarUnidad(Models.InfoCeldaModel infoCelda)
@@ -66,5 +68,40 @@ namespace FrontEnd.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult IniciarAtaque(InfoAtaque info)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+                client.IniciarAtaque(info);
+                return Json(new { sucess = true });
+            }
+            catch (Exception e)
+            {
+                return Json(new { sucess = false });
+            }
+        }
+
+
+        [HttpGet]
+        public ActionResult GetListaDeJugadoresAtacables(string jugador)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+                var res = client.GetListaDeJugadoresAtacables(jugador);
+                return Json(new { success = true, ret = res }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception e)
+            {
+                return Json(new { sucess = false });
+            }
+        }
+
+
+
+
     }
+
 }

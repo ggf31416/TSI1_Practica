@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace BusinessLogicLayer
 {
@@ -11,9 +12,17 @@ namespace BusinessLogicLayer
     {
         private Dictionary<int, TipoUnidad> tiposUnidades = new Dictionary<int, TipoUnidad>();
         private Dictionary<int, TipoEdificio> tiposEdificios = new Dictionary<int, TipoEdificio>();
+        public int JuegoId { get; set; }
+        private List<Jugador> jugadores = new List<Jugador>();
+
+        private Jugador defensor;
         private DataAccessLayer.Relacional.IDALEntidadesRO _dalRO;
-        public string canalSignalR { get; set; }
-        public Tablero tablero;
+        public string CanalSignalR { get; set; }
+        public bool EnCurso { get; set; }
+        public CampoBatalla tablero;
+
+
+    
 
         public void inicializar()
         {
@@ -25,14 +34,26 @@ namespace BusinessLogicLayer
         public Batalla(string atacante,string defensor)
         {
             inicializar();
-            this.tablero = new Tablero();
+            this.tablero = new CampoBatalla();
+            this.EnCurso = true;
 
+        }
+
+        public Batalla(Jugador atacante,Jugador defensor)
+        {
+            inicializar();
+            this.tablero = new CampoBatalla();
+            this.tablero.JugadorDefensor = defensor.Id;
+            this.EnCurso = true;
+            this.defensor = defensor;
+            jugadores.Add(atacante);
+            jugadores.Add(defensor);
         }
 
 
         private void agregarUnidades(Jugador jug)
         {
-            foreach (ConjuntoUnidades cu in jug.Unidades)
+            foreach (ConjuntoUnidades cu in jug.Unidades.Values)
             {
                 Unidad x = getUnidadPorId(cu.UnidadId);
                 IEnumerable<Unidad> lst = Enumerable.Repeat(x, cu.Cantidad).ToList();
@@ -41,9 +62,9 @@ namespace BusinessLogicLayer
                 foreach(Unidad u in lst)
                 {
                     //u.id = r.Next(1, Int32.MaxValue);
-                    u.jugador = jug.Identificador;
+                    u.jugador = jug.Id;
                 }
-                tablero.agregarUnidades(jug.Identificador, lst);
+                tablero.agregarUnidades(jug.Id, lst);
             }
         }
 
@@ -62,7 +83,7 @@ namespace BusinessLogicLayer
 
         void crearBatalla(Jugador atacante,Jugador defensor)
         {
-            tablero = new Tablero();
+            tablero = new CampoBatalla();
             agregarUnidades(atacante);
             agregarUnidades(defensor);
             tablero.agregarEdificios(defensor.Edificios);
@@ -88,7 +109,44 @@ namespace BusinessLogicLayer
         public void ejecutarTurno()
         {
             tablero.tickTiempo();
+            if (tablero.Turno > 300)
+            {
+                this.EnCurso = false;
+            }
         }
+
+        public string generarListaAccionesTurno()
+        {
+            List<AccionMsg> list = tablero.Acciones;
+            if (list.Count == 0) return "";
+            var obj = new
+            {
+                A = "ListaAcciones",
+                L = list
+            };
+            string res = JsonConvert.SerializeObject(obj,new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+            return res;
+        }
+
+        public string GenerarJson()
+        {
+            // tipo de retorno anonimo
+            var res = new
+            {
+                A = "IniciarAtaque",
+                unidades = new List<Unidad>(),
+                jugadores = new List<String>()
+            };
+            foreach(Jugador j in jugadores)
+            {
+                bool incluirEdificios = j.Equals(defensor);
+                string jsonJugador = j.GenerarJson(incluirEdificios, false);
+                res.jugadores.Add(jsonJugador);
+            }
+            return JsonConvert.SerializeObject(res);
+        }
+
+
     }
 }
 

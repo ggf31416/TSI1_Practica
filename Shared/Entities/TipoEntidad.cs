@@ -26,5 +26,9 @@ namespace Shared.Entities
         public Nullable<int> Ataque { get; set; }
         [DataMember]
         public Nullable<int> TiempoConstruccion { get; set; }
+        [DataMember]
+        public int IdJuego { get; set; }
+        [DataMember]
+        public List<Costo> Costos { get; set; }
     }
 }

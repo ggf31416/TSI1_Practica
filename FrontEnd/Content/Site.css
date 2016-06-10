@@ -1,6 +1,18 @@
 ﻿body {
 }
 
+.columnasTablero{
+    padding:0px;
+}
+
+.handPointer{
+    cursor: pointer; 
+}
+
+.recursosTablero{
+    width: 50px;
+    height: 50px;
+}
 
 div.item {
     vertical-align: top;
@@ -18,5 +30,14 @@ ul
 list-style-type: none;
 }
 
+
+img:disabled {
+     opacity: 0.5;
+    -webkit-filter: grayscale(100%);
+       -moz-filter: grayscale(100%);
+         -o-filter: grayscale(100%);
+        -ms-filter: grayscale(100%);
+            filter: grayscale(100%); 
+}
 
  .barraLateralJuego, #divEdificios { float: left; }

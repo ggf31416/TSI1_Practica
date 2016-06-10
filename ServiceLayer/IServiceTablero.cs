@@ -23,5 +23,14 @@ namespace ServiceLayer
 
         [OperationContract]
         void register(ClienteJuego cliente, int idJuego);
+
+        List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt);
+
+        [OperationContract]
+        void IniciarAtaque(InfoAtaque info);
+
+        //DATA JUEGO
+        [OperationContract]
+        Juego GetAllDataJuego(Int32 idJuego);
     }
 }

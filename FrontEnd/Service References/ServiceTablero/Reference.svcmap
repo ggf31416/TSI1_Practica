@@ -22,6 +22,7 @@
     <MetadataSource Address="http://localhost:8836/tsi/" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
+    <MetadataFile FileName="item3.xsd" MetadataType="Schema" ID="7b7b968f-4e21-45e0-973d-eeeac203519a" SourceId="1" SourceUrl="http://localhost:8836/tsi/?xsd=xsd3" />
     <MetadataFile FileName="item.disco" MetadataType="Disco" ID="18e029d8-3a55-49eb-b349-9a0017f41b94" SourceId="1" SourceUrl="http://localhost:8836/tsi/?disco" />
     <MetadataFile FileName="item.xsd" MetadataType="Schema" ID="38734a9d-a99a-4ac4-a838-be423a104df1" SourceId="1" SourceUrl="http://localhost:8836/tsi/?xsd=xsd2" />
     <MetadataFile FileName="item.wsdl" MetadataType="Wsdl" ID="13edd052-dc66-4c6c-841e-5c77d05416e5" SourceId="1" SourceUrl="http://localhost:8836/tsi/?wsdl=wsdl0" />

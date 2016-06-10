@@ -5,6 +5,7 @@
       <xsd:import schemaLocation="http://localhost:8836/tsi/?xsd=xsd0" namespace="http://localhost:8836/tsi1/" />
       <xsd:import schemaLocation="http://localhost:8836/tsi/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
       <xsd:import schemaLocation="http://localhost:8836/tsi/?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/Shared.Entities" />
+      <xsd:import schemaLocation="http://localhost:8836/tsi/?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
     </xsd:schema>
   </wsdl:types>
   <wsdl:message name="IServiceTablero_JugarUnidad_InputMessage">
@@ -31,6 +32,18 @@
   <wsdl:message name="IServiceTablero_register_OutputMessage">
     <wsdl:part name="parameters" element="tns:registerResponse" />
   </wsdl:message>
+  <wsdl:message name="IServiceTablero_IniciarAtaque_InputMessage">
+    <wsdl:part name="parameters" element="tns:IniciarAtaque" />
+  </wsdl:message>
+  <wsdl:message name="IServiceTablero_IniciarAtaque_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IniciarAtaqueResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServiceTablero_GetAllDataJuego_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllDataJuego" />
+  </wsdl:message>
+  <wsdl:message name="IServiceTablero_GetAllDataJuego_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllDataJuegoResponse" />
+  </wsdl:message>
   <wsdl:portType name="IServiceTablero">
     <wsdl:operation name="JugarUnidad">
       <wsdl:input wsaw:Action="http://localhost:8836/tsi1/IServiceTablero/JugarUnidad" message="tns:IServiceTablero_JugarUnidad_InputMessage" />
@@ -47,6 +60,14 @@
     <wsdl:operation name="register">
       <wsdl:input wsaw:Action="http://localhost:8836/tsi1/IServiceTablero/register" message="tns:IServiceTablero_register_InputMessage" />
       <wsdl:output wsaw:Action="http://localhost:8836/tsi1/IServiceTablero/registerResponse" message="tns:IServiceTablero_register_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IniciarAtaque">
+      <wsdl:input wsaw:Action="http://localhost:8836/tsi1/IServiceTablero/IniciarAtaque" message="tns:IServiceTablero_IniciarAtaque_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8836/tsi1/IServiceTablero/IniciarAtaqueResponse" message="tns:IServiceTablero_IniciarAtaque_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllDataJuego">
+      <wsdl:input wsaw:Action="http://localhost:8836/tsi1/IServiceTablero/GetAllDataJuego" message="tns:IServiceTablero_GetAllDataJuego_InputMessage" />
+      <wsdl:output wsaw:Action="http://localhost:8836/tsi1/IServiceTablero/GetAllDataJuegoResponse" message="tns:IServiceTablero_GetAllDataJuego_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
 </wsdl:definitions>

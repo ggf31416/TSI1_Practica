@@ -53,4 +53,30 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
+  <xs:element name="IniciarAtaque">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q4="http://schemas.datacontract.org/2004/07/Shared.Entities" minOccurs="0" name="info" nillable="true" type="q4:InfoAtaque" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="IniciarAtaqueResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllDataJuego">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="idJuego" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllDataJuegoResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q5="http://schemas.datacontract.org/2004/07/Shared.Entities" minOccurs="0" name="GetAllDataJuegoResult" nillable="true" type="q5:Juego" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 </xs:schema>

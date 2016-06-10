@@ -12,6 +12,7 @@ namespace ServiceLayer
     class Program
     {
         public static IBLTablero blHandler;
+        public static IBLJuego blJuegoHandler;
 
         static void Main(string[] args)
         {
@@ -24,7 +25,8 @@ namespace ServiceLayer
 
         private static void SetupDependencies()
         {
-            blHandler = new BLTablero(new DataAccessLayer.DALTablero());
+            blHandler = BLTablero.getInstancia();
+            blJuegoHandler = new BLJuego(new DataAccessLayer.DALJuego());
         }
 
         private static void SetupService()
@@ -46,7 +48,7 @@ namespace ServiceLayer
                 selfHost.Close();
             }catch (CommunicationException ce)
             {
-                Console.Write("An exception ocurred: ", ce.ToString());
+                Console.Write("An exception ocurred: " +  ce.ToString());
                 Console.ReadLine();
                 selfHost.Abort();
             }

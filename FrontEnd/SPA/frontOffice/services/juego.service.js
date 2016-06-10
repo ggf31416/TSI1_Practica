@@ -33,7 +33,7 @@
             return $http({
                 method: 'POST',
                 dataType: 'text',
-                url: "Tablero/Accion",
+                url: "/Tablero/Accion",
                 data: { data: JSON.stringify(json) }
             });
         }
@@ -49,12 +49,43 @@
             return postAccion({ "A": "AddUnidad", "J": jugador, "Id": idTipo, "IdUn": idUnidad, "PosX": input_x, "PosY": input_y });
         }
 
+        this.construirUnidad = function (idTipo,jugador){
+            return postAccion({ "A": "BU", "J": jugador, "Id": idTipo});
+        }
+
         this.moverUnidad = function (id, input_x, input_y,jugador){
-            return $http.post("Tablero/Accion", JSON.stringify({ "A": "MoveUnidad", "J": jugador , "Id": id, "PosX": input_x, "PosY": input_y}));
+            return $http.post("/Tablero/Accion", JSON.stringify({ "A": "MoveUnidad", "J": jugador , "Id": id, "PosX": input_x, "PosY": input_y}));
         }
 
         this.registrarJugador = function (jugador,juego) {
-            return $http.post("Tablero/Accion", JSON.stringify({ "A": "RegistrarJugador", "J": jugador }));
+            return $http({
+                method: 'POST',
+                dataType: 'text',
+                url: "/Tablero/RegistrarJugador",
+                data: { "jugador": jugador }
+            });
+        }
+
+
+        this.getListaEnemigos = function (jugador,juego) {
+            var promise = $http.get("/Tablero/GetListaDeJugadoresAtacables",{params: {"jugador": jugador}}).then(
+                function (data) {
+                    if (data.data.success == false) {
+                        throw new Error(data.data.responseText);
+                        console.log("Error al cargar enemigos atacables: " + data.data.responseText + " msg" + data.data.msg);
+                    }
+                    return data.data.ret;
+                }).catch(
+                    function (err) {
+                        console.log("Error al cargar enemigos atacables: " + err);
+                });
+             return promise;
+        }
+
+        this.iniciarAtaque = function(ataqueJson){
+             return $http.post("/Tablero/iniciarAtaque", JSON.stringify(ataqueJson));
+
+
         }
 
         

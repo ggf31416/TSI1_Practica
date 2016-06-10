@@ -58,6 +58,7 @@
                     console.log(msjError);
                 });
         }
+        $scope.listaEnemigos = [];
         
         $scope.posicionarUnidad= function (id) {
             // llama a la funcion iniciarCustomDrag en el CrearCanvas.js
@@ -73,11 +74,12 @@
 
         
         $q.all([
-            edificiosService.getAllTipoEdificios(),
-            unidadesService.getAllTipoUnidades()
+            //edificiosService.getAllTipoEdificios(),
+            //unidadesService.getAllTipoUnidades()
         ]).then(function (data) {
-            $rootScope.listaEdificios = data[0];
-            $rootScope.listaUnidades = data[1];
+            $rootScope.listaEdificios = [];//data[0];
+            $rootScope.listaUnidades = [ {Ataque : 10, Defensa : 10, Id : 314159, Nombre : "Arquero", TiempoConstruccion : 10, Vida : 100, Imagen : "/SPA/backoffice/ImagenesSubidas/arquero.jpg" }]
+            //data[1];
             window.createGame();
         });
 
@@ -94,22 +96,14 @@
                 }
         ];
 
-        $scope.estadoJuego = {
-            edificios: [
-                {
-                    id: 3,
-                    posX: 12,
-                    posY: 8
-                },
-                {
-                    id: 22,
-                    posX: 12,
-                    posY: 20
-                }
-            ],
-            unidades_desplegadas: [],
-            unidades: []
-        }
+        var EstadoJuego = function() {
+            this.edificios =  [];
+            this.unidades_desplegadas = [];
+            this.unidades = [];
+            this.unidades_desplegables = {};
+        };
+
+        $scope.estadoJuego = new EstadoJuego();
 
 
         var altoJuego = 600;
@@ -132,21 +126,30 @@
         var nombreJugador;
 
         var estaEnBatalla = false;
-
+       
         $scope.animaciones = {}
 
         window.createGame = function (scope, injector) {
             // Create our phaser $scope.game
             $scope.game = new Phaser.Game(anchoJuego, altoJuego, Phaser.AUTO, 'divJuego', { preload: $scope.preload, create: create, update: update });
+            //$scope.game.time.events.add(Phaser.Timer.SECOND * 1, pedirNombre, this);
             pedirNombre();
         };
 
         function pedirNombre() {
-            //nombreJugador = window.prompt("Jugador?", "");
+            nombreJugador = window.prompt("Jugador?", "");
+            juegoService.registrarJugador(nombreJugador, $scope.nombreJuego);
         }
 
-
+        function objetoUnidad(data,idSprite) {
+           return $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
+        }
         
+
+        function desplegable(sprite_id){
+            return  $scope.estadoJuego.unidades_desplegables[sprite_id];
+        }
+
 
 
         /*function crearInternalMenu() {
@@ -173,17 +176,20 @@
             buildings.add(edificio);
         }
 
+
+
         function crearUnidadInmediato(data) {
             if (!unidadesPorId[data.Unit_id]) {
                 var idSprite = data.Id;
-                var unit = $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
+                var unit = objetoUnidad(data,idSprite);
                 unit.height = unit_size;
                 unit.width = unit_size;
                 unit.inputEnabled = true;
                 clickVisibleUnidades(unit, true);
-                unit.info.unit_id = data.Unit_id;
+                unit.info = new Unidad_Info(data.Unit_id);
                 unidades_desplegadas.add(unit);
                 unidadesPorId[unit.info.unit_id] = unit;
+                agregarGraficos($scope.game, unit);
                 console.log("Unidad agregada desde remoto json:" + data);
             }
             else {
@@ -192,6 +198,7 @@
         }
 
         $scope.cargarDesdeEstado = function () {
+            var estado = $scope.estadoJuego;
             if (buildings){
                 // quita todos los edificios
                 buildings.removeAll(true);
@@ -199,21 +206,103 @@
             if (unidades_desplegadas) {
                 unidades_desplegadas.removeAll(true);
             }
-            $scope.estadoJuego.edificios.forEach (function (e) {
+           estado.edificios.forEach (function (e) {
                 crearEdificioInmediato(e);
             });
-            $scope.estadoJuego.unidades_desplegadas.forEach(function (e) {
+            if (estado.unidades_desplegadas){
+               estado.unidades_desplegadas.forEach(function (e) {
                 crearUnidadInmediato(e);
-            });
+                });
+            }
+            $scope.$apply();
         };
+
+        function esEsteJugador(json){
+            return json.Id == nombreJugador;
+        }
+
+        function cargarEstado(batalla ){
+            $scope.estadoJuego = new EstadoJuego();
+            var est = $scope.estadoJuego;
+            estaEnBatalla = true;
+            batalla.jugadores.forEach(function(j){
+                var jugador = JSON.parse(j);
+                if (esEsteJugador(jugador)){
+                    var jug_u = jugador.Unidades;
+                    jug_u.forEach(function(c){
+                        est.unidades_desplegables[c.UnidadId] = { cantidad : c.Cantidad};
+                    });
+                }
+            });
+            est.unidades_desplegadas = batalla.unidades;
+            $scope.cargarDesdeEstado();
+            console.log("Se termino de cargar batalla");
+        }
+
+       
 
         var MsgA = {
             AddEdificio: "AddEd",
             AddUnidad: "AddUn",
             MoveUnit: "MoveUnit",
             TargetUnit: "TargetUnit",
-            UpdateHP: "UpdateHP"
+            UpdateHP: "UpdateHP",
+            ListaAcciones: "ListaAcciones",
+            IniciarAtaque: "IniciarAtaque",
+            PosUnit: "PosUnit"
         };
+
+        function posicionarAbs(sprite,x,y){
+            sprite.x = x * unit_size;
+            sprite.y = y * unit_size;
+        }
+
+        function ejecutarMensaje(msg){
+            if (msg.A == MsgA.IniciarAtaque){
+                cargarEstado(msg);
+            }
+            else if(msg.A == MsgA.PosUnit){
+                 var unit = unidadesPorId[msg.IdUn];
+                 if(unit){
+                    posicionarAbs(unit,msg.PosX,msg.PosY);
+                 }
+            }
+            else if (msg.A == MsgA.AddEdificio) {
+                    crearEdificioInmediato(msg);
+            }
+            else if (msg.A == MsgA.AddUnidad) {
+                crearUnidadInmediato(msg);
+            }
+            else if (msg.A == MsgA.MoveUnit) {
+                var unit = unidadesPorId[msg.IdUn];
+                if (unit) {
+                    unit.info.target = msg.T;
+                    //moverUnidad(unit, msg.Path);
+                }
+            }
+            else if (msg.A == MsgA.Target) {
+                var unit = unidadesPorId[msg.IdUn];
+                if (unit) {
+                    unit.info.target = msg.T;
+                }
+            }
+            else if (msg.A == MsgA.UpdateHP) {
+                var unit = unidadesPorId[msg.IdUn];
+                // setear vida
+                unit.info.hp = msg.VN;
+                if (msg.VN < 0){
+                    // matar
+
+                    unit.kill();
+                }
+            }
+            else if (msg.A == MsgA.ListaAcciones){
+                msg.L.forEach(function(a){
+                    ejecutarMensaje(a);
+                });
+            }
+
+        }
 
         $scope.iniciarSignalR = function () {
             // Declare a proxy to reference the hub.
@@ -221,39 +310,11 @@
             // Create a function that the hub can call to broadcast messages.
             $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
                 var msg = JSON.parse(message);
-                if (msg.A == MsgA.AddEdificio) {
-                    crearEdificioInmediato(msg);
-                }
-                if (msg.A == MsgA.AddUnidad) {
-                    crearUnidadInmediato(msg);
-                }
-                if (msg.A == MsgA.MoveUnit) {
-                    var unit = unidadesPorId[msg.Unit_id];
-                    if (unit) {
-                        moverUnidad(unit, msg.Path);
-                    }
-                }
-                if (msg.A == MsgA.Target) {
-                    var unit = unidadesPorId[msg.Unit_id];
-                    if (unit) {
-                        unit.info.target = msg.Target;
-                    }
-                }
-                if (msg.A == MsgA.UpdateHP) {
-                    var unit = unidadesPorId[msg.Unit_id];
-                    // setear vida
-                    unit.info.hp = msg.VN;
-                    if (msg.VN < 0){
-                        // matar
-                        unit.destroy();
-                    }
-
-                }
-
+                ejecutarMensaje(msg);
 
                 //$scope.estadoJuego.edificios = msjJSON.edificios;
                 //$scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;
-                $scope.estadoJuego.edificios.push(msjJSON);
+                //$scope.estadoJuego.edificios.push(msjJSON);
                 //$scope.cargarDesdeEstado();
             };
             // Get the user name and store it to prepend to messages.
@@ -287,13 +348,16 @@
             $scope.game.load.image('cuartel', '/Content/img/Barracks4.png');
             $scope.game.load.image('cuartelMenu', '/Content/img/cuartel.jpg');
             $scope.game.load.image('default_proyectil', '/Content/img/Crystal_Arrow.gif');
-
+            if (!$scope.estadoJuego.unidades_desplegables){
+                $scope.estadoJuego.unidades_desplegables = {};
+            }
             
             $scope.listaEdificios.forEach(function (e) {
                 if (e.Imagen != null) {
                     console.log(e);
                    // $scope.game.load.image(e.Id, 'http://localhost:56662' + e.Imagen);
                     $scope.game.load.image(e.Id,  e.Imagen);
+
                 }
             });
 
@@ -301,6 +365,8 @@
                 if (e.Imagen != null) {
                     console.log(e);
                     $scope.game.load.image(e.Id, e.Imagen);
+                    $scope.estadoJuego.unidades_desplegables[e.Id] = { cantidad: 0};
+                    //$scope.estadoJuego.unidades_desplegables[e.Id].cantidad = 10;
                 }
             });
         }
@@ -336,7 +402,7 @@
             var tile = $scope.game.add.tileSprite(0, 0, $scope.game.world.width, $scope.game.world.height, "grass");
             tile.tileScale = new PIXI.Point(0.25, 0.25);
             tile.inputEnabled = true;
-            clickVisibleUnidades(tile, false);
+            //clickVisibleUnidades(tile, false);
 
 
             buildings = $scope.game.add.physicsGroup();
@@ -378,6 +444,14 @@
                 
                 nombreEntidadDragged = null;
             }
+        }
+
+        $scope.puedoDesplegarUnidad = function(sprite_id){
+            return !estaEnBatalla  || (desplegable(sprite_id) &&  desplegable(sprite_id).cantidad > 0);
+        };
+
+        $scope.cantUnidad = function(id){
+            return  (desplegable(id)) ? desplegable(id).cantidad : "";
         }
 
 
@@ -462,6 +536,40 @@
         }
 
 
+        function agregarGraficos(game,sprite){
+            var graphics = game.add.graphics(sprite.x,sprite.y);
+            crearGraficoUnidad(sprite, graphics);
+            sprite.graficos = graphics;
+            sprite.events.onKilled.add(function(f) {
+                console.info(f);
+                if (sprite.graficos) sprite.graficos.destroy();
+                console.info(sprite.info.unit_id + " was kiled");
+            });
+            sprite.events.onDestroy.add(function(f) {
+                if (sprite.graficos) sprite.graficos.destroy();
+                console.info(sprite.info.unit_id + " was destroyed");
+            });
+        }
+
+        // se podría permitir personalizar
+        function crearGraficoUnidad(sprite,graphics){
+            var colorCirculo = 0xffffff;
+            if (sprite.info ){
+                colorCirculo = sprite.info.jugador == nombreJugador ? 0x00ff00 : 0xff0000;
+            }
+            // dibuja un circulo del color apropiado
+            graphics.lineStyle(1, colorCirculo, 1);
+            graphics.drawCircle(sprite.width/2,sprite.height / 2, unit_size * 1.5);
+            /*graphics.beginFill(0x00ff00,1);
+            graphics.vida = graphics.drawRect(0, sprite.height * 0.9,sprite.width,20);
+            graphics.endFill();
+            graphics.beginFill(0xff0000,1);
+            graphics.vidaFaltante = graphics.drawRect(0, sprite.height * 0.9,0,20);
+            graphics.endFill();*/
+        }
+
+
+
         $scope.aceptarPosicionUnidad = function (sprite, pointer) {
             console.log("aceptarPosicionUnidad");
             if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
@@ -472,15 +580,22 @@
                 $scope.game.debug.reset();
                 sprite.alpha = 1.0;
                 sprite.tint = 0xFFFFFF;
-                hacerSeleccionableUnidad(sprite);
+                //hacerSeleccionableUnidad(sprite);
+                sprite.info = new Unidad_Info();
+                sprite.info.jugador = nombreJugador;
                 sprite.info.unit_id = nombreJugador + "#" + $scope.contador++;
                 unidadesPorId[sprite.info.unit_id] = sprite;
+                agregarGraficos($scope.game, sprite);
                 //sprite.id_logico = $scope.contador--; // asigno un id automatico que luego cambio}
-                juegoService.posicionarUnidad(sprite.id, sprite.info.unit_id, input_x, input_y,nombreJugador).then(function (data) {
-                    //sprite.id_logico = data.data.ret;
-                    //unidadesPorId[sprite.id_logico] = sprite;
-                    
-                });
+                if (estaEnBatalla){
+                    desplegable(sprite.id).cantidad -= 1;
+                    juegoService.posicionarUnidad(sprite.id, sprite.info.unit_id, input_x, input_y,nombreJugador);
+                    $scope.$apply();
+                }
+                else{
+                    juegoService.construirUnidad(sprite.id,nombreJugador);
+                }
+                
             }
             else {
                 sprite.destroy();
@@ -490,10 +605,11 @@
         }
 
         function moverUnidad(sprite, paths) {
+            detenerMovimiento(sprite);
             var tweenAnterior = null;
             var primerTween = null;
             for (var i in paths) {
-                var tiempo = 1000; // paths[i].s * 1000;
+                var tiempo = 2000; // paths[i].s * 1000;
                 var tween = $scope.game.add.tween(sprite).to({ x: paths[i].x * unit_size, y: paths[i].y * unit_size }, tiempo , Phaser.Easing.Linear.None, false);
                 if (tweenAnterior) {
                     tweenAnterior.chain(tween)
@@ -561,6 +677,21 @@
         }
 
         function update() {
+            // actualizo los circulos de las unidades para que coincidan los centros
+            // si lo hago con addChild me escala el circulo y no lo quiero 
+            unidades_desplegadas.forEach(function(u){
+                if (u.graficos){
+
+                    //var porcentaje = u.info.hp / u.info.max_hp;
+                    /*u.graficos.vida.width = u.width *  porcentaje;
+                    u.graficos.vidaFaltante.x = u.graficos.vida.width;
+                    u.graficos.vidaFaltante.width = u.width * (1 - porcentaje);*/
+                    u.graficos.x  = u.x;
+                    u.graficos.y = u.y;
+                    $scope.game.debug.text(u.info.hp,u.x,u.y + u.height * 1.2);
+                }
+            });
+
             if (cursors.up.isDown) {
                 $scope.game.camera.y -= 4;
             }
@@ -574,6 +705,8 @@
             else if (cursors.right.isDown) {
                 $scope.game.camera.x += 4;
             }
+
+
 
             if (spriteDragged != null) {
                 var s = esUnidad ? unit_size : tile_size;
@@ -618,7 +751,7 @@
         function detenerMovimiento(sprite) {
             var tw = $scope.animaciones[sprite.info.unit_id];
             if (tw) {
-                game.tween.remove(tw);
+                $scope.game.tween.remove(tw);
                 delete $scope.animaciones[sprite.info.unit_id];
             }
         }
@@ -656,6 +789,29 @@
                 sprite.body.velocity.setTo(0, 0);
             }*/
         }
+
+
+        $scope.mostrarEnemigos = function () {
+            juegoService.getListaEnemigos(nombreJugador, $scope.nombreJuego).then(function (data) {
+                $scope.listaEnemigos = data;
+                //$scope.$apply();
+                $("#listaEnemigos").toggle(true);
+            });
+        };
+
+        $scope.iniciarAtaque = function(enemigo){
+            var jsonAtaque = {
+                Jugador: nombreJugador,
+                Enemigo: enemigo,
+                Juego: $scope.nombreJuego
+            };
+            juegoService.iniciarAtaque(jsonAtaque);
+        }
+
+        
+
+
+
 
     }
     ]);

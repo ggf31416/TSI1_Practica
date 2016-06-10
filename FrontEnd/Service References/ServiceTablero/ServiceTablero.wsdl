@@ -40,6 +40,24 @@
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="IniciarAtaque">
+      <soap:operation soapAction="http://localhost:8836/tsi1/IServiceTablero/IniciarAtaque" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllDataJuego">
+      <soap:operation soapAction="http://localhost:8836/tsi1/IServiceTablero/GetAllDataJuego" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="ServiceTablero">
     <wsdl:port name="BasicHttpBinding_IServiceTablero" binding="tns:BasicHttpBinding_IServiceTablero">

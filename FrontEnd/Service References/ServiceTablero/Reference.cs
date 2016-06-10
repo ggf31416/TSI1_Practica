@@ -38,6 +38,18 @@ namespace FrontEnd.ServiceTablero {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/register", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/registerResponse")]
         System.Threading.Tasks.Task registerAsync(Shared.Entities.ClienteJuego cliente, int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/IniciarAtaque", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/IniciarAtaqueResponse")]
+        void IniciarAtaque(Shared.Entities.InfoAtaque info);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/IniciarAtaque", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/IniciarAtaqueResponse")]
+        System.Threading.Tasks.Task IniciarAtaqueAsync(Shared.Entities.InfoAtaque info);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetAllDataJuego", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetAllDataJuegoResponse")]
+        Shared.Entities.Juego GetAllDataJuego(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetAllDataJuego", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetAllDataJuegoResponse")]
+        System.Threading.Tasks.Task<Shared.Entities.Juego> GetAllDataJuegoAsync(int idJuego);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -97,6 +109,22 @@ namespace FrontEnd.ServiceTablero {
         
         public System.Threading.Tasks.Task registerAsync(Shared.Entities.ClienteJuego cliente, int idJuego) {
             return base.Channel.registerAsync(cliente, idJuego);
+        }
+        
+        public void IniciarAtaque(Shared.Entities.InfoAtaque info) {
+            base.Channel.IniciarAtaque(info);
+        }
+        
+        public System.Threading.Tasks.Task IniciarAtaqueAsync(Shared.Entities.InfoAtaque info) {
+            return base.Channel.IniciarAtaqueAsync(info);
+        }
+        
+        public Shared.Entities.Juego GetAllDataJuego(int idJuego) {
+            return base.Channel.GetAllDataJuego(idJuego);
+        }
+        
+        public System.Threading.Tasks.Task<Shared.Entities.Juego> GetAllDataJuegoAsync(int idJuego) {
+            return base.Channel.GetAllDataJuegoAsync(idJuego);
         }
     }
 }

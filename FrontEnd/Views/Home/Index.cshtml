@@ -50,7 +50,7 @@
     <ul ng-repeat="e in listaEdificios | filter:{Imagen: ''}">
     <li>
         <div draggable="true" ng-click="posicionarEdificio(e.Id)" ng-mousedown="posicionarEdificio(e.Id)">
-            <img width="50" height="50" ng-src="http://localhost:56662/{{e.Imagen}}" alt="{{e.Id}}"  />
+            <img width="50" height="50" ng-src="{{e.Imagen}}" alt="{{e.Id}}"  />
             <span class="caption">{{e.Nombre}}</span>
             <span class="caption">{{e.TiempoConstruccion}}s</span>
         </div>
@@ -61,13 +61,26 @@
 <div id="divUnidades" class="barraLateralJuego">
     <ul ng-repeat="e in listaUnidades | filter:{Imagen: ''}">
         <li>
-            <div ng-mousedown="posicionarUnidad(e.Id)">
-                <img width="50" height="50" ng-src="http://localhost:56662/{{e.Imagen}}" alt="{{e.Id}}" />
+            <div ng-mousedown="!puedoDesplegarUnidad(e.Id) || posicionarUnidad(e.Id)"  ng-disabled="!puedoDesplegarUnidad(e.Id)">
+                <img width="50" height="50" ng-src="{{e.Imagen}}" alt="{{e.Id}}" ng-disabled="!puedoDesplegarUnidad(e.Id)" />
                 <span class="caption">{{e.Nombre}}</span>
+                <span class="caption">{{cantUnidad(e.Id)}}</span>
             </div>
         </li>
     </ul>
 </div>
+
+<div>
+    <input type="button" value="Atacar" ng-click="mostrarEnemigos()" />
+</div>
+
+
+<ul id="listaEnemigos" ng-repeat="e in listaEnemigos" >
+    <li>
+        <p ng-mousedown="iniciarAtaque(e.Id)">{{e.Id}}</p>
+    </li>
+   
+</ul>
 
 <div
   class="fb-like"
@@ -78,7 +91,8 @@
 
 <script> 
     $(document).ready(function () {
-        $('#divUnidades').toggle(false);
+        //$('#divUnidades').toggle(false);
+        $('#listaEnemigos').toggle(false);
     })
 </script>
 

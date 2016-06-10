@@ -98,23 +98,23 @@ namespace DataAccessLayer
                 throw new DALConstruccionException("ERROR:No existe el usuario " + idUsuario);
             DateTime now = new DateTime();
             bool necesitaUpdate = false;
+            var dicEntidades = juego.TipoEntidad.ToDictionary(e => e.Id);
             foreach (var infoCelda in tableroConstruccion.lstInfoCelda)
             {
                 if (!infoCelda.terminado)
                 {
                     int segundosConstruyendo = now.Subtract(infoCelda.FechaCreacion).Seconds;
-                    foreach (Shared.Entities.TipoEntidad tipoEntidad in juego.tipo_entidad)
+                    //foreach (Shared.Entities.TipoEntidad tipoEntidad in juego.tipo_entidad)
+                    if (!dicEntidades.ContainsKey(infoCelda.Id))
                     {
-                        if (infoCelda.Id == tipoEntidad.Id)
-                        {
-                            if (segundosConstruyendo >= tipoEntidad.TiempoConstruccion)
-                            {
-                                infoCelda.terminado = true;
-                                necesitaUpdate = true;
-                            }
+                        throw new Exception(infoCelda.Id + " no es un id de entidad en la coleccion de entidades del juego!!!");
+                    }
+                    var tipoEntidad = dicEntidades[infoCelda.Id];
 
-                            break;
-                        }
+                    if (segundosConstruyendo >= tipoEntidad.TiempoConstruccion)
+                    {
+                        infoCelda.terminado = true;
+                        necesitaUpdate = true;
                     }
                 }
             }
