@@ -143,7 +143,7 @@ namespace DataAccessLayer
 
 
         //SERVICIOS
-        public Shared.Entities.ValidarConstruccion ConstruirEdificio(int IdEdificio)
+        public Shared.Entities.ValidarConstruccion ConstruirEdificio(int IdEdificio, string Tenant, string NombreJugador)
         {
             var query = from juego in collection.AsQueryable<Shared.Entities.Juego>()
                         where juego.IdJugador == idUsuario
@@ -175,7 +175,7 @@ namespace DataAccessLayer
             }
         }
 
-        public bool PersistirEdificio(Shared.Entities.CEInputData ceid)
+        public bool PersistirEdificio(Shared.Entities.CEInputData ceid, string Tenant, string NombreJugador)
         {
             var query = from juego in collection.AsQueryable<Shared.Entities.Juego>()
                         where juego.IdJugador == idUsuario
@@ -217,7 +217,7 @@ namespace DataAccessLayer
             }
         }
 
-        public Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad)
+        public Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad, string Tenant, string NombreJugador)
         {
             var query = from juego in collection.AsQueryable<Shared.Entities.Juego>()
                         where juego.IdJugador == idUsuario
@@ -248,7 +248,7 @@ namespace DataAccessLayer
             }
         }
 
-        public bool PersistirUnidades(Shared.Entities.EUInputData euid)
+        public bool PersistirUnidades(Shared.Entities.EUInputData euid, string Tenant, string NombreJugador)
         {
             var query = from juego in collection.AsQueryable<Shared.Entities.Juego>()
                         where juego.IdJugador == idUsuario

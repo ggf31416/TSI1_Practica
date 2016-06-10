@@ -22,9 +22,9 @@ namespace BusinessLogicLayer
             _dal = dal;
         }
 
-        public bool ConstruirEdificio(CEInputData ceid)
+        public bool ConstruirEdificio(CEInputData ceid, string Tenant, string NombreJugador)
         {
-            ValidarConstruccion vE = _dal.ConstruirEdificio(ceid.IdTipoEdificio);
+            ValidarConstruccion vE = _dal.ConstruirEdificio(ceid.IdTipoEdificio, Tenant, NombreJugador);
 
             //Checkear si la posicion esta vacia
             bool vacia = false;
@@ -50,7 +50,7 @@ namespace BusinessLogicLayer
 
             if(vacia && suficientesRecursos)
             {
-                return _dal.PersistirEdificio(ceid);
+                return _dal.PersistirEdificio(ceid, Tenant, NombreJugador);
             }
             else
             {
@@ -58,11 +58,11 @@ namespace BusinessLogicLayer
             }
         }
 
-        public int EntrenarUnidad(EUInputData euid)
+        public int EntrenarUnidad(EUInputData euid, string Tenant, string NombreJugador)
         {
             //TODO: ACTUALIZAR BASE
 
-            ValidarUnidad vU = _dal.EntrenarUnidad(euid.IdTipoUnidad);
+            ValidarUnidad vU = _dal.EntrenarUnidad(euid.IdTipoUnidad, Tenant, NombreJugador);
 
             //Checkear si tiene recursos suficientes
             int cantidad = 0;
@@ -78,7 +78,7 @@ namespace BusinessLogicLayer
                 EUInputData newEUID = new EUInputData();
                 newEUID.IdTipoUnidad = euid.IdTipoUnidad;
                 newEUID.Cantidad = cantidad;
-                if (_dal.PersistirUnidades(newEUID))
+                if (_dal.PersistirUnidades(newEUID, Tenant, NombreJugador))
                 {
                     return cantidad;
                 }

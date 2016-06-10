@@ -35,10 +35,10 @@ namespace ServiceLayer
         Juego GetAllDataJuego(string tenant);
 
         [OperationContract]
-        bool ConstruirEdificio(CEInputData ceid);
+        bool ConstruirEdificio(CEInputData ceid, string Tenant, string NombreJugador);
 
         [OperationContract]
-        int EntrenarUnidad(EUInputData euid);
+        int EntrenarUnidad(EUInputData euid, string Tenant, string NombreJugador);
 
         [OperationContract]
         ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador);

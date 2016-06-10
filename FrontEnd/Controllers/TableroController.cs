@@ -100,7 +100,7 @@ namespace FrontEnd.Controllers
 
 
         [HttpPost]
-        public ActionResult ConstruirEdificio(Models.CEInputDataModel ceid)
+        public ActionResult ConstruirEdificio(string tenant, Models.CEInputDataModel ceid)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace FrontEnd.Controllers
                 ceInputData.PosFila = ceid.PosFila;
                 ceInputData.PosColumna = ceid.PosColumna;
 
-                bool ret = client.ConstruirEdificio(ceInputData);
+                bool ret = client.ConstruirEdificio(ceInputData, tenant, Request.Cookies["clienteId"].Value);
                 
                 return Json(new { sucess = true, ret = ret});
             }
@@ -123,7 +123,7 @@ namespace FrontEnd.Controllers
         }
 
         [HttpPost]
-        public ActionResult EntrenarUnidad(Models.EUInputDataModel euid)
+        public ActionResult EntrenarUnidad(string tenant, Models.EUInputDataModel euid)
         {
             try
             {
@@ -134,7 +134,7 @@ namespace FrontEnd.Controllers
                 euInputData.IdTipoUnidad = euid.IdTipoUnidad;
                 euInputData.Cantidad = euid.Cantidad;
 
-                int ret = client.EntrenarUnidad(euInputData);
+                int ret = client.EntrenarUnidad(euInputData, tenant, Request.Cookies["clienteId"].Value);
 
                 return Json(new { sucess = true, ret = ret });
             }
