@@ -32,11 +32,14 @@ namespace DataAccessLayer
             collection = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
         }
 
-        //public void InicializarConstruccion(string idUsuario)
-        //{
-        //    TableroConstruccion tableroConstruccionInicial = new TableroConstruccion(idUsuario);
-        //    collection.InsertOne(tableroConstruccionInicial);
-        //}
+        public void InicializarConstruccion(string idUsuario, string nombreJuego)
+        {
+            IDALJuego iDALJuego = new DALJuego();
+            Shared.Entities.Juego juego = iDALJuego.GetJuego(this.nombreJuego);
+            juego.IdJugador = idUsuario;
+            juego.DataJugador = new Shared.Entities.DataActual();
+            collection.InsertOne(juego);
+        }
 
         //public TableroConstruccion getTableroConstruccion(string idUsuario)
         //{
@@ -126,7 +129,7 @@ namespace DataAccessLayer
         //        collection.ReplaceOne(tablero => tablero.idUsuario == tableroConstruccion.idUsuario, tableroConstruccion);
         //}
 
-        
+
         //SERVICIOS
         public Shared.Entities.ValidarConstruccion ConstruirEdificio(int IdEdificio)
         {
