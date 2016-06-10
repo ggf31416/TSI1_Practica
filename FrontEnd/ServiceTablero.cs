@@ -336,11 +336,11 @@ namespace Shared.Entities
         
         private int EstadoField;
         
-        private int IdField;
+        private string IdField;
         
         private int IdDisenadorField;
         
-        private int IdJugadorField;
+        private string IdJugadorField;
         
         private string ImagenField;
         
@@ -414,7 +414,7 @@ namespace Shared.Entities
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Id
+        public string Id
         {
             get
             {
@@ -440,7 +440,7 @@ namespace Shared.Entities
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int IdJugador
+        public string IdJugador
         {
             get
             {
@@ -1698,7 +1698,7 @@ namespace Shared.Entities
         
         private int ProduccionField;
         
-        private int TotalField;
+        private float TotalField;
         
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData
         {
@@ -1726,7 +1726,7 @@ namespace Shared.Entities
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Total
+        public float Total
         {
             get
             {
@@ -1751,7 +1751,9 @@ namespace Shared.Entities
         
         private Shared.Entities.EstadoData.EstadoEnum EstadoField;
         
-        private int TiempoField;
+        private long FaltanteField;
+        
+        private System.DateTime FinField;
         
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData
         {
@@ -1792,15 +1794,28 @@ namespace Shared.Entities
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Tiempo
+        public long Faltante
         {
             get
             {
-                return this.TiempoField;
+                return this.FaltanteField;
             }
             set
             {
-                this.TiempoField = value;
+                this.FaltanteField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime Fin
+        {
+            get
+            {
+                return this.FinField;
+            }
+            set
+            {
+                this.FinField = value;
             }
         }
         
@@ -1814,6 +1829,12 @@ namespace Shared.Entities
             
             [System.Runtime.Serialization.EnumMemberAttribute()]
             C = 1,
+            
+            [System.Runtime.Serialization.EnumMemberAttribute()]
+            Puedo = 2,
+            
+            [System.Runtime.Serialization.EnumMemberAttribute()]
+            NoPuedo = 3,
         }
     }
     
@@ -2209,7 +2230,7 @@ public interface IServiceTablero
     bool ConstruirEdificio(Shared.Entities.CEInputData ceid);
     
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/EntrenarUnidad", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/EntrenarUnidadResponse")]
-    bool EntrenarUnidad(Shared.Entities.EUInputData euid);
+    int EntrenarUnidad(Shared.Entities.EUInputData euid);
     
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/DesarrollarTecnologia", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/DesarrollarTecnologiaResponse")]
     bool DesarrollarTecnologia(string tenant, string idJugador, int idTecnologia);
@@ -2289,7 +2310,7 @@ public partial class ServiceTableroClient : System.ServiceModel.ClientBase<IServ
         return base.Channel.ConstruirEdificio(ceid);
     }
     
-    public bool EntrenarUnidad(Shared.Entities.EUInputData euid)
+    public int EntrenarUnidad(Shared.Entities.EUInputData euid)
     {
         return base.Channel.EntrenarUnidad(euid);
     }

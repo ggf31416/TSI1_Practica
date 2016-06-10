@@ -208,7 +208,7 @@ namespace FrontEnd.Controllers
             foreach(var eR in juego.DataJugador.EstadoRecursos)
             {
                 Models.EstadoRecursoModel eRM = new Models.EstadoRecursoModel();
-                eRM.Total = eR.Value.Total;
+                eRM.Total = (int)eR.Value.Total;
                 eRM.Produccion = eR.Value.Produccion;
 
                 ret.DataJugador.EstadoRecursos.Add(eR.Key, eRM);

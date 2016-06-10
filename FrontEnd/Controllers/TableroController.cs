@@ -134,7 +134,7 @@ namespace FrontEnd.Controllers
                 euInputData.IdTipoUnidad = euid.IdTipoUnidad;
                 euInputData.Cantidad = euid.Cantidad;
 
-                bool ret = client.EntrenarUnidad(euInputData);
+                int ret = client.EntrenarUnidad(euInputData);
 
                 return Json(new { sucess = true, ret = ret });
             }

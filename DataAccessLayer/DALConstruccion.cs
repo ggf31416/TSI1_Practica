@@ -199,9 +199,9 @@ namespace DataAccessLayer
             return null;
         }
 
-        public void PersistirUnidades(Shared.Entities.EUInputData euid)
+        public bool PersistirUnidades(Shared.Entities.EUInputData euid)
         {
-
+            return false;
         }
 
         //public void AddPrueba(Prueba prueba)
