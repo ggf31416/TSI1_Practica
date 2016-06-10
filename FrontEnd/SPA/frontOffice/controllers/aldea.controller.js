@@ -1,9 +1,9 @@
 ﻿(function () {
 'use strict';
-angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService",
+angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService", "juegoService",
         "edificiosService", "unidadesService", '$scope', '$rootScope', '$interval',
 
-    function ($http, $q, aldeasService, edificiosService, unidadesService, $scope, $rootScope, $interval) {
+    function ($http, $q, aldeasService, juegoService, edificiosService, unidadesService, $scope, $rootScope, $interval) {
 
         //--------------Inicializacion de variables---------------------
         /*$rootScope.listaRecursos = [
@@ -103,12 +103,14 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                         {
                                             Nombre: "Pepe",
                                             Apellido: "Rodriguez",
-                                            Username: "aaa"
+                                            Username: "aaa",
+                                            Id: "10209545762984761"
                                         },
                                         {
                                             Nombre: "Juan",
                                             Apellido: "Rodriguez",
-                                            Username: "bbb"
+                                            Username: "bbb",
+                                            Id: "10209545762984761"
                                         }
                                     ]
 
@@ -326,6 +328,13 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             $scope.unidadesAconstruir = jQuery.grep($scope.unidadesAconstruir, function (value) {
                 return value.Id != Id;
             });
+        }
+
+        $scope.iniciarAtaque = function (id) {
+            var jsonAtaque = {
+                Enemigo: id
+            };
+            juegoService.iniciarAtaque(jsonAtaque);
         }
     }
 ]);
