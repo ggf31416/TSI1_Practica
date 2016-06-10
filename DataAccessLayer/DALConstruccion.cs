@@ -98,7 +98,7 @@ namespace DataAccessLayer
                 throw new DALConstruccionException("ERROR:No existe el usuario " + idUsuario);
             DateTime now = new DateTime();
             bool necesitaUpdate = false;
-            var dicEntidades = juego.tipo_entidad.ToDictionary(e => e.Id);
+            var dicEntidades = juego.TipoEntidad.ToDictionary(e => e.Id);
             foreach (var infoCelda in tableroConstruccion.lstInfoCelda)
             {
                 if (!infoCelda.terminado)

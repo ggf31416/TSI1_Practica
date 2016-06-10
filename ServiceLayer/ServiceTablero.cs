@@ -14,10 +14,12 @@ namespace ServiceLayer
     public class ServiceTablero : IServiceTablero
     {
         private static IBLTablero blHandler;
+        private static IBLJuego blJuegoHandler;
 
         public ServiceTablero()
         {
             blHandler = Program.blHandler;
+            blJuegoHandler = Program.blJuegoHandler;
         }
 
         public void JugarUnidad(InfoCelda infoCelda) {
@@ -50,6 +52,12 @@ namespace ServiceLayer
             blHandler.login(cliente, idJuego);
         }
 
+
+        //DATA JUEGO
+        public Juego GetAllDataJuego(Int32 idJuego)
+        {
+            return blJuegoHandler.GetAllDataJuego(idJuego);
+        }
 
     }
 }

@@ -50,6 +50,12 @@ namespace FrontEnd.ServiceTablero {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/login", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/loginResponse")]
         System.Threading.Tasks.Task loginAsync(Shared.Entities.Cliente cliente, int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetAllDataJuego", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetAllDataJuegoResponse")]
+        Shared.Entities.Juego GetAllDataJuego(int idJuego);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetAllDataJuego", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetAllDataJuegoResponse")]
+        System.Threading.Tasks.Task<Shared.Entities.Juego> GetAllDataJuegoAsync(int idJuego);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -125,6 +131,14 @@ namespace FrontEnd.ServiceTablero {
         
         public System.Threading.Tasks.Task loginAsync(Shared.Entities.Cliente cliente, int idJuego) {
             return base.Channel.loginAsync(cliente, idJuego);
+        }
+        
+        public Shared.Entities.Juego GetAllDataJuego(int idJuego) {
+            return base.Channel.GetAllDataJuego(idJuego);
+        }
+        
+        public System.Threading.Tasks.Task<Shared.Entities.Juego> GetAllDataJuegoAsync(int idJuego) {
+            return base.Channel.GetAllDataJuegoAsync(idJuego);
         }
     }
 }
