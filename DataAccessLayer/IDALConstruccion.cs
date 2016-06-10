@@ -10,8 +10,7 @@ namespace DataAccessLayer
 {
     public interface IDALConstruccion
     {
-
-        //void InicializarConstruccion(string idUsuario);
+        void InicializarConstruccion(string idUsuario, string nombreJuego);
 
         //TableroConstruccion getTableroConstruccion(string idUsuario);
 

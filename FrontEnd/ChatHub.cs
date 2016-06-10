@@ -14,5 +14,10 @@ namespace FrontEnd
             Clients.All.broadcastMessage(name, message);
             Clients.Caller.broadcastMessage(name, "mensaje enivado");
         }
+
+        public void agregarUsuarioGrupo(string idUsuario,string grupo)
+        {
+            Groups.Add(idUsuario, grupo);
+        }
     }
 }

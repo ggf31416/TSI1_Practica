@@ -19,5 +19,44 @@
             return promise;
 
         };
+
+        this.construirEdificio = function (json) {
+            var ret = "";
+            console.debug(JSON.stringify(json));
+            $.ajax({
+                url: '/' + $rootScope.NombreJuego + '/Tablero/ConstruirEdificio/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(json),
+                async: false,
+                success: function (response) {
+                    ret = response;
+                },
+                error: function (xhr, status, error) {
+                    alert("Error al crear edificio");
+                }
+            });
+            return ret;
+        }
+
+        this.entrenarUnidades = function (json) {
+            var ret = "";
+            console.debug(JSON.stringify(json));
+            $.ajax({
+                url: '/' + $rootScope.NombreJuego + '/Tablero/EntrenarUnidad/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(json),
+                async: false,
+                success: function (response) {
+                    ret = response;
+                },
+                error: function (xhr, status, error) {
+                    alert("Error al crear edificio");
+                }
+            });
+            return ret;
+        }
+        
     }
 })();

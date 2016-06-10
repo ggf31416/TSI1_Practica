@@ -16,5 +16,6 @@ namespace BusinessLogicLayer
         bool authenticate(ClienteJuego cliente, string nombreJuego);
         List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt);
         void IniciarAtaque(InfoAtaque info);
+
     }
 }

@@ -4,13 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace FrontEnd.Models
+namespace FrontEnd.Hubs
 {
     public class IdentificadorSignalR : IUserIdProvider
     {
         public string GetUserId(IRequest request)
         {
-            throw new NotImplementedException("GetUserId no implementado");
+            var cookie = request.Cookies["clienteId"];
+            string clienteId = cookie.Value;
+            return clienteId;
         }
     }
 }

@@ -19,10 +19,13 @@ namespace DataAccessLayer
         private static IMongoClient client = new MongoClient(connectionstring);
         private IMongoDatabase database;
         private IMongoCollection<Shared.Entities.Juego> collection;
-        private string nombreJuego;
-        private string idUsuario;
+        private string nombreJuego = "AOE";
+        private string idUsuario = "10209545762984761";
 
-        public DALConstruccion(){}
+        public DALConstruccion(){
+            database = client.GetDatabase(nombreJuego);
+            collection = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
+        }
 
         public DALConstruccion(string nombreJuego, string idUsuario)
         {
@@ -32,11 +35,23 @@ namespace DataAccessLayer
             collection = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
         }
 
-        //public void InicializarConstruccion(string idUsuario)
-        //{
-        //    TableroConstruccion tableroConstruccionInicial = new TableroConstruccion(idUsuario);
-        //    collection.InsertOne(tableroConstruccionInicial);
-        //}
+        public void InicializarConstruccion(string idUsuario, string nombreJuego)
+        {
+            IDALJuego iDALJuego = new DALJuego();
+            Shared.Entities.Juego juego = iDALJuego.GetJuego(this.nombreJuego);
+            juego.IdJugador = idUsuario;
+            juego.DataJugador = new Shared.Entities.DataActual();
+            juego.DataJugador.UltimaActualizacion = DateTime.Now;
+            juego.DataJugador.EstadoRecursos = new Dictionary<string, Shared.Entities.EstadoRecurso>();
+            foreach (var recurso in juego.TipoRecurso)
+            {
+                Shared.Entities.EstadoRecurso EstadoRecurso = new Shared.Entities.EstadoRecurso();
+                EstadoRecurso.Total = 99999;
+                EstadoRecurso.Produccion = 12345;
+                juego.DataJugador.EstadoRecursos.Add(recurso.Id.ToString(), EstadoRecurso);
+            }
+            collection.InsertOne(juego);
+        }
 
         //public TableroConstruccion getTableroConstruccion(string idUsuario)
         //{
@@ -126,7 +141,7 @@ namespace DataAccessLayer
         //        collection.ReplaceOne(tablero => tablero.idUsuario == tableroConstruccion.idUsuario, tableroConstruccion);
         //}
 
-        
+
         //SERVICIOS
         public Shared.Entities.ValidarConstruccion ConstruirEdificio(int IdEdificio)
         {
@@ -150,7 +165,7 @@ namespace DataAccessLayer
                 validarConstruccion.Recursos = new Dictionary<int, int>();
                 foreach(var recur in juego.DataJugador.EstadoRecursos)
                 {
-                    validarConstruccion.Recursos.Add(recur.Key, (int)recur.Value.Total);
+                    validarConstruccion.Recursos.Add(Int32.Parse(recur.Key), (int)recur.Value.Total);
                 }
                 return validarConstruccion;
             }
@@ -182,6 +197,7 @@ namespace DataAccessLayer
                 tableroCelda.IdTipoEdificio = ceid.IdTipoEdificio;
                 tableroCelda.PosColumna = ceid.PosColumna;
                 tableroCelda.PosFila = ceid.PosFila;
+                tableroCelda.Estado = new Shared.Entities.EstadoData();
                 tableroCelda.Estado.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
                 tableroCelda.Estado.Fin = DateTime.Now.AddSeconds((int)TipoEdificio.TiempoConstruccion);
                 juego.Tablero.Celdas.Add(tableroCelda);
