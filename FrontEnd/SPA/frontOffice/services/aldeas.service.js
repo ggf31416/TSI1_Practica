@@ -93,5 +93,88 @@
 
         };
         
+        this.getJugadoresAtacables = function () {
+            var defered = $q.defer();
+            var promise = defered.promise;
+
+            $http.get('/' + $rootScope.NombreJuego + '/Juego/GetJugadoresAtacables/')
+            .success(function (data) {
+                defered.resolve(data.ret);
+            })
+            .error(function (err) {
+                defered.reject("Error al abandonar clan")
+            });
+
+            return promise;
+
+        };
+
+        //CLANES
+        this.crearClan = function (json) {
+            var ret = "";
+            console.debug(JSON.stringify(json));
+            $.ajax({
+                url: '/' + $rootScope.NombreJuego + '/Juego/CrearClan/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(json),
+                async: false,
+                success: function (response) {
+                    ret = response;
+                },
+                error: function (xhr, status, error) {
+                    alert("Error al crear clan");
+                }
+            });
+            return ret;
+        }
+
+        this.abandonarClan = function () {
+            var defered = $q.defer();
+            var promise = defered.promise;
+
+            $http.get('/' + $rootScope.NombreJuego + '/Juego/AbandonarClan/')
+            .success(function (data) {
+                defered.resolve(data.ret);
+            })
+            .error(function (err) {
+                defered.reject("Error al abandonar clan")
+            });
+
+            return promise;
+
+        };
+
+        this.getJugadoresSinClan = function () {
+            var defered = $q.defer();
+            var promise = defered.promise;
+
+            $http.get('/' + $rootScope.NombreJuego + '/Juego/GetJugadoresSinClan/')
+            .success(function (data) {
+                defered.resolve(data.ret);
+            })
+            .error(function (err) {
+                defered.reject("Error al abandonar clan")
+            });
+
+            return promise;
+
+        };
+
+        this.soyAdministrador = function () {
+            var defered = $q.defer();
+            var promise = defered.promise;
+
+            $http.get('/' + $rootScope.NombreJuego + '/Juego/SoyAdministrador/')
+            .success(function (data) {
+                defered.resolve(data.ret);
+            })
+            .error(function (err) {
+                defered.reject("Error")
+            });
+
+            return promise;
+
+        };
     }
 })();
