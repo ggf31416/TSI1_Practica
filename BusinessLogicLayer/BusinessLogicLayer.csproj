@@ -119,10 +119,12 @@
   <ItemGroup>
     <Compile Include="AccionMsg.cs" />
     <Compile Include="Batalla.cs" />
+    <Compile Include="BLJuego.cs" />
     <Compile Include="BLTablero.cs" />
     <Compile Include="BLServiceClient.cs" />
     <Compile Include="Edificio.cs" />
     <Compile Include="Entidad.cs" />
+    <Compile Include="IBLJuego.cs" />
     <Compile Include="IBLTablero.cs" />
     <Compile Include="Jugador.cs" />
     <Compile Include="Pathfinding\General\Pair.cs" />

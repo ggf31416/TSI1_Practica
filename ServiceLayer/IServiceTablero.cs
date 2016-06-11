@@ -29,5 +29,10 @@ namespace ServiceLayer
 
         [OperationContract]
         void login(Cliente cliente, int idJuego);
+
+
+        //DATA JUEGO
+        [OperationContract]
+        Juego GetAllDataJuego(Int32 idJuego);
     }
 }
