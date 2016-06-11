@@ -28,7 +28,8 @@ namespace BusinessLogicLayer
 
         public bool DesarrollarTecnologia(string tenant, string idJugador, int idTecnologia)
         {
-            Juego j = blHandler.GetAllDataJuego(tenant,idJugador);
+            // pedir tenant
+            Juego j = blHandler.GetAllDataJuego(idJugador);
 
             
             var estadoT = j.DataJugador.EstadoTecnologias;
