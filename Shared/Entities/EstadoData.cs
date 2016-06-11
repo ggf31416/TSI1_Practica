@@ -22,16 +22,11 @@ namespace Shared.Entities
 
         [DataMember]
         public int Cantidad { get; set; }
-
-        [DataMember]
-        public long Faltante { get; set; }
-
-
-
-        /*
+        
         [DataMember]
         public DateTime Fin { get; set; }
 
+        [MongoDB.Bson.Serialization.Attributes.BsonIgnore]
         [DataMember]
         public long Faltante
         {
@@ -39,6 +34,6 @@ namespace Shared.Entities
                 return (long)((Fin - DateTime.Now).TotalMilliseconds);
             }
             protected set { }
-        }*/
+        }
     }
 }

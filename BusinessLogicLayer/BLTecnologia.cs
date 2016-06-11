@@ -52,7 +52,7 @@ namespace BusinessLogicLayer
             if (!consumirRecursosSiPuedo(j, j.Tecnologias[idTecnologia])) return false;
             if (estadoT.ContainsKey(idTecnologia))
             {
-                EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Faltante =  j.Tecnologias[idTecnologia].Tiempo * 1000 };
+                EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Fin = DateTime.Now.AddSeconds( j.Tecnologias[idTecnologia].Tiempo) };
                 estadoT.Add(idTecnologia, estado);
             }
             // guardar juego
@@ -66,7 +66,7 @@ namespace BusinessLogicLayer
             Tecnologia tec = j.Tecnologias.FirstOrDefault(t => t.Id == idTecnologia);
             if (tec != null) {
                 AplicarTecnologia(j, tec);
-                j.DataJugador.EstadoTecnologias[idTecnologia].Faltante = 0;
+                
                 j.DataJugador.EstadoTecnologias[idTecnologia].Estado = EstadoData.EstadoEnum.A;
             }
         }
