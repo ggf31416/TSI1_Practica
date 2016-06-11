@@ -18,12 +18,12 @@ namespace DataAccessLayer
         const string connectionstring = "mongodb://40.84.2.155";
         private static IMongoClient _client = new MongoClient(connectionstring);
 
-        public Juego GetJuego(string tenant)
+        public JuegoIndependiente GetJuego(string tenant)
         {
             IMongoDatabase _database = _client.GetDatabase(tenant.ToString());
-            IMongoCollection<Juego> collection = _database.GetCollection<Juego>("juego");
+            IMongoCollection<JuegoIndependiente> collection = _database.GetCollection<JuegoIndependiente>("juego");
 
-            var query = from juego in collection.AsQueryable<Juego>()
+            var query = from juego in collection.AsQueryable<JuegoIndependiente>()
                         where juego.Nombre == tenant
                         select juego;
 
