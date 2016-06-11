@@ -1,14 +1,14 @@
 ﻿(function () {
     'use strict';
-    angular.module('aldeas').service('aldeasService', ["$http", "$q", aldeaService]);
+    angular.module('aldeas').service('aldeasService', ["$http", "$q", "$rootScope", aldeaService]);
 
 
-    function aldeaService($http, $q) {
-        this.getAllData = function () {
+    function aldeaService($http, $q, $rootScope) {
+        this.getAllData = function (tenant) {
             var defered = $q.defer();
             var promise = defered.promise;
 
-            $http.get('/Juego/GetAllDataJuego/' + 6)
+            $http.get('/' + $rootScope.NombreJuego + '/Juego/GetAllDataJuego/')
             .success(function (data) {
                 defered.resolve(data.ret);
             })

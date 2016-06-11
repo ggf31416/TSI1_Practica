@@ -28,7 +28,10 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             }
         },1000);
         
-        aldeasService.getAllData()
+        $scope.initVariables = function () {
+                    $rootScope.NombreJuego = tenant;
+                    console.debug($rootScope.NombreJuego);
+                    aldeasService.getAllData()
                                 .then(function (data) {
                                     console.debug(data);
                                     $rootScope.listaEdificios = data.TipoEdificios;
@@ -46,6 +49,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                 .catch(function (err) {
                                     alert(err)
                                 });
+        }
 
         
         //--------------Fin inicializacion de variables---------------------
@@ -91,7 +95,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
         $scope.entidad = null;
 
         $scope.editCell = function (casilla) {
-            if(id == -1){
+            if (casilla.Id == -1) {
                 if ($scope.aux == undefined){
                     //Abro cuadro para contruir
                     $scope.editCasilla = casilla;
@@ -105,8 +109,9 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                 var id = casilla.Id;
                 //abro cuadro del edificio
                 $scope.entidad = findEdificioInArray($rootScope.listaEdificios, id)[0];
-                getUnidades();
                 console.debug($scope.entidad);
+                getUnidades();
+                
                 $scope.unidadesAconstruir = [];
                 $('#dialogoDatosEdificio').modal('show');
             }
