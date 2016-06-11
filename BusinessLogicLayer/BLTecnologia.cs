@@ -11,13 +11,17 @@ namespace BusinessLogicLayer
     {
         private IBLJuego blHandler;
 
+        public BLTecnologia(IBLJuego juegoHandler)
+        {
+            blHandler = juegoHandler;
+        }
 
         private bool checkarDependencias(Juego j,int IdTecnologia)
         {
             var estadoT = j.DataJugador.EstadoTecnologias;
             if (estadoT.ContainsKey(IdTecnologia))
             {
-                return estadoT[IdTecnologia].Estado == EstadoData.EstadoEnum.A;
+                return estadoT[IdTecnologia].Estado == EstadoData.EstadoEnum.Puedo;
             }
             return false;
         }
@@ -84,6 +88,7 @@ namespace BusinessLogicLayer
             {
                 AplicarAccion(j, a, entidades);
             }
+            ActualizarTecnologiasConstruibles(j, tec);
             // guardar juego
         }
 
@@ -112,9 +117,25 @@ namespace BusinessLogicLayer
             }
         }
 
+        private bool puedoDesarrollarDep(Juego j, Tecnologia tec)
+        {
+            var estado = j.DataJugador.EstadoTecnologias;
+            return tec.TecnologiaDependencias.All(dep => estado[dep.IdTecnologiaDepende].Estado == EstadoData.EstadoEnum.A);
+        }
+
         private void ActualizarTecnologiasConstruibles(Juego j, Tecnologia tec)
         {
-            
+            var estado = j.DataJugador.EstadoTecnologias;
+            foreach (var id in estado.Keys)
+            {
+                if (estado[id].Estado == EstadoData.EstadoEnum.NoPuedo)
+                {
+                    if (puedoDesarrollarDep(j, tec))
+                    {
+                        estado[id].Estado = EstadoData.EstadoEnum.Puedo;
+                    }
+                }
+            }
         }
     }
 
