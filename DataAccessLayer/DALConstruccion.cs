@@ -28,7 +28,8 @@ namespace DataAccessLayer
             database = client.GetDatabase(nombreJuego);
             collection = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
             IDALJuego iDALJuego = new DALJuego();
-            Shared.Entities.Juego juego = iDALJuego.GetJuego(nombreJuego);
+            Shared.Entities.JuegoIndependiente juegoIndependiente = iDALJuego.GetJuego(nombreJuego);
+            Shared.Entities.Juego juego = new Shared.Entities.Juego(juegoIndependiente);
             juego.IdJugador = idUsuario;
             juego.DataJugador = new Shared.Entities.DataActual();
             foreach (var recurso in juego.TipoRecurso)

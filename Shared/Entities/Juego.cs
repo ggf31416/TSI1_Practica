@@ -12,10 +12,29 @@ namespace Shared.Entities
     [DataContract]
     public class Juego
     {
+        public Juego() { }
+        public Juego(JuegoIndependiente juegoIndependiente)
+        {
+            this.Id = juegoIndependiente.Id;
+            this.IdJugador = juegoIndependiente.IdJugador;
+            this.Nombre = juegoIndependiente.Nombre;
+            this.Imagen = juegoIndependiente.Imagen;
+            this.Estado = juegoIndependiente.Estado;
+            this.Url = juegoIndependiente.Url;
+            this.IdDisenador = juegoIndependiente.IdDisenador;
+            this.Acciones = juegoIndependiente.Acciones;
+            this.Razas = juegoIndependiente.Razas;
+            this.Tecnologias = juegoIndependiente.Tecnologias;
+            this.TipoEdificios = juegoIndependiente.TipoEdificios;
+            this.TipoUnidades = juegoIndependiente.TipoUnidades;
+            this.TipoRecurso = juegoIndependiente.TipoRecurso;
+            this.Tablero = juegoIndependiente.Tablero;
+        }
+
         [DataMember]
-        [BsonId]
         public int Id { get; set; }
         [DataMember]
+        [BsonId]
         public string IdJugador { get; set; }
         [DataMember]
         public string Nombre { get; set; }
