@@ -11,10 +11,6 @@ namespace BusinessLogicLayer
     {
         private IBLJuego blHandler;
 
-        private void ActualizarTecnologias(string tenant, string idJugador)
-        {
-            throw new NotImplementedException();
-        }
 
         private bool checkarDependencias(Juego j,int IdTecnologia)
         {
@@ -52,23 +48,33 @@ namespace BusinessLogicLayer
             if (!consumirRecursosSiPuedo(j, j.Tecnologias[idTecnologia])) return false;
             if (estadoT.ContainsKey(idTecnologia))
             {
-                EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Tiempo = j.Tecnologias[idTecnologia].Tiempo };
+                EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Fin = DateTime.Now.AddSeconds(j.Tecnologias[idTecnologia].Tiempo) };
                 estadoT.Add(idTecnologia, estado);
             }
             // guardar juego
             return true;
         }
 
-        public void AplicarTecnologia(string tenant, string idJugador, int idTecnologia)
+        public void CompletarTecnologia(string tenant, string idJugador, int idTecnologia)
         {
             // pedir tenant
             Juego j = blHandler.GetAllDataJuego(tenant);
-            
-
+            Tecnologia tec = j.Tecnologias.FirstOrDefault(t => t.Id == idTecnologia);
+            if (tec != null) {
+                AplicarTecnologia(j, tec);
+                j.DataJugador.EstadoTecnologias[idTecnologia].Fin = DateTime.Now;
+                j.DataJugador.EstadoTecnologias[idTecnologia].Estado = EstadoData.EstadoEnum.A;
+            }
         }
 
-        public void AplicarTecnologia(Juego j ,Tecnologia tec)
+        private bool estaCompleta(Juego j, int idTecnologia)
         {
+            return j.DataJugador.EstadoTecnologias[idTecnologia].Fin < DateTime.Now;
+        }
+
+        private void AplicarTecnologia(Juego j ,Tecnologia tec)
+        {
+
             var entidades = j.TipoEdificios.Cast<TipoEntidad>().ToDictionary(e => e.Id);
             foreach(var u in j.TipoUnidades)
             {
@@ -78,8 +84,9 @@ namespace BusinessLogicLayer
             {
                 AplicarAccion(j, a, entidades);
             }
-            // juardar juego
+            // guardar juego
         }
+
 
         private void AplicarAccion(Juego j ,Accion accion,Dictionary<int,TipoEntidad> entidades)
         {
@@ -104,11 +111,16 @@ namespace BusinessLogicLayer
                 }
             }
         }
+
+        private void ActualizarTecnologiasConstruibles(Juego j, Tecnologia tec)
+        {
+            
+        }
     }
 
 
 
 
 
-}
+
 }

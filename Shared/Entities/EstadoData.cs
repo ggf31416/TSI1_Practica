@@ -17,9 +17,22 @@ namespace Shared.Entities
 
         [DataMember]
         public EstadoEnum Estado { get; set; }
+
         [DataMember]
-        public int Tiempo { get; set; }
+        public DateTime Fin { get; set; }
+
         [DataMember]
         public int Cantidad { get; set; }
+
+
+        
+        [DataMember]
+        public long Faltante
+        {
+            get {
+                return (long)((Fin - DateTime.Now).TotalMilliseconds);
+            }
+            protected set { }
+        }
     }
 }
