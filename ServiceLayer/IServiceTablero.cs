@@ -48,5 +48,24 @@ namespace ServiceLayer
 
         [OperationContract]
         bool DesarrollarTecnologia(string tenant, string idJugador, int idTecnologia);
+
+
+        //SOCIALES
+        [OperationContract]
+        List<ClienteJuego> GetJugadoresAtacables(string Tenant, string NombreJugador);
+
+        //CLANES
+        [OperationContract]
+        void CrearClan(string NombreClan, string Tenant, string IdJugador);
+        [OperationContract]
+        bool AbandonarClan(string Tenant, string IdJugador);
+        [OperationContract]
+        List<ClienteJuego> GetJugadoresSinClan(string Tenant, string IdJugador);
+        [OperationContract]
+        bool AgregarJugadorClan(ClienteJuego Jugador, string Tenant, string IdJugador);
+        [OperationContract]
+        List<ClienteJuego> GetJugadoresEnElClan(string Tenant, string IdJugador);
+        [OperationContract]
+        bool SoyAdministrador(string Tenant, string IdJugador);
     }
 }
