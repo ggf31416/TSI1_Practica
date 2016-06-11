@@ -10,6 +10,6 @@ namespace DataAccessLayer
 {
     public interface IDALJuego
     {
-        Juego GetJuego(string idJuego);
+        Juego GetJuego(string tenant);
     }
 }

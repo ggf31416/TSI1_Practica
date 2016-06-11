@@ -1,62 +1,55 @@
 ﻿(function () {
 'use strict';
 angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService",
-        "edificiosService", "unidadesService", '$scope', '$rootScope',
+        "edificiosService", "unidadesService", '$scope', '$rootScope', '$interval',
 
-    function ($http, $q, aldeasService, edificiosService, unidadesService, $scope, $rootScope) {
+    function ($http, $q, aldeasService, edificiosService, unidadesService, $scope, $rootScope, $interval) {
 
         //--------------Inicializacion de variables---------------------
-        /*$rootScope.tablero = [
-            { cols: [{ Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}] },
-            { cols: [{ Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 1, Imagen: "/SPA/backOffice/ImagenesSubidas/cuartel.jpg" }, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}] },
-            { cols: [{ Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}] },
-            { cols: [{ Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}] },
-            { cols: [{ Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}] },
-            { cols: [{ Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}] },
-            { cols: [{ Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}] },
-            { cols: [{ Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}, { Id: 0, Imagen: "/SPA/backOffice/ImagenesSubidas/pasto.jpg"}] }
-        ]
-
         $rootScope.listaRecursos = [
                {
                    Nombre: "Oro",
                    Imagen: "/SPA/backOffice/ImagenesSubidas/oro.jpg",
-                   Valor: 134
+                   Valor: 134,
+                   Produccion: 1
                },
                {
                    Nombre: "Madera",
                    Imagen: "/SPA/backOffice/ImagenesSubidas/madera.jpg",
-                   Valor: 546
+                   Valor: 546,
+                   Produccion: 2
                }
         ];
         
-        $q.all([
-            edificiosService.getAllTipoEdificios(),
-            unidadesService.getAllTipoUnidades()
-        ]).then(function (data) {
-            $rootScope.listaEdificios = data[0];
-            $rootScope.listaUnidades = data[1];
-           // window.createGame();
-        });
-        */
+        //timer para actualizar recursos
+        $interval(function () {
+            for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
+                $rootScope.listaRecursos[i].Valor = $rootScope.listaRecursos[i].Valor + $rootScope.listaRecursos[i].Produccion;
+            }
+        },1000);
         
-        aldeasService.getAllData()
+        $scope.initVariables = function () {
+                    $rootScope.NombreJuego = tenant;
+                    console.debug($rootScope.NombreJuego);
+                    aldeasService.getAllData()
                                 .then(function (data) {
                                     console.debug(data);
-                                    //$rootScope.tablero = data;
                                     $rootScope.listaEdificios = data.TipoEdificios;
                                     console.debug($rootScope.listaEdificios);
                                     $rootScope.listaUnidades = data.TipoUnidades;
-                                    $rootScope.listaRecursos = data.TipoRecursos;
+                                    //$rootScope.listaRecursos = data.TipoRecursos;
                                     $rootScope.tablero = data.Tablero;
                                     $rootScope.listaTecnologias = data.Tecnologias;
                                     $rootScope.dataJuego = data.DataJuego;
 
                                     $scope.style = { "background-image": "url('" + $rootScope.tablero.ImagenFondo + "')" };
+
+                                    $rootScope.tablero.enConstruccion = "https://storagegabilo.blob.core.windows.net/imagenes/gente_en_obra.png";
                                     })
                                 .catch(function (err) {
                                     alert(err)
                                 });
+        }
 
         
         //--------------Fin inicializacion de variables---------------------
@@ -64,6 +57,8 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
         $scope.getImgCasilla = function (id) {
             if (id == -1) {
                 return $rootScope.tablero.ImagenTerreno;
+            } if(id == -5){
+                return $rootScope.tablero.enConstruccion;
             } else {
                 var edificio = findEdificioInArray($rootScope.listaEdificios, id)[0];
                 return edificio.Imagen;
@@ -88,18 +83,36 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             else return [];
         }
 
+        function getUnidades() {
+            $scope.unidadesDisponibles = [];
+            for (var i = 0; i < $scope.entidad.UnidadesAsociadas.length; i++) {
+                $scope.unidadesDisponibles.push(jQuery.grep($rootScope.listaUnidades, function (value) {
+                    return value.Id == $scope.entidad.UnidadesAsociadas[i];
+                })[0]);
+            }
+        }
+
         $scope.entidad = null;
 
         $scope.editCell = function (casilla) {
-            $scope.editCasilla = casilla;
-            var id = casilla.Id;
-            if(id == -1){
-                //Abro cuadro para contruir
-                $('#dialogoConstruir').modal('show');
-            }else{
+            if (casilla.Id == -1) {
+                if ($scope.aux == undefined){
+                    //Abro cuadro para contruir
+                    $scope.editCasilla = casilla;
+                    var id = casilla.Id;
+                    $('#dialogoConstruir').modal('show');
+                } else {
+                    alert("Ya hay un edificio en construccion");
+                }
+            } else {
+                $scope.editCasilla = casilla;
+                var id = casilla.Id;
                 //abro cuadro del edificio
                 $scope.entidad = findEdificioInArray($rootScope.listaEdificios, id)[0];
                 console.debug($scope.entidad);
+                getUnidades();
+                
+                $scope.unidadesAconstruir = [];
                 $('#dialogoDatosEdificio').modal('show');
             }
         }
@@ -114,14 +127,39 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             $('#dialogoDatosTecnologias').modal('hide');
         }
 
+        function getCosto(IdRecurso){
+            console.debug($scope.aux);
+        }
+
         $scope.addEdificio = function (id) {
-            var edificio = findEdificioInArray($rootScope.listaEdificios, id)[0];
-            $scope.editCasilla.Id = edificio.Id;
-            $scope.editCasilla.Imagen = edificio.Imagen;
+            
+            $scope.aux = findEdificioInArray($rootScope.listaEdificios, id)[0];
+            for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
+                $rootScope.listaRecursos[i].Valor = $rootScope.listaRecursos[i].Valor - getCosto($scope.aux, $rootScope.listaRecursos[i].Id);
+            }
+            $scope.editCasilla.Id = -5;
+            $scope.timerConstruccion = $interval(function () {
+                $scope.editCasilla.Id = $scope.aux.Id;
+                $interval.cancel($scope.timerConstruccion);
+                $scope.aux = undefined;
+            }, $scope.aux.TiempoConstruccion * 1000);
+            
             $('#dialogoConstruir').modal('hide');
         }
 
+        $scope.crearUnidad = function (e) {
+            $scope.unidadesAconstruir.push({
+                Id: e.Id,
+                Nombre: e.Nombre,
+                Cantidad: 0
+            })
+        }
 
+        $scope.removerUnidad = function (Id) {
+            $scope.unidadesAconstruir = jQuery.grep($scope.unidadesAconstruir, function (value) {
+                return value.Id != Id;
+            });
+        }
     }
 ]);
 })();

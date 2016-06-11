@@ -59,8 +59,9 @@ namespace FrontEnd.Controllers
 
 
         // GET: Aldea
-        public ActionResult Aldea()
+        public ActionResult Aldea(string tenant)
         {
+            ViewBag.Tenant = tenant;
             return View();
         }
 

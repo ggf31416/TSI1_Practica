@@ -9,6 +9,6 @@ namespace BusinessLogicLayer
 {
     public interface IBLJuego
     {
-        Juego GetAllDataJuego(string idJuego);
+        Juego GetAllDataJuego(string tenant);
     }
 }

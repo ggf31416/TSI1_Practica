@@ -5,6 +5,10 @@
     padding:0px;
 }
 
+.modalRows{
+    padding:10px;
+}
+
 .handPointer{
     cursor: pointer; 
 }
