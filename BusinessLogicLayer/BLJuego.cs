@@ -17,23 +17,14 @@ namespace BusinessLogicLayer
     {
         private IDALJuego _dal;
 
-        private Dictionary<string, Juego> cacheJuegos = new Dictionary<string, Juego>();
-
         public BLJuego(IDALJuego dal)
         {
             _dal = dal;
         }
 
-        public Juego GetAllDataJuego(string idJuego)
+        public Juego GetAllDataJuego(string tenant)
         {
-            if (cacheJuegos.ContainsKey(idJuego)){
-                return cacheJuegos[idJuego]; // retorno de memoria
-            }
-            var res = _dal.GetJuego(idJuego);
-            cacheJuegos[idJuego] = res;
-            return res;
+            return _dal.GetJuego(tenant);
         }
-
-
     }
 }
