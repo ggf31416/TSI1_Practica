@@ -59,5 +59,9 @@ namespace ServiceLayer
             return blJuegoHandler.GetAllDataJuego(idJuego);
         }
 
+        public List<int> GetTecnologias(string tenant, string idJugador)
+        {
+            return bl
+        }
     }
 }

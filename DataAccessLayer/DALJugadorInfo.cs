@@ -22,16 +22,17 @@ namespace DataAccessLayer
         private IMongoCollection<ConjuntosUnidadMongo> conjuntos;
         private IMongoCollection<JugadorRecursoMongo> recursos;
         private IMongoCollection<JugadorTecnologiasMongo> tecnologias;
-        private int idJuego;
+        private string idJuego;
 
-        public DALJugadorInfo(int idJuego)
+        public DALJugadorInfo(string idJuego)
         {
             this.idJuego = idJuego;
-            database = client.GetDatabase(idJuego.ToString());
+            //database = client.GetDatabase(idJuego.ToString());
+            setDB(idJuego);
             //collection = database.GetCollection<JugadorInfo>("construccion");
         }
 
-        private void setDB(int idJuego)
+        private void setDB(string idJuego)
         {
             this.idJuego = idJuego;
             database = client.GetDatabase(idJuego.ToString());
@@ -52,18 +53,18 @@ namespace DataAccessLayer
             return database.GetCollection<JugadorTecnologiasMongo>("jugTecnologias");
         }
 
-        private void inicializarColeccionTipos(int idJugador)
+        private void inicializarColeccionTipos(string idJugador)
         {
             conjuntos = coleccionUnidades();
             conjuntos.InsertOneAsync(new ConjuntosUnidadMongo() { IdJugador = idJugador });
         }
 
-        private void inicializarRecursos(int idJugador) {
+        private void inicializarRecursos(string idJugador) {
             recursos = coleccionRecursos();
             recursos.InsertOneAsync(new JugadorRecursoMongo() { IdJugador = idJugador });
         }
 
-        private void inicializarColleccionTecnologias(int idJugador)
+        private void inicializarColleccionTecnologias(string idJugador)
         {
             tecnologias = coleccionTecnologias();
             tecnologias.InsertOneAsync(new JugadorTecnologiasMongo() { IdJugador = idJugador });
@@ -76,7 +77,7 @@ namespace DataAccessLayer
             conjuntos.ReplaceOneAsync(c => c.IdJugador == doc.IdJugador, doc);
         }
 
-        public void incrementarUnidad(int idJugador,Shared.Entities.ConjuntoUnidades cu)
+        public void cambiarCantidadUnidad(string idJugador,Shared.Entities.ConjuntoUnidades cu)
         {
             conjuntos = coleccionUnidades();
 
@@ -97,7 +98,7 @@ namespace DataAccessLayer
             tecnologias.ReplaceOneAsync(x => x.IdJugador == doc.IdJugador, doc);
         }
 
-        public void inicializarJugadorInfo(int idUsuario,int idJuego)
+        public void inicializarJugadorInfo(string idUsuario,string idJuego)
         {
             setDB(idJuego);
             inicializarColeccionTipos(idUsuario);

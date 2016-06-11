@@ -10,7 +10,7 @@ namespace DataAccessLayer.Entities
     class JugadorRecursoMongo
     {
         [BsonId]
-        public int IdJugador;
+        public string IdJugador;
         public List<Shared.Entities.CantidadRecurso> Recursos { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,8 @@ namespace DataAccessLayer.Entities
 {
     class JugadorTecnologiasMongo
     {
-        public int IdJugador { get; set; }
+        [BsonId]
+        public string IdJugador { get; set; }
         public List<int> Tecnologias { get; set; } = new List<int>();
         public List<TecnologiaDesarrollo> EnDesarrollo = new List<TecnologiaDesarrollo>();
         public List<int> Desarrollables { get; set; } = new List<int>();
@@ -18,6 +20,5 @@ namespace DataAccessLayer.Entities
     {
         public int IdTecnologia;
         public DateTime TiempoFinalizacion { get; set; }
-        public bool Terminada { get; set; }
     }
 }

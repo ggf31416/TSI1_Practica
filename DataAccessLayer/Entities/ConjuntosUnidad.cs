@@ -11,7 +11,7 @@ namespace DataAccessLayer.Entities
     class ConjuntosUnidadMongo
     {
         [BsonId]
-        public int IdJugador;
+        public string IdJugador;
         public List<ConjuntoUnidades> Unidades { get; set; } = new List< ConjuntoUnidades>();
     }
 }

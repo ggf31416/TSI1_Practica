@@ -309,6 +309,7 @@
     <Compile Include="Controllers\TableroController.cs" />
     <Compile Include="Controllers\EntidadesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TecnologiaController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -385,6 +386,7 @@
     <Folder Include="Views\chat\" />
     <Folder Include="Views\Entidades\" />
     <Folder Include="Views\Tablero\" />
+    <Folder Include="Views\Tecnologia\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

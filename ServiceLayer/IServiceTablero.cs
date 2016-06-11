@@ -34,5 +34,10 @@ namespace ServiceLayer
         //DATA JUEGO
         [OperationContract]
         Juego GetAllDataJuego(Int32 idJuego);
+
+
+
+        [OperationContract]
+        List<int> GetTecnologias(string tenant, string idJugador);
     }
 }
