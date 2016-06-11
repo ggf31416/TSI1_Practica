@@ -584,7 +584,7 @@ namespace Shared.Entities
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="DataActual", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
     public partial class DataActual : object, System.Runtime.Serialization.IExtensibleDataObject
     {
@@ -597,6 +597,9 @@ namespace Shared.Entities
         
         private System.Collections.Generic.Dictionary<int, Shared.Entities.EstadoData> EstadoUnidadesField;
         
+        private System.DateTime UltimaActualizacionField;
+        
+
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData
         {
             get
@@ -645,6 +648,19 @@ namespace Shared.Entities
             set
             {
                 this.EstadoUnidadesField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime UltimaActualizacion
+        {
+            get
+            {
+                return this.UltimaActualizacionField;
+            }
+            set
+            {
+                this.UltimaActualizacionField = value;
             }
         }
     }
@@ -1674,7 +1690,7 @@ namespace Shared.Entities
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="EstadoRecurso", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
     public partial class EstadoRecurso : object, System.Runtime.Serialization.IExtensibleDataObject
     {
@@ -1725,7 +1741,7 @@ namespace Shared.Entities
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="EstadoData", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
     public partial class EstadoData : object, System.Runtime.Serialization.IExtensibleDataObject
     {
@@ -1789,7 +1805,7 @@ namespace Shared.Entities
             }
         }
         
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+        [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
         [System.Runtime.Serialization.DataContractAttribute(Name="EstadoData.EstadoEnum", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
         public enum EstadoEnum : int
         {
@@ -1803,7 +1819,7 @@ namespace Shared.Entities
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
     [System.Runtime.Serialization.DataContractAttribute(Name="Costo", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
     public partial class Costo : object, System.Runtime.Serialization.IExtensibleDataObject
     {
@@ -2214,4 +2230,5 @@ public partial class ServiceTableroClient : System.ServiceModel.ClientBase<IServ
     {
         return base.Channel.DesarrollarTecnologiaAsync(tenant, idJugador, idTecnologia);
     }
+    
 }
