@@ -39,24 +39,27 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
            // window.createGame();
         });
         */
-        
-        aldeasService.getAllData()
-                                .then(function (data) {
-                                    console.debug(data);
-                                    //$rootScope.tablero = data;
-                                    $rootScope.listaEdificios = data.TipoEdificios;
-                                    console.debug($rootScope.listaEdificios);
-                                    $rootScope.listaUnidades = data.TipoUnidades;
-                                    $rootScope.listaRecursos = data.TipoRecursos;
-                                    $rootScope.tablero = data.Tablero;
-                                    $rootScope.listaTecnologias = data.Tecnologias;
-                                    $rootScope.dataJuego = data.DataJuego;
+        $scope.initVariables = function () {
+            $rootScope.NombreJuego = tenant;
+            console.debug($rootScope.NombreJuego);
+            aldeasService.getAllData($rootScope.NombreJuego)
+                                    .then(function (data) {
+                                        console.debug(data);
+                                        //$rootScope.tablero = data;
+                                        $rootScope.listaEdificios = data.TipoEdificios;
+                                        console.debug($rootScope.listaEdificios);
+                                        $rootScope.listaUnidades = data.TipoUnidades;
+                                        $rootScope.listaRecursos = data.TipoRecursos;
+                                        $rootScope.tablero = data.Tablero;
+                                        $rootScope.listaTecnologias = data.Tecnologias;
+                                        $rootScope.dataJuego = data.DataJuego;
 
-                                    $scope.style = { "background-image": "url('" + $rootScope.tablero.ImagenFondo + "')" };
-                                    })
-                                .catch(function (err) {
-                                    alert(err)
-                                });
+                                        $scope.style = { "background-image": "url('" + $rootScope.tablero.ImagenFondo + "')" };
+                                        })
+                                    .catch(function (err) {
+                                        alert(err)
+                                    });
+        }
 
         
         //--------------Fin inicializacion de variables---------------------

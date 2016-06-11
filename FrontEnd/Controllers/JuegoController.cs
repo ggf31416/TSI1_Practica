@@ -14,13 +14,13 @@ namespace FrontEnd.Controllers
     public class JuegoController : Controller
     {
         [HttpGet]
-        public ActionResult GetAllDataJuego(int id)
+        public ActionResult GetAllDataJuego(string tenant)
         {
             ServiceTableroClient client = new ServiceTableroClient();
 
             Models.AllDataJuegoModel ret = new Models.AllDataJuegoModel();
 
-            Juego juego = client.GetAllDataJuego(id);
+            Juego juego = client.GetAllDataJuego(tenant);
 
             //Datos Juegos
             Models.JuegoModel retJuegoModel = new Models.JuegoModel();

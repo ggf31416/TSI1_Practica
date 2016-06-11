@@ -10,8 +10,17 @@
     @Scripts.Render("~/bundles/bootstrap")
 
 </head>
+
 <div ng-app="tsi" ng-controller="aldeaCtrl">
-    <div class="row">
+
+    @{
+        var tenant = ViewBag.Tenant;
+    }
+    <script type="text/javascript">
+        var tenant = '@tenant';
+    </script>
+
+    <div ng-init="initVariables()" class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="row">
                 <button class="btn btn-default" ng-click="listaTecnologias()">Tecnologias</button>
