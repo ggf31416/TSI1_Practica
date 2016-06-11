@@ -10,7 +10,10 @@ namespace Shared.Entities
     [DataContract]
     public class EstadoData
     {
-        public enum EstadoEnum {A,C};
+        public enum EstadoEnum {A,
+            C,
+            Inactivo
+        };
 
         [DataMember]
         public EstadoEnum Estado { get; set; }

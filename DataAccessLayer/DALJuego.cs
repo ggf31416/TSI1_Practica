@@ -18,9 +18,9 @@ namespace DataAccessLayer
         const string connectionstring = "mongodb://40.84.2.155";
         private static IMongoClient _client = new MongoClient(connectionstring);
 
-        public Juego GetJuego(Int32 idJuego)
+        public Juego GetJuego(string idJuego)
         {
-            IMongoDatabase _database = _client.GetDatabase(idJuego.ToString());
+            IMongoDatabase _database = _client.GetDatabase(idJuego);
             IMongoCollection<Juego> collection = _database.GetCollection<Juego>("juego");
 
             var query = from juego in collection.AsQueryable<Juego>()
