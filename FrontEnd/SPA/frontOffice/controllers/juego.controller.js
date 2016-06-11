@@ -17,47 +17,6 @@
         $scope.contador = 1;
         $scope.idJuego = 6;
 
-        $scope.loginJuego = function (response) {
-            if (response.status === 'connected') {
-                $scope.clienteId = response.authResponse.userID;
-                $scope.token = response.authResponse.accessToken;
-                var loginJuegoParams = {
-                    "id": $scope.clienteId,
-                    "token": $scope.token,
-                    "idJuego": $scope.idJuego
-                };
-                juegoService.loginJuego(loginJuegoParams)
-                .then(function (response) {
-                    console.log(response);
-                }).catch(function (msjError) {
-                    if (msjError === "registrarse") {
-                        $('#modalRegistro').modal('show');
-                    }
-                    
-                });
-            } else if (response.status === 'not_authorized') {
-
-            } else {
-
-            }
-        }
-
-        $scope.submitRegister = function () {
-            var registerJuegoParams = {
-                "clienteId": $scope.clienteId,
-                "token": $scope.token,
-                "idJuego": $scope.idJuego,
-                "username": username_register.value,
-                "nombre": nombre_register.value,
-                "apellido": apellido_register.value
-            };
-            juegoService.registerJuego(registerJuegoParams)
-                .then(function (response) {
-                    $('#modalRegistro').modal('hide');
-                }).catch(function (msjError) {
-                    console.log(msjError);
-                });
-        }
         $scope.listaEnemigos = [];
         
         $scope.posicionarUnidad= function (id) {
@@ -796,9 +755,7 @@
 
         $scope.iniciarAtaque = function(enemigo){
             var jsonAtaque = {
-                Jugador: nombreJugador,
-                Enemigo: enemigo,
-                Juego: $scope.nombreJuego
+                Enemigo: enemigo
             };
             juegoService.iniciarAtaque(jsonAtaque);
         }

@@ -129,6 +129,7 @@
     <Compile Include="Edificio.cs" />
     <Compile Include="Entidad.cs" />
     <Compile Include="IBLUsuario.cs" />
+    <Compile Include="IBLConexion.cs" />
     <Compile Include="IBLConstruccion.cs" />
     <Compile Include="IBLJuego.cs" />
     <Compile Include="IBLTablero.cs" />

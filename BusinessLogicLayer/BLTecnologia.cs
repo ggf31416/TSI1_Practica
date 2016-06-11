@@ -49,12 +49,10 @@ namespace BusinessLogicLayer
             
             var estadoT = j.DataJugador.EstadoTecnologias;
             if (!checkarDependencias(j, idTecnologia)) return false;
-            if (!consumirRecursosSiPuedo(j, j.Tecnologias[idTecnologia])) return false;
-            if (estadoT.ContainsKey(idTecnologia.ToString()))
-            {
-                EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Fin = DateTime.UtcNow. AddSeconds( j.Tecnologias[idTecnologia].Tiempo) };
-                estadoT.Add(idTecnologia.ToString(), estado);
-            }
+            var Tec = j.Tecnologias.FirstOrDefault(t => t.Id == idTecnologia);
+            if (!consumirRecursosSiPuedo(j, Tec)) return false;
+            EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Fin = DateTime.UtcNow. AddSeconds(Tec.Tiempo) };
+            estadoT[idTecnologia.ToString()] = estado;
             // guardar juego
             blHandler.GuardarJuego(j);
             return true;
@@ -87,16 +85,31 @@ namespace BusinessLogicLayer
         {
 
             var entidades = j.TipoEdificios.Cast<TipoEntidad>().ToDictionary(e => e.Id);
-            foreach(var u in j.TipoUnidades)
+            if (j.TipoUnidades != null)
             {
-                entidades[u.Id] = u;
+                foreach (var u in j.TipoUnidades)
+                {
+                    entidades[u.Id] = u;
+                }
+
             }
-            foreach (Accion a in tec.AccionesAsociadas)
+            if (j.TipoEdificios != null)
             {
-                AplicarAccion(j, a, entidades);
+                foreach (var u in j.TipoEdificios)
+                {
+                    entidades[u.Id] = u;
+                }
             }
-            ActualizarTecnologiasConstruibles(j, tec);
-            // guardar juego
+            if (entidades.Count > 0)
+            {
+                foreach (Accion a in tec.AccionesAsociadas)
+                {
+                    AplicarAccion(j, a, entidades);
+                }
+
+            }
+
+            // guardo juego afuera del metodo
         }
 
 
@@ -127,19 +140,47 @@ namespace BusinessLogicLayer
         private bool puedoDesarrollarDep(Juego j, Tecnologia tec)
         {
             var estado = j.DataJugador.EstadoTecnologias;
-            return tec.TecnologiaDependencias.All(dep => estado[dep.IdTecnologiaDepende.ToString()].Estado == EstadoData.EstadoEnum.A);
+            return tec.TecnologiaDependencias == null || tec.TecnologiaDependencias.All(dep => estado[dep.IdTecnologiaDepende.ToString()].Estado == EstadoData.EstadoEnum.A);
         }
 
-        private void ActualizarTecnologiasConstruibles(Juego j, Tecnologia tec)
+        public void asegurarEstadoTecnologia(Juego j)
+        {
+            if (j.DataJugador.EstadoTecnologias == null)
+            {
+                j.DataJugador.EstadoTecnologias = new Dictionary<string, EstadoData>();
+            }
+            // si ya esta inicializado salgo
+            if (j.DataJugador.EstadoTecnologias.Count > 0) return;
+            foreach (Tecnologia t in j.Tecnologias)
+            {
+                string key = t.Id.ToString();
+                if (true || !j.DataJugador.EstadoTecnologias.ContainsKey(key))
+                {
+                    EstadoData dataTec = new EstadoData() { Id = t.Id, Estado = EstadoData.EstadoEnum.NoPuedo, Fin = DateTime.UtcNow };
+                    j.DataJugador.EstadoTecnologias.Add(key, dataTec);
+                }
+            }
+        }
+
+        
+
+        public void ActualizarTecnologiasConstruibles(Juego j)
         {
             if (j.DataJugador.EstadoTecnologias == null)
                 j.DataJugador.EstadoTecnologias = new Dictionary<string, EstadoData>();
             var estado = j.DataJugador.EstadoTecnologias;
-            
+
+            if (estado.Count == 0)
+            {
+                asegurarEstadoTecnologia(j);
+            }
+            var dicTecnologias = j.Tecnologias.ToDictionary(t => t.Id.ToString());
             foreach (var id in estado.Keys)
             {
                 if (estado[id].Estado == EstadoData.EstadoEnum.NoPuedo)
                 {
+
+                    Tecnologia tec = dicTecnologias[id];
                     if (puedoDesarrollarDep(j, tec))
                     {
                         estado[id].Estado = EstadoData.EstadoEnum.Puedo;
@@ -148,10 +189,9 @@ namespace BusinessLogicLayer
             }
         }
 
-        public bool CompletarTecnologiasTerminadas(Juego j)
+        public bool CompletarTecnologiasTerminadasSinGuardar(Juego j)
         {
-            if (j.DataJugador.EstadoTecnologias == null)
-                j.DataJugador.EstadoTecnologias = new Dictionary<string, EstadoData>();
+            asegurarEstadoTecnologia(j); 
             var estado = j.DataJugador.EstadoTecnologias;
             
             bool algunaTermino = false;
@@ -165,6 +205,7 @@ namespace BusinessLogicLayer
                     algunaTermino = true;
                 }
             }
+            ActualizarTecnologiasConstruibles(j);
             return algunaTermino;
         }
     }

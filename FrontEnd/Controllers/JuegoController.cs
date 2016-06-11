@@ -327,11 +327,11 @@ namespace FrontEnd.Controllers
                     ret.TipoUnidades.Add(newTipoEntidad);
                 }
 
-                return Json(new { success = true, ret = ret });
+                return Json(new { success = true, ret = ret }, JsonRequestBehavior.AllowGet);
             }
             catch
             {
-                return Json(new { success = false });
+                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
             }
         }
 

@@ -16,8 +16,7 @@ namespace FrontEnd.Controllers
 
         public class JugadorElemento
         {
-            public string IdJugador;
-            public int IdElemento;
+            public int IdElemento { get; set; }
         }
 
         [HttpPost]
@@ -25,8 +24,9 @@ namespace FrontEnd.Controllers
         {
             try
             {
+                string idJugador = Request.Cookies["clienteId"].Value;
                 ServiceTableroClient client = new ServiceTableroClient();
-                bool puede =  client.DesarrollarTecnologia(tenant, data.IdJugador,data.IdElemento);
+                bool puede =  client.DesarrollarTecnologia(tenant, idJugador,data.IdElemento);
                 return Json(new { sucess = puede });
             }
             catch (Exception e)

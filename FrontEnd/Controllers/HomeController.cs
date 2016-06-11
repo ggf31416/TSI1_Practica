@@ -17,6 +17,19 @@ namespace FrontEnd.Controllers
             return View();
         }
 
+        // GET: LoginFacebook
+        public ActionResult LoginFacebook(string tenant)
+        {
+            ViewBag.Tenant = tenant;
+            return View();
+        }
+        
+        // GET: Aldea
+        public ActionResult Aldea(string tenant)
+        {
+            ViewBag.Tenant = tenant;
+            return View();
+        }
 
         [HttpPost]
         public ActionResult login(string tenant, ClienteJuego clienteJuego)
@@ -79,14 +92,5 @@ namespace FrontEnd.Controllers
                 return Json(new { status = false });
             }
         }
-
-
-        // GET: Aldea
-        public ActionResult Aldea(string tenant)
-        {
-            ViewBag.Tenant = tenant;
-            return View();
-        }
-
     }
 }

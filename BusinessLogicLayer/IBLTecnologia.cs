@@ -10,6 +10,6 @@ namespace BusinessLogicLayer
     public interface IBLTecnologia
     {
         bool DesarrollarTecnologia(string tenant, string idJugador,int idTecnologia);
-        bool CompletarTecnologiasTerminadas(Juego j);
+        bool CompletarTecnologiasTerminadasSinGuardar(Juego j);
     }
 }

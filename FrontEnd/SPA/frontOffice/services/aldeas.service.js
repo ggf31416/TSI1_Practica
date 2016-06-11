@@ -57,6 +57,25 @@
             });
             return ret;
         }
+
+        this.desarrollarTecnologia = function (json) {
+            var ret = "";
+            console.debug(JSON.stringify(json));
+            $.ajax({
+                url: '/' + $rootScope.NombreJuego + '/Tecnologia/DesarrollarTecnologia/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(json),
+                async: false,
+                success: function (response) {
+                    ret = response;
+                },
+                error: function (xhr, status, error) {
+                    alert("Error al desarrollar tecnologia");
+                }
+            });
+            return ret;
+        }
         
         this.getEntidadesActualizadas = function () {
             var defered = $q.defer();
