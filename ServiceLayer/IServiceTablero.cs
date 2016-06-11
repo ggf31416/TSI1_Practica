@@ -37,6 +37,6 @@ namespace ServiceLayer
 
 
         [OperationContract]
-        List<int> GetTecnologias(string tenant, string idJugador);
+        bool DesarrollarTecnologia(string tenant, string idJugador, int idTecnologia);
     }
 }

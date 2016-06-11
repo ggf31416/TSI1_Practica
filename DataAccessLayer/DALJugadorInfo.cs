@@ -105,5 +105,37 @@ namespace DataAccessLayer
             inicializarColleccionTecnologias(idUsuario);
             inicializarRecursos(idUsuario);
         }
+
+        private Task<ConjuntosUnidadMongo> obtenerConjuntoUnidades(string idJugador)
+        {
+            return coleccionUnidades().AsQueryable().FirstOrDefaultAsync(c => c.IdJugador == idJugador);
+        }
+
+        private Task<JugadorRecursoMongo> obtenerRecursos(string idJugador)
+        {
+            return coleccionRecursos().AsQueryable().FirstOrDefaultAsync(c => c.IdJugador == idJugador);
+        }
+
+        private Task<JugadorTecnologiasMongo> obtenerTecnologias(string idJugador)
+        {
+            return coleccionTecnologias().AsQueryable().FirstOrDefaultAsync(c => c.IdJugador == idJugador);
+        }
+
+        public async Task<Shared.Entities.JugadorShared> obtenerInfoJugador(string idJugador)
+        {
+            var taskUnidades = obtenerConjuntoUnidades(idJugador);
+            var taskTecnologias = obtenerTecnologias(idJugador);
+            var taskRecursos = obtenerRecursos(idJugador);
+            var unidades = await taskUnidades;
+            var tecnologias = await taskTecnologias;
+            var recursos = await taskRecursos;
+            var info = new Shared.Entities.JugadorShared();
+            info.Unidades = unidades.Unidades.ToDictionary(u => u.UnidadId);
+            info.Recursos = recursos.Recursos;
+            info.ultimaActualizacionRecursos = recursos.ultimaActualizacion;
+            return info;
+        }
+
+
     }
 }

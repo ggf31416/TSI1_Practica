@@ -14,10 +14,26 @@ namespace FrontEnd.Controllers
             return View();
         }
 
-        [HttpGet]
-        public ActionResult GetTecnologiasDesarrollables(string tenant,string idJugador)
+        public class JugadorElemento
         {
-            
+            string IdJugador;
+            int IdElemento;
+        }
+
+        [HttpPost]
+        public ActionResult DesarrollarTecnologia(string tenant, JugadorElemento data)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+                bool puede = false;
+                //bool puede =  client.DesarrollarTecnologia(tenant, data);
+                return Json(new { sucess = puede });
+            }
+            catch (Exception e)
+            {
+                return Json(new { sucess = false });
+            }
         }
     }
 }

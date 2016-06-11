@@ -52,6 +52,8 @@
     <Compile Include="Entities\InfoCelda.cs" />
     <Compile Include="Entities\Juego.cs" />
     <Compile Include="Entities\JugadorBasico.cs" />
+    <Compile Include="Entities\JugadorRecursos.cs" />
+    <Compile Include="Entities\JugadorTecnologia.cs" />
     <Compile Include="Entities\Prueba.cs" />
     <Compile Include="Entities\Raza.cs" />
     <Compile Include="Entities\RecursoAsociado.cs" />

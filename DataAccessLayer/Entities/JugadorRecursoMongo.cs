@@ -11,6 +11,7 @@ namespace DataAccessLayer.Entities
     {
         [BsonId]
         public string IdJugador;
-        public List<Shared.Entities.CantidadRecurso> Recursos { get; set; }
+        public DateTime ultimaActualizacion { get; set; }
+        public Dictionary<int,Shared.Entities.CantidadRecurso> Recursos { get; set; }
     }
 }

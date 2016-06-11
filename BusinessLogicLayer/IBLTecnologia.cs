@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace BusinessLogicLayer
 {
-    interface IBLTecnologias
+    public interface IBLTecnologia
     {
-        public void ActualizarTecnologias(string tenant,string idJugador)
-        {
-
-        }
+        bool DesarrollarTecnologia(string tenant, string idJugador,int idTecnologia);
     }
 }
