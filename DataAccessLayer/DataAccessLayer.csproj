@@ -82,11 +82,14 @@
     <Compile Include="DALConstruccion.cs" />
     <Compile Include="DALUsuario.cs" />
     <Compile Include="Entities\Cliente.cs" />
+    <Compile Include="Entities\ConjuntosUnidad.cs" />
     <Compile Include="Entities\Construccion.cs" />
     <Compile Include="Entities\Edificio.cs" />
     <Compile Include="Entities\Estadisticas.cs" />
     <Compile Include="Entities\InfoCelda.cs" />
     <Compile Include="Entities\JugadorInfo.cs" />
+    <Compile Include="Entities\JugadorRecursoMongo.cs" />
+    <Compile Include="Entities\JugadorTecnologiasMongo.cs" />
     <Compile Include="Entities\Prueba.cs" />
     <Compile Include="Entities\TableroConstruccion.cs" />
     <Compile Include="Exceptions\DALConstruccionException.cs" />

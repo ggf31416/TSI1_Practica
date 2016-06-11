@@ -13,8 +13,13 @@ namespace Shared.Entities
         public List<TipoEdificio> TipoEdificios { get; set; }
         public List<TipoUnidad> TipoUnidades { get; set; }
         public Dictionary<int, CantidadRecurso> Recursos { get; set; }  // clave Recurso.ID
+        public List<int> TecnologiasDesarrolladas { get; set; }
+        public List<int> TecnologiasDisponibles { get; set; }
         public DateTime ultimaActualizacionRecursos;
+
+
 
 
     }
 }
+

@@ -9,7 +9,6 @@ namespace BusinessLogicLayer
     public class Unidad : Entidad
     {
 
-        public int tipo_id { get; set; }
         public float velocidad { get; set; } = 10;
 
     }

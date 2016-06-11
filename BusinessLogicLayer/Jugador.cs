@@ -15,8 +15,38 @@ namespace BusinessLogicLayer
         public Dictionary<int,ConjuntoUnidades> Unidades { get; set; } = new Dictionary<int, ConjuntoUnidades>();
         public List<Edificio> Edificios { get; set; } = new List<Edificio>();
         private Dictionary<int, CantidadRecurso> Recursos { get; set; }  // clave Recurso.ID
+        public Dictionary<int, TipoEntidad> tipos = new Dictionary<int, TipoEntidad>();
         private DateTime ultimaActualizacionRecursos;
 
+        public void Inicializar(Shared.Entities.Juego juego)
+        {
+            foreach(var entidad in juego.TipoEntidad)
+            {
+                this.tipos.Add(entidad.Id, entidad);
+            }
+            foreach(var recurso in juego.TipoRecurso)
+            {
+                this.Recursos.Add(recurso.Id,new CantidadRecurso() { acumulado = 0, porSegundo = 0 });
+            }
+            ultimaActualizacionRecursos = DateTime.Now;
+        }
+
+        public void CargarEdificios(Tablero miBase)
+        {
+            var ocupadas = miBase.Celdas.Where(c => c.IdTipoEdificio.HasValue && c.IdTipoEdificio >= 0);
+            foreach(TableroCelda tc in ocupadas)
+            {
+                TipoEdificio te = tipos.GetValueOrDefault(tc.IdTipoEdificio.Value) as TipoEdificio;
+                if (te != null)
+                {
+                    Edificio e = new Edificio();
+                    e.DesdeTipo(te);
+                    e.jugador = this.Id;
+                    e.posX = tc.PosColumna.Value * e.sizeX;
+                    e.posY = tc.PosFila.Value * e.sizeY;
+                }
+            }
+        }
 
 
         public Jugador()
@@ -36,9 +66,10 @@ namespace BusinessLogicLayer
             }
             foreach (Edificio e in Edificios)
             {
-                foreach (var prod in e.produccion)
+                TipoEdificio te = tipos[e.tipo_id] as TipoEdificio;
+                foreach (var prod in te.RecursosAsociados)
                 {
-                    Recursos[prod.Key.Id].porSegundo += prod.Value;
+                    Recursos[prod.IdRecurso].porSegundo += prod.Valor;
                 }
             }
         }
@@ -53,16 +84,16 @@ namespace BusinessLogicLayer
             ultimaActualizacionRecursos = now;
         }
 
-        public bool RecursosConstruir(Edificio e)
+        public bool Construir(TipoEdificio e)
         {
             actualizarRecursos(DateTime.Now);
             // tengo la cantidad necesaria para todos los recursos:
-            bool puedoConstruir = e.costo.All(costoRec => Recursos[costoRec.Key.Id].acumulado >= costoRec.Value);
+            bool puedoConstruir = e.Costos.All(costoRec => Recursos[costoRec.IdRecurso].acumulado >= costoRec.Valor);
             if (puedoConstruir)
             {
-                foreach (var costoRec in e.costo)
+                foreach (var costoRec in e.Costos)
                 {
-                    Recursos[costoRec.Key.Id].acumulado -= costoRec.Value;
+                    Recursos[costoRec.IdRecurso].acumulado -= costoRec.Valor;
                 }
                 actualizarRecursosPorSegundo();
             }
@@ -100,6 +131,39 @@ namespace BusinessLogicLayer
             }
         }
 
+        private double aplicarPorcentaje(double valor, double porc)
+        {
+            return valor * (1 + 0.01 * porc);
+        }
+
+        public void AplicarTecnologia(Tecnologia tec)
+        {
+            foreach (Accion a in tec.AccionesAsociadas)
+            {
+                AplicarAccion(a);
+            }
+        }
+
+        public void AplicarAccion(Accion accion)
+        {
+            if (accion.IdEntidad.HasValue)
+            {
+                TipoEntidad te = tipos.GetValueOrDefault(accion.IdEntidad.Value);
+                string atr = accion.NombreAtributo.ToLowerInvariant();
+                if (atr.Equals("ataque"))
+                {
+                    te.Ataque += accion.Valor;
+                }
+                else if (atr.Equals("defensa"))
+                {
+                    te.Defensa += accion.Valor;
+                }
+                else if (atr.Equals("vida"))
+                {
+                    te.Vida += accion.Valor;
+                }
+            }
+        }
     }
 
 
