@@ -23,12 +23,14 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                clienteJuego.idJuego = tenant;
+                //clienteJuego.idJuego = tenant;
+                clienteJuego.idJuego = clienteJuego.idJuego;
                 ServiceTableroClient client = new ServiceTableroClient();
                 Shared.Entities.ClienteJuego cli = new Shared.Entities.ClienteJuego();
                 cli.clienteId = clienteJuego.clienteId;
                 cli.token = clienteJuego.token;
-                bool result = client.login(cli, clienteJuego.idJuego);
+                //bool result = client.login(cli, clienteJuego.idJuego);
+                bool result = client.login(cli, tenant);
                 return Json(new { status = result });
             }
             catch (Exception e)
@@ -42,7 +44,8 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                clienteJuego.idJuego = tenant;
+                clienteJuego.idJuego = clienteJuego.idJuego;
+                //clienteJuego.idJuego = tenant;
                 ServiceTableroClient client = new ServiceTableroClient();
                 Shared.Entities.ClienteJuego cli = new Shared.Entities.ClienteJuego();
                 cli.clienteId = clienteJuego.clienteId;
@@ -67,7 +70,8 @@ namespace FrontEnd.Controllers
                 cli.apellido = clienteJuego.apellido;
                 cli.nombre = clienteJuego.nombre;
                 cli.username = clienteJuego.username;
-                client.register(cli, clienteJuego.idJuego);
+                //client.register(cli, clienteJuego.idJuego);
+                client.register(cli, tenant);
                 return Json(new { status = true });
             }
             catch (Exception e)

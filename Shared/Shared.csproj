@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Clan.cs" />
     <Compile Include="Entities\JugadorConexion.cs" />
     <Compile Include="Entities\ListasEntidades.cs" />
     <Compile Include="Entities\ValidarUnidad.cs" />
