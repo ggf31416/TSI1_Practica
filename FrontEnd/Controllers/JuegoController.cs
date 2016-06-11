@@ -631,13 +631,13 @@ namespace FrontEnd.Controllers
         }
 
         [HttpGet]
-        public ActionResult AbandonarClan(string tenant, string IdJugador)
+        public ActionResult AbandonarClan(string tenant)
         {
             try
             {
                 ServiceTableroClient client = new ServiceTableroClient();
 
-                bool ret = client.AbandonarClan(tenant, IdJugador);
+                bool ret = client.AbandonarClan(tenant, Request.Cookies["clienteId"].Value);
 
                 return Json(new { success = true, ret = ret }, JsonRequestBehavior.AllowGet);
             }
@@ -703,7 +703,7 @@ namespace FrontEnd.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetJugadoresEnElClan(string tenant, string IdJugador)
+        public ActionResult GetJugadoresEnElClan(string tenant)
         {
             try
             {
