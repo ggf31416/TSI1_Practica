@@ -12,20 +12,26 @@ namespace Shared.Entities
     {
         public enum EstadoEnum {A,
             C,
-            Inactivo
+            Puedo,
+            NoPuedo
         };
 
         [DataMember]
         public EstadoEnum Estado { get; set; }
 
-        [DataMember]
-        public DateTime Fin { get; set; }
 
         [DataMember]
         public int Cantidad { get; set; }
 
+        [DataMember]
+        public long Faltante { get; set; }
 
-        
+
+
+        /*
+        [DataMember]
+        public DateTime Fin { get; set; }
+
         [DataMember]
         public long Faltante
         {
@@ -33,6 +39,6 @@ namespace Shared.Entities
                 return (long)((Fin - DateTime.Now).TotalMilliseconds);
             }
             protected set { }
-        }
+        }*/
     }
 }
