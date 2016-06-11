@@ -531,6 +531,7 @@ namespace FrontEnd.Controllers
 
                 //Datos DataActual
                 ret.DataJugador = new Models.DataActualModel();
+                ret.DataJugador.Clan = juego.DataJugador.Clan;
                 ret.DataJugador.EstadoRecursos = new Dictionary<string, Models.EstadoRecursoModel>();
                 foreach (var eR in juego.DataJugador.EstadoRecursos)
                 {
