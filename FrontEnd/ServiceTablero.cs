@@ -2319,13 +2319,11 @@ public interface IServiceTablero
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/SoyAdministrador", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/SoyAdministradorResponse")]
     bool SoyAdministrador(string Tenant, string IdJugador);
     
-<<<<<<< HEAD
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/EnviarRecursos", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/EnviarRecursosResponse")]
     int EnviarRecursos(Shared.Entities.RecursoAsociado[] tributos, string IdJugadorDestino, string Tenant, string IdJugador);
-=======
+
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetEstadoBatalla", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetEstadoBatallaResponse")]
     string GetEstadoBatalla(string tenant, string idJugador);
->>>>>>> 4814c274ca4421bdcb7265d1ad1af143edf12216
 }
 
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
