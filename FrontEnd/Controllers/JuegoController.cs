@@ -591,7 +591,7 @@ namespace FrontEnd.Controllers
 
                 foreach(var cJ in jugadores)
                 {
-                    if(cJ.username != Request.Cookies["clienteId"].Value)
+                    if(cJ.clienteId != Request.Cookies["clienteId"].Value)
                     {
                         Models.ClienteJuego mCJ = new Models.ClienteJuego();
                         mCJ.idJuego = cJ.idJuego;

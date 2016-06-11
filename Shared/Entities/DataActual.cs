@@ -18,5 +18,7 @@ namespace Shared.Entities
         public Dictionary<string, EstadoRecurso> EstadoRecursos { get; set; } = new Dictionary<string, EstadoRecurso>();
         [DataMember]
         public DateTime UltimaActualizacion { get; set; } = DateTime.UtcNow;
+        [DataMember]
+        public string Clan { get; set; }
     }
 }

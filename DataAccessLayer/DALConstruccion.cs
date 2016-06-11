@@ -32,6 +32,7 @@ namespace DataAccessLayer
             Shared.Entities.Juego juego = new Shared.Entities.Juego(juegoIndependiente);
             juego.IdJugador = idUsuario;
             juego.DataJugador = new Shared.Entities.DataActual();
+            juego.DataJugador.Clan = null;
             foreach (var recurso in juego.TipoRecurso)
             {
                 Shared.Entities.EstadoRecurso EstadoRecurso = new Shared.Entities.EstadoRecurso();
@@ -148,6 +149,7 @@ namespace DataAccessLayer
 
 
         //SERVICIOS
+
         public Shared.Entities.ValidarConstruccion ConstruirEdificio(int IdEdificio, string Tenant, string NombreJugador)
         {
             database = client.GetDatabase(Tenant);
