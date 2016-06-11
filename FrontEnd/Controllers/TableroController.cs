@@ -1,5 +1,4 @@
-﻿using FrontEnd.ServiceEntidades;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -65,21 +64,6 @@ namespace FrontEnd.Controllers
             {
                 Console.WriteLine("An error occurred: '{0}'", e);
                 return Json(new { success = false, responseText = "Error al Jugar Unidad! " + e.ToString() }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
-        [HttpPost]
-        public ActionResult RegistrarJugador(string jugador)
-        {
-            try
-            {
-                ServiceTableroClient client = new ServiceTableroClient();
-                client.RegistrarJugador(jugador);
-                return Json(new { sucess = true });
-            }
-            catch (Exception e)
-            {
-                return Json(new { sucess = false });
             }
         }
 

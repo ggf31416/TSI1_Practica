@@ -11,10 +11,10 @@ namespace DataAccessLayer.Entities
     {
 
         [BsonId]
-        public int idUsuario { get; set; }
+        public string idUsuario { get; set; }
         public List<InfoCelda> lstInfoCelda = new List<InfoCelda>();
 
-        public TableroConstruccion(int idUsuario)
+        public TableroConstruccion(string idUsuario)
         {
             this.idUsuario = idUsuario;
         }

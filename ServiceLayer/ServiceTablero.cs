@@ -31,15 +31,14 @@ namespace ServiceLayer
             blHandler.Accion(json);
         }
 
+        public bool login(ClienteJuego cliente, int idJuego)
+        {
+            return blHandler.login(cliente, idJuego);
+        }
 
         public List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt)
         {
             return blHandler.GetListaDeJugadoresAtacables(jugadorAt);
-        }
-
-        public void RegistrarJugador(string nombre)
-        {
-            blHandler.RegistrarJugador(nombre);
         }
 
         public void IniciarAtaque(InfoAtaque info)
@@ -47,11 +46,10 @@ namespace ServiceLayer
             blHandler.IniciarAtaque(info);
         }
 
-        public void login(Cliente cliente, int idJuego)
+        public void register(ClienteJuego cliente, int idJuego)
         {
-            blHandler.login(cliente, idJuego);
+            blHandler.register(cliente, idJuego);
         }
-
 
         //DATA JUEGO
         public Juego GetAllDataJuego(Int32 idJuego)

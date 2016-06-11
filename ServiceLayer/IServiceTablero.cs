@@ -19,17 +19,16 @@ namespace ServiceLayer
         void Accion(String json);
 
         [OperationContract]
+        bool login(ClienteJuego cliente, int idJuego);
+
+        [OperationContract]
+        void register(ClienteJuego cliente, int idJuego);
+
+        [OperationContract]
         List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt);
 
         [OperationContract]
-        void RegistrarJugador(string nombre);
-
-        [OperationContract]
         void IniciarAtaque(InfoAtaque info);
-
-        [OperationContract]
-        void login(Cliente cliente, int idJuego);
-
 
         //DATA JUEGO
         [OperationContract]

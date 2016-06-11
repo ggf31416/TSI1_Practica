@@ -17,14 +17,14 @@ namespace ConsoleApplication1
             {
                 BsonClassMap.RegisterClassMap<TableroConstruccion>();
             }
-            if (!BsonClassMap.IsClassMapRegistered(typeof(Cliente)))
+            if (!BsonClassMap.IsClassMapRegistered(typeof(ClienteJuego)))
             {
-                BsonClassMap.RegisterClassMap<Cliente>();
+                BsonClassMap.RegisterClassMap<ClienteJuego>();
             }
             Console.WriteLine("inicio");
             IDALUsuario iDALUsuario = new DALUsuario(1);
-            Shared.Entities.Cliente cliente = new Shared.Entities.Cliente();
-            cliente.clienteId = 1;
+            Shared.Entities.ClienteJuego cliente = new Shared.Entities.ClienteJuego();
+            cliente.clienteId = "1";
             cliente.token = "token1";
             iDALUsuario.login(cliente);
             //IDALConstruccion iDALConstruccion = new DALConstruccionMongo("juego1");

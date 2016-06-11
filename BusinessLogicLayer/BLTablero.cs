@@ -171,24 +171,22 @@ namespace BusinessLogicLayer
             }
         }
 
-        public void login(Cliente cliente, int idJuego)
+        public bool login(ClienteJuego cliente, int idJuego)
         {
             IDALUsuario iDALUsuario = new DALUsuario(idJuego);
-            iDALUsuario.login(cliente);
+            return iDALUsuario.login(cliente);
         }
 
-
-
-        public void RegistrarJugador(string nombre)
+        public void register(ClienteJuego cliente, int idJuego)
         {
-            if (nombre != null && !jugadores.ContainsKey(nombre))
-            {
-                Jugador j = new Jugador();
-                j.Id = nombre;
-                j.Clan = nombre;
-                jugadores.Add(j.Id,j);
+            IDALUsuario iDALUsuario = new DALUsuario(idJuego);
+            iDALUsuario.register(cliente);
+        }
 
-            }
+        public bool authenticate(ClienteJuego cliente, int idJuego)
+        {
+            IDALUsuario iDALUsuario = new DALUsuario(idJuego);
+            return iDALUsuario.authenticate(cliente);
         }
 
         public List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt)
@@ -216,12 +214,5 @@ namespace BusinessLogicLayer
             string infoBatalla = b.GenerarJson();
             client.Send(infoBatalla);
 		}
-
-        public bool authenticate(Cliente cliente, int idJuego)
-        {
-            IDALUsuario iDALUsuario = new DALUsuario(idJuego);
-            return iDALUsuario.authenticate(cliente);
-
-        }
     }
 }

@@ -15,48 +15,74 @@ namespace DataAccessLayer
         private static IMongoClient client = new MongoClient(connectionstring);
         private int idJuego;
         private IMongoDatabase database;
-        private IMongoCollection<Cliente> collection;
+        private IMongoCollection<ClienteJuego> collection;
+        private IMongoCollection<Shared.Entities.FechaCantidad> collectionFechaCantidad;
 
         public DALUsuario(int idJuego)
         {
             this.idJuego = idJuego;
             database = client.GetDatabase(idJuego.ToString());
-            collection = database.GetCollection<Cliente>("usuario");
+            collection = database.GetCollection<ClienteJuego>("usuario");
+            collectionFechaCantidad = database.GetCollection<Shared.Entities.FechaCantidad>("fecha_cantidad");
         }
         
-        private void inicializarUsuario(Cliente cliente)
+        private void inicializarUsuario(ClienteJuego cliente)
         {
+            cliente.creacion = DateTime.Now;
             collection.InsertOne(cliente);
             IDALConstruccion iDALConstruccion = new DALConstruccion(this.idJuego);
-            iDALConstruccion.InicializarConstruccion(cliente.clienteId);
+            iDALConstruccion.InicializarConstruccion(cliente.id);
         }
 
-        public void login(Shared.Entities.Cliente client)
+        public bool login(Shared.Entities.ClienteJuego client)
         {
-            var query = from usuario in collection.AsQueryable<Cliente>()
-                        where usuario.clienteId == client.clienteId
+            var query = from usuario in collection.AsQueryable<ClienteJuego>()
+                        where usuario.id == client.clienteId
                         select usuario;
             if (query.Count() == 0)
             {
-                Cliente cliente = new Cliente(client.clienteId, client.token);
-                inicializarUsuario(cliente);
+                return false;
             }
             else
             {
-                Cliente c = query.First();
+                ClienteJuego c = query.First();
                 c.token = client.token;
-                collection.ReplaceOne(cliente => cliente.clienteId == c.clienteId, c);
+                collection.ReplaceOne(cliente => cliente.id == c.id, c);
+                Shared.Entities.FechaCantidad fechaCantidad = new Shared.Entities.FechaCantidad();
+                fechaCantidad.cantidad = 1;
+                fechaCantidad.fecha = DateTime.Now;
+                collectionFechaCantidad.InsertOne(fechaCantidad);
+                return true;
             }
-            
         }
 
-        public bool authenticate(Shared.Entities.Cliente client)
+        public void register(Shared.Entities.ClienteJuego client)
         {
-            var query = from usuario in collection.AsQueryable<Cliente>()
-                        where usuario.clienteId == client.clienteId && usuario.token == client.token
+            ClienteJuego c = new ClienteJuego();
+            c.id = client.clienteId;
+            c.nombre = client.nombre;
+            c.apellido = client.apellido;
+            c.username = client.username;
+            inicializarUsuario(c);
+        }
+
+        public bool authenticate(Shared.Entities.ClienteJuego client)
+        {
+            var query = from usuario in collection.AsQueryable<ClienteJuego>()
+                        where usuario.id == client.clienteId && usuario.token == client.token
                         select usuario;
             return query.Count() > 0;
         }
 
+        public void logout(Shared.Entities.ClienteJuego client)
+        {
+            ClienteJuego updateCliente = new ClienteJuego();
+            updateCliente.id = client.clienteId;
+            updateCliente.nombre = client.nombre;
+            updateCliente.apellido = client.apellido;
+            updateCliente.username = client.username;
+            updateCliente.token = null;
+            collection.ReplaceOne(cliente => cliente.id == updateCliente.id, updateCliente);
+        }
     }
 }

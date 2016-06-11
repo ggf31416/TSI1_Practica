@@ -233,43 +233,12 @@
     <Content Include="Scripts\jquery.signalR-2.1.2.js" />
     <Content Include="Scripts\jquery.signalR-2.1.2.min.js" />
     <Content Include="Chat.html" />
-    <Content Include="Service References\ServiceEntidades\FrontEnd.ServiceEntidades.Tablero.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Content>
-    <Content Include="Service References\ServiceEntidades\FrontEnd.ServiceEntidades.Tecnologia.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Content>
-    <Content Include="Service References\ServiceEntidades\FrontEnd.ServiceEntidades.TipoRecurso.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Content>
-    <None Include="Service References\ServiceEntidades\item.wsdl" />
-    <None Include="Service References\ServiceEntidades\item.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceEntidades\item1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceEntidades\item2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceEntidades\item3.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\ServiceEntidades\ServiceAtlas.wsdl" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
+    <Content Include="Scripts\phaser.min.js" />
     <None Include="Service References\ServiceTablero\item.disco" />
     <None Include="Service References\ServiceTablero\configuration91.svcinfo" />
     <None Include="Service References\ServiceTablero\configuration.svcinfo" />
-    <None Include="Service References\ServiceTablero\item3.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Service References\ServiceTablero\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\ServiceEntidades\item.disco" />
-    <None Include="Service References\ServiceEntidades\configuration91.svcinfo" />
-    <None Include="Service References\ServiceEntidades\configuration.svcinfo" />
-    <None Include="Service References\ServiceEntidades\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
@@ -307,7 +276,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\JuegoController.cs" />
     <Compile Include="Controllers\TableroController.cs" />
-    <Compile Include="Controllers\EntidadesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TecnologiaController.cs" />
     <Compile Include="Global.asax.cs">
@@ -318,7 +286,7 @@
     <Compile Include="Models\AccionModel.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AllDataJuegoModel.cs" />
-    <Compile Include="Models\Cliente.cs" />
+    <Compile Include="Models\ClienteJuego.cs" />
     <Compile Include="Models\ColumnaModel.cs" />
     <Compile Include="Models\Costo.cs" />
     <Compile Include="Models\EdificioUnidadModel.cs" />
@@ -343,24 +311,21 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Service References\ServiceEntidades\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
+    <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Service References\ServiceTablero\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="ServiceEntidades.cs" />
-    <Compile Include="App_Start\Startup.cs" />
+    <Compile Include="ServiceTablero.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-2.2.3.min.map" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Aldea.cshtml" />
     <None Include="Service References\ServiceTablero\item.wsdl" />
     <None Include="Service References\ServiceTablero\item.xsd">
       <SubType>Designer</SubType>
@@ -371,9 +336,10 @@
     <None Include="Service References\ServiceTablero\item2.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Service References\ServiceTablero\item3.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\ServiceTablero\ServiceTablero.wsdl" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Aldea.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -392,10 +358,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\ServiceEntidades\" />
-    <WCFMetadataStorage Include="Service References\ServiceTablero\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\BusinessLogicLayer\BusinessLogicLayer.csproj">
       <Project>{a07aa8df-3a92-4cc5-b111-5dea0447c2a3}</Project>
       <Name>BusinessLogicLayer</Name>
@@ -411,6 +373,9 @@
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\ServiceTablero\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
