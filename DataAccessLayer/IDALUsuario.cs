@@ -23,5 +23,7 @@ namespace DataAccessLayer
         bool AgregarJugadorClan(Shared.Entities.ClienteJuego Jugador, string Tenant, string IdJugador);
         List<Shared.Entities.ClienteJuego> GetJugadoresEnElClan(string Tenant, string IdJugador);
         bool SoyAdministrador(string Tenant, string IdJugador);
+
+        int EnviarRecursos(List<Shared.Entities.RecursoAsociado> tributos, string IdJugadorDestino, string Tenant, string IdJugador);
     }
 }

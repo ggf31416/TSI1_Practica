@@ -19,5 +19,6 @@ namespace BusinessLogicLayer
         bool AgregarJugadorClan(ClienteJuego Jugador, string Tenant, string IdJugador);
         List<ClienteJuego> GetJugadoresEnElClan(string Tenant, string IdJugador);
         bool SoyAdministrador(string Tenant, string IdJugador);
+        int EnviarRecursos(List<RecursoAsociado> tributos, string IdJugadorDestino, string Tenant, string IdJugador);
     }
 }

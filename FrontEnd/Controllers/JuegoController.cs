@@ -749,6 +749,32 @@ namespace FrontEnd.Controllers
                 return Json(new { success = false}, JsonRequestBehavior.AllowGet);
             }
         }
+
+        [HttpPost]
+        public ActionResult EnviarRecursos(string tenant, Models.TributoModel tributoModel)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+
+                List<RecursoAsociado> recursosAsociados = new List<RecursoAsociado>();
+                foreach(var ram in tributoModel.Valores)
+                {
+                    RecursoAsociado ra = new RecursoAsociado();
+                    ra.IdRecurso = ram.IdRecurso;
+                    ra.Valor = ram.Value;
+                    recursosAsociados.Add(ra);
+                }
+                int ret = client.EnviarRecursos(recursosAsociados.ToArray(), tributoModel.IdJugadorDestino, tenant, Request.Cookies["clienteId"].Value);
+
+                return Json(new { success = true, ret = ret}, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
     }
 
 }

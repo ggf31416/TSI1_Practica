@@ -141,5 +141,9 @@ namespace ServiceLayer
             blConexHandler.agregarConexion(tenant, con);
         }
 
+        public int EnviarRecursos(List<RecursoAsociado> tributos, string IdJugadorDestino, string Tenant, string IdJugador)
+        {
+            return blUsuarioHandler.EnviarRecursos(tributos, IdJugadorDestino, Tenant, IdJugador);
+        }
     }
 }

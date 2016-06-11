@@ -336,5 +336,57 @@ namespace DataAccessLayer
                 return null;
             }
         }
+
+        public int EnviarRecursos(List<Shared.Entities.RecursoAsociado> tributos, string IdJugadorDestino, string Tenant, string IdJugador)
+        {
+            database = client.GetDatabase(Tenant);
+            collection = database.GetCollection<ClienteJuego>("usuario");
+            IMongoCollection<Shared.Entities.Juego> collectionJuego = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
+
+            if (GetClanJugador(Tenant, IdJugadorDestino) != GetClanJugador(Tenant, IdJugador))
+            {
+                return 1;//El Jugador al que le quiere enviar recursos no esta en su clan
+            }
+            else
+            {
+                DALJuego dalJuego = new DALJuego();
+                Shared.Entities.Juego dataJugador = dalJuego.GetJuegoUsuario(Tenant, IdJugador);
+
+                bool suficientesRecursos = true;
+                foreach(var ra in tributos)
+                {
+                    if(dataJugador.DataJugador.EstadoRecursos[ra.IdRecurso.ToString()].Total < ra.Valor)
+                    {
+                        suficientesRecursos = false;
+                        break;
+                    }
+                    dataJugador.DataJugador.EstadoRecursos[ra.IdRecurso.ToString()].Total -= ra.Valor;
+                }
+                if (suficientesRecursos)
+                {
+                    ReplaceOneResult resultJugador = collectionJuego.ReplaceOne(juego => juego.IdJugador == IdJugador, dataJugador);
+
+                    Shared.Entities.Juego dataJugadorDestino = dalJuego.GetJuegoUsuario(Tenant, IdJugadorDestino);
+
+                    foreach (var ra in tributos)
+                    {
+                        dataJugadorDestino.DataJugador.EstadoRecursos[ra.IdRecurso.ToString()].Total += ra.Valor;
+                    }
+                    ReplaceOneResult resultJugadorDestino = collectionJuego.ReplaceOne(juego => juego.IdJugador == IdJugadorDestino, dataJugadorDestino);
+
+                    if ((resultJugador.ModifiedCount == 1) && (resultJugadorDestino.ModifiedCount == 1)) {
+                        return 0;//Operacion realizada con exito
+                    }
+                    else
+                    {
+                        return 3;//Se produjo un error al guardar en la base de datos
+                    }
+                }
+                else
+                {
+                    return 2;//No tiene suficientes recursos para enviar
+                }
+            }
+        }
     }
 }
