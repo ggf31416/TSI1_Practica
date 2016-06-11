@@ -119,6 +119,7 @@
   <ItemGroup>
     <Compile Include="AccionMsg.cs" />
     <Compile Include="Batalla.cs" />
+    <Compile Include="BLBatalla.cs" />
     <Compile Include="BLConexion.cs" />
     <Compile Include="BLUsuario.cs" />
     <Compile Include="BLConstruccion.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="BLTecnologia.cs" />
     <Compile Include="Edificio.cs" />
     <Compile Include="Entidad.cs" />
+    <Compile Include="IBLBatalla.cs" />
     <Compile Include="IBLUsuario.cs" />
     <Compile Include="IBLConexion.cs" />
     <Compile Include="IBLConstruccion.cs" />
@@ -167,7 +169,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>

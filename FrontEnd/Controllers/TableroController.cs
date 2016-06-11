@@ -14,12 +14,12 @@ namespace FrontEnd.Controllers
     {
 
         [HttpPost]
-        public ActionResult Accion(string data)
+        public ActionResult Accion(string tenant,string data)
         {
             try
             {
                 ServiceTableroClient client = new ServiceTableroClient();
-                client.Accion(data);
+                client.Accion(tenant,data);
                 return Json(new { sucess = true });
             }
             catch (Exception e)
@@ -68,12 +68,15 @@ namespace FrontEnd.Controllers
         }
 
         [HttpPost]
-        public ActionResult IniciarAtaque(InfoAtaque info)
+        public ActionResult IniciarAtaque(string tenant, InfoAtaque info)
         {
             try
             {
+                String idJugador = Request.Cookies["ClienteId"].Value;
                 ServiceTableroClient client = new ServiceTableroClient();
-                client.IniciarAtaque(info);
+                info.Jugador = idJugador;
+                info.Juego = tenant;
+                client.IniciarAtaque(tenant,info);
                 return Json(new { sucess = true });
             }
             catch (Exception e)
@@ -82,8 +85,16 @@ namespace FrontEnd.Controllers
             }
         }
 
+        public ActionResult ObtenerEstadoBatalla(string tenant)
+        {
+            String idJugador = Request.Cookies["ClienteId"].Value;
+            ServiceTableroClient client = new ServiceTableroClient();
+            string res = client.GetEstadoBatalla(tenant, idJugador);
+            return Json(new { success = true, ret = res }, JsonRequestBehavior.AllowGet);
+        }
 
-        [HttpGet]
+
+        /*[HttpGet]
         public ActionResult GetListaDeJugadoresAtacables(string jugador)
         {
             try
@@ -96,7 +107,7 @@ namespace FrontEnd.Controllers
             {
                 return Json(new { sucess = false });
             }
-        }
+        }*/
 
 
         [HttpPost]

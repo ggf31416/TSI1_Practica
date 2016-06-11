@@ -72,19 +72,20 @@ namespace BusinessLogicLayer
 
         public void actualizarUnidades(DataActual data)
         {
-            var estUnidadesEnConstr = data.EstadoUnidades.Values.Where(x => x != null && x.Estado == EstadoData.EstadoEnum.C);
+            var estUnidadesEnConstr = data.EstadoUnidades.Values.Where(x => x != null && x.Estado == EstadoData.EstadoEnum.C).ToList();
            
             foreach (var unidad in estUnidadesEnConstr)
             {
-                if ( unidad.Fin <= DateTime.Now) {
- 
-                    string key = unidad.Id + "#" + EstadoData.EstadoEnum.A;
-                   
+                if ( unidad.Fin <= DateTime.UtcNow) {
+
+                    string key = unidad.Id.ToString()  + "#" + EstadoData.EstadoEnum.A;
+
                     if (!data.EstadoUnidades.ContainsKey(key))
                     {
                         data.EstadoUnidades.Add(key, new EstadoData() { Id = unidad.Id, Cantidad = 0, Estado = EstadoData.EstadoEnum.A, Fin = DateTime.UtcNow });
                     }
                     data.EstadoUnidades[key].Cantidad += unidad.Cantidad;
+                    data.EstadoUnidades[key].Estado = EstadoData.EstadoEnum.A;
                     unidad.Cantidad = 0;
                 } 
             }
@@ -103,7 +104,8 @@ namespace BusinessLogicLayer
                     edificio.Estado.Estado = EstadoData.EstadoEnum.A;
                     cambio = true;
                     TimeSpan dif = DateTime.UtcNow - edificio.Estado.Fin;
-                    foreach (var prod in juego.TipoEdificios[(int)edificio.IdTipoEdificio].RecursosAsociados)
+                    var tipoEdificio = juego.TipoEdificios.FirstOrDefault(e => e.Id== edificio.IdTipoEdificio);
+                    foreach (var prod in tipoEdificio.RecursosAsociados)
                     {
                         recursos[prod.IdRecurso.ToString()].Total += (float)(prod.Valor * dif.TotalSeconds);
                     }
@@ -115,25 +117,38 @@ namespace BusinessLogicLayer
 
         public void ActualizarJuegoSinGuardar(Juego j)
         {
-            actualizarEdificios(j);
-            actualizarRecursos(j.DataJugador);
-            actualizarRecursosPorSegundo(j);
-            IBLTecnologia tec = new BLTecnologia(this);
-            tec.CompletarTecnologiasTerminadasSinGuardar(j);
-            j.DataJugador.UltimaActualizacion = DateTime.UtcNow;
-            DALUsuario _dalUsuario = new DALUsuario();
-            j.DataJugador.Clan = _dalUsuario.GetClanJugador(j.Nombre, j.IdJugador);
+            if (j != null)
+            {
+                actualizarEdificios(j);
+                actualizarUnidades(j.DataJugador);
+                actualizarRecursos(j.DataJugador);
+                actualizarRecursosPorSegundo(j);
+                IBLTecnologia tec = new BLTecnologia(this);
+                tec.CompletarTecnologiasTerminadasSinGuardar(j);
+                j.DataJugador.UltimaActualizacion = DateTime.UtcNow;
+            }   
         }
 
         public void ActualizarJuego(Juego j)
         {
-            ActualizarJuegoSinGuardar(j);
-            GuardarJuego(j);
+            if (j != null)
+            {
+                try
+                {
+                    ActualizarJuegoSinGuardar(j);
+                    GuardarJuego(j);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+                
+            }
         }
 
         public Juego GetAllDataJuego(string tenant)
         {
-            return _dal.GetJuegoUsuario(tenant, "pijaUsuario");
+            return _dal.GetJuegoUsuario(tenant, "ejemploUsuario");
         }
 
         public ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador)

@@ -12,31 +12,26 @@ namespace BusinessLogicLayer
     
     public class Batalla
     {
-        private Dictionary<int, TipoUnidad> tiposUnidades = new Dictionary<int, TipoUnidad>();
-        private Dictionary<int, TipoEdificio> tiposEdificios = new Dictionary<int, TipoEdificio>();
+        private List<TipoUnidad> tiposUnidades = new List<TipoUnidad>();
+        private List< TipoEdificio> tiposEdificios = new List< TipoEdificio>();
         public int JuegoId { get; set; }
-        private List<Jugador> jugadores = new List<Jugador>();
+        private Dictionary<string, Jugador> jugadores = new Dictionary<string, Jugador>();
 
 
         private Jugador defensor;
         private DataAccessLayer.Relacional.IDALEntidadesRO _dalRO;
-        public string CanalSignalR { get; set; }
+        public string GrupoSignalR { get; set; }
         public bool EnCurso { get; set; }
         public CampoBatalla tablero;
 
 
     
 
-        public void inicializar()
-        {
-            /*_dalRO = new DataAccessLayer.Relacional.DALEntidades();
-            tiposUnidades = _dalRO.GetAllTipoUnidades().ToDictionary(x => x.Id);
-            tiposEdificios = _dalRO.GetAllTipoEdificios().ToDictionary(x => x.Id);*/
-        }
+        
 
         public Batalla(string atacante,string defensor)
         {
-            inicializar();
+            //inicializar();
             this.tablero = new CampoBatalla();
             this.EnCurso = true;
 
@@ -44,13 +39,17 @@ namespace BusinessLogicLayer
 
         public Batalla(Jugador atacante,Jugador defensor)
         {
-            inicializar();
+
             this.tablero = new CampoBatalla();
             this.tablero.JugadorDefensor = defensor.Id;
             this.EnCurso = true;
             this.defensor = defensor;
-            jugadores.Add(atacante);
-            jugadores.Add(defensor);
+            jugadores.Add(atacante.Id,atacante);
+            jugadores.Add(defensor.Id, defensor);
+            this.tiposEdificios = atacante.tiposEdificio;
+            this.tiposUnidades = atacante.tiposUnidad;
+            this.GrupoSignalR = "bat_" + this.defensor.Id;
+            //inicializar();
         }
 
 
@@ -58,27 +57,31 @@ namespace BusinessLogicLayer
         {
             foreach (ConjuntoUnidades cu in jug.Unidades.Values)
             {
-                Unidad x = getUnidadPorId(cu.UnidadId);
+                Unidad x = getUnidadPorId(cu.UnidadId,jug.Id);
                 IEnumerable<Unidad> lst = Enumerable.Repeat(x, cu.Cantidad).ToList();
                 Random r = new Random();
                 
                 foreach(Unidad u in lst)
                 {
-                    //u.id = r.Next(1, Int32.MaxValue);
                     u.jugador = jug.Id;
                 }
                 tablero.agregarUnidades(jug.Id, lst);
             }
         }
 
-        public int agregarUnidad(int idUnidad,String jugador,string unitId,int posX,int posY)
+        public int agregarUnidad(int id_tipo,String jugador,string unitId,int posX,int posY)
         {
-            Unidad u = getUnidadPorId( idUnidad);
-            u.id = unitId;
-            u.posX = posX;
-            u.posY = posY;
-             tablero.agregarUnidad(jugador,u);
-            //return id;
+            if (!this.jugadores.ContainsKey(jugador) || !(this.jugadores[jugador].Unidades.ContainsKey(id_tipo))) return 0;
+            if (this.jugadores[jugador].Unidades[id_tipo].Cantidad > 0)
+            {
+                Unidad u = getUnidadPorId(id_tipo, jugador);
+                this.jugadores[jugador].Unidades[id_tipo].Cantidad -= 1;
+                u.id = unitId;
+                u.posX = posX;
+                u.posY = posY;
+                tablero.agregarUnidad(jugador, u);
+                return 1;
+            }
             return 0;
         }
 
@@ -89,23 +92,34 @@ namespace BusinessLogicLayer
             tablero = new CampoBatalla();
             agregarUnidades(atacante);
             agregarUnidades(defensor);
+            this.tiposUnidades = atacante.tiposUnidad;
+            this.tiposEdificios = atacante.tiposEdificio;
             tablero.agregarEdificios(defensor.Edificios);
         }
 
-        private Unidad getUnidadPorId(int tipoId)
+        private Unidad getUnidadPorId(int tipoId,string idJugador)
         {
-            //TipoUnidad tu = tiposUnidades[tipoId];
-
-            //Unidad u = new Unidad { ataque = tu.Ataque.Value, defensa = tu.Defensa.Value, tipo_id = tu.Id, vida = tu.Vida.Value };
-            Unidad u = new Unidad { ataque = 10, defensa = 10, tipo_id = tipoId, vida = 100 };
-            u.rango = 8; // hardcodeado;
+            Unidad u = null;
+            if (!jugadores.ContainsKey(idJugador)) return u;
+            TipoUnidad tu = jugadores[idJugador].tipos.GetValueOrDefault(tipoId) as TipoUnidad;
+            if (tu != null)
+            {
+                u = new Unidad { ataque = tu.Ataque.GetValueOrDefault(), defensa = tu.Defensa.GetValueOrDefault(), tipo_id = tu.Id, hp = tu.Vida.GetValueOrDefault() };
+                u.rango = 8; // hardcodeado;
+            }
             return u;
         }
 
-        private Edificio getEdificioPorId(int tipoId, int pX, int pY,string j)
+        private Edificio getEdificioPorId(int tipoId, int pX, int pY, string j)
         {
-            //TipoEdificio te = tiposEdificios[tipoId];
-            Edificio e = new Edificio { tipo_id = tipoId, posX = pX, posY = pY, jugador = j };
+            if (!jugadores.ContainsKey(j)) return null;
+            TipoEdificio te = jugadores[j].tipos.GetValueOrDefault(tipoId) as TipoEdificio;
+            Edificio e = null;
+            if (te != null)
+            {
+                e = new Edificio { tipo_id = tipoId, posX = pX, posY = pY, jugador = j};
+                e.DesdeTipo(te);
+            }
             return e;
         }
 
@@ -131,21 +145,42 @@ namespace BusinessLogicLayer
             return res;
         }
 
-        public string GenerarJson()
+        public class InfoBatalla
         {
-            // tipo de retorno anonimo
-            var res = new
+            public string A { get; set; } = "IniciarAtaque";
+            public bool Finalice { get; set; } = false;
+            public List<Unidad>  unidades { get; set; }  = new List<Unidad>();
+            public List<Edificio> edificios { get; set; } = new List<Edificio>();
+            public List<TipoUnidad> tiposUnidad { get; set; } = new List<TipoUnidad>();
+            public List<TipoEdificio> tiposEdificio { get; set; } = new List<TipoEdificio>();
+            public List<String> jugadores { get; set; } = new List<String>();
+
+            public string IdJugador { get; set; }
+
+        }
+
+        public String[] GetListaJugadores()
+        {
+            return jugadores.Keys.ToArray();
+        }
+
+        public string GenerarJson(string IdJugador)
+        {
+
+            var res = new InfoBatalla();
+            res.IdJugador = IdJugador;
+            foreach(Jugador j in jugadores.Values)
             {
-                A = "IniciarAtaque",
-                unidades = new List<Unidad>(),
-                jugadores = new List<String>()
-            };
-            foreach(Jugador j in jugadores)
-            {
-                bool incluirEdificios = j.Equals(defensor);
-                string jsonJugador = j.GenerarJson(incluirEdificios, false);
+                //bool incluirEdificios = j.Equals(defensor);
+                string jsonJugador = j.GenerarJson(false, false);
                 res.jugadores.Add(jsonJugador);
+
             }
+
+        
+            this.tablero.RellenarInfoBatalla(res);
+            res.tiposEdificio = this.tiposEdificios;
+            res.tiposUnidad = this.tiposUnidades;
             return JsonConvert.SerializeObject(res);
         }
 

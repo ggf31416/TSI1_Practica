@@ -289,13 +289,22 @@ namespace DataAccessLayer
                 juego.DataJugador.EstadoUnidades.TryGetValue(TipoUnidad.Id.ToString(), out EstadoData);
                 if(EstadoData != null)
                 {
+                    long msDeberianFaltar = (long)EstadoData.Cantidad * TipoUnidad.TiempoConstruccion.Value * 100;
+                    if (EstadoData.Faltante > msDeberianFaltar)
+                    {
+                        EstadoData.Fin = DateTime.UtcNow.AddMilliseconds(msDeberianFaltar); ;
+
+                    }
                     EstadoData.Cantidad += euid.Cantidad;
-                }else
+                    EstadoData.Fin = EstadoData.Fin.AddMilliseconds(euid.Cantidad * TipoUnidad.TiempoConstruccion.Value * 100);
+                }
+                else
                 {
                     EstadoData = new Shared.Entities.EstadoData();
+                    EstadoData.Id = euid.IdTipoUnidad;
                     EstadoData.Cantidad = euid.Cantidad;
                     EstadoData.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
-                    EstadoData.Fin = DateTime.UtcNow.AddHours((int)TipoUnidad.TiempoConstruccion);
+                    EstadoData.Fin = DateTime.UtcNow.AddMilliseconds((int)TipoUnidad.TiempoConstruccion * 100);
                 }
                 juego.DataJugador.EstadoUnidades[TipoUnidad.Id.ToString()] = EstadoData;
                 Shared.Entities.EstadoRecurso EstRec = new Shared.Entities.EstadoRecurso();

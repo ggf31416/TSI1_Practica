@@ -19,6 +19,7 @@ namespace ServiceLayer
         private static IBLConstruccion blConstruccionHandler;
         private static IBLUsuario blUsuarioHandler;        
         private static IBLConexion blConexHandler;
+        private static IBLBatalla blBatalla;
 
         public ServiceTablero()
         {
@@ -26,6 +27,8 @@ namespace ServiceLayer
             blJuegoHandler = Program.blJuegoHandler;
             blTecnologiaHandler = Program.blTecnologiaHandler;
             blConstruccionHandler = Program.blConstruccionHandler;
+            blBatalla = BLBatalla.getInstancia();
+            ((BLBatalla)blBatalla).setBLJuego(blJuegoHandler);
             blUsuarioHandler = Program.blUsuarioHandler;
         }
 
@@ -33,9 +36,9 @@ namespace ServiceLayer
             blHandler.JugarUnidad(infoCelda);
         }
 
-        public void Accion(string json)
+        public void Accion(string tenant,string json)
         {
-            blHandler.Accion(json);
+            blBatalla.Accion(tenant,json);
         }
 
         public bool login(ClienteJuego cliente, string idJuego)
@@ -43,14 +46,14 @@ namespace ServiceLayer
             return blHandler.login(cliente, idJuego);
         }
 
-        public List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt)
+        /*public List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt)
         {
             return blHandler.GetListaDeJugadoresAtacables(jugadorAt);
-        }
+        }*/
 
-        public void IniciarAtaque(InfoAtaque info)
+        public void IniciarAtaque(string tenant, InfoAtaque info)
         {
-            blHandler.IniciarAtaque(info);
+            blBatalla.IniciarAtaque(tenant,info);
         }
 
         public void register(ClienteJuego cliente, string idJuego)
@@ -144,6 +147,10 @@ namespace ServiceLayer
         public int EnviarRecursos(List<RecursoAsociado> tributos, string IdJugadorDestino, string Tenant, string IdJugador)
         {
             return blUsuarioHandler.EnviarRecursos(tributos, IdJugadorDestino, Tenant, IdJugador);
+        }
+        public string GetEstadoBatalla(string tenant,string idJugador)
+        {
+            return blBatalla.getJsonBatalla(tenant, idJugador);
         }
     }
 }

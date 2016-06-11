@@ -27,12 +27,20 @@ namespace BusinessLogicLayer
         private static int tablero_size = 10;
         private int sizeX = tablero_size * edificio_size;
         private int sizeY = tablero_size * edificio_size;
-        private float velocidad = 5;
+        
         JumpPointParam param = null;
         private Stopwatch sw;
         private long nanosPrevio;
         public List<AccionMsg> Acciones { get; private set; } = new List<AccionMsg>();
 
+
+        public void RellenarInfoBatalla(Batalla.InfoBatalla info )
+        {
+            foreach (var u in unidades.Values)
+            {
+                info.unidades.Add(u);
+            }
+        }
 
         public int Turno { get; private set; }  = 0;
 
@@ -333,13 +341,13 @@ namespace BusinessLogicLayer
             {
                 detener((Unidad)ataq);
                 float daño = (deltaT / 1000.0f) * 10 * ataq.ataque / (float)def.defensa;
-                def.vida -= daño;
-                if (def.vida < 0) {
+                def.hp -= daño;
+                if (def.hp < 0) {
                     //matar(def);
                     def.target = null;
                     ataq.target = null;
                 }
-                AccionMsg notif = new AccionMsg { Accion = "UpdateHP", IdUnidad = def.id ,ValorN = def.vida};
+                AccionMsg notif = new AccionMsg { Accion = "UpdateHP", IdUnidad = def.id ,ValorN = def.hp};
                 this.Acciones.Add(notif);
                 return true;
             }
@@ -349,6 +357,8 @@ namespace BusinessLogicLayer
             }
         
         }
+
+        
 
         string generarJson()
         {

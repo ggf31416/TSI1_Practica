@@ -1,12 +1,12 @@
 ﻿(function () {
 'use strict';
 angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService", "juegoService",
-        "edificiosService", "unidadesService", '$scope', '$rootScope', '$interval',
+        "edificiosService", "unidadesService", '$scope', '$rootScope', '$interval','$window',
 
-    function ($http, $q, aldeasService, juegoService, edificiosService, unidadesService, $scope, $rootScope, $interval) {
+    function ($http, $q, aldeasService, juegoService, edificiosService, unidadesService, $scope, $rootScope, $interval,$window) {
 
         //--------------Inicializacion de variables---------------------
-        /*
+        
         $scope.iniciarSignalR = function () {
             // Declare a proxy to reference the hub.
             $scope.tablero_signalR = $.connection.chatHub;
@@ -16,31 +16,26 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                 if (msg.Tipo && msg.Tipo == "NotificacionAtaque") {
                     //Mostrar mensaje 
                     if (msg.SoyAtacante && !msg.SoyAliado) {
+                        alert("el ataque empezara en " + msg.TiempoAtaque + " segundos");
                         //el ataque empezara en msg.TiempoAtaque segundos
                     } else if (!msg.SoyAtacante) {
                         //me atacaran en msg.TiempoAtaque segundos
                     }
                 } else if (msg.Tipo && msg.Tipo == "IniciarAtaque") {
-                    //redirigir a la pagina
+                    alert("Inicia el ataque!");
+                    $window.location.href = "/" + $rootScope.NombreJuego + "/Home/Index";
                 }
 
-                //$scope.estadoJuego.edificios = msjJSON.edificios;
-                //$scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;
-                //$scope.estadoJuego.edificios.push(msjJSON);
-                //$scope.cargarDesdeEstado();
+
             };
-            // Get the user name and store it to prepend to messages.
-            // $('#displayname').val(prompt('Enter your name:', ''));
-            // Set initial focus to message input box.
-            // $('#message').focus();
-            // Start the connection.
+
             $.connection.hub.start().done(function () {
 
             });
         };
 
         $scope.iniciarSignalR();
-        */
+        
 
         /*$rootScope.listaRecursos = [
                {
@@ -50,7 +45,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                    Produccion: 1
                },
                {
-                   Nombre: "Madera",
+                   NombreF: "Madera",
                    Imagen: "/SPA/backOffice/ImagenesSubidas/madera.jpg",
                    Valor: 546,
                    Produccion: 2
@@ -134,8 +129,10 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                             $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Total = $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Total + $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Produccion;
                                         }
                                     }, 1000);
-
-                                    
+                                    console.debug($rootScope.dataJugador.Clan);
+                                    if ($rootScope.dataJugador.Clan != null) {
+                                        $scope.soyAdmin = aldeasService.soyAdministrador();
+                                    }
 
                                 })
                                 .catch(function (err) {
@@ -226,8 +223,70 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
         }
 
         $scope.abrirClan = function () {
+            aldeasService.getJugadoresSinClan()
+                                .then(function (data) {
+                                    console.debug(data);
+                                    $rootScope.jugadoresSinClan = data;
+                                })
+                                .catch(function (err) {
+                                    alert(err)
+                                });
+            aldeasService.getJugadoresEnElClan()
+                                .then(function (data) {
+                                    console.debug(data);
+                                    $rootScope.jugadoresEnClan = data;
+                                })
+                                .catch(function (err) {
+                                    alert(err)
+                                });
+            
             //Abro cuadro de clanes
             $('#dialogoClanes').modal('show');
+        }
+
+        $scope.abandonarClan = function () {
+            var ret = aldeasService.abandonarClan();
+            if (ret) {
+                $rootScope.dataJugador.Clan = null;
+                $scope.soyAdmin = false;
+            }
+            $('#dialogoClanes').modal('hide');
+        }
+
+        $scope.agregarAlClan = function (user) {
+            var ret = aldeasService.agregarJugadorClan(user);
+            if (ret.success) {
+                aldeasService.getJugadoresSinClan()
+                                .then(function (data) {
+                                    console.debug(data);
+                                    $rootScope.jugadoresSinClan = data;
+                                })
+                                .catch(function (err) {
+                                    alert(err)
+                                });
+                aldeasService.getJugadoresEnElClan()
+                                .then(function (data) {
+                                    console.debug(data);
+                                    $rootScope.jugadoresEnClan = data;
+                                })
+                                .catch(function (err) {
+                                    alert(err)
+                                });
+            }
+        }
+
+        $scope.abrirCrearClan = function () {
+            //Abro cuadro de tecnologias
+            $('#dialogoCrearClan').modal('show');
+        }
+
+        $scope.crearClan = function () {
+            var json = { NombreClan: $scope.NombreClan };
+            var ret = aldeasService.crearClan(json);
+            if(ret.success){
+                $rootScope.dataJugador.Clan = $scope.NombreClan;
+                $scope.soyAdmin = true;
+            }
         }
 
         $scope.listaTecnologias = function () {
@@ -341,9 +400,20 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                     var data = aldeasService.entrenarUnidades(json);
                     if (data.ret) {
                         $scope.auxUnidad = $rootScope.dataJugador.EstadoUnidades[$scope.unidadesAconstruir[i].Id];
-                        $scope.auxUnidad.CantAConstruir = parseInt($scope.unidadesAconstruir[i].Cantidad);
+                        
                         //de donde se saca el tiempo:
                         $scope.modeloUnidad = findEdificioInArray($rootScope.listaUnidades, $scope.unidadesAconstruir[i].Id)[0];
+
+                        if ($scope.auxUnidad == undefined) {
+                            $scope.auxUnidad ={
+                                            Cantidad:0,
+                                            Estado:0,
+                                            Id:$scope.unidadesAconstruir[i].Id,
+                                            Tiempo:$scope.modeloUnidad.TiempoConstruccion
+                            }
+                            $rootScope.dataJugador.EstadoUnidades[$scope.unidadesAconstruir[i].Id] = $scope.auxUnidad;
+                        }
+                        $scope.auxUnidad.CantAConstruir = parseInt($scope.unidadesAconstruir[i].Cantidad);
                         
                         for (var j = 0; j < $rootScope.dataJugador.EstadoRecursos.length; j++) {
                             $rootScope.dataJugador.EstadoRecursos[j].Total = $rootScope.dataJugador.EstadoRecursos[j].Total - getCosto($scope.auxUnidad, $rootScope.dataJugador.EstadoRecursos[j].Id);
@@ -352,6 +422,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                             $interval.cancel($scope.timerUnidad);
                             console.debug($scope.auxUnidad);
                             $scope.auxUnidad.Cantidad = $scope.auxUnidad.Cantidad + $scope.auxUnidad.CantAConstruir;
+                            $scope.auxUnidad.Estado = 1;
                             $scope.auxUnidad = undefined;
                         }, $scope.modeloUnidad.TiempoConstruccion * 100 * $scope.auxUnidad.CantAConstruir);
                     }

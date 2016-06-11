@@ -3,11 +3,11 @@
 
 (function () {
     'use strict';
-    angular.module('juego').controller("juegoCtrl", ["$http", "$q","juegoService", "edificiosService", "unidadesService",'$scope', '$rootScope',
+    angular.module('juego').controller("juegoCtrl", ["$http", "$q","juegoService",'$scope', '$window','$rootScope',
 
    
 
-    function ($http,$q,juegoService, edificiosService, unidadesService, $scope, $rootScope) {
+    function ($http,$q,juegoService, $scope, $window,$rootScope) {
 
 
         var selectedUnit = null;
@@ -19,6 +19,8 @@
 
         $scope.listaEnemigos = [];
         
+        //juegoService.GetEstadoBatalla();
+
         $scope.posicionarUnidad= function (id) {
             // llama a la funcion iniciarCustomDrag en el CrearCanvas.js
             esUnidad = true;
@@ -33,13 +35,18 @@
 
         
         $q.all([
-            //edificiosService.getAllTipoEdificios(),
-            //unidadesService.getAllTipoUnidades()
+            juegoService.GetEstadoBatalla()
         ]).then(function (data) {
-            $rootScope.listaEdificios = [];//data[0];
-            $rootScope.listaUnidades = [ {Ataque : 10, Defensa : 10, Id : 314159, Nombre : "Arquero", TiempoConstruccion : 10, Vida : 100, Imagen : "/SPA/backoffice/ImagenesSubidas/arquero.jpg" }]
+            var batalla = JSON.parse(data[0].data.ret);
+            if (!batalla) console.error("No hay datos de batalla");
+            nombreJugador = batalla.IdJugador;
+            $rootScope.listaEdificios = batalla.tiposEdificio;
+            //$rootScope.listaUnidades = [ {Ataque : 10, Defensa : 10, Id : 314159, Nombre : "Arquero", TiempoConstruccion : 10, Vida : 100, Imagen : "/SPA/backoffice/ImagenesSubidas/arquero.jpg" }]
+            $rootScope.listaUnidades = batalla.tiposUnidad;
             //data[1];
             window.createGame();
+
+            cargarEstado(batalla); // carga info
         });
 
      
@@ -84,7 +91,7 @@
 
         var nombreJugador;
 
-        var estaEnBatalla = false;
+        var estaEnBatalla = true;
        
         $scope.animaciones = {}
 
@@ -105,24 +112,19 @@
         }
 
 
-
-        /*function crearInternalMenu() {
-            menuCuartel = $scope.game.add.sprite(0, 0, 'cuartelMenu');
-            menuCuartel.width = 64;
-            menuCuartel.height = 64;
-            menuCuartel.inputEnabled = true;
-            menuCuartel.events.onInputDown.add(function () { crearDragEdificio('cuartel'); }, this);
-            menuCuartel.fixedToCamera = true;
-        }*/
-
         function mostrarUnidades(b) {
             $('#divEdificios').toggle(!b);
             $('#divUnidades').toggle(b);
         }
 
+        function setInfoFromData(entidad,data){
+         entidad.info = new Unidad_Info(data.Unit_id,data.jugador,data.hp,data.rango,data.velocidad,data.ataque,data.defensa,data.target);   
+        }
+
         function crearEdificioInmediato(data) {
             var idSprite =  data.Id;
             var edificio = $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
+            setInfoFromData(unit, data);
             edificio.height = tile_size;
             edificio.width = tile_size;
             edificio.inputEnabled = true;
@@ -134,13 +136,15 @@
 
         function crearUnidadInmediato(data) {
             if (!unidadesPorId[data.Unit_id]) {
+                if (data.hp < 0) return;
                 var idSprite = data.Id;
                 var unit = objetoUnidad(data,idSprite);
                 unit.height = unit_size;
                 unit.width = unit_size;
                 unit.inputEnabled = true;
                 clickVisibleUnidades(unit, true);
-                unit.info = new Unidad_Info(data.Unit_id);
+                
+                setInfoFromData(unit, data)
                 unidades_desplegadas.add(unit);
                 unidadesPorId[unit.info.unit_id] = unit;
                 agregarGraficos($scope.game, unit);
@@ -168,7 +172,7 @@
                 crearUnidadInmediato(e);
                 });
             }
-            $scope.$apply();
+            //$scope.$apply();
         };
 
         function esEsteJugador(json){
@@ -189,6 +193,8 @@
                 }
             });
             est.unidades_desplegadas = batalla.unidades;
+            est.edificios = batalla.edificios;
+            
             $scope.cargarDesdeEstado();
             console.log("Se termino de cargar batalla");
         }
@@ -213,7 +219,7 @@
 
         function ejecutarMensaje(msg){
             if (msg.A == MsgA.IniciarAtaque){
-                cargarEstado(msg);
+                //cargarEstado(msg);
             }
             else if(msg.A == MsgA.PosUnit){
                  var unit = unidadesPorId[msg.IdUn];
@@ -319,7 +325,10 @@
                 if (e.Imagen != null) {
                     console.log(e);
                     $scope.game.load.image(e.Id, e.Imagen);
-                    $scope.estadoJuego.unidades_desplegables[e.Id] = { cantidad: 0};
+                    /*if (!$scope.estadoJuego.unidades_desplegables[e.Id]){
+                        $scope.estadoJuego.unidades_desplegables[e.Id] = { cantidad: 0};    
+                    }*/
+                    
                     //$scope.estadoJuego.unidades_desplegables[e.Id].cantidad = 10;
                 }
             });
@@ -342,7 +351,7 @@
 
             //  The deadzone is a Rectangle that defines the limits at which the camera will start to scroll
             //  It does NOT keep the target sprite within the rectangle, all it does is control the boundary
-            //  at which the camera will start to move. So when the sprite hits the edge, the camera scrolls
+            //  at which the Fcamera will start to move. So when the sprite hits the edge, the camera scrolls
             //  (until it reaches an edge of the world)
 
 
@@ -642,7 +651,7 @@
                     u.graficos.vidaFaltante.width = u.width * (1 - porcentaje);*/
                     u.graficos.x  = u.x;
                     u.graficos.y = u.y;
-                    $scope.game.debug.text(u.info.hp,u.x,u.y + u.height * 1.2);
+                    $scope.game.debug.text(u.info.hp,u.x,u.y + u.height * 1.4);
                 }
             });
 
@@ -715,9 +724,11 @@
             var distancia = $scope.game.physics.arcade.distanceBetween(spriteAt, def);
             if (distancia <= spriteAt.info.rango) {
                 detenerMovimiento(spriteAtaq);
-                if (!spriteAtaq.info.prox_ataque || game.time.now() > spriteAtaq.info.prox_ataque){
-                    disparar(spriteAtaq,def);
-                    spriteAtaq.info.prox_ataque = game.time.now() + 500;
+                if (sprite.info && sprite.info.ataque > 0){
+                    if (!spriteAtaq.info.prox_ataque || game.time.now() > spriteAtaq.info.prox_ataque){
+                        disparar(spriteAtaq,def);
+                        spriteAtaq.info.prox_ataque = game.time.now() + 500;
+                    }
                 }
             }
             
