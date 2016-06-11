@@ -14,7 +14,12 @@
     <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
             <div class="row">
-                <button class="btn btn-default" ng-click="listaTecnologias()">Tecnologias</button>
+                <div class="col-sm-2">
+                    <button class="btn btn-default" ng-click="listaTecnologias()">Tecnologias</button>
+                </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-danger" ng-click="listarUsuarios()">Atacar</button>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-2" ng-repeat="rec in $root.listaRecursos">
@@ -75,7 +80,7 @@
                             <h4 class="modal-title" id="myModalLabel">Edificio</h4>
                         </div>
                         <div class="modal-body">
-                            <div class="row">
+                            <div class="row modalRows">
                                 <div class="col-sm-3 col-md-3 col-lg-3">
                                     <div class="row">
                                         <h4>Nombre</h4>
@@ -108,9 +113,39 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <div class="row modalRows">
+                                <div class="form-group col-sm-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-sm-3 col-md-3 col-lg-3">
+                                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                Crear unidades
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                                <li style="margin-left:5px;"><b>Unidades</b></li>
+                                                <li ng-repeat="e in unidadesDisponibles"><a class="handPointer" ng-click="crearUnidad(e)">{{e.Nombre}}</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-sm-9 col-md-9 col-lg-9">
+                                            <div class="row modalRows" ng-repeat="u in unidadesAconstruir">
+                                                <div class="col-sm-4 col-md-4 col-lg-4">
+                                                    <span>{{u.Nombre}}</span>
+                                                </div>
+                                                <div class="col-sm-7 col-md-7 col-lg-7">
+                                                    <input type="text" class="form-control" ng-model="u.Cantidad" />
+                                                </div>
+                                                <div class="col-sm-1 col-md-1 col-lg-1">
+                                                    <a style="cursor: pointer;" ng-click="removerUnidad(u.Id)">x</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
                         </div>
                     </div>
                 </div>
