@@ -8,12 +8,11 @@ using System.Runtime.Serialization;
 namespace Shared.Entities
 {
     [DataContract]
-    public class EstadoRecurso
+    public class ValidarUnidad
     {
-        // tiene que ser un float o double porque sino donde se calcule con un dT no entero no da bien
         [DataMember]
-        public float Total { get; set; }
+        public TipoUnidad TipoUnidad { get; set; }
         [DataMember]
-        public int Produccion { get; set; }
+        public Dictionary<int,Recurso> recursos { get; set; }
     }
 }

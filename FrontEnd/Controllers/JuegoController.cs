@@ -25,6 +25,7 @@ namespace FrontEnd.Controllers
             Models.JuegoModel retJuegoModel = new Models.JuegoModel();
 
             retJuegoModel.Id = juego.Id;
+            retJuegoModel.IdJugador = juego.IdJugador;
             retJuegoModel.Nombre = juego.Nombre;
             retJuegoModel.Estado = juego.Estado;
             retJuegoModel.IdDisenador = juego.IdDisenador;
@@ -201,6 +202,40 @@ namespace FrontEnd.Controllers
 
                 ret.TipoUnidades.Add(newTipoEntidad);
             }
+
+            //Datos DataActual
+            ret.DataJugador.EstadoRecursos = new Dictionary<int, Models.EstadoRecursoModel>();
+            foreach(var eR in juego.DataJugador.EstadoRecursos)
+            {
+                Models.EstadoRecursoModel eRM = new Models.EstadoRecursoModel();
+                eRM.Total = eR.Value.Total;
+                eRM.Produccion = eR.Value.Produccion;
+
+                ret.DataJugador.EstadoRecursos.Add(eR.Key, eRM);
+            }
+
+            ret.DataJugador.EstadoTecnologias = new Dictionary<int, Models.EstadoDataModel>();
+            foreach(var eT in juego.DataJugador.EstadoTecnologias)
+            {
+                Models.EstadoDataModel eDM = new Models.EstadoDataModel();
+                eDM.Estado = eT.Value.Estado;
+                eDM.Tiempo = eT.Value.Tiempo;
+                eDM.Cantidad = eT.Value.Cantidad;
+
+                ret.DataJugador.EstadoTecnologias.Add(eT.Key, eDM);
+            }
+
+            ret.DataJugador.EstadoUnidades = new Dictionary<int, Models.EstadoDataModel>();
+            foreach (var eU in juego.DataJugador.EstadoUnidades)
+            {
+                Models.EstadoDataModel eDM = new Models.EstadoDataModel();
+                eDM.Estado = eU.Value.Estado;
+                eDM.Tiempo = eU.Value.Tiempo;
+                eDM.Cantidad = eU.Value.Cantidad;
+
+                ret.DataJugador.EstadoUnidades.Add(eU.Key, eDM);
+            }
+            ret.DataJugador.UltimaActualizacion = juego.DataJugador.UltimaActualizacion;
 
             return Json(new { success = true, responseText = "Juego: ", ret = ret }, JsonRequestBehavior.AllowGet);
         }

@@ -13,5 +13,6 @@ namespace FrontEnd.Models
         public List<TipoRecursoModel> TipoRecursos { get; set; }
         public List<TecnologiaModel> Tecnologias { get; set; }
         public TableroModel Tablero { get; set; }
+        public DataActualModel DataJugador { get; set; }
     }
 }

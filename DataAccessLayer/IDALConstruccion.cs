@@ -21,5 +21,12 @@ namespace DataAccessLayer
 
         void Refresh(string idUsuario, Shared.Entities.Juego juego);
 
+        Shared.Entities.ValidarConstruccion ConstruirEdificio(int IdEdificio);
+
+        void PersistirEdificio(Shared.Entities.CEInputData ceid);
+
+        Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad);
+
+        void PersistirUnidades(Shared.Entities.EUInputData ceid);
     }
 }

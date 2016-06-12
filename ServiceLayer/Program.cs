@@ -28,6 +28,7 @@ namespace ServiceLayer
         {
             blHandler = BLTablero.getInstancia();
             blJuegoHandler = new BLJuego(new DataAccessLayer.DALJuego());
+            blTecnologiaHandler = new BLTecnologia(blJuegoHandler);
         }
 
         private static void SetupService()

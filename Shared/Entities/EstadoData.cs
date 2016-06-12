@@ -10,13 +10,30 @@ namespace Shared.Entities
     [DataContract]
     public class EstadoData
     {
-        public enum EstadoEnum {A,C};
+        public enum EstadoEnum {A,
+            C,
+            Puedo,
+            NoPuedo
+        };
 
         [DataMember]
         public EstadoEnum Estado { get; set; }
-        [DataMember]
-        public int Tiempo { get; set; }
+
+
         [DataMember]
         public int Cantidad { get; set; }
+        
+        [DataMember]
+        public DateTime Fin { get; set; }
+
+        [MongoDB.Bson.Serialization.Attributes.BsonIgnore]
+        [DataMember]
+        public long Faltante
+        {
+            get {
+                return (long)((Fin - DateTime.Now).TotalMilliseconds);
+            }
+            protected set { }
+        }
     }
 }

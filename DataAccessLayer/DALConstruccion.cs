@@ -122,6 +122,28 @@ namespace DataAccessLayer
                 collection.ReplaceOne(tablero => tablero.idUsuario == tableroConstruccion.idUsuario, tableroConstruccion);
         }
 
+        
+        //SERVICIOS
+        public Shared.Entities.ValidarConstruccion ConstruirEdificio(int IdEdificio)
+        {
+            return null;
+        }
+
+        public void PersistirEdificio(Shared.Entities.CEInputData ceid)
+        {
+
+        }
+
+        public Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad)
+        {
+            return null;
+        }
+
+        public void PersistirUnidades(Shared.Entities.EUInputData ceid)
+        {
+
+        }
+
         //public void AddPrueba(Prueba prueba)
         //{
         //    collection.InsertOne(prueba);
