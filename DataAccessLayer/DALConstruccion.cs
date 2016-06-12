@@ -282,7 +282,6 @@ namespace DataAccessLayer
                 EstadoData.Cantidad = euid.Cantidad;
                 EstadoData.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
                 EstadoData.Fin = DateTime.UtcNow.AddHours((int)TipoUnidad.TiempoConstruccion);
-                juego.DataJugador.EstadoUnidades = new Dictionary<string, Shared.Entities.EstadoData>();
                 juego.DataJugador.EstadoUnidades.Add(TipoUnidad.Id.ToString(), EstadoData);
                 Shared.Entities.EstadoRecurso EstRec = new Shared.Entities.EstadoRecurso();
                 foreach (var costo in TipoUnidad.Costos)
