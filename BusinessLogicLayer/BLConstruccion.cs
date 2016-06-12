@@ -76,6 +76,7 @@ namespace BusinessLogicLayer
                 maxUnidadesPorRecurso[costo.IdRecurso] = vU.Recursos[costo.IdRecurso.ToString()] / costo.Valor;
             }
             List<int> aux = maxUnidadesPorRecurso.Values.ToList();
+            aux.Add(euid.Cantidad);
             cantidad = aux.Min();
             if (cantidad > 0)
             {

@@ -94,8 +94,8 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                     $rootScope.tablero.enConstruccion = "https://storagegabilo.blob.core.windows.net/imagenes/gente_en_obra.png";
                                     //timer para actualizar recursos
                                     $interval(function () {
-                                        for (var i = 0; i < $rootScope.dataJugador.EstadoRecursos.length; i++) {
-                                            $rootScope.dataJugador.EstadoRecursos[i].Total = $rootScope.dataJugador.EstadoRecursos[i].Total + $rootScope.dataJugador.EstadoRecursos[i].Produccion;
+                                        for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
+                                            $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Total = $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Total + $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Produccion;
                                         }
                                     }, 1000);
 
@@ -273,7 +273,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                         $scope.timerUnidad = $interval(function () {
                             $interval.cancel($scope.timerUnidad);
                             console.debug($scope.auxUnidad);
-                            $scope.auxUnidad.Valor = $scope.auxUnidad.Valor + $scope.auxUnidad.Cant;
+                            $scope.auxUnidad.Cantidad = $scope.auxUnidad.Cantidad + $scope.auxUnidad.Cant;
                             $scope.auxUnidad = undefined;
                         }, $scope.auxUnidad.TiempoConstruccion * 100 * $scope.auxUnidad.Cant);
                     }
