@@ -206,7 +206,7 @@ namespace DataAccessLayer
                 {
                     juego.DataJugador.EstadoRecursos.TryGetValue(costo.IdRecurso.ToString(), out EstRec);
                     EstRec.Total = EstRec.Total - costo.Valor;
-                    juego.DataJugador.EstadoRecursos.Add(costo.IdRecurso.ToString(), EstRec);
+                    juego.DataJugador.EstadoRecursos[costo.IdRecurso.ToString()] = EstRec;
                 }
                 var result = collection.ReplaceOne(j => j.IdJugador == juego.IdJugador, juego, new UpdateOptions { IsUpsert = true });
                 return result.ModifiedCount == 1;
@@ -270,13 +270,15 @@ namespace DataAccessLayer
                 EstadoData.Cantidad = euid.Cantidad;
                 EstadoData.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
                 EstadoData.Fin = DateTime.Now.AddHours((int)TipoUnidad.TiempoConstruccion);
+                juego.DataJugador.EstadoUnidades = new Dictionary<string, Shared.Entities.EstadoData>();
                 juego.DataJugador.EstadoUnidades.Add(TipoUnidad.Id.ToString(), EstadoData);
                 Shared.Entities.EstadoRecurso EstRec = new Shared.Entities.EstadoRecurso();
                 foreach (var costo in TipoUnidad.Costos)
                 {
                     juego.DataJugador.EstadoRecursos.TryGetValue(costo.IdRecurso.ToString(), out EstRec);
                     EstRec.Total = EstRec.Total - costo.Valor;
-                    juego.DataJugador.EstadoRecursos.Add(costo.IdRecurso.ToString(), EstRec);
+
+                    juego.DataJugador.EstadoRecursos[costo.IdRecurso.ToString()] = EstRec;
                 }
                 var result = collection.ReplaceOne(j => j.IdJugador == juego.IdJugador, juego, new UpdateOptions { IsUpsert = true });
                 return result.ModifiedCount == 1;

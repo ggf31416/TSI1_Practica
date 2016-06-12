@@ -58,5 +58,21 @@
             return ret;
         }
         
+        this.getEntidadesActualizadas = function () {
+            var defered = $q.defer();
+            var promise = defered.promise;
+
+            $http.get('/' + $rootScope.NombreJuego + '/Juego/GetEntidadesActualizadas/')
+            .success(function (data) {
+                defered.resolve(data.ret);
+            })
+            .error(function (err) {
+                defered.reject("Error al traer datos del juego")
+            });
+
+            return promise;
+
+        };
+        
     }
 })();
