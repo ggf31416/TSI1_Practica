@@ -31,7 +31,7 @@ namespace DataAccessLayer
             cliente.creacion = DateTime.Now;
             collection.InsertOne(cliente);
             IDALConstruccion iDALConstruccion = new DALConstruccion(this.nombreJuego, cliente.id);
-            //iDALConstruccion.InicializarConstruccion(cliente.id);
+            iDALConstruccion.InicializarConstruccion(cliente.id, this.nombreJuego);
         }
 
         public bool login(Shared.Entities.ClienteJuego client)

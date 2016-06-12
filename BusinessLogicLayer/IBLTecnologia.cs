@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Shared.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,6 @@ namespace BusinessLogicLayer
     public interface IBLTecnologia
     {
         bool DesarrollarTecnologia(string tenant, string idJugador,int idTecnologia);
+        bool CompletarTecnologiasTerminadas(Juego j);
     }
 }
