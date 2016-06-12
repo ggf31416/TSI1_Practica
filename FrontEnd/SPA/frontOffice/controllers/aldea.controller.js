@@ -122,6 +122,10 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             $('#dialogoDatosTecnologias').modal('show');
         }
 
+        $scope.listaUnidades = function () {
+            //Abro cuadro de unidades
+            $('#dialogoDatosUnidades').modal('show');
+        }
         $scope.actualizarTecnologia = function (idTecnologia) {
             //----LLAMAR AL SERVICIO DE ACTUALIZAR TECNOLOGIAS--------
             $('#dialogoDatosTecnologias').modal('hide');
