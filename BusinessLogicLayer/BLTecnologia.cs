@@ -56,6 +56,7 @@ namespace BusinessLogicLayer
                 estadoT.Add(idTecnologia, estado);
             }
             // guardar juego
+            blHandler.GuardarJuego(j);
             return true;
         }
 

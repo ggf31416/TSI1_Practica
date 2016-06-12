@@ -22,6 +22,8 @@ namespace BusinessLogicLayer
             _dal = dal;
         }
 
+        
+
 
         private List<TipoEdificio> cargarEdificios(Juego j, EstadoData.EstadoEnum estado)
         {
@@ -118,9 +120,21 @@ namespace BusinessLogicLayer
             return _dal.GetJuego(tenant);
         }
 
+        public ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador)
+        {
+            return _dal.GetEntidadesActualizadas(tenant, nombreJugador);
+        }
+
         public Juego GetJuegoUsuario(string tenant, string idUsuario)
         {
-            return _dal.GetJuegoUsuario(tenant, idUsuario);
+            var juego =  _dal.GetJuegoUsuario(tenant, idUsuario);
+            ActualizarJuego(juego);
+            return juego;
+        }
+
+        public void GuardarJuego(Juego j)
+        {
+            _dal.GuardarJuegoUsuarioAsync(j);
         }
     }
 }

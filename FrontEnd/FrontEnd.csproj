@@ -282,7 +282,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="ChatHub.cs" />
-    <Compile Include="Hubs\AtlasHub.cs" />
+    <Compile Include="Models\ListasEntidadesModel.cs" />
     <Compile Include="Models\CEInputDataModel.cs" />
     <Compile Include="Models\DataActualModel.cs" />
     <Compile Include="Models\EstadoRecursoModel.cs" />
@@ -297,8 +297,9 @@
     <Compile Include="Models\EUInputDataModel.cs" />
     <Compile Include="Models\FechaCantidad.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\IdentificadorModel.cs" />
     <Compile Include="Models\IdModel.cs" />
-    <Compile Include="Models\IdentificadorSignalR.cs" />
+    <Compile Include="Hubs\IdentificadorSignalR.cs" />
     <Compile Include="Models\InfoCeldaModel.cs" />
     <Compile Include="Models\JuegoModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
