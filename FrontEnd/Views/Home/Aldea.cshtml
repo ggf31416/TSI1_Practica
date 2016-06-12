@@ -36,14 +36,14 @@
             <div class="row">
                 <div class="col-sm-6 col-md-6 col-lg-6">
                     <div class="row">
-                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="(key, rec) in $root.dataJugador.EstadoRecursos">
-                            <img class="recursosTablero" ng-src="getImagenRec(key.Id)"/>{{rec.Total}}
+                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.dataJugador.EstadoRecursos">
+                            <img class="recursosTablero" ng-src="getImagenRec(rec.Id)"/>{{rec.Total}}
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-6 col-md-6 col-lg-6">
                     <div class="row">
-                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="(key, uni) in $root.dataJugador.EstadoUnidades">
+                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="uni in $root.dataJugador.EstadoUnidades">
                             <img class="recursosTablero" ng-src="getImagenUnidad(uni.Id)"/>{{uni.Total}}
                         </div>
                     </div>
