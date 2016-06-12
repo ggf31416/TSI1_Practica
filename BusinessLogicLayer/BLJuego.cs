@@ -72,9 +72,9 @@ namespace BusinessLogicLayer
         {
             foreach (var unidad in data.EstadoUnidades.Values)
             {
-                if (unidad.Estado == EstadoData.EstadoEnum.C && unidad.Fin <= DateTime.Now)
-
+                if (unidad.Estado == EstadoData.EstadoEnum.C && unidad.Fin <= DateTime.Now) {
                     unidad.Estado = EstadoData.EstadoEnum.A;
+                }   
             }
         }
 

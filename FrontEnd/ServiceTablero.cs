@@ -2278,10 +2278,10 @@ public interface IServiceTablero
     Shared.Entities.Juego GetAllDataJuego(string tenant);
     
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/ConstruirEdificio", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/ConstruirEdificioResponse")]
-    bool ConstruirEdificio(Shared.Entities.CEInputData ceid);
+    bool ConstruirEdificio(Shared.Entities.CEInputData ceid, string Tenant, string NombreJugador);
     
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/EntrenarUnidad", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/EntrenarUnidadResponse")]
-    int EntrenarUnidad(Shared.Entities.EUInputData euid);
+    int EntrenarUnidad(Shared.Entities.EUInputData euid, string Tenant, string NombreJugador);
     
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetEntidadesActualizadas", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetEntidadesActualizadasResponse")]
     Shared.Entities.ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador);
@@ -2362,14 +2362,14 @@ public partial class ServiceTableroClient : System.ServiceModel.ClientBase<IServ
         return base.Channel.GetAllDataJuego(tenant);
     }
     
-    public bool ConstruirEdificio(Shared.Entities.CEInputData ceid)
+    public bool ConstruirEdificio(Shared.Entities.CEInputData ceid, string Tenant, string NombreJugador)
     {
-        return base.Channel.ConstruirEdificio(ceid);
+        return base.Channel.ConstruirEdificio(ceid, Tenant, NombreJugador);
     }
     
-    public int EntrenarUnidad(Shared.Entities.EUInputData euid)
+    public int EntrenarUnidad(Shared.Entities.EUInputData euid, string Tenant, string NombreJugador)
     {
-        return base.Channel.EntrenarUnidad(euid);
+        return base.Channel.EntrenarUnidad(euid, Tenant, NombreJugador);
     }
     
     public Shared.Entities.ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador)
