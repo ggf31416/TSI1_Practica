@@ -28,7 +28,7 @@ namespace BusinessLogicLayer
         private List<TipoEdificio> cargarEdificios(Juego j, EstadoData.EstadoEnum estado)
         {
             Tablero miBase = j.Tablero;
-            var ocupadas = miBase.Celdas.Where(c => c.IdTipoEdificio.HasValue && c.IdTipoEdificio >= 0 && c.Estado.Estado == estado);
+            var ocupadas = miBase.Celdas.Where(c => c.IdTipoEdificio.HasValue && c.IdTipoEdificio >= 0 && (c.Estado != null && c.Estado.Estado == estado));
             var res = new List<TipoEdificio>();
             foreach (TableroCelda tc in ocupadas)
             {
@@ -84,7 +84,7 @@ namespace BusinessLogicLayer
         public bool actualizarEdificios(Juego juego)
         {
             bool cambio = true;
-            var edificiosConstruyendo = juego.Tablero.Celdas.Where(c => c.IdTipoEdificio.HasValue && c.IdTipoEdificio >= 0 && c.Estado.Estado == EstadoData.EstadoEnum.A);
+            var edificiosConstruyendo = juego.Tablero.Celdas.Where(c => c.IdTipoEdificio.HasValue && c.IdTipoEdificio >= 0 && (c.Estado != null && c.Estado.Estado == EstadoData.EstadoEnum.C));
             var recursos = juego.DataJugador.EstadoRecursos;
             foreach (var edificio in edificiosConstruyendo)
             {

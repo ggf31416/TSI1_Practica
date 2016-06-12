@@ -530,6 +530,7 @@ namespace FrontEnd.Controllers
                 }
 
                 //Datos DataActual
+                ret.DataJugador = new Models.DataActualModel();
                 ret.DataJugador.EstadoRecursos = new Dictionary<string, Models.EstadoRecursoModel>();
                 foreach (var eR in juego.DataJugador.EstadoRecursos)
                 {
@@ -565,9 +566,10 @@ namespace FrontEnd.Controllers
 
                 return Json(new { success = true, responseText = "Juego: ", ret = ret }, JsonRequestBehavior.AllowGet);
             }
-            catch
+            catch(Exception e)
             {
-                return Json(new { success = false });
+
+                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
             }
         }
     }
