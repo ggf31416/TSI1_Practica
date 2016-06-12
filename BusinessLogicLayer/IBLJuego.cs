@@ -11,7 +11,7 @@ namespace BusinessLogicLayer
     {
         Juego GetAllDataJuego(string tenant);
         Juego GetJuegoUsuario(string tenant,string idUsuario);
-
+        void GuardarJuego(Juego j);
         void ActualizarJuego(Juego j);
     }
 }
