@@ -192,6 +192,39 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
         }
         $scope.actualizarTecnologia = function (idTecnologia) {
             //----LLAMAR AL SERVICIO DE ACTUALIZAR TECNOLOGIAS--------
+            if (!$scope.auxTecnologia) {
+                    var json = {
+                        idTecnologia: idTecnologia
+                    };
+                    //var data = aldeasService.desarrollarTecnologia(json);
+                    if (true || data.ret) {
+                        $scope.auxTecnologia = findEdificioInArray($rootScope.listaTecnologias, idTecnologia)[0];
+                        for (var j = 0; j < $rootScope.listaRecursos.length; j++) {
+                            $rootScope.listaRecursos[j].Valor = $rootScope.listaRecursos[j].Valor - getCosto($scope.auxTecnologia, $rootScope.listaRecursos[j].Id);
+                        }
+                        $scope.timerTecnologia = $interval(function () {
+                            $interval.cancel($scope.timerTecnologia);
+                            aldeasService.getEntidadesActualizadas()
+                                                    .then(function (data) {
+                                                        console.debug(data);
+                                                        $rootScope.listaEdificios = data.TipoEdificios;
+                                                        console.debug($rootScope.listaEdificios);
+                                                        $rootScope.listaUnidades = data.TipoUnidades;
+                                                        for (var i = 0; i < $rootScope.listaUnidades.length; i++) {
+                                                            $rootScope.listaUnidades[i].Valor = (i + 1) * 10;
+                                                        }
+
+                                                    })
+                                                    .catch(function (err) {
+                                                        alert(err)
+                                                    });
+                            $scope.auxTecnologia = undefined;
+                        }, $scope.auxTecnologia.TiempoConstruccion * 100);
+                    }
+                    else
+                        alert("No es posible desarrollar la tecnologia");
+            } else
+                alert("Ya hay otra tecnologia actualizando");
             $('#dialogoDatosTecnologias').modal('hide');
         }
 
