@@ -1696,6 +1696,8 @@ namespace Shared.Entities
         
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
+        private int IdField;
+        
         private int ProduccionField;
         
         private float TotalField;
@@ -1709,6 +1711,19 @@ namespace Shared.Entities
             set
             {
                 this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Id
+        {
+            get
+            {
+                return this.IdField;
+            }
+            set
+            {
+                this.IdField = value;
             }
         }
         
@@ -1754,6 +1769,8 @@ namespace Shared.Entities
         private long FaltanteField;
         
         private System.DateTime FinField;
+        
+        private int IdField;
         
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData
         {
@@ -1816,6 +1833,19 @@ namespace Shared.Entities
             set
             {
                 this.FinField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Id
+        {
+            get
+            {
+                return this.IdField;
+            }
+            set
+            {
+                this.IdField = value;
             }
         }
         

@@ -64,7 +64,7 @@ namespace BusinessLogicLayer
 
         private void actualizarRecursos(DataActual data)
         {
-            TimeSpan dif = DateTime.Now - data.UltimaActualizacion;
+            TimeSpan dif = DateTime.UtcNow - data.UltimaActualizacion;
             foreach (var cant in data.EstadoRecursos.Values)
             {
                 cant.Total += (float)(cant.Produccion * dif.TotalSeconds);
@@ -93,11 +93,11 @@ namespace BusinessLogicLayer
             var recursos = juego.DataJugador.EstadoRecursos;
             foreach (var edificio in edificiosConstruyendo)
             {
-                if (edificio.Estado.Fin <= DateTime.Now)
+                if (edificio.Estado.Fin <= DateTime.UtcNow)
                 {
                     edificio.Estado.Estado = EstadoData.EstadoEnum.A;
                     cambio = true;
-                    TimeSpan dif = DateTime.Now - edificio.Estado.Fin;
+                    TimeSpan dif = DateTime.UtcNow - edificio.Estado.Fin;
                     foreach (var prod in juego.TipoEdificios[edificio.Id].RecursosAsociados)
                     {
                         recursos[prod.IdRecurso.ToString()].Total += (float)(prod.Valor * dif.TotalSeconds);
@@ -115,7 +115,7 @@ namespace BusinessLogicLayer
             actualizarRecursosPorSegundo(j);
             IBLTecnologia tec = new BLTecnologia(this);
             tec.CompletarTecnologiasTerminadas(j);
-            j.DataJugador.UltimaActualizacion = DateTime.Now;
+            j.DataJugador.UltimaActualizacion = DateTime.UtcNow;
             
         }
 

@@ -52,7 +52,7 @@ namespace BusinessLogicLayer
             if (!consumirRecursosSiPuedo(j, j.Tecnologias[idTecnologia])) return false;
             if (estadoT.ContainsKey(idTecnologia.ToString()))
             {
-                EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Fin = DateTime.Now.AddSeconds( j.Tecnologias[idTecnologia].Tiempo) };
+                EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Fin = DateTime.UtcNow. AddSeconds( j.Tecnologias[idTecnologia].Tiempo) };
                 estadoT.Add(idTecnologia.ToString(), estado);
             }
             // guardar juego
@@ -80,7 +80,7 @@ namespace BusinessLogicLayer
 
         private bool estaCompleta(Juego j, int idTecnologia)
         {
-            return j.DataJugador.EstadoTecnologias[idTecnologia.ToString()].Fin > DateTime.Now;
+            return j.DataJugador.EstadoTecnologias[idTecnologia.ToString()].Fin > DateTime.UtcNow;
         }
 
         private void AplicarTecnologia(Juego j ,Tecnologia tec)
@@ -159,7 +159,7 @@ namespace BusinessLogicLayer
             {
                 string idTec = kv.Key;
                 EstadoData e = kv.Value;
-                if (e.Estado == EstadoData.EstadoEnum.C && e.Fin < DateTime.Now) 
+                if (e.Estado == EstadoData.EstadoEnum.C && e.Fin < DateTime.UtcNow) 
                 {
                     CompletarTecnologia(j, idTec);
                     algunaTermino = true;

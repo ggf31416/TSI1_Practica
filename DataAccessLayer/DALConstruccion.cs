@@ -52,7 +52,7 @@ namespace DataAccessLayer
             {
                 celda.Estado = new Shared.Entities.EstadoData();
                 celda.Estado.Estado = Shared.Entities.EstadoData.EstadoEnum.A;
-                celda.Estado.Fin = DateTime.Now;
+                celda.Estado.Fin = DateTime.UtcNow;
             }
             collection.InsertOne(juego);
         }
@@ -207,7 +207,7 @@ namespace DataAccessLayer
                 tableroCelda.PosFila = ceid.PosFila;
                 tableroCelda.Estado = new Shared.Entities.EstadoData();
                 tableroCelda.Estado.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
-                tableroCelda.Estado.Fin = DateTime.Now.AddSeconds((int)TipoEdificio.TiempoConstruccion);
+                tableroCelda.Estado.Fin = DateTime.UtcNow.AddSeconds((int)TipoEdificio.TiempoConstruccion);
                 juego.Tablero.Celdas.Add(tableroCelda);
                 Shared.Entities.EstadoRecurso EstRec = new Shared.Entities.EstadoRecurso();
                 foreach (var costo in TipoEdificio.Costos)
@@ -281,7 +281,7 @@ namespace DataAccessLayer
                 Shared.Entities.EstadoData EstadoData = new Shared.Entities.EstadoData();
                 EstadoData.Cantidad = euid.Cantidad;
                 EstadoData.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
-                EstadoData.Fin = DateTime.Now.AddHours((int)TipoUnidad.TiempoConstruccion);
+                EstadoData.Fin = DateTime.UtcNow.AddHours((int)TipoUnidad.TiempoConstruccion);
                 juego.DataJugador.EstadoUnidades = new Dictionary<string, Shared.Entities.EstadoData>();
                 juego.DataJugador.EstadoUnidades.Add(TipoUnidad.Id.ToString(), EstadoData);
                 Shared.Entities.EstadoRecurso EstRec = new Shared.Entities.EstadoRecurso();
