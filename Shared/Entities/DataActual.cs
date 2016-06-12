@@ -15,7 +15,7 @@ namespace Shared.Entities
         [DataMember]
         public Dictionary<int, EstadoData> EstadoTecnologias { get; set; }
         [DataMember]
-        public Dictionary<int, EstadoRecurso> EstadoRecursos { get; set; }
+        public Dictionary<string, EstadoRecurso> EstadoRecursos { get; set; }
         [DataMember]
         public DateTime UltimaActualizacion { get; set; }
     }

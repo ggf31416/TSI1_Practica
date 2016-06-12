@@ -42,12 +42,13 @@ namespace DataAccessLayer
             juego.IdJugador = idUsuario;
             juego.DataJugador = new Shared.Entities.DataActual();
             juego.DataJugador.UltimaActualizacion = DateTime.Now;
-            foreach(var recurso in juego.TipoRecurso)
+            juego.DataJugador.EstadoRecursos = new Dictionary<string, Shared.Entities.EstadoRecurso>();
+            foreach (var recurso in juego.TipoRecurso)
             {
                 Shared.Entities.EstadoRecurso EstadoRecurso = new Shared.Entities.EstadoRecurso();
                 EstadoRecurso.Total = 99999;
                 EstadoRecurso.Produccion = 12345;
-                juego.DataJugador.EstadoRecursos.Add(recurso.Id, EstadoRecurso);
+                juego.DataJugador.EstadoRecursos.Add(recurso.Id.ToString(), EstadoRecurso);
             }
             collection.InsertOne(juego);
         }
@@ -164,7 +165,7 @@ namespace DataAccessLayer
                 validarConstruccion.Recursos = new Dictionary<int, int>();
                 foreach(var recur in juego.DataJugador.EstadoRecursos)
                 {
-                    validarConstruccion.Recursos.Add(recur.Key, (int)recur.Value.Total);
+                    validarConstruccion.Recursos.Add(Int32.Parse(recur.Key), (int)recur.Value.Total);
                 }
                 return validarConstruccion;
             }
@@ -196,6 +197,7 @@ namespace DataAccessLayer
                 tableroCelda.IdTipoEdificio = ceid.IdTipoEdificio;
                 tableroCelda.PosColumna = ceid.PosColumna;
                 tableroCelda.PosFila = ceid.PosFila;
+                tableroCelda.Estado = new Shared.Entities.EstadoData();
                 tableroCelda.Estado.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
                 tableroCelda.Estado.Fin = DateTime.Now.AddSeconds((int)TipoEdificio.TiempoConstruccion);
                 juego.Tablero.Celdas.Add(tableroCelda);
