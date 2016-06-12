@@ -382,6 +382,15 @@ namespace FrontEnd.Controllers
                     Models.IdModel celda = new Models.IdModel();
                     celda.Id = tc.IdTipoEdificio == null ? -1 : (int)tc.IdTipoEdificio;
                     retTableroModel.Columnas.ElementAt((int)tc.PosFila).Fila.Add(celda);
+
+                    Models.EstadoDataModel edm = new Models.EstadoDataModel();
+                    edm.Estado = tc.Estado.Estado;
+                    edm.Id = tc.Estado.Id;
+                    edm.Cantidad = tc.Estado.Cantidad;
+                    edm.Fin = tc.Estado.Fin;
+                    edm.Faltante = tc.Estado.Faltante;
+
+                    celda.EstadoData = edm;
                 }
 
                 ret.Tablero = retTableroModel;
@@ -550,7 +559,8 @@ namespace FrontEnd.Controllers
                     Models.EstadoDataModel eDM = new Models.EstadoDataModel();
                     eDM.Id = int.Parse(eT.Key);// TODO: Modificar cuando cambien las claves
                     eDM.Estado = eT.Value.Estado;
-                    eDM.Tiempo = (int)eT.Value.Faltante;
+                    eDM.Fin = eT.Value.Fin;
+                    eDM.Faltante = eT.Value.Faltante;
                     eDM.Cantidad = eT.Value.Cantidad;
 
                     ret.DataJugador.EstadoTecnologias.Add(eT.Key, eDM);
@@ -564,7 +574,8 @@ namespace FrontEnd.Controllers
                         Models.EstadoDataModel eDM = new Models.EstadoDataModel();
                         eDM.Id = eU.Value.Id;// TODO: Modificar cuando cambien las claves
                         eDM.Estado = eU.Value.Estado;
-                        eDM.Tiempo = (int)eU.Value.Faltante;
+                        eDM.Fin = eU.Value.Fin;
+                        eDM.Faltante = eU.Value.Faltante;
                         eDM.Cantidad = eU.Value.Cantidad;
 
                         ret.DataJugador.EstadoUnidades.Add(eDM.Id.ToString(), eDM);
