@@ -25,10 +25,7 @@ namespace FrontEnd
         {
             var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);
 
-            foreach (var groupName i)
-            {
-                await Groups.Add(Context.ConnectionId, groupName);
-            }
+
         }
     }
 }
