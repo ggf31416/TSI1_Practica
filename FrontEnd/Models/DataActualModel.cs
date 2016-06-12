@@ -7,9 +7,9 @@ namespace FrontEnd.Models
 {
     public class DataActualModel
     {
-        public Dictionary<int, EstadoDataModel> EstadoUnidades { get; set; }
-        public Dictionary<int, EstadoDataModel> EstadoTecnologias { get; set; }
-        public Dictionary<int, EstadoRecursoModel> EstadoRecursos { get; set; }
+        public Dictionary<string, EstadoDataModel> EstadoUnidades { get; set; }
+        public Dictionary<string, EstadoDataModel> EstadoTecnologias { get; set; }
+        public Dictionary<string, EstadoRecursoModel> EstadoRecursos { get; set; }
         public DateTime UltimaActualizacion { get; set; }
     }
 }

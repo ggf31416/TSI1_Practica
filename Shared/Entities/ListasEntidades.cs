@@ -4,17 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Serialization;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Shared.Entities
 {
     [DataContract]
-    public class ValidarConstruccion
+    public class ListasEntidades
     {
         [DataMember]
-        public TipoEdificio TipoEdificio { get; set; }
+        public List<TipoEdificio> TipoEdificios { get; set; }
         [DataMember]
-        public Tablero Tablero { get; set; }
-        [DataMember]
-        public Dictionary<string,int> Recursos { get; set; }
+        public List<TipoUnidad> TipoUnidades { get; set; }
     }
 }

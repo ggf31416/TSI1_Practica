@@ -41,6 +41,12 @@ namespace ServiceLayer
         int EntrenarUnidad(EUInputData euid);
 
         [OperationContract]
+        ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador);
+
+        [OperationContract]
+        Juego GetJuegoUsuario(string tenant, string idUsuario);
+
+        [OperationContract]
         bool DesarrollarTecnologia(string tenant, string idJugador, int idTecnologia);
     }
 }

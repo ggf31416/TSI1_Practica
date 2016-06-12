@@ -19,9 +19,9 @@ namespace BusinessLogicLayer
         private bool checkarDependencias(Juego j,int IdTecnologia)
         {
             var estadoT = j.DataJugador.EstadoTecnologias;
-            if (estadoT.ContainsKey(IdTecnologia))
+            if (estadoT.ContainsKey(IdTecnologia.ToString()))
             {
-                return estadoT[IdTecnologia].Estado == EstadoData.EstadoEnum.Puedo;
+                return estadoT[IdTecnologia.ToString()].Estado == EstadoData.EstadoEnum.Puedo;
             }
             return false;
         }
@@ -50,10 +50,10 @@ namespace BusinessLogicLayer
             var estadoT = j.DataJugador.EstadoTecnologias;
             if (!checkarDependencias(j, idTecnologia)) return false;
             if (!consumirRecursosSiPuedo(j, j.Tecnologias[idTecnologia])) return false;
-            if (estadoT.ContainsKey(idTecnologia))
+            if (estadoT.ContainsKey(idTecnologia.ToString()))
             {
                 EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Fin = DateTime.Now.AddSeconds( j.Tecnologias[idTecnologia].Tiempo) };
-                estadoT.Add(idTecnologia, estado);
+                estadoT.Add(idTecnologia.ToString(), estado);
             }
             // guardar juego
             blHandler.GuardarJuego(j);
@@ -67,20 +67,20 @@ namespace BusinessLogicLayer
             CompletarTecnologia(j, idTecnologia);
         }*/
 
-        private void CompletarTecnologia(Juego j, int idTecnologia)
+        private void CompletarTecnologia(Juego j, string idTecnologia)
         {
-            Tecnologia tec = j.Tecnologias.FirstOrDefault(t => t.Id == idTecnologia);
+            Tecnologia tec = j.Tecnologias.FirstOrDefault(t => t.Id.ToString() == idTecnologia);
             if (tec != null)
             {
                 AplicarTecnologia(j, tec);
 
-                j.DataJugador.EstadoTecnologias[idTecnologia].Estado = EstadoData.EstadoEnum.A;
+                j.DataJugador.EstadoTecnologias[idTecnologia.ToString()].Estado = EstadoData.EstadoEnum.A;
             }
         }
 
         private bool estaCompleta(Juego j, int idTecnologia)
         {
-            return j.DataJugador.EstadoTecnologias[idTecnologia].Fin > DateTime.Now;
+            return j.DataJugador.EstadoTecnologias[idTecnologia.ToString()].Fin > DateTime.Now;
         }
 
         private void AplicarTecnologia(Juego j ,Tecnologia tec)
@@ -127,7 +127,7 @@ namespace BusinessLogicLayer
         private bool puedoDesarrollarDep(Juego j, Tecnologia tec)
         {
             var estado = j.DataJugador.EstadoTecnologias;
-            return tec.TecnologiaDependencias.All(dep => estado[dep.IdTecnologiaDepende].Estado == EstadoData.EstadoEnum.A);
+            return tec.TecnologiaDependencias.All(dep => estado[dep.IdTecnologiaDepende.ToString()].Estado == EstadoData.EstadoEnum.A);
         }
 
         private void ActualizarTecnologiasConstruibles(Juego j, Tecnologia tec)
@@ -151,7 +151,7 @@ namespace BusinessLogicLayer
             bool algunaTermino = false;
             foreach (var kv in estado)
             {
-                int idTec = kv.Key;
+                string idTec = kv.Key;
                 EstadoData e = kv.Value;
                 if (e.Estado == EstadoData.EstadoEnum.C && e.Fin < DateTime.Now) 
                 {
