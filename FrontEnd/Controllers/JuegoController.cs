@@ -241,13 +241,14 @@ namespace FrontEnd.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetEntidadesActualizadas(Models.IdentificadorModel identificador)
+        public ActionResult GetEntidadesActualizadas(string tenant)
         {
             try
             {
+                string idJugador = Request.Cookies["clienteId"].Value;
                 ServiceTableroClient client = new ServiceTableroClient();
 
-                ListasEntidades listasEntidades = client.GetEntidadesActualizadas(identificador.Tenant, identificador.NombreJugador);
+                ListasEntidades listasEntidades = client.GetEntidadesActualizadas(tenant, idJugador);
 
                 Models.ListasEntidadesModel ret = new Models.ListasEntidadesModel();
 

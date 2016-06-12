@@ -62,7 +62,7 @@
             var defered = $q.defer();
             var promise = defered.promise;
 
-            $http.get('/' + $rootScope.NombreJuego + '/Juego/GetAllDataJuego/')
+            $http.get('/' + $rootScope.NombreJuego + '/Juego/GetEntidadesActualizadas/')
             .success(function (data) {
                 defered.resolve(data.ret);
             })
