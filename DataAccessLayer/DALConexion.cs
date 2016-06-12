@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer
 {
-    class DALConexion
+    public class DALConexion
     {
+        public void agregarConexion(string tenant,string idJugado)
+        {
+
+        }
+
     }
 }
