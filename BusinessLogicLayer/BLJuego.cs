@@ -103,9 +103,7 @@ namespace BusinessLogicLayer
         }
 
 
-
-
-        public void ActualizarJuego(Juego j)
+        public void ActualizarJuegoSinGuardar(Juego j)
         {
             actualizarEdificios(j);
             actualizarRecursos(j.DataJugador);
@@ -113,6 +111,13 @@ namespace BusinessLogicLayer
             IBLTecnologia tec = new BLTecnologia(this);
             tec.CompletarTecnologiasTerminadas(j);
             j.DataJugador.UltimaActualizacion = DateTime.Now;
+            
+        }
+
+        public void ActualizarJuego(Juego j)
+        {
+            ActualizarJuegoSinGuardar(j);
+            GuardarJuego(j);
         }
 
         public Juego GetAllDataJuego(string tenant)
@@ -127,9 +132,18 @@ namespace BusinessLogicLayer
             return juego;
         }
 
+        public Juego GetJuegoUsuarioSinActualizar(string tenant, string idUsuario)
+        {
+            var juego = _dal.GetJuegoUsuario(tenant, idUsuario);
+            ActualizarJuegoSinGuardar(juego);
+            return juego;
+        }
+
         public void GuardarJuego(Juego j)
         {
             _dal.GuardarJuegoUsuarioAsync(j);
         }
+
+
     }
 }

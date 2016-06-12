@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.SignalR;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 
@@ -10,9 +11,14 @@ namespace FrontEnd.Hubs
     {
         public string GetUserId(IRequest request)
         {
-            var cookie = request.Cookies["clienteId"];
-            string clienteId = cookie.Value;
-            return clienteId;
+            if (request.Cookies.ContainsKey("clienteId"))
+            {
+                var cookie = request.Cookies["clienteId"];
+                string clienteId = cookie.Value;
+                return clienteId;
+            }
+            Debug.WriteLine("[WARNING] GetUserId para jugador no autenticado");
+            return "NO_AUTENTICADO";
         }
     }
 }

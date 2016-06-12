@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Microsoft.AspNet.SignalR;
+using System.Threading.Tasks;
 
 namespace FrontEnd
 {
@@ -18,6 +19,16 @@ namespace FrontEnd
         public void agregarUsuarioGrupo(string idUsuario,string grupo)
         {
             Groups.Add(idUsuario, grupo);
+        }
+
+        public override async Task OnConnected()
+        {
+            var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);
+
+            foreach (var groupName i)
+            {
+                await Groups.Add(Context.ConnectionId, groupName);
+            }
         }
     }
 }
