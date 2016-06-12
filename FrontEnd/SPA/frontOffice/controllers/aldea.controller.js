@@ -264,8 +264,8 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                         IdTipoUnidad: parseInt($scope.unidadesAconstruir[i].Id),
                         Cantidad: parseInt( $scope.unidadesAconstruir[i].Cantidad)
                     };
-                    //var data = aldeasService.entrenarUnidades(json);
-                    if (true || data.ret) {
+                    var data = aldeasService.entrenarUnidades(json);
+                    if (data.ret) {
                         $scope.auxUnidad = findEdificioInArray($rootScope.listaUnidades, $scope.unidadesAconstruir[i].Id)[0];
                         $scope.auxUnidad.Cant = parseInt($scope.unidadesAconstruir[i].Cantidad);
                         for (var j = 0; j < $rootScope.listaRecursos.length; j++) {
