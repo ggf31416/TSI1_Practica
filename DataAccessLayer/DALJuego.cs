@@ -38,7 +38,45 @@ namespace DataAccessLayer
 
         public Juego GetJuegoUsuario(string tenant, string idUsuario)
         {
-            return null;
+            IMongoDatabase _database = _client.GetDatabase(tenant.ToString());
+            IMongoCollection<Juego> collection = _database.GetCollection<Juego>("juego_usuario");
+
+            var query = from juego in collection.AsQueryable<Juego>()
+                        where juego.IdJugador == idUsuario
+                        select juego;
+
+            if (query.Count() > 0)
+            {
+                return query.First();
+            }
+            else
+            {
+                return null;
+            }
         }
+
+        private Task<ReplaceOneResult> GuardarJuegoUsuario(Juego juego)
+        {
+            string tenant = juego.Nombre;
+            IMongoDatabase _database = _client.GetDatabase(tenant);
+            IMongoCollection<Juego> collection = _database.GetCollection<Juego>("juego_usuario");
+
+            return collection.ReplaceOneAsync(j => j.IdJugador == juego.IdJugador, juego, new UpdateOptions { IsUpsert = true });
+        }
+
+        public Task GuardarJuegoUsuarioAsync(Juego juego)
+        {
+            return GuardarJuegoUsuario(juego);
+        }
+
+        // espera a que termine la operacion y retorna si tuvo exito
+        public bool GuardarJuegoUsuarioEsperar(Juego juego)
+        {
+            var task = GuardarJuegoUsuario(juego);
+            var res = task.Result;
+            return res.ModifiedCount == 1;
+        }
+
+
     }
 }

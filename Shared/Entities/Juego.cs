@@ -14,7 +14,7 @@ namespace Shared.Entities
         [DataMember]
         public string Id { get; set; }
         [DataMember]
-        public int IdJugador { get; set; }
+        public string IdJugador { get; set; }
         [DataMember]
         [BsonId]
         public string Nombre { get; set; }
