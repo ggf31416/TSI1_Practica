@@ -43,6 +43,11 @@ namespace BusinessLogicLayer
         private void actualizarRecursosPorSegundo(Juego j)
         {
             var recursos = j.DataJugador.EstadoRecursos;
+            foreach (var cant in recursos.Values)
+            {
+                if(cant.Total < 0)
+                        cant.Total = 0;
+            }
             var lst = cargarEdificios(j,EstadoData.EstadoEnum.A);
             foreach (var cant in recursos.Values)
             {
