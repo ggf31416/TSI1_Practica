@@ -12,7 +12,7 @@
 
         var selectedUnit = null;
 
-        $rootScope.nombreJuego = "Atlas2";
+        $rootScope.nombreJuego = tenant;
 
         $scope.contador = 1;
         $scope.idJuego = 6;

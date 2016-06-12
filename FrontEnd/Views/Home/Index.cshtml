@@ -11,7 +11,12 @@
     <script src="~/Scripts/phaser.min.js"></script>
     
 }
-
+@{
+    var tenant = ViewBag.Tenant;
+}
+<script type="text/javascript">
+        var tenant = '@tenant';
+</script>
 
 
     <div class="container">

@@ -11,17 +11,19 @@ namespace FrontEnd.Controllers
     public class HomeController : Controller
     {
         // GET: Home
-        public ActionResult Index()
+        public ActionResult Index(string tenant)
         {
+            ViewBag.Tenant = tenant;
             return View();
         }
 
 
         [HttpPost]
-        public ActionResult login(ClienteJuego clienteJuego)
+        public ActionResult login(string tenant, ClienteJuego clienteJuego)
         {
             try
             {
+                clienteJuego.idJuego = tenant;
                 ServiceTableroClient client = new ServiceTableroClient();
                 Shared.Entities.ClienteJuego cli = new Shared.Entities.ClienteJuego();
                 cli.clienteId = clienteJuego.clienteId;
@@ -36,16 +38,16 @@ namespace FrontEnd.Controllers
         }
 
         [HttpPost]
-        public ActionResult register(ClienteJuego clienteJuego)
+        public ActionResult register(string tenant, ClienteJuego clienteJuego)
         {
             try
             {
+                clienteJuego.idJuego = tenant;
                 ServiceTableroClient client = new ServiceTableroClient();
                 Shared.Entities.ClienteJuego cli = new Shared.Entities.ClienteJuego();
                 cli.clienteId = clienteJuego.clienteId;
                 cli.token = clienteJuego.token;
                 cli.apellido = clienteJuego.apellido;
-                cli.idJuego = clienteJuego.idJuego;
                 cli.nombre = clienteJuego.nombre;
                 cli.username = clienteJuego.username;
                 client.register(cli, clienteJuego.idJuego);
