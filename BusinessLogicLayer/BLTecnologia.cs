@@ -30,12 +30,12 @@ namespace BusinessLogicLayer
         {
             var t_costo = t.TecnologiaRecursoCostos;
             var estado_recursos = j.DataJugador.EstadoRecursos;
-            bool puedoConstruir = t_costo.All(costoRec => estado_recursos[costoRec.IdRecurso].Total >= costoRec.Costo);
+            bool puedoConstruir = t_costo.All(costoRec => estado_recursos[costoRec.IdRecurso.ToString()].Total >= costoRec.Costo);
             if (puedoConstruir)
             {
                 foreach (var costoRec in t_costo)
                 {
-                    estado_recursos[costoRec.IdRecurso].Total -= costoRec.Costo;
+                    estado_recursos[costoRec.IdRecurso.ToString()].Total -= costoRec.Costo;
                 }
             }
             return puedoConstruir;

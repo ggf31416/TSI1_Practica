@@ -52,7 +52,7 @@ namespace BusinessLogicLayer
             {
                 foreach (var prod in e.RecursosAsociados)
                 {
-                    recursos[prod.IdRecurso].Produccion += prod.Valor;
+                    recursos[prod.IdRecurso.ToString()].Produccion += prod.Valor;
                 }
             }
         }
@@ -95,7 +95,7 @@ namespace BusinessLogicLayer
                     TimeSpan dif = DateTime.Now - edificio.Estado.Fin;
                     foreach (var prod in juego.TipoEdificios[edificio.Id].RecursosAsociados)
                     {
-                        recursos[prod.IdRecurso].Total += (float)(prod.Valor * dif.TotalSeconds);
+                        recursos[prod.IdRecurso.ToString()].Total += (float)(prod.Valor * dif.TotalSeconds);
                     }
                 }
             }

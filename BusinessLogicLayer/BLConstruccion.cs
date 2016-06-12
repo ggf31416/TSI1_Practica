@@ -32,13 +32,13 @@ namespace BusinessLogicLayer
             {
                 if(celda.PosFila == ceid.PosFila && celda.PosColumna == ceid.PosColumna)
                 {
-                    vacia = celda.IdTipoEdificio == -1;
+                    vacia = celda.IdTipoEdificio == null;
                     break;
                 }
             }
 
             //Checkear si tiene recursos suficientes
-            bool suficientesRecursos = false;
+            bool suficientesRecursos = true;
             foreach(var costo in vE.TipoEdificio.Costos)
             {
                 if (vE.Recursos[costo.IdRecurso] < costo.Valor)
