@@ -12,7 +12,7 @@ namespace Shared.Entities
     public class Juego
     {
         [DataMember]
-        public string Id { get; set; }
+        public int Id { get; set; }
         [DataMember]
         public int IdJugador { get; set; }
         [DataMember]

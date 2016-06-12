@@ -6,7 +6,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
     function ($http, $q, aldeasService, edificiosService, unidadesService, $scope, $rootScope, $interval) {
 
         //--------------Inicializacion de variables---------------------
-        $rootScope.listaRecursos = [
+        /*$rootScope.listaRecursos = [
                {
                    Nombre: "Oro",
                    Imagen: "/SPA/backOffice/ImagenesSubidas/oro.jpg",
@@ -20,14 +20,60 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                    Produccion: 2
                }
         ];
+
+        $rootScope.listaUnidades = [
+               {
+                   Nombre: "Soldado",
+                   Imagen: "/SPA/backOffice/ImagenesSubidas/soldado.jpg",
+                   Valor: 10
+               },
+               {
+                   Nombre: "Arquero",
+                   Imagen: "/SPA/backOffice/ImagenesSubidas/arquero.jpg",
+                   Valor: 20
+               }
+        ];
         
-        //timer para actualizar recursos
-        $interval(function () {
-            for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
-                $rootScope.listaRecursos[i].Valor = $rootScope.listaRecursos[i].Valor + $rootScope.listaRecursos[i].Produccion;
-            }
-        },1000);
-        
+        $rootScope.dataJugador = {"EstadoUnidades":{
+                                    9:{
+                                        "Estado":"A",
+                                        "Faltante":0,
+                                        "Cantidad":0
+                                    },
+                                    9:{
+                                        "Estado":"C",
+                                        "Faltante":20,
+                                        "Cantidad":2
+                                    }
+                                },
+                                "EstadoTecnologias":{
+                                    "INT":{
+                                        "Estado":"STRING", //A terminado C construyendo (Puedo/NoPuedo solo tecnologias)
+                                        "Faltante":"INT",
+                                        "Cantidad":"INT"
+                                    },
+                                    "INT":{
+                                        "Estado":"STRING",
+                                        "Faltante":"INT",
+                                        "Cantidad":"INT"
+                                    }
+                                },
+                                "EstadoRecursos":{
+                                    1:{
+                                        "Total":100,
+                                        "Produccion":1
+                                    },
+                                    2: {
+                                        "Total": 100,
+                                        "Produccion": 2
+                                    },
+                                    3: {
+                                        "Total": 100,
+                                        "Produccion": 3
+                                    }
+                                }
+        }
+        */
         $scope.initVariables = function () {
                     $rootScope.NombreJuego = tenant;
                     console.debug($rootScope.NombreJuego);
@@ -37,7 +83,16 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                     $rootScope.listaEdificios = data.TipoEdificios;
                                     console.debug($rootScope.listaEdificios);
                                     $rootScope.listaUnidades = data.TipoUnidades;
-                                    //$rootScope.listaRecursos = data.TipoRecursos;
+                                    for (var i = 0; i < $rootScope.listaUnidades.length; i++) {
+                                        $rootScope.listaUnidades[i].Valor = (i+1) * 10;
+                                    }
+                                    $rootScope.listaRecursos = data.TipoRecursos;
+                                    for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
+                                        console.debug($rootScope.listaRecursos[i]);
+                                        $rootScope.listaRecursos[i].Valor = 100;
+                                        $rootScope.listaRecursos[i].Produccion = i + 1;
+                                        console.debug($rootScope.listaRecursos[i].Produccion);
+                                    }
                                     $rootScope.tablero = data.Tablero;
                                     $rootScope.listaTecnologias = data.Tecnologias;
                                     $rootScope.dataJuego = data.DataJuego;
@@ -45,7 +100,14 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                     $scope.style = { "background-image": "url('" + $rootScope.tablero.ImagenFondo + "')" };
 
                                     $rootScope.tablero.enConstruccion = "https://storagegabilo.blob.core.windows.net/imagenes/gente_en_obra.png";
-                                    })
+                                    //timer para actualizar recursos
+                                    $interval(function () {
+                                        for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
+                                            $rootScope.listaRecursos[i].Valor = $rootScope.listaRecursos[i].Valor + $rootScope.listaRecursos[i].Produccion;
+                                        }
+                                    }, 1000);
+
+                                })
                                 .catch(function (err) {
                                     alert(err)
                                 });
@@ -94,11 +156,13 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
 
         $scope.entidad = null;
 
-        $scope.editCell = function (casilla) {
+        $scope.editCell = function (fila, columna, casilla) {
             if (casilla.Id == -1) {
                 if ($scope.aux == undefined){
                     //Abro cuadro para contruir
                     $scope.editCasilla = casilla;
+                    $scope.editCasilla.fila = fila;
+                    $scope.editCasilla.columna = columna;
                     var id = casilla.Id;
                     $('#dialogoConstruir').modal('show');
                 } else {
@@ -131,24 +195,62 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             $('#dialogoDatosTecnologias').modal('hide');
         }
 
-        function getCosto(IdRecurso){
-            console.debug($scope.aux);
+        function getCosto(aux, IdRecurso){
+            var rec = jQuery.grep(aux.Costos, function (value) {
+                return value.IdRecurso === IdRecurso;
+            })[0];
+            return rec ? rec.Value : 0;
         }
 
         $scope.addEdificio = function (id) {
-            
-            $scope.aux = findEdificioInArray($rootScope.listaEdificios, id)[0];
-            for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
-                $rootScope.listaRecursos[i].Valor = $rootScope.listaRecursos[i].Valor - getCosto($scope.aux, $rootScope.listaRecursos[i].Id);
+            var fila = $scope.editCasilla.fila;
+            var columna = $scope.editCasilla.columna;
+            var json = { PosFila: fila, PosColumna: columna, IdTipoEdificio: id }
+            var data = aldeasService.construirEdificio(json);
+            if (data.ret) {
+                $scope.aux = findEdificioInArray($rootScope.listaEdificios, id)[0];
+                for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
+                    $rootScope.listaRecursos[i].Valor = $rootScope.listaRecursos[i].Valor - getCosto($scope.aux, $rootScope.listaRecursos[i].Id);
+                }
+                $scope.editCasilla.Id = -5;
+                $scope.timerConstruccion = $interval(function () {
+                    $scope.editCasilla.Id = $scope.aux.Id;
+                    $interval.cancel($scope.timerConstruccion);
+                    $scope.aux = undefined;
+                }, $scope.aux.TiempoConstruccion * 1000);
             }
-            $scope.editCasilla.Id = -5;
-            $scope.timerConstruccion = $interval(function () {
-                $scope.editCasilla.Id = $scope.aux.Id;
-                $interval.cancel($scope.timerConstruccion);
-                $scope.aux = undefined;
-            }, $scope.aux.TiempoConstruccion * 1000);
-            
+            else
+                alert("No es posible construir en ese lugar");
             $('#dialogoConstruir').modal('hide');
+        }
+
+        $scope.entrenarUnidades = function () {
+            if (!$scope.auxUnidad) {
+                for (var i = 0; i < $scope.unidadesAconstruir.length; i++) {
+                    var json = {
+                        IdTipoUnidad: parseInt($scope.unidadesAconstruir[i].Id),
+                        Cantidad: parseInt( $scope.unidadesAconstruir[i].Cantidad)
+                    };
+                    //var data = aldeasService.entrenarUnidades(json);
+                    if (true || data.ret) {
+                        $scope.auxUnidad = findEdificioInArray($rootScope.listaUnidades, $scope.unidadesAconstruir[i].Id)[0];
+                        $scope.auxUnidad.Cant = parseInt($scope.unidadesAconstruir[i].Cantidad);
+                        for (var j = 0; j < $rootScope.listaRecursos.length; j++) {
+                            $rootScope.listaRecursos[j].Valor = $rootScope.listaRecursos[j].Valor - getCosto($scope.auxUnidad, $rootScope.listaRecursos[j].Id);
+                        }
+                        $scope.timerUnidad = $interval(function () {
+                            $interval.cancel($scope.timerUnidad);
+                            console.debug($scope.auxUnidad);
+                            $scope.auxUnidad.Valor = $scope.auxUnidad.Valor + $scope.auxUnidad.Cant;
+                            $scope.auxUnidad = undefined;
+                        }, $scope.auxUnidad.TiempoConstruccion * 100 * $scope.auxUnidad.Cant);
+                    }
+                    else
+                        alert("No es posible construir la unidad");
+                }
+            } else
+                alert("Ya hay otra unidad actualizando");
+            $('#dialogoDatosEdificio').modal('hide');
         }
 
         $scope.crearUnidad = function (e) {
