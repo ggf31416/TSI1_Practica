@@ -41,7 +41,7 @@ namespace BusinessLogicLayer
             bool suficientesRecursos = true;
             foreach(var costo in vE.TipoEdificio.Costos)
             {
-                if (vE.Recursos[costo.IdRecurso] < costo.Valor)
+                if (vE.Recursos[costo.IdRecurso.ToString()] < costo.Valor)
                 {
                     suficientesRecursos = false;
                     break;
@@ -69,7 +69,7 @@ namespace BusinessLogicLayer
             Dictionary<int, int> maxUnidadesPorRecurso = new Dictionary<int, int>();
             foreach (var costo in vU.TipoUnidad.Costos)
             {
-                maxUnidadesPorRecurso[costo.IdRecurso] = vU.Recursos[costo.IdRecurso] / costo.Valor;
+                maxUnidadesPorRecurso[costo.IdRecurso] = vU.Recursos[costo.IdRecurso.ToString()] / costo.Valor;
             }
             List<int> aux = maxUnidadesPorRecurso.Values.ToList();
             cantidad = aux.Min();
