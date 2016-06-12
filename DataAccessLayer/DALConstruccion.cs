@@ -201,14 +201,17 @@ namespace DataAccessLayer
                         break;
                     }
                 }
-                Shared.Entities.TableroCelda tableroCelda = new Shared.Entities.TableroCelda();
-                tableroCelda.IdTipoEdificio = ceid.IdTipoEdificio;
-                tableroCelda.PosColumna = ceid.PosColumna;
-                tableroCelda.PosFila = ceid.PosFila;
-                tableroCelda.Estado = new Shared.Entities.EstadoData();
-                tableroCelda.Estado.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
-                tableroCelda.Estado.Fin = DateTime.UtcNow.AddSeconds((int)TipoEdificio.TiempoConstruccion);
-                juego.Tablero.Celdas.Add(tableroCelda);
+                foreach(var TableroCelda in juego.Tablero.Celdas)
+                {
+                    if (TableroCelda.PosColumna == ceid.PosColumna && TableroCelda.PosFila == ceid.PosFila)
+                    {
+                        TableroCelda.IdTipoEdificio = ceid.IdTipoEdificio;
+                        TableroCelda.Estado = new Shared.Entities.EstadoData();
+                        TableroCelda.Estado.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
+                        TableroCelda.Estado.Fin = DateTime.UtcNow.AddSeconds((int)TipoEdificio.TiempoConstruccion);
+                        break;
+                    }
+                }
                 Shared.Entities.EstadoRecurso EstRec = new Shared.Entities.EstadoRecurso();
                 foreach (var costo in TipoEdificio.Costos)
                 {
