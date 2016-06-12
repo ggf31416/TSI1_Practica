@@ -15,6 +15,6 @@ namespace Shared.Entities
         [DataMember]
         public Tablero Tablero { get; set; }
         [DataMember]
-        public Dictionary<int,Recurso> recursos { get; set; }
+        public Dictionary<int,int> Recursos { get; set; }
     }
 }

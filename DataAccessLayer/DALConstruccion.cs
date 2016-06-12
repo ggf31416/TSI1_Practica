@@ -18,120 +18,180 @@ namespace DataAccessLayer
         const string connectionstring = "mongodb://40.84.2.155";
         private static IMongoClient client = new MongoClient(connectionstring);
         private IMongoDatabase database;
-        private IMongoCollection<TableroConstruccion> collection;
-        private int idJuego;
+        private IMongoCollection<Shared.Entities.Juego> collection;
+        private string nombreJuego;
+        private string idUsuario;
 
-        public DALConstruccion(int idJuego)
+        public DALConstruccion(){}
+
+        public DALConstruccion(string nombreJuego, string idUsuario)
         {
-            this.idJuego = idJuego;
-            database = client.GetDatabase(idJuego.ToString());
-            collection = database.GetCollection<TableroConstruccion>("construccion");
+            this.nombreJuego = nombreJuego;
+            this.idUsuario = idUsuario;
+            database = client.GetDatabase(nombreJuego);
+            collection = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
         }
 
-        public void InicializarConstruccion(string idUsuario)
-        {
-            TableroConstruccion tableroConstruccionInicial = new TableroConstruccion(idUsuario);
-            collection.InsertOne(tableroConstruccionInicial);
-        }
+        //public void InicializarConstruccion(string idUsuario)
+        //{
+        //    TableroConstruccion tableroConstruccionInicial = new TableroConstruccion(idUsuario);
+        //    collection.InsertOne(tableroConstruccionInicial);
+        //}
 
-        public TableroConstruccion getTableroConstruccion(string idUsuario)
-        {
-            var query = from tablero in collection.AsQueryable<TableroConstruccion>()
-                        where tablero.idUsuario == idUsuario
-                        select tablero;
-            if (query.Count() > 0)
-                return query.First();
-            else
-                throw new DALConstruccionException("ERROR:No existe el usuario " + idUsuario);
-        }
+        //public TableroConstruccion getTableroConstruccion(string idUsuario)
+        //{
+        //    var query = from tablero in collection.AsQueryable<TableroConstruccion>()
+        //                where tablero.idUsuario == idUsuario
+        //                select tablero;
+        //    if (query.Count() > 0)
+        //        return query.First();
+        //    else
+        //        throw new DALConstruccionException("ERROR:No existe el usuario " + idUsuario);
+        //}
 
-        private InfoCelda getInfoCelda(TableroConstruccion tableroConstruccion, int posX, int posY) {
-            foreach (var infoCelda in tableroConstruccion.lstInfoCelda)
-            {
-                if (infoCelda.PosX == posX && infoCelda.PosY == posY)
-                    return infoCelda;
-            }
-            return null;
-        }
+        //private InfoCelda getInfoCelda(TableroConstruccion tableroConstruccion, int posX, int posY) {
+        //    foreach (var infoCelda in tableroConstruccion.lstInfoCelda)
+        //    {
+        //        if (infoCelda.PosX == posX && infoCelda.PosY == posY)
+        //            return infoCelda;
+        //    }
+        //    return null;
+        //}
 
-        public void AddInfoCelda(string idUsuario, InfoCelda infoCelda)
-        {
-            TableroConstruccion tableroConstruccion = null;
-            try
-            {
-                tableroConstruccion = getTableroConstruccion(idUsuario);
-            } catch (DALConstruccionException ex)
-            {
-                throw new DALConstruccionException("ERROR:Imposible insertar edificio " + infoCelda.Id +
-                    "en la posicion(" + infoCelda.PosX + "," + infoCelda.PosY +
-                    "). No existe el usuario " + idUsuario);
-            }
-            InfoCelda celda = getInfoCelda(tableroConstruccion, infoCelda.PosX, infoCelda.PosY);
-            if (celda != null)
-                throw new DALConstruccionException("ERROR:Imposible insertar edificio " + infoCelda.Id + 
-                    "en la posicion(" + infoCelda.PosX + "," + infoCelda.PosY + 
-                    "). Ya existe un edificio de id " + celda.Id + " en dicho lugar");
-            tableroConstruccion.lstInfoCelda.Add(infoCelda);
-            collection.ReplaceOne(tablero => tablero.idUsuario == tableroConstruccion.idUsuario, tableroConstruccion);
-        }
+        //public void AddInfoCelda(string idUsuario, InfoCelda infoCelda)
+        //{
+        //    TableroConstruccion tableroConstruccion = null;
+        //    try
+        //    {
+        //        tableroConstruccion = getTableroConstruccion(idUsuario);
+        //    } catch (DALConstruccionException ex)
+        //    {
+        //        throw new DALConstruccionException("ERROR:Imposible insertar edificio " + infoCelda.Id +
+        //            "en la posicion(" + infoCelda.PosX + "," + infoCelda.PosY +
+        //            "). No existe el usuario " + idUsuario);
+        //    }
+        //    InfoCelda celda = getInfoCelda(tableroConstruccion, infoCelda.PosX, infoCelda.PosY);
+        //    if (celda != null)
+        //        throw new DALConstruccionException("ERROR:Imposible insertar edificio " + infoCelda.Id + 
+        //            "en la posicion(" + infoCelda.PosX + "," + infoCelda.PosY + 
+        //            "). Ya existe un edificio de id " + celda.Id + " en dicho lugar");
+        //    tableroConstruccion.lstInfoCelda.Add(infoCelda);
+        //    collection.ReplaceOne(tablero => tablero.idUsuario == tableroConstruccion.idUsuario, tableroConstruccion);
+        //}
 
-        public void DeleteInfoCelda(string idUsuario, InfoCelda infoCelda)
-        {
-            TableroConstruccion tableroConstruccion = getTableroConstruccion(idUsuario);
-            if (tableroConstruccion == null)
-                throw new DALConstruccionException("ERROR:Imposible insertar edificio " + infoCelda.Id +
-                    "en la posicion(" + infoCelda.PosX + "," + infoCelda.PosY +
-                    "). No existe el usuario " + idUsuario);
-            InfoCelda celda = getInfoCelda(tableroConstruccion, infoCelda.PosX, infoCelda.PosY);
-            if (celda != null)
-                throw new DALConstruccionException("ERROR:Imposible insertar edificio " + infoCelda.Id +
-                    "en la posicion(" + infoCelda.PosX + "," + infoCelda.PosY +
-                    "). Ya existe un edificio de id " + celda.Id + " en dicho lugar");
-            tableroConstruccion.lstInfoCelda.Remove(infoCelda);
-            collection.ReplaceOne(tablero => tablero.idUsuario == tableroConstruccion.idUsuario, tableroConstruccion);
-        }
+        //public void DeleteInfoCelda(string idUsuario, InfoCelda infoCelda)
+        //{
+        //    TableroConstruccion tableroConstruccion = getTableroConstruccion(idUsuario);
+        //    if (tableroConstruccion == null)
+        //        throw new DALConstruccionException("ERROR:Imposible insertar edificio " + infoCelda.Id +
+        //            "en la posicion(" + infoCelda.PosX + "," + infoCelda.PosY +
+        //            "). No existe el usuario " + idUsuario);
+        //    InfoCelda celda = getInfoCelda(tableroConstruccion, infoCelda.PosX, infoCelda.PosY);
+        //    if (celda != null)
+        //        throw new DALConstruccionException("ERROR:Imposible insertar edificio " + infoCelda.Id +
+        //            "en la posicion(" + infoCelda.PosX + "," + infoCelda.PosY +
+        //            "). Ya existe un edificio de id " + celda.Id + " en dicho lugar");
+        //    tableroConstruccion.lstInfoCelda.Remove(infoCelda);
+        //    collection.ReplaceOne(tablero => tablero.idUsuario == tableroConstruccion.idUsuario, tableroConstruccion);
+        //}
 
-        public void Refresh(string idUsuario, Shared.Entities.Juego juego)
-        {
-            TableroConstruccion tableroConstruccion = getTableroConstruccion(idUsuario);
-            if (tableroConstruccion == null)
-                throw new DALConstruccionException("ERROR:No existe el usuario " + idUsuario);
-            DateTime now = new DateTime();
-            bool necesitaUpdate = false;
-            var dicEntidades = juego.TipoEntidad.ToDictionary(e => e.Id);
-            foreach (var infoCelda in tableroConstruccion.lstInfoCelda)
-            {
-                if (!infoCelda.terminado)
-                {
-                    int segundosConstruyendo = now.Subtract(infoCelda.FechaCreacion).Seconds;
-                    //foreach (Shared.Entities.TipoEntidad tipoEntidad in juego.tipo_entidad)
-                    if (!dicEntidades.ContainsKey(infoCelda.Id))
-                    {
-                        throw new Exception(infoCelda.Id + " no es un id de entidad en la coleccion de entidades del juego!!!");
-                    }
-                    var tipoEntidad = dicEntidades[infoCelda.Id];
+        //public void Refresh(string idUsuario, Shared.Entities.Juego juego)
+        //{
+        //    TableroConstruccion tableroConstruccion = getTableroConstruccion(idUsuario);
+        //    if (tableroConstruccion == null)
+        //        throw new DALConstruccionException("ERROR:No existe el usuario " + idUsuario);
+        //    DateTime now = new DateTime();
+        //    bool necesitaUpdate = false;
+        //    var dicEntidades = juego.TipoEntidad.ToDictionary(e => e.Id);
+        //    foreach (var infoCelda in tableroConstruccion.lstInfoCelda)
+        //    {
+        //        if (!infoCelda.terminado)
+        //        {
+        //            int segundosConstruyendo = now.Subtract(infoCelda.FechaCreacion).Seconds;
+        //            //foreach (Shared.Entities.TipoEntidad tipoEntidad in juego.tipo_entidad)
+        //            if (!dicEntidades.ContainsKey(infoCelda.Id))
+        //            {
+        //                throw new Exception(infoCelda.Id + " no es un id de entidad en la coleccion de entidades del juego!!!");
+        //            }
+        //            var tipoEntidad = dicEntidades[infoCelda.Id];
 
-                    if (segundosConstruyendo >= tipoEntidad.TiempoConstruccion)
-                    {
-                        infoCelda.terminado = true;
-                        necesitaUpdate = true;
-                    }
-                }
-            }
-            if (necesitaUpdate)
-                collection.ReplaceOne(tablero => tablero.idUsuario == tableroConstruccion.idUsuario, tableroConstruccion);
-        }
+        //            if (segundosConstruyendo >= tipoEntidad.TiempoConstruccion)
+        //            {
+        //                infoCelda.terminado = true;
+        //                necesitaUpdate = true;
+        //            }
+        //        }
+        //    }
+        //    if (necesitaUpdate)
+        //        collection.ReplaceOne(tablero => tablero.idUsuario == tableroConstruccion.idUsuario, tableroConstruccion);
+        //}
 
         
         //SERVICIOS
         public Shared.Entities.ValidarConstruccion ConstruirEdificio(int IdEdificio)
         {
-            return null;
+            var query = from juego in collection.AsQueryable<Shared.Entities.Juego>()
+                        where juego.IdJugador == idUsuario
+                        select juego;
+
+            if (query.Count() > 0)
+            {
+                Shared.Entities.Juego juego = query.First();
+                Shared.Entities.ValidarConstruccion validarConstruccion = new Shared.Entities.ValidarConstruccion();
+                validarConstruccion.Tablero = juego.Tablero;
+                foreach(var tipoEdi in juego.TipoEdificios)
+                {
+                    if (tipoEdi.Id == IdEdificio)
+                    {
+                        validarConstruccion.TipoEdificio = tipoEdi;
+                        break;
+                    }
+                }
+                validarConstruccion.Recursos = new Dictionary<int, int>();
+                foreach(var recur in juego.DataJugador.EstadoRecursos)
+                {
+                    validarConstruccion.Recursos.Add(recur.Key, (int)recur.Value.Total);
+                }
+                return validarConstruccion;
+            }
+            else
+            {
+                return null;
+            }
         }
 
-        public void PersistirEdificio(Shared.Entities.CEInputData ceid)
+        public bool PersistirEdificio(Shared.Entities.CEInputData ceid)
         {
+            var query = from juego in collection.AsQueryable<Shared.Entities.Juego>()
+                        where juego.IdJugador == idUsuario
+                        select juego;
 
+            if (query.Count() > 0)
+            {
+                Shared.Entities.Juego juego = query.First();
+                Shared.Entities.TipoEdificio TipoEdificio = new Shared.Entities.TipoEdificio();
+                foreach (var tipoEdi in juego.TipoEdificios)
+                {
+                    if (tipoEdi.Id == ceid.IdTipoEdificio)
+                    {
+                        TipoEdificio = tipoEdi;
+                        break;
+                    }
+                }
+                Shared.Entities.TableroCelda tableroCelda = new Shared.Entities.TableroCelda();
+                tableroCelda.IdTipoEdificio = ceid.IdTipoEdificio;
+                tableroCelda.PosColumna = ceid.PosColumna;
+                tableroCelda.PosFila = ceid.PosFila;
+                tableroCelda.Estado.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
+                tableroCelda.Estado.Fin = DateTime.Now.AddSeconds((int)TipoEdificio.TiempoConstruccion);
+                juego.Tablero.Celdas.Add(tableroCelda);
+                var result = collection.ReplaceOne(j => j.IdJugador == juego.IdJugador, juego, new UpdateOptions { IsUpsert = true });
+                return result.ModifiedCount == 1;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad)
@@ -139,9 +199,9 @@ namespace DataAccessLayer
             return null;
         }
 
-        public void PersistirUnidades(Shared.Entities.EUInputData ceid)
+        public bool PersistirUnidades(Shared.Entities.EUInputData euid)
         {
-
+            return false;
         }
 
         //public void AddPrueba(Prueba prueba)

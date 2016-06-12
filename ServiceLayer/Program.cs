@@ -14,6 +14,7 @@ namespace ServiceLayer
         public static IBLTablero blHandler;
         public static IBLJuego blJuegoHandler;
         public static IBLTecnologia blTecnologiaHandler;
+        public static IBLConstruccion blConstruccionHandler;
 
         static void Main(string[] args)
         {
@@ -28,6 +29,7 @@ namespace ServiceLayer
         {
             blHandler = BLTablero.getInstancia();
             blJuegoHandler = new BLJuego(new DataAccessLayer.DALJuego());
+            blConstruccionHandler = new BLConstruccion(new DataAccessLayer.DALConstruccion());
             blTecnologiaHandler = new BLTecnologia(blJuegoHandler);
         }
 

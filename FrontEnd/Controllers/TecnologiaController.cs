@@ -16,8 +16,8 @@ namespace FrontEnd.Controllers
 
         public class JugadorElemento
         {
-            string IdJugador;
-            int IdElemento;
+            public string IdJugador;
+            public int IdElemento;
         }
 
         [HttpPost]
@@ -26,8 +26,7 @@ namespace FrontEnd.Controllers
             try
             {
                 ServiceTableroClient client = new ServiceTableroClient();
-                bool puede = false;
-                //bool puede =  client.DesarrollarTecnologia(tenant, data);
+                bool puede =  client.DesarrollarTecnologia(tenant, data.IdJugador,data.IdElemento);
                 return Json(new { sucess = puede });
             }
             catch (Exception e)

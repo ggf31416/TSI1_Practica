@@ -19,10 +19,10 @@ namespace ServiceLayer
         void Accion(String json);
 
         [OperationContract]
-        bool login(ClienteJuego cliente, int idJuego);
+        bool login(ClienteJuego cliente, string nombreJuego);
 
         [OperationContract]
-        void register(ClienteJuego cliente, int idJuego);
+        void register(ClienteJuego cliente, string nombreJuego);
 
         [OperationContract]
         List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt);
@@ -34,7 +34,11 @@ namespace ServiceLayer
         [OperationContract]
         Juego GetAllDataJuego(string tenant);
 
+        [OperationContract]
+        bool ConstruirEdificio(CEInputData ceid);
 
+        [OperationContract]
+        int EntrenarUnidad(EUInputData euid);
 
         [OperationContract]
         bool DesarrollarTecnologia(string tenant, string idJugador, int idTecnologia);

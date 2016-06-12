@@ -99,7 +99,50 @@ namespace FrontEnd.Controllers
         }
 
 
+        [HttpPost]
+        public ActionResult ConstruirEdificio(Models.CEInputDataModel ceid)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
 
+                CEInputData ceInputData = new CEInputData();
+
+                ceInputData.IdTipoEdificio = ceid.IdTipoEdificio;
+                ceInputData.PosFila = ceid.PosFila;
+                ceInputData.PosColumna = ceid.PosColumna;
+
+                bool ret = client.ConstruirEdificio(ceInputData);
+                
+                return Json(new { sucess = true, ret = ret});
+            }
+            catch(Exception e)
+            {
+                return Json(new { sucess = false });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult EntrenarUnidad(Models.EUInputDataModel euid)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+
+                EUInputData euInputData = new EUInputData();
+
+                euInputData.IdTipoUnidad = euid.IdTipoUnidad;
+                euInputData.Cantidad = euid.Cantidad;
+
+                int ret = client.EntrenarUnidad(euInputData);
+
+                return Json(new { sucess = true, ret = ret });
+            }
+            catch (Exception e)
+            {
+                return Json(new { sucess = false });
+            }
+        }
 
     }
 
