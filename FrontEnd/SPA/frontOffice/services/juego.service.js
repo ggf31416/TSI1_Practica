@@ -6,7 +6,7 @@
         //var jugador = "jugador1";
 
         this.loginJuego = function(loginJuegoParamas) {
-            return $http.post('login', loginJuegoParamas)
+            return $http.post('/'+$rootScope.nombreJuego + '/Home/login', loginJuegoParamas)
             .then(function (response) {
                 if (response.data.status)
                     return response.data;
@@ -18,7 +18,7 @@
         }
 
         this.registerJuego = function (registerJuegoParams) {
-            return $http.post('register', registerJuegoParams)
+            return $http.post('/' + $rootScope.nombreJuego + '/Home/register', registerJuegoParams)
             .then(function (response) {
                 if (response.data.status)
                     return response.data;
@@ -33,7 +33,7 @@
             return $http({
                 method: 'POST',
                 dataType: 'text',
-                url: $rootScope.nombreJuego + "/Tablero/Accion",
+                url: '/' + $rootScope.nombreJuego + "/Tablero/Accion",
                 data: { data: JSON.stringify(json) }
             });
         }
@@ -54,14 +54,14 @@
         }
 
         this.moverUnidad = function (id, input_x, input_y,jugador){
-            return $http.post($rootScope.nombreJuego+"/Tablero/Accion", JSON.stringify({ "A": "MoveUnidad", "J": jugador , "Id": id, "PosX": input_x, "PosY": input_y}));
+            return $http.post('/' + $rootScope.nombreJuego + "/Tablero/Accion", JSON.stringify({ "A": "MoveUnidad", "J": jugador, "Id": id, "PosX": input_x, "PosY": input_y }));
         }
 
         this.registrarJugador = function (jugador,juego) {
             return $http({
                 method: 'POST',
                 dataType: 'text',
-                url: $rootScope.nombreJuego + "/Tablero/RegistrarJugador",
+                url: '/' + $rootScope.nombreJuego + "/Tablero/RegistrarJugador",
                 data: { "jugador": jugador }
             });
         }
@@ -83,7 +83,7 @@
         }
 
         this.iniciarAtaque = function(ataqueJson){
-             return $http.post("/Tablero/iniciarAtaque", JSON.stringify(ataqueJson));
+            return $http.post('/' + $rootScope.nombreJuego + "/Tablero/iniciarAtaque", JSON.stringify(ataqueJson));
 
 
         }

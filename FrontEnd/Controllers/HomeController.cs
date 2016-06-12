@@ -47,6 +47,23 @@ namespace FrontEnd.Controllers
                 Shared.Entities.ClienteJuego cli = new Shared.Entities.ClienteJuego();
                 cli.clienteId = clienteJuego.clienteId;
                 cli.token = clienteJuego.token;
+
+                HttpCookie myCookie = new HttpCookie("clienteId");
+                DateTime now = DateTime.Now;
+
+                myCookie.Value = cli.clienteId;
+                myCookie.Expires = now.AddMonths(1);
+
+                Response.Cookies.Add(myCookie);
+
+                HttpCookie token = new HttpCookie("token");
+
+                token.Value = cli.token;
+                token.Expires = now.AddMonths(1);
+
+                Response.Cookies.Add(token);
+
+
                 cli.apellido = clienteJuego.apellido;
                 cli.nombre = clienteJuego.nombre;
                 cli.username = clienteJuego.username;
