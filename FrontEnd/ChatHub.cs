@@ -21,11 +21,23 @@ namespace FrontEnd
             Groups.Add(idUsuario, grupo);
         }
 
-        public override  Task OnConnected()
+        public override Task OnConnected()
         {
             var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);
             return base.OnConnected();
 
         }
+
+        public override Task OnReconnected()
+        {
+            return base.OnReconnected();
+        }
+
+
+        public override Task OnDisconnected(bool stopCalled)
+        {
+            return base.OnDisconnected(stopCalled);
+        }
+
     }
 }

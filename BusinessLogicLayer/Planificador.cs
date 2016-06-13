@@ -1,5 +1,6 @@
 ﻿using Quartz;
 using Quartz.Impl;
+using Shared.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,18 +21,56 @@ namespace BusinessLogicLayer
         }
     }
 
+    class IniciarBatallaJob : IJob
+    {
+        public void Execute(IJobExecutionContext context)
+        {
+            
+        }
+
+        
+    }
+
     public class Planificador
     {
 
         private static Planificador instancia;
+        private IScheduler scheduler;
+
         public static  Planificador getInstancia()
         {
             if (instancia == null) instancia = new Planificador();
             return instancia;
         }
 
+        private Planificador()
+        {
 
-        IScheduler scheduler;
+        }
+
+
+        private ITrigger agregarTriggerSimple(int segundosDelay)
+        {
+            ITrigger t = TriggerBuilder.Create().StartNow().WithSimpleSchedule(x =>
+                    x.WithInterval(TimeSpan.FromMilliseconds(1000 * segundosDelay)))
+                    .Build();
+            return t;
+
+        }
+
+        private void unaVez(IJobDetail job, int segundosDelay)
+        {
+            ITrigger t = agregarTriggerSimple(segundosDelay);
+            scheduler.ScheduleJob(job, t);
+        }
+
+
+        public void IniciarAtaque(string tenant,InfoAtaque ataque,int segundosDelay)
+        {
+            var job = JobBuilder.Create<IniciarBatallaJob>().WithIdentity("job1", "group1").Build();
+
+
+        }
 
         public void iniciar()
         {

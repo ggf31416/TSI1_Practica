@@ -8,12 +8,15 @@ using Newtonsoft.Json;
 
 namespace BusinessLogicLayer
 {
+
+    
     public class Batalla
     {
         private Dictionary<int, TipoUnidad> tiposUnidades = new Dictionary<int, TipoUnidad>();
         private Dictionary<int, TipoEdificio> tiposEdificios = new Dictionary<int, TipoEdificio>();
         public int JuegoId { get; set; }
         private List<Jugador> jugadores = new List<Jugador>();
+
 
         private Jugador defensor;
         private DataAccessLayer.Relacional.IDALEntidadesRO _dalRO;

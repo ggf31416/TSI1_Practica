@@ -13,7 +13,7 @@ namespace DataAccessLayer
     {
         const string connectionstring = "mongodb://40.84.2.155";
         private static IMongoClient client = new MongoClient(connectionstring);
-        private string nombreJuego;
+        //private string nombreJuego;
         private IMongoDatabase database;
         private IMongoCollection<JugadorConexion> collection;
 
@@ -23,9 +23,12 @@ namespace DataAccessLayer
         {
             database = client.GetDatabase(tenant);
             collection = database.GetCollection<JugadorConexion>("jugConexion");
-            var act = collection.AsQueryable().FirstOrDefault(x => x.IdJugador == conn.ConnectionID);
-            act.ConexionesId.Add(conn.ConnectionID);
-            collection.ReplaceOneAsync(x => x.IdJugador == conn.ConnectionID, act);
+            JugadorConexion jugCon = collection.AsQueryable().FirstOrDefault(x => x.IdJugador == conn.ConnectionID);
+            if (!conn.ConnectionID.Contains(conn.ConnectionID))
+            {
+                jugCon.ConexionesId.Add(conn.ConnectionID);
+            }
+            collection.ReplaceOneAsync(x => x.IdJugador == conn.ConnectionID, jugCon,new UpdateOptions() { IsUpsert = true });
 
         }
 

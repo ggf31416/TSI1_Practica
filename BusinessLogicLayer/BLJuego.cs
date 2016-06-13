@@ -75,11 +75,21 @@ namespace BusinessLogicLayer
 
         public void actualizarUnidades(DataActual data)
         {
-            foreach (var unidad in data.EstadoUnidades.Values)
+            var estUnidadesEnConstr = data.EstadoUnidades.Values.Where(x => x != null && x.Estado == EstadoData.EstadoEnum.C);
+           
+            foreach (var unidad in estUnidadesEnConstr)
             {
-                if (unidad.Estado == EstadoData.EstadoEnum.C && unidad.Fin <= DateTime.Now) {
-                    unidad.Estado = EstadoData.EstadoEnum.A;
-                }   
+                if ( unidad.Fin <= DateTime.Now) {
+ 
+                    string key = unidad.Id + "#" + EstadoData.EstadoEnum.A;
+                   
+                    if (!data.EstadoUnidades.ContainsKey(key))
+                    {
+                        data.EstadoUnidades.Add(key, new EstadoData() { Id = unidad.Id, Cantidad = 0, Estado = EstadoData.EstadoEnum.A, Fin = DateTime.UtcNow });
+                    }
+                    data.EstadoUnidades[key].Cantidad += unidad.Cantidad;
+                    unidad.Cantidad = 0;
+                } 
             }
         }
 
@@ -114,7 +124,7 @@ namespace BusinessLogicLayer
             actualizarRecursos(j.DataJugador);
             actualizarRecursosPorSegundo(j);
             IBLTecnologia tec = new BLTecnologia(this);
-            tec.CompletarTecnologiasTerminadas(j);
+            tec.CompletarTecnologiasTerminadasSinGuardar(j);
             j.DataJugador.UltimaActualizacion = DateTime.UtcNow;
             
         }
