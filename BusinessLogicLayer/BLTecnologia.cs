@@ -49,12 +49,10 @@ namespace BusinessLogicLayer
             
             var estadoT = j.DataJugador.EstadoTecnologias;
             if (!checkarDependencias(j, idTecnologia)) return false;
-            if (!consumirRecursosSiPuedo(j, j.Tecnologias[idTecnologia])) return false;
-            if (estadoT.ContainsKey(idTecnologia.ToString()))
-            {
-                EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Fin = DateTime.UtcNow. AddSeconds( j.Tecnologias[idTecnologia].Tiempo) };
-                estadoT.Add(idTecnologia.ToString(), estado);
-            }
+            var Tec = j.Tecnologias.FirstOrDefault(t => t.Id == idTecnologia);
+            if (!consumirRecursosSiPuedo(j, Tec)) return false;
+            EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Fin = DateTime.UtcNow. AddSeconds(Tec.Tiempo) };
+            estadoT[idTecnologia.ToString()] = estado;
             // guardar juego
             blHandler.GuardarJuego(j);
             return true;

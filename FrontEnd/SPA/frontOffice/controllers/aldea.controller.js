@@ -6,6 +6,42 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
     function ($http, $q, aldeasService, juegoService, edificiosService, unidadesService, $scope, $rootScope, $interval) {
 
         //--------------Inicializacion de variables---------------------
+        /*
+        $scope.iniciarSignalR = function () {
+            // Declare a proxy to reference the hub.
+            $scope.tablero_signalR = $.connection.chatHub;
+            // Create a function that the hub can call to broadcast messages.
+            $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
+                var msg = JSON.parse(message);
+                if (msg.Tipo && msg.Tipo == "NotificacionAtaque") {
+                    //Mostrar mensaje 
+                    if (msg.SoyAtacante && !msg.SoyAliado) {
+                        //el ataque empezara en msg.TiempoAtaque segundos
+                    } else if (!msg.SoyAtacante) {
+                        //me atacaran en msg.TiempoAtaque segundos
+                    }
+                } else if (msg.Tipo && msg.Tipo == "IniciarAtaque") {
+                    //redirigir a la pagina
+                }
+
+                //$scope.estadoJuego.edificios = msjJSON.edificios;
+                //$scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;
+                //$scope.estadoJuego.edificios.push(msjJSON);
+                //$scope.cargarDesdeEstado();
+            };
+            // Get the user name and store it to prepend to messages.
+            // $('#displayname').val(prompt('Enter your name:', ''));
+            // Set initial focus to message input box.
+            // $('#message').focus();
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+
+            });
+        };
+
+        $scope.iniciarSignalR();
+        */
+
         /*$rootScope.listaRecursos = [
                {
                    Nombre: "Oro",
@@ -221,10 +257,10 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             //----LLAMAR AL SERVICIO DE ACTUALIZAR TECNOLOGIAS--------
             if (!$scope.auxTecnologia) {
                     var json = {
-                        idTecnologia: idTecnologia
+                        IdElemento: idTecnologia
                     };
-                    //var data = aldeasService.desarrollarTecnologia(json);
-                    if (true || data.ret) {
+                    var data = aldeasService.desarrollarTecnologia(json);
+                    if (data.sucess) {
                         $scope.auxTecnologia = findEdificioInArray($rootScope.dataJugador.EstadoTecnologias[idTecnologia], idTecnologia)[0];
                         //de donde se saca el tiempo:
                         $scope.modeloTecnologia = findEdificioInArray($rootScope.listaTecnologias, idTecnologia)[0];

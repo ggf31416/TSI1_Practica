@@ -286,6 +286,8 @@
                                         <div class="col-sm-2 col-md-2 col-lg-2">{{e.Nombre}}</div>
                                         <div class="col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 3">No es posible</div>
                                         <div class="col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 2">Posible</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 1">En desarrollo</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 0">Ya desarrollado</div>
                                         <div class="col-sm-2 col-md-2 col-lg-2">{{e.TiempoConstruccion}}</div>
                                         <div class="col-sm-2 col-md-2 col-lg-1" ng-repeat="rec in $root.listaRecursos">{{getCostoRecurso(e, rec.Id)}}</div>
                                     </div>
