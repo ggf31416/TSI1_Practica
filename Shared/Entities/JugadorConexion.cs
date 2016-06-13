@@ -8,16 +8,18 @@ using System.Threading.Tasks;
 namespace Shared.Entities
 {
 
-    class ConexionSignalr
+    public class ConexionSignalr
     {
         public string ConnectionID { get; set; }
+        string IdJugador { get; set; }
         //public string UserAgent { get; set; }
         //public bool Connected { get; set; }
     }
-    class JugadorConexion
+    public class JugadorConexion
     {
         [BsonId]
-        string IdJugador;
-        List<string> conexionesId { get; set; } = new List<string>();
+        public string IdJugador { get; set; }
+
+        public List<string> ConexionesId { get; set; } = new List<string>();
     }
 }

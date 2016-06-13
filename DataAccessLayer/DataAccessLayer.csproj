@@ -88,7 +88,6 @@
     <Compile Include="Entities\Estadisticas.cs" />
     <Compile Include="Entities\InfoCelda.cs" />
     <Compile Include="Entities\ClienteJuego.cs" />
-    <Compile Include="Entities\JugadorConexion.cs" />
     <Compile Include="Entities\JugadorInfo.cs" />
     <Compile Include="Entities\JugadorRecursoMongo.cs" />
     <Compile Include="Entities\JugadorTecnologiasMongo.cs" />

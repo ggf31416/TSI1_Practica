@@ -133,13 +133,8 @@
             // Create our phaser $scope.game
             $scope.game = new Phaser.Game(anchoJuego, altoJuego, Phaser.AUTO, 'divJuego', { preload: $scope.preload, create: create, update: update });
             //$scope.game.time.events.add(Phaser.Timer.SECOND * 1, pedirNombre, this);
-            pedirNombre();
         };
 
-        function pedirNombre() {
-            nombreJugador = window.prompt("Jugador?", "");
-            juegoService.registrarJugador(nombreJugador, $scope.nombreJuego);
-        }
 
         function objetoUnidad(data,idSprite) {
            return $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
