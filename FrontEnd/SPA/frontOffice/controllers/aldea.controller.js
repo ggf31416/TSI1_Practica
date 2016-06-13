@@ -141,6 +141,11 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                 return 0;
         }
 
+        $scope.getEstadoTecnologia = function (tecnologia) {
+            var tec = $rootScope.dataJugador.EstadoTecnologias[tecnologia.Id];
+            return tec.Estado;
+        }
+
         function findEdificioInArray(lista, id) {
             if (lista != null)
                 return jQuery.grep(lista, function (value) {
