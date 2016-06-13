@@ -99,12 +99,24 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                         }
                                     }, 1000);
 
+                                    $rootScope.listaUsuario = [
+                                        {
+                                            Nombre: "Pepe",
+                                            Apellido: "Rodriguez",
+                                            Username: "aaa"
+                                        },
+                                        {
+                                            Nombre: "Juan",
+                                            Apellido: "Rodriguez",
+                                            Username: "bbb"
+                                        }
+                                    ]
+
                                 })
                                 .catch(function (err) {
                                     alert(err)
                                 });
         }
-
         
         //--------------Fin inicializacion de variables---------------------
 
@@ -191,6 +203,11 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
         $scope.listaUnidades = function () {
             //Abro cuadro de unidades
             $('#dialogoDatosUnidades').modal('show');
+        }
+
+        $scope.listarUsuarios = function () {
+            //Abro cuadro de usuarios para atacar
+            $('#dialogoDatosUsuarios').modal('show');
         }
 
         $scope.actualizarTecnologia = function (idTecnologia) {
