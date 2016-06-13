@@ -87,16 +87,31 @@ namespace BusinessLogicLayer
         {
 
             var entidades = j.TipoEdificios.Cast<TipoEntidad>().ToDictionary(e => e.Id);
-            foreach(var u in j.TipoUnidades)
+            if (j.TipoUnidades != null)
             {
-                entidades[u.Id] = u;
+                foreach (var u in j.TipoUnidades)
+                {
+                    entidades[u.Id] = u;
+                }
+
             }
-            foreach (Accion a in tec.AccionesAsociadas)
+            if (j.TipoEdificios != null)
             {
-                AplicarAccion(j, a, entidades);
+                foreach (var u in j.TipoEdificios)
+                {
+                    entidades[u.Id] = u;
+                }
             }
-            
-            // guardar juego
+            if (entidades.Count > 0)
+            {
+                foreach (Accion a in tec.AccionesAsociadas)
+                {
+                    AplicarAccion(j, a, entidades);
+                }
+
+            }
+
+            // guardo juego afuera del metodo
         }
 
 
