@@ -108,7 +108,7 @@ namespace BusinessLogicLayer
                     edificio.Estado.Estado = EstadoData.EstadoEnum.A;
                     cambio = true;
                     TimeSpan dif = DateTime.UtcNow - edificio.Estado.Fin;
-                    foreach (var prod in juego.TipoEdificios[edificio.Id].RecursosAsociados)
+                    foreach (var prod in juego.TipoEdificios[(int)edificio.IdTipoEdificio].RecursosAsociados)
                     {
                         recursos[prod.IdRecurso.ToString()].Total += (float)(prod.Valor * dif.TotalSeconds);
                     }

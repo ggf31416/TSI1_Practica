@@ -82,16 +82,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                     console.debug(data);
                                     $rootScope.listaEdificios = data.TipoEdificios;
                                     $rootScope.listaUnidades = data.TipoUnidades;
-                                    for (var i = 0; i < $rootScope.listaUnidades.length; i++) {
-                                        $rootScope.listaUnidades[i].Valor = (i+1) * 10;
-                                    }
                                     $rootScope.listaRecursos = data.TipoRecursos;
-                                    for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
-                                        console.debug($rootScope.listaRecursos[i]);
-                                        $rootScope.listaRecursos[i].Valor = 100;
-                                        $rootScope.listaRecursos[i].Produccion = i + 1;
-                                        console.debug($rootScope.listaRecursos[i].Produccion);
-                                    }
                                     $rootScope.tablero = data.Tablero;
                                     $rootScope.listaTecnologias = data.Tecnologias;
                                     $rootScope.dataJuego = data.DataJuego;
@@ -104,7 +95,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                     //timer para actualizar recursos
                                     $interval(function () {
                                         for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
-                                            $rootScope.listaRecursos[i].Valor = $rootScope.listaRecursos[i].Valor + $rootScope.listaRecursos[i].Produccion;
+                                            $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Total = $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Total + $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Produccion;
                                         }
                                     }, 1000);
 
@@ -157,6 +148,16 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
 
         $scope.entidad = null;
 
+        $scope.getImagenRec = function (id) {
+            var edificio = findEdificioInArray($rootScope.listaRecursos, id)[0];
+            return edificio.Imagen;
+        }
+
+        $scope.getImagenUnidad = function (id) {
+            var edificio = findEdificioInArray($rootScope.listaUnidades, id)[0];
+            return edificio.Imagen;
+        }
+
         $scope.editCell = function (fila, columna, casilla) {
             if (casilla.Id == -1) {
                 if ($scope.aux == undefined){
@@ -191,6 +192,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             //Abro cuadro de unidades
             $('#dialogoDatosUnidades').modal('show');
         }
+
         $scope.actualizarTecnologia = function (idTecnologia) {
             //----LLAMAR AL SERVICIO DE ACTUALIZAR TECNOLOGIAS--------
             if (!$scope.auxTecnologia) {
@@ -199,9 +201,12 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                     };
                     //var data = aldeasService.desarrollarTecnologia(json);
                     if (true || data.ret) {
-                        $scope.auxTecnologia = findEdificioInArray($rootScope.listaTecnologias, idTecnologia)[0];
-                        for (var j = 0; j < $rootScope.listaRecursos.length; j++) {
-                            $rootScope.listaRecursos[j].Valor = $rootScope.listaRecursos[j].Valor - getCosto($scope.auxTecnologia, $rootScope.listaRecursos[j].Id);
+                        $scope.auxTecnologia = findEdificioInArray($rootScope.dataJugador.EstadoTecnologias[idTecnologia], idTecnologia)[0];
+                        //de donde se saca el tiempo:
+                        $scope.modeloTecnologia = findEdificioInArray($rootScope.listaTecnologias, idTecnologia)[0];
+
+                        for (var j = 0; j < $rootScope.dataJugador.EstadoRecursos.length; j++) {
+                            $rootScope.dataJugador.EstadoRecursos[j].Total = $rootScope.dataJugador.EstadoRecursos[j].Total - getCosto($scope.auxTecnologia, $rootScope.dataJugador.EstadoRecursos[j].Id);
                         }
                         $scope.timerTecnologia = $interval(function () {
                             $interval.cancel($scope.timerTecnologia);
@@ -211,16 +216,13 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                                         $rootScope.listaEdificios = data.TipoEdificios;
                                                         console.debug($rootScope.listaEdificios);
                                                         $rootScope.listaUnidades = data.TipoUnidades;
-                                                        for (var i = 0; i < $rootScope.listaUnidades.length; i++) {
-                                                            $rootScope.listaUnidades[i].Valor = (i + 1) * 10;
-                                                        }
 
                                                     })
                                                     .catch(function (err) {
                                                         alert(err)
                                                     });
                             $scope.auxTecnologia = undefined;
-                        }, $scope.auxTecnologia.TiempoConstruccion * 100);
+                        }, $scope.modeloTecnologia.TiempoConstruccion * 1000);
                     }
                     else
                         alert("No es posible desarrollar la tecnologia");
@@ -243,8 +245,8 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             var data = aldeasService.construirEdificio(json);
             if (data.ret) {
                 $scope.aux = findEdificioInArray($rootScope.listaEdificios, id)[0];
-                for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
-                    $rootScope.listaRecursos[i].Valor = $rootScope.listaRecursos[i].Valor - getCosto($scope.aux, $rootScope.listaRecursos[i].Id);
+                for (var i = 0; i < $rootScope.dataJugador.EstadoRecursos.length; i++) {
+                    $rootScope.dataJugador.EstadoRecursos[i].Total = $rootScope.dataJugador.EstadoRecursos[i].Total - getCosto($scope.aux, $rootScope.dataJugador.EstadoRecursos[i].Id);
                 }
                 $scope.editCasilla.Id = -5;
                 $scope.timerConstruccion = $interval(function () {
@@ -267,17 +269,20 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                     };
                     var data = aldeasService.entrenarUnidades(json);
                     if (data.ret) {
-                        $scope.auxUnidad = findEdificioInArray($rootScope.listaUnidades, $scope.unidadesAconstruir[i].Id)[0];
-                        $scope.auxUnidad.Cant = parseInt($scope.unidadesAconstruir[i].Cantidad);
-                        for (var j = 0; j < $rootScope.listaRecursos.length; j++) {
-                            $rootScope.listaRecursos[j].Valor = $rootScope.listaRecursos[j].Valor - getCosto($scope.auxUnidad, $rootScope.listaRecursos[j].Id);
+                        $scope.auxUnidad = $rootScope.dataJugador.EstadoUnidades[$scope.unidadesAconstruir[i].Id];
+                        $scope.auxUnidad.CantAConstruir = parseInt($scope.unidadesAconstruir[i].Cantidad);
+                        //de donde se saca el tiempo:
+                        $scope.modeloUnidad = findEdificioInArray($rootScope.listaUnidades, $scope.unidadesAconstruir[i].Id)[0];
+                        
+                        for (var j = 0; j < $rootScope.dataJugador.EstadoRecursos.length; j++) {
+                            $rootScope.dataJugador.EstadoRecursos[j].Total = $rootScope.dataJugador.EstadoRecursos[j].Total - getCosto($scope.auxUnidad, $rootScope.dataJugador.EstadoRecursos[j].Id);
                         }
                         $scope.timerUnidad = $interval(function () {
                             $interval.cancel($scope.timerUnidad);
                             console.debug($scope.auxUnidad);
-                            $scope.auxUnidad.Valor = $scope.auxUnidad.Valor + $scope.auxUnidad.Cant;
+                            $scope.auxUnidad.Cantidad = $scope.auxUnidad.Cantidad + $scope.auxUnidad.CantAConstruir;
                             $scope.auxUnidad = undefined;
-                        }, $scope.auxUnidad.TiempoConstruccion * 100 * $scope.auxUnidad.Cant);
+                        }, $scope.modeloUnidad.TiempoConstruccion * 100 * $scope.auxUnidad.CantAConstruir);
                     }
                     else
                         alert("No es posible construir la unidad");

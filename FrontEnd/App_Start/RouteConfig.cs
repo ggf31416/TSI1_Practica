@@ -22,7 +22,7 @@ namespace FrontEnd
             routes.MapRoute(
                 name: "Default",
                 url: "{tenant}/{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Aldea", id = UrlParameter.Optional, tenant = "tenant" }
+                defaults: new { controller = "Home", action = "LoginFacebook", id = UrlParameter.Optional, tenant = "tenant" }
             );
         }
     }
