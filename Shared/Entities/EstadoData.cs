@@ -34,7 +34,7 @@ namespace Shared.Entities
         public long Faltante
         {
             get {
-                if (Estado == EstadoEnum.A) return 0;
+                if (Estado != EstadoEnum.C) return 0;
                 return (long)((Fin - DateTime.UtcNow).TotalMilliseconds);
             }
             protected set { }
