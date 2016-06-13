@@ -755,9 +755,7 @@
 
         $scope.iniciarAtaque = function(enemigo){
             var jsonAtaque = {
-                Jugador: nombreJugador,
-                Enemigo: enemigo,
-                Juego: $scope.nombreJuego
+                Enemigo: enemigo
             };
             juegoService.iniciarAtaque(jsonAtaque);
         }
