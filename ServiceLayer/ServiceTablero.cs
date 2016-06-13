@@ -17,6 +17,7 @@ namespace ServiceLayer
         private static IBLJuego blJuegoHandler;
         private static IBLTecnologia blTecnologiaHandler;
         private static IBLConstruccion blConstruccionHandler;
+        private static IBLConexion blConexHandler;
 
         public ServiceTablero()
         {
@@ -24,6 +25,7 @@ namespace ServiceLayer
             blJuegoHandler = Program.blJuegoHandler;
             blTecnologiaHandler = Program.blTecnologiaHandler;
             blConstruccionHandler = Program.blConstruccionHandler;
+
         }
 
         public void JugarUnidad(InfoCelda infoCelda) {
@@ -84,6 +86,22 @@ namespace ServiceLayer
         public bool DesarrollarTecnologia(string tenant, string idJugador,int idTecnologia)
         {
             return blTecnologiaHandler.DesarrollarTecnologia(tenant, idJugador, idTecnologia);
+        }
+
+
+        public void ConectarSignalr(string tenant,ConexionSignalr con)
+        {
+            blConexHandler.agregarConexion(tenant, con);
+        }
+
+        public void DesconectarSignalr(string tenant, ConexionSignalr con)
+        {
+            blConexHandler.desconectar(tenant, con);
+        }
+
+        public void ReconectarSignalr(string tenant, ConexionSignalr con)
+        {
+            blConexHandler.agregarConexion(tenant, con);
         }
 
     }

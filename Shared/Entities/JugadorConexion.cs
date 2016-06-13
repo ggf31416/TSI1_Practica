@@ -19,7 +19,6 @@ namespace Shared.Entities
     {
         [BsonId]
         public string IdJugador { get; set; }
-
         public List<string> ConexionesId { get; set; } = new List<string>();
     }
 }

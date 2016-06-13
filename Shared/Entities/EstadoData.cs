@@ -10,10 +10,11 @@ namespace Shared.Entities
     [DataContract]
     public class EstadoData
     {
-        public enum EstadoEnum {A,
-            C,
-            Puedo,
-            NoPuedo
+        public enum EstadoEnum {
+            A = 0,
+            C = 1,
+            Puedo = 2,
+            NoPuedo = 3
         };
 
         [DataMember]
@@ -33,6 +34,7 @@ namespace Shared.Entities
         public long Faltante
         {
             get {
+                if (Estado == EstadoEnum.A) return 0;
                 return (long)((Fin - DateTime.UtcNow).TotalMilliseconds);
             }
             protected set { }
