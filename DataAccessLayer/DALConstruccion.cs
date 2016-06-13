@@ -281,11 +281,20 @@ namespace DataAccessLayer
                         break;
                     }
                 }
-                Shared.Entities.EstadoData EstadoData = new Shared.Entities.EstadoData();
-                EstadoData.Cantidad = euid.Cantidad;
-                EstadoData.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
-                EstadoData.Fin = DateTime.UtcNow.AddHours((int)TipoUnidad.TiempoConstruccion);
-                juego.DataJugador.EstadoUnidades.Add(TipoUnidad.Id.ToString(), EstadoData);
+                
+                Shared.Entities.EstadoData EstadoData;
+                juego.DataJugador.EstadoUnidades.TryGetValue(TipoUnidad.Id.ToString(), out EstadoData);
+                if(EstadoData != null)
+                {
+                    EstadoData.Cantidad += euid.Cantidad;
+                }else
+                {
+                    EstadoData = new Shared.Entities.EstadoData();
+                    EstadoData.Cantidad = euid.Cantidad;
+                    EstadoData.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
+                    EstadoData.Fin = DateTime.UtcNow.AddHours((int)TipoUnidad.TiempoConstruccion);
+                }
+                juego.DataJugador.EstadoUnidades[TipoUnidad.Id.ToString()] = EstadoData;
                 Shared.Entities.EstadoRecurso EstRec = new Shared.Entities.EstadoRecurso();
                 foreach (var costo in TipoUnidad.Costos)
                 {

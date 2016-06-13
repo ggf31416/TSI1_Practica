@@ -200,7 +200,10 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                     };
                     //var data = aldeasService.desarrollarTecnologia(json);
                     if (true || data.ret) {
-                        $scope.auxTecnologia = findEdificioInArray($rootScope.listaTecnologias, idTecnologia)[0];
+                        $scope.auxTecnologia = findEdificioInArray($rootScope.dataJugador.EstadoTecnologias[idTecnologia], idTecnologia)[0];
+                        //de donde se saca el tiempo:
+                        $scope.modeloTecnologia = findEdificioInArray($rootScope.listaTecnologias, idTecnologia)[0];
+
                         for (var j = 0; j < $rootScope.dataJugador.EstadoRecursos.length; j++) {
                             $rootScope.dataJugador.EstadoRecursos[j].Total = $rootScope.dataJugador.EstadoRecursos[j].Total - getCosto($scope.auxTecnologia, $rootScope.dataJugador.EstadoRecursos[j].Id);
                         }
@@ -218,7 +221,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                                         alert(err)
                                                     });
                             $scope.auxTecnologia = undefined;
-                        }, $scope.auxTecnologia.TiempoConstruccion * 100);
+                        }, $scope.modeloTecnologia.TiempoConstruccion * 1000);
                     }
                     else
                         alert("No es posible desarrollar la tecnologia");
@@ -265,17 +268,20 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                     };
                     var data = aldeasService.entrenarUnidades(json);
                     if (data.ret) {
-                        $scope.auxUnidad = findEdificioInArray($rootScope.listaUnidades, $scope.unidadesAconstruir[i].Id)[0];
-                        $scope.auxUnidad.Cant = parseInt($scope.unidadesAconstruir[i].Cantidad);
+                        $scope.auxUnidad = $rootScope.dataJugador.EstadoUnidades[$scope.unidadesAconstruir[i].Id];
+                        $scope.auxUnidad.CantAConstruir = parseInt($scope.unidadesAconstruir[i].Cantidad);
+                        //de donde se saca el tiempo:
+                        $scope.modeloUnidad = findEdificioInArray($rootScope.listaUnidades, $scope.unidadesAconstruir[i].Id)[0];
+                        
                         for (var j = 0; j < $rootScope.dataJugador.EstadoRecursos.length; j++) {
                             $rootScope.dataJugador.EstadoRecursos[j].Total = $rootScope.dataJugador.EstadoRecursos[j].Total - getCosto($scope.auxUnidad, $rootScope.dataJugador.EstadoRecursos[j].Id);
                         }
                         $scope.timerUnidad = $interval(function () {
                             $interval.cancel($scope.timerUnidad);
                             console.debug($scope.auxUnidad);
-                            $scope.auxUnidad.Cantidad = $scope.auxUnidad.Cantidad + $scope.auxUnidad.Cant;
+                            $scope.auxUnidad.Cantidad = $scope.auxUnidad.Cantidad + $scope.auxUnidad.CantAConstruir;
                             $scope.auxUnidad = undefined;
-                        }, $scope.auxUnidad.TiempoConstruccion * 100 * $scope.auxUnidad.Cant);
+                        }, $scope.modeloUnidad.TiempoConstruccion * 100 * $scope.auxUnidad.CantAConstruir);
                     }
                     else
                         alert("No es posible construir la unidad");
