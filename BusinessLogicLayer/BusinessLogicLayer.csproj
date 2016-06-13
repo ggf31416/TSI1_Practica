@@ -119,6 +119,7 @@
   <ItemGroup>
     <Compile Include="AccionMsg.cs" />
     <Compile Include="Batalla.cs" />
+    <Compile Include="BLConexion.cs" />
     <Compile Include="BLConstruccion.cs" />
     <Compile Include="BLJuego.cs" />
     <Compile Include="BLTablero.cs" />
