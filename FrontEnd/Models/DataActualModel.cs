@@ -11,5 +11,6 @@ namespace FrontEnd.Models
         public Dictionary<string, EstadoDataModel> EstadoTecnologias { get; set; }
         public Dictionary<string, EstadoRecursoModel> EstadoRecursos { get; set; }
         public DateTime UltimaActualizacion { get; set; }
+        public string Clan { get; set; }
     }
 }

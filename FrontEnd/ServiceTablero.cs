@@ -606,6 +606,8 @@ namespace Shared.Entities
         
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
+        private string ClanField;
+        
         private System.Collections.Generic.Dictionary<string, Shared.Entities.EstadoRecurso> EstadoRecursosField;
         
         private System.Collections.Generic.Dictionary<string, Shared.Entities.EstadoData> EstadoTecnologiasField;
@@ -623,6 +625,19 @@ namespace Shared.Entities
             set
             {
                 this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Clan
+        {
+            get
+            {
+                return this.ClanField;
+            }
+            set
+            {
+                this.ClanField = value;
             }
         }
         
