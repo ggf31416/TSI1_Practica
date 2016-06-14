@@ -298,11 +298,11 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             return rec ? rec.Value : 0;
         }
 
-        function getProduccion(aux, idRecurso) {
+        function getProduccion(aux, IdRecurso) {
             var rec = jQuery.grep(aux.RecursosAsociados, function (value) {
-                return value.idRecurso === IdRecurso;
+                return value.IdRecurso === parseInt(IdRecurso);
             })[0];
-            return rec ? rec.Produccion : 0;
+            return rec ? rec.Value : 0;
         }
 
         $scope.addEdificio = function (id) {
@@ -317,8 +317,9 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                 }
                 $scope.editCasilla.Id = -5;
                 $scope.timerConstruccion = $interval(function () {
-                    for (var j = 0; j < $rootScope.dataJugador.EstadoRecursos.length; j++) {
-                        $rootScope.dataJugador.EstadoRecursos[j].Produccion = $rootScope.dataJugador.EstadoRecursos[j].Produccion + getProduccion($scope.aux, $rootScope.dataJugador.EstadoRecursos[j].Id);
+                    var keys = Object.keys($rootScope.dataJugador.EstadoRecursos);
+                    for (var j = 0; j < keys.length; j++) {
+                        $rootScope.dataJugador.EstadoRecursos[keys[j]].Produccion = $rootScope.dataJugador.EstadoRecursos[keys[j]].Produccion + getProduccion($scope.aux, keys[j]);
                     }
                     $scope.editCasilla.Id = $scope.aux.Id;
                     $interval.cancel($scope.timerConstruccion);
