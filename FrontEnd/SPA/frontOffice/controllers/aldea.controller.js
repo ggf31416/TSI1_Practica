@@ -130,20 +130,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                         }
                                     }, 1000);
 
-                                    $rootScope.listaUsuario = [
-                                        {
-                                            Nombre: "Pepe",
-                                            Apellido: "Rodriguez",
-                                            Username: "aaa",
-                                            Id: "10209545762984761"
-                                        },
-                                        {
-                                            Nombre: "Juan",
-                                            Apellido: "Rodriguez",
-                                            Username: "bbb",
-                                            Id: "10209545762984761"
-                                        }
-                                    ]
+                                    
 
                                 })
                                 .catch(function (err) {
@@ -233,6 +220,11 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             }
         }
 
+        $scope.abrirClan = function () {
+            //Abro cuadro de clanes
+            $('#dialogoClanes').modal('show');
+        }
+
         $scope.listaTecnologias = function () {
             //Abro cuadro de tecnologias
             $('#dialogoDatosTecnologias').modal('show');
@@ -244,6 +236,14 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
         }
 
         $scope.listarUsuarios = function () {
+            aldeasService.getJugadoresAtacables()
+                                .then(function (data) {
+                                    console.debug(data);
+                                    $rootScope.listaUsuario = data;
+                                })
+                                .catch(function (err) {
+                                    alert(err)
+                                });
             //Abro cuadro de usuarios para atacar
             $('#dialogoDatosUsuarios').modal('show');
         }

@@ -173,7 +173,7 @@ namespace DataAccessLayer
                     cj.clan = null;
                     ReplaceOneResult resultClient = collection.ReplaceOne(cliente => cliente.id == cj.id, cj);
 
-                    return resultClan.IsAcknowledged && resultClient.IsAcknowledged;
+                    return (resultClan.ModifiedCount == 1) && (resultClient.ModifiedCount == 1);
                 }
                 else
                 {
@@ -243,7 +243,7 @@ namespace DataAccessLayer
 
             ReplaceOneResult resultClan = clanCollection.ReplaceOne(clan => clan.Nombre == clanAModificar.Nombre, clanAModificar);
 
-            return resultNuevoMiembro.IsAcknowledged && resultClan.IsAcknowledged;
+            return (resultClan.ModifiedCount == 1) && (resultNuevoMiembro.ModifiedCount == 1);           
         }
 
         public List<Shared.Entities.ClienteJuego> GetJugadoresEnElClan(string Tenant, string IdJugador)
@@ -302,7 +302,7 @@ namespace DataAccessLayer
 
             ReplaceOneResult resultUsuario = collection.ReplaceOne(cliente => cliente.id == cj.id, cj);
 
-            return resultClan.IsAcknowledged && resultUsuario.IsAcknowledged;
+            return (resultClan.ModifiedCount == 1) && (resultUsuario.ModifiedCount == 1);
         }
 
         public bool SoyAdministrador(string Tenant, string IdJugador)

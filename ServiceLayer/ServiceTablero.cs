@@ -29,6 +29,7 @@ namespace ServiceLayer
             blConstruccionHandler = Program.blConstruccionHandler;
             blBatalla = BLBatalla.getInstancia();
             ((BLBatalla)blBatalla).setBLJuego(blJuegoHandler);
+            blUsuarioHandler = Program.blUsuarioHandler;
         }
 
         public void JugarUnidad(InfoCelda infoCelda) {

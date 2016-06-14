@@ -115,6 +115,9 @@
                     <button class="btn btn-default" ng-click="listaUnidades()">Unidades</button>
                 </div>
                 <div class="col-sm-2 col-md-2 col-lg-2">
+                    <button class="btn btn-default" ng-click="abrirClan()">Clanes</button>
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2">
                     <button class="btn btn-warning" ng-click="listarUsuarios()">Atacar</button>
                 </div>
                 <div class="col-sm-2 col-md-2 col-lg-2">
@@ -185,6 +188,41 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal Clanes-->
+            <div class="modal fade" id="dialogoClanes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Edificio a construir</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-sm-2 col-md-2 col-lg-2">Imagen</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">Nombre</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">Tiempo de construccion</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">
+                                            <img class="recursosTablero" ng-src="{{rec.Imagen}}" />
+                                        </div>
+                                    </div>
+                                    <div class="row handPointer" ng-click="addEdificio(e.Id)" ng-repeat="e in $root.listaEdificios">
+                                        <div class="col-sm-2 col-md-2 col-lg-2"><img width="50" height="50" ng-src="{{e.Imagen}}" /></div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.Nombre}}</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.TiempoConstruccion}}</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">{{getCostoRecurso(e, rec.Id)}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Modal Edificio -->
             <div class="modal fade" id="dialogoDatosEdificio" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
@@ -356,10 +394,10 @@
                                         <div class="col-sm-2 col-md-2 col-lg-2">Apellido</div>
                                     </div>
                                     <div class="row" style="padding:10px" ng-repeat="e in $root.listaUsuario">
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.Username}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.Nombre}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.Apellido}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2"><button class="btn btn-danger" ng-click="iniciarAtaque(e.Id)">Atacar</button></div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.username}}</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.nombre}}</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.apellido}}</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2"><button class="btn btn-danger" ng-click="iniciarAtaque(e.clienteId)">Atacar</button></div>
                                     </div>
                                 </div>
                             </div>

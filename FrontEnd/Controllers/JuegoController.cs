@@ -531,6 +531,7 @@ namespace FrontEnd.Controllers
 
                 //Datos DataActual
                 ret.DataJugador = new Models.DataActualModel();
+                ret.DataJugador.Clan = juego.DataJugador.Clan;
                 ret.DataJugador.EstadoRecursos = new Dictionary<string, Models.EstadoRecursoModel>();
                 foreach (var eR in juego.DataJugador.EstadoRecursos)
                 {
@@ -591,7 +592,7 @@ namespace FrontEnd.Controllers
 
                 foreach(var cJ in jugadores)
                 {
-                    if(cJ.username != Request.Cookies["clienteId"].Value)
+                    if(cJ.clienteId != Request.Cookies["clienteId"].Value)
                     {
                         Models.ClienteJuego mCJ = new Models.ClienteJuego();
                         mCJ.idJuego = cJ.idJuego;
@@ -631,13 +632,13 @@ namespace FrontEnd.Controllers
         }
 
         [HttpGet]
-        public ActionResult AbandonarClan(string tenant, string IdJugador)
+        public ActionResult AbandonarClan(string tenant)
         {
             try
             {
                 ServiceTableroClient client = new ServiceTableroClient();
 
-                bool ret = client.AbandonarClan(tenant, IdJugador);
+                bool ret = client.AbandonarClan(tenant, Request.Cookies["clienteId"].Value);
 
                 return Json(new { success = true, ret = ret }, JsonRequestBehavior.AllowGet);
             }
@@ -703,7 +704,7 @@ namespace FrontEnd.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetJugadoresEnElClan(string tenant, string IdJugador)
+        public ActionResult GetJugadoresEnElClan(string tenant)
         {
             try
             {
