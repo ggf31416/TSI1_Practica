@@ -18,6 +18,7 @@ namespace ServiceLayer
         private static IBLTecnologia blTecnologiaHandler;
         private static IBLConstruccion blConstruccionHandler;
         private static IBLConexion blConexHandler;
+        private static IBLBatalla blBatalla;
 
         public ServiceTablero()
         {
@@ -32,9 +33,9 @@ namespace ServiceLayer
             blHandler.JugarUnidad(infoCelda);
         }
 
-        public void Accion(string json)
+        public void Accion(string tenant,string json)
         {
-            blHandler.Accion(json);
+            blBatalla.Accion(tenant,json);
         }
 
         public bool login(ClienteJuego cliente, string idJuego)
@@ -42,14 +43,14 @@ namespace ServiceLayer
             return blHandler.login(cliente, idJuego);
         }
 
-        public List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt)
+        /*public List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt)
         {
             return blHandler.GetListaDeJugadoresAtacables(jugadorAt);
-        }
+        }*/
 
-        public void IniciarAtaque(InfoAtaque info)
+        public void IniciarAtaque(string tenant, InfoAtaque info)
         {
-            blHandler.IniciarAtaque(info);
+            blBatalla.IniciarAtaque(tenant,info);
         }
 
         public void register(ClienteJuego cliente, string idJuego)

@@ -17,7 +17,7 @@ namespace BusinessLogicLayer
         {
             // ejecutarTurno
             
-            BLTablero.getInstancia().ejecutarBatallasEnCurso();
+            BLBatalla.getInstancia().ejecutarBatallasEnCurso();
         }
     }
 
@@ -25,7 +25,12 @@ namespace BusinessLogicLayer
     {
         public void Execute(IJobExecutionContext context)
         {
-            
+            if (context.MergedJobDataMap.ContainsKey("infoAtaque"))
+            {
+                InfoAtaque ataque = (InfoAtaque)context.MergedJobDataMap.Get("infoAtaque");
+                string tenant = (string)context.MergedJobDataMap.Get("tenant");
+                BLBatalla.getInstancia().IniciarBatalla(tenant, ataque);
+            }
         }
 
         
@@ -68,6 +73,8 @@ namespace BusinessLogicLayer
         public void IniciarAtaque(string tenant,InfoAtaque ataque,int segundosDelay)
         {
             var job = JobBuilder.Create<IniciarBatallaJob>().WithIdentity("job1", "group1").Build();
+            job.JobDataMap.Put("infoAtaque", ataque);
+            job.JobDataMap.Put("tenant", tenant);
 
 
         }

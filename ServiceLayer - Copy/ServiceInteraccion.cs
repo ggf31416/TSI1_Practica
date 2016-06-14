@@ -36,8 +36,6 @@ namespace ServiceLayer
 
                     hubConnection.Start().Wait();
                 }
-                
-
             }
             catch (Exception ex)
             {
@@ -46,14 +44,67 @@ namespace ServiceLayer
 
         }
 
-        public void Send(String grupo, String msg)
+        public void SendGrupo(String grupo, String msg)
         {
+            try
+            {
+                var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
+                context.Clients.Group(grupo).broadcastMessage("Service", msg);
+
+            }
+            catch (TimeoutException toEx)
+            {
+                Console.WriteLine("Timeout signlar Date " + DateTime.Now.ToShortTimeString() + " msg: " + msg);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ocurrio un error al enviar signalr: " + ex.ToString());
+            }
+        }
+
+        public void SendLista(List<string> nombreUsuarios, String msg)
+        {
+            try
+            {
+                foreach(string user in nombreUsuarios)
+                {
+                    var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
+                    context.Clients.User(user).broadcastMessage("Service", msg);
+                }
+            }
+            catch (TimeoutException toEx)
+            {
+                Console.WriteLine("Timeout signlar Date " + DateTime.Now.ToShortTimeString() + " msg: " + msg);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ocurrio un error al enviar signalr: " + ex.ToString());
+            }
+        }
+
+
+        public void SendUsuario(String usuario, String msg)
+        {
+            try
+            {
+                var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
+                context.Clients.User(usuario).broadcastMessage("Service", msg);
+            }
+            catch (TimeoutException toEx)
+            {
+                Console.WriteLine("Timeout signlar Date " + DateTime.Now.ToShortTimeString() + " msg: " + msg);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ocurrio un error al enviar signalr: " + ex.ToString());
+            }
 
         }
 
+
+
         public void Send(String msg)
         {
-            
             try
             {
                 if (usoRedis)
@@ -65,7 +116,6 @@ namespace ServiceLayer
                 {
                     proxy.Invoke("send", "Service", msg).Wait();
                 }
-
             }
             catch (TimeoutException toEx)
             {

@@ -13,7 +13,13 @@ namespace FrontEnd
         {
             Console.WriteLine(name + " -> " + message);
             Clients.All.broadcastMessage(name, message);
-            Clients.Caller.broadcastMessage(name, "mensaje enivado");
+            //Clients.Caller.broadcastMessage(name, "mensaje enivado");
+        }
+
+        public void SendGrupo(string grupo,string mensaje)
+        {
+            string nombre = grupo;
+            Clients.Group(grupo).broadcastMessage(nombre, mensaje);
         }
 
         public void agregarUsuarioGrupo(string idUsuario,string grupo)
@@ -24,8 +30,8 @@ namespace FrontEnd
         public override Task OnConnected()
         {
             var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);
+            Groups.Add(Context.ConnectionId, userName);
             return base.OnConnected();
-
         }
 
         public override Task OnReconnected()

@@ -16,7 +16,7 @@ namespace ServiceLayer
         void JugarUnidad(InfoCelda infoCelda);
 
         [OperationContract]
-        void Accion(String json);
+        void Accion(String tenant,String json);
 
         [OperationContract]
         bool login(ClienteJuego cliente, string nombreJuego);
@@ -24,11 +24,11 @@ namespace ServiceLayer
         [OperationContract]
         void register(ClienteJuego cliente, string nombreJuego);
 
-        [OperationContract]
-        List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt);
+        /*[OperationContract]
+        List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt);*/
 
         [OperationContract]
-        void IniciarAtaque(InfoAtaque info);
+        void IniciarAtaque(string tenant,InfoAtaque info);
 
         //DATA JUEGO
         [OperationContract]

@@ -3,11 +3,11 @@
 
 (function () {
     'use strict';
-    angular.module('juego').controller("juegoCtrl", ["$http", "$q","juegoService", "edificiosService", "unidadesService",'$scope', '$rootScope',
+    angular.module('juego').controller("juegoCtrl", ["$http", "$q","juegoService",'$scope', '$rootScope',
 
    
 
-    function ($http,$q,juegoService, edificiosService, unidadesService, $scope, $rootScope) {
+    function ($http,$q,juegoService, $scope, $rootScope) {
 
 
         var selectedUnit = null;
@@ -104,16 +104,6 @@
             return  $scope.estadoJuego.unidades_desplegables[sprite_id];
         }
 
-
-
-        /*function crearInternalMenu() {
-            menuCuartel = $scope.game.add.sprite(0, 0, 'cuartelMenu');
-            menuCuartel.width = 64;
-            menuCuartel.height = 64;
-            menuCuartel.inputEnabled = true;
-            menuCuartel.events.onInputDown.add(function () { crearDragEdificio('cuartel'); }, this);
-            menuCuartel.fixedToCamera = true;
-        }*/
 
         function mostrarUnidades(b) {
             $('#divEdificios').toggle(!b);

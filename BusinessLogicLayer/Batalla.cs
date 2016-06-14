@@ -44,13 +44,14 @@ namespace BusinessLogicLayer
 
         public Batalla(Jugador atacante,Jugador defensor)
         {
-            inicializar();
+
             this.tablero = new CampoBatalla();
             this.tablero.JugadorDefensor = defensor.Id;
             this.EnCurso = true;
             this.defensor = defensor;
             jugadores.Add(atacante);
             jugadores.Add(defensor);
+            inicializar();
         }
 
 
@@ -64,7 +65,6 @@ namespace BusinessLogicLayer
                 
                 foreach(Unidad u in lst)
                 {
-                    //u.id = r.Next(1, Int32.MaxValue);
                     u.jugador = jug.Id;
                 }
                 tablero.agregarUnidades(jug.Id, lst);
@@ -78,7 +78,6 @@ namespace BusinessLogicLayer
             u.posX = posX;
             u.posY = posY;
              tablero.agregarUnidad(jugador,u);
-            //return id;
             return 0;
         }
 

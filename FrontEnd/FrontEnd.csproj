@@ -222,6 +222,7 @@
     <Content Include="Properties\DataSources\Shared.Entities.Juego.datasource" />
     <Content Include="Properties\DataSources\Shared.Entities.TipoEdificio.datasource" />
     <Content Include="Properties\DataSources\Shared.Entities.TipoUnidad.datasource" />
+    <Content Include="Properties\DataSources\Shared.Entities.ListasEntidades.datasource" />
     <None Include="Properties\PublishProfiles\tsiatlas2fo.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

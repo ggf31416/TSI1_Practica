@@ -14,5 +14,17 @@ namespace ServiceLayer
     {
         [OperationContract]
         void Send(String msg);
+
+        [OperationContract]
+        void SendLista(List<string> nombreUsuarios, String msg);
+
+        [OperationContract]
+        void SendGrupo(String grupo, String msg);
+
+        [OperationContract]
+        void SendUsuario(String usuario, String msg);
+
     }
 }
+
+
