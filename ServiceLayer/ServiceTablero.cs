@@ -17,6 +17,7 @@ namespace ServiceLayer
         private static IBLJuego blJuegoHandler;
         private static IBLTecnologia blTecnologiaHandler;
         private static IBLConstruccion blConstruccionHandler;
+        private static IBLUsuario blUsuarioHandler;        
         private static IBLConexion blConexHandler;
         private static IBLBatalla blBatalla;
 
@@ -89,6 +90,42 @@ namespace ServiceLayer
             return blTecnologiaHandler.DesarrollarTecnologia(tenant, idJugador, idTecnologia);
         }
 
+        //SOCIALES
+        public List<ClienteJuego> GetJugadoresAtacables(string Tenant, string NombreJugador)
+        {
+            return blUsuarioHandler.GetJugadoresAtacables(Tenant, NombreJugador);
+        }
+
+        //CLANES
+        public void CrearClan(string NombreClan, string Tenant, string IdJugador)
+        {
+            blUsuarioHandler.CrearClan(NombreClan, Tenant, IdJugador);
+        }
+
+        public bool AbandonarClan(string Tenant, string IdJugador)
+        {
+            return blUsuarioHandler.AbandonarClan(Tenant, IdJugador);
+        }
+
+        public List<ClienteJuego> GetJugadoresSinClan(string Tenant, string IdJugador)
+        {
+            return blUsuarioHandler.GetJugadoresSinClan(Tenant, IdJugador);
+        }
+
+        public bool AgregarJugadorClan(ClienteJuego Jugador, string Tenant, string IdJugador)
+        {
+            return blUsuarioHandler.AgregarJugadorClan(Jugador, Tenant, IdJugador);
+        }
+
+        public List<ClienteJuego> GetJugadoresEnElClan(string Tenant, string IdJugador)
+        {
+            return blUsuarioHandler.GetJugadoresEnElClan(Tenant, IdJugador);
+        }
+
+        public bool SoyAdministrador(string Tenant, string IdJugador)
+        {
+            return blUsuarioHandler.SoyAdministrador(Tenant, IdJugador);
+        }
 
         public void ConectarSignalr(string tenant,ConexionSignalr con)
         {

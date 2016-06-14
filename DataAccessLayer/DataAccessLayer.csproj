@@ -79,9 +79,9 @@
     <Compile Include="DALConexion.cs" />
     <Compile Include="DALJuego.cs" />
     <Compile Include="DALJugadorInfo.cs" />
-    <Compile Include="DALTablero.cs" />
     <Compile Include="DALConstruccion.cs" />
     <Compile Include="DALUsuario.cs" />
+    <Compile Include="Entities\Clan.cs" />
     <Compile Include="Entities\ConjuntosUnidadMongo.cs" />
     <Compile Include="Entities\Construccion.cs" />
     <Compile Include="Entities\Edificio.cs" />
@@ -95,7 +95,6 @@
     <Compile Include="Entities\TableroConstruccion.cs" />
     <Compile Include="Exceptions\DALConstruccionException.cs" />
     <Compile Include="IDALJuego.cs" />
-    <Compile Include="IDALTablero.cs" />
     <Compile Include="IDALConstruccion.cs" />
     <Compile Include="IDALUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

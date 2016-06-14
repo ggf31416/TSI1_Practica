@@ -535,7 +535,8 @@ namespace FrontEnd.Controllers
                 foreach (var eR in juego.DataJugador.EstadoRecursos)
                 {
                     Models.EstadoRecursoModel eRM = new Models.EstadoRecursoModel();
-                    eRM.Id = int.Parse(eR.Key);// TODO: Modificar cuando cambien las claves
+                    //eRM.Id = int.Parse(eR.Key.Split('#')[0]);
+                    eRM.Id = int.Parse(eR.Key);// TODO: Cambiar por la linea de arrib acuando cambie la clave
                     eRM.Total = (int)eR.Value.Total;
                     eRM.Produccion = eR.Value.Produccion;
 
@@ -573,6 +574,178 @@ namespace FrontEnd.Controllers
             {
 
                 return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //SOCIALES
+        [HttpGet]
+        public ActionResult GetJugadoresAtacables(string tenant)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+
+                List<ClienteJuego> jugadores = client.GetJugadoresAtacables(tenant, Request.Cookies["clienteId"].Value).ToList();
+
+                List<Models.ClienteJuego> ret = new List<Models.ClienteJuego>();
+
+                foreach(var cJ in jugadores)
+                {
+                    if(cJ.username != Request.Cookies["clienteId"].Value)
+                    {
+                        Models.ClienteJuego mCJ = new Models.ClienteJuego();
+                        mCJ.idJuego = cJ.idJuego;
+                        mCJ.nombre = cJ.nombre;
+                        mCJ.apellido = cJ.apellido;
+                        mCJ.token = cJ.token;
+                        mCJ.clienteId = cJ.clienteId;
+                        mCJ.username = cJ.username;
+                        ret.Add(mCJ);
+                    }
+                }
+
+                return Json(new { success = true, ret = ret }, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception e)
+            {
+                return Json(new { success = false}, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //CLANES
+        [HttpPost]
+        public ActionResult CrearClan(string tenant, Models.NombreClanModel NombreClanModel)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+
+                client.CrearClan(NombreClanModel.NombreClan, tenant, Request.Cookies["clienteId"].Value);
+
+                return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult AbandonarClan(string tenant, string IdJugador)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+
+                bool ret = client.AbandonarClan(tenant, IdJugador);
+
+                return Json(new { success = true, ret = ret }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetJugadoresSinClan(string tenant)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+
+                List<Models.ClienteJuego> ret = new List<Models.ClienteJuego>();
+
+                foreach (var cj in client.GetJugadoresSinClan(tenant, Request.Cookies["clienteId"].Value))
+                {
+                    Models.ClienteJuego newCJ = new Models.ClienteJuego();
+                    newCJ.clienteId = cj.clienteId;
+                    newCJ.idJuego = cj.idJuego;
+                    newCJ.nombre = cj.nombre;
+                    newCJ.apellido = cj.apellido;
+                    newCJ.clan = cj.clan;
+                    newCJ.username = cj.username;
+                    newCJ.token = cj.token;
+                    ret.Add(newCJ);
+                }
+
+                return Json(new { success = true, ret = ret }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult AgregarJugadorClan(string tenant, Models.ClienteJuego JugadorModel)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+
+                ClienteJuego cj = new ClienteJuego();
+                cj.clienteId = JugadorModel.clienteId;
+                cj.idJuego = JugadorModel.idJuego;
+                cj.nombre = JugadorModel.nombre;
+                cj.apellido = JugadorModel.apellido;
+                cj.clan = JugadorModel.clan;
+                cj.username = JugadorModel.username;
+                cj.token = JugadorModel.token;
+                bool ret = client.AgregarJugadorClan(cj,tenant, Request.Cookies["clienteId"].Value);
+
+                return Json(new { success = true, ret = ret}, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { success = false}, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult GetJugadoresEnElClan(string tenant, string IdJugador)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+
+                List<Models.ClienteJuego> ret = new List<Models.ClienteJuego>();
+
+                foreach (var cj in client.GetJugadoresEnElClan(tenant, Request.Cookies["clienteId"].Value))
+                {
+                    Models.ClienteJuego newCJ = new Models.ClienteJuego();
+                    newCJ.clienteId = cj.clienteId;
+                    newCJ.idJuego = cj.idJuego;
+                    newCJ.nombre = cj.nombre;
+                    newCJ.apellido = cj.apellido;
+                    newCJ.clan = cj.clan;
+                    newCJ.username = cj.username;
+                    newCJ.token = cj.token;
+                    ret.Add(newCJ);
+                }
+
+                return Json(new { success = true, ret = ret }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult SoyAdministrador(string tenant)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+
+                bool ret = client.SoyAdministrador(tenant, Request.Cookies["clienteId"].Value);
+
+                return Json(new { success = true, ret = ret}, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { success = false}, JsonRequestBehavior.AllowGet);
             }
         }
     }

@@ -19,6 +19,8 @@ namespace DataAccessLayer
         //private IMongoCollection<JugadorConexion> conexionesJug;
         private IMongoCollection<Shared.Entities.FechaCantidad> collectionFechaCantidad;
 
+        public DALUsuario() { }
+
         public DALUsuario(string nombreJuego)
         {
             this.nombreJuego = nombreJuego;
@@ -65,6 +67,7 @@ namespace DataAccessLayer
             c.nombre = client.nombre;
             c.apellido = client.apellido;
             c.username = client.username;
+            c.atacable = true;
             inicializarUsuario(c);
         }
 
@@ -85,6 +88,253 @@ namespace DataAccessLayer
             updateCliente.username = client.username;
             updateCliente.token = null;
             collection.ReplaceOne(cliente => cliente.id == updateCliente.id, updateCliente);
+        }
+
+        //SOCIALES
+        public List<Shared.Entities.ClienteJuego> GetJugadoresAtacables(string Tenant, string ClienteId)
+        {
+            database = client.GetDatabase(Tenant);
+            collection = database.GetCollection<ClienteJuego>("usuario");
+
+            var query = from usuario in collection.AsQueryable<ClienteJuego>()
+                        where usuario.atacable == true
+                        select usuario;
+
+            List<Shared.Entities.ClienteJuego> res = new List<Shared.Entities.ClienteJuego>();
+            foreach(var q in query)
+            {
+                Shared.Entities.ClienteJuego cj = new Shared.Entities.ClienteJuego();
+                cj.nombre = q.nombre;
+                cj.apellido = q.apellido;
+                cj.token = q.token;
+                cj.clienteId = q.id;
+                cj.username = q.username;
+                res.Add(cj);
+            }
+
+            return res;
+        }
+
+        //CLANES
+        public void CrearClan(string NombreClan, string Tenant, string IdJugador)
+        {
+            database = client.GetDatabase(Tenant);
+            collection = database.GetCollection<ClienteJuego>("usuario");
+            IMongoCollection<Clan> clanCollection = database.GetCollection<Clan>("clan");
+
+            Clan newClan = new Clan();
+            newClan.AdministradorId = IdJugador;
+            newClan.Nombre = NombreClan;
+            newClan.IdJugadores = new List<string>();
+
+            newClan.IdJugadores.Add(IdJugador);
+
+            clanCollection.InsertOne(newClan);
+
+            IMongoCollection<ClienteJuego> clientCollection = database.GetCollection<ClienteJuego>("usuario");
+
+            var query = from usuario in collection.AsQueryable<ClienteJuego>()
+                        where usuario.id == IdJugador
+                        select usuario;
+
+            if(query.Count() > 0)
+            {
+                ClienteJuego cj = query.First();
+                cj.clan = NombreClan;
+
+                clientCollection.ReplaceOne(cliente => cliente.id == cj.id, cj);
+            }
+        }
+
+        public bool AbandonarClan(string Tenant, string IdJugador)
+        {
+            database = client.GetDatabase(Tenant);
+            collection = database.GetCollection<ClienteJuego>("usuario");
+            IMongoCollection<Clan> clanCollection = database.GetCollection<Clan>("clan");
+
+            var query = from usuario in collection.AsQueryable<ClienteJuego>()
+                        where usuario.id == IdJugador
+                        select usuario;
+
+            if (query.Count() > 0)
+            {
+                ClienteJuego cj = query.First();
+                
+                var queryClan = from clan in clanCollection.AsQueryable<Clan>()
+                                where clan.Nombre == cj.clan
+                                select clan;
+
+                if(queryClan.Count() > 0)
+                {
+                    Clan c = queryClan.First();
+                    c.IdJugadores.Remove(IdJugador);
+                    ReplaceOneResult resultClan = clanCollection.ReplaceOne(clan => clan.Nombre == c.Nombre, c);
+
+                    cj.clan = null;
+                    ReplaceOneResult resultClient = collection.ReplaceOne(cliente => cliente.id == cj.id, cj);
+
+                    return resultClan.IsAcknowledged && resultClient.IsAcknowledged;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public List<Shared.Entities.ClienteJuego> GetJugadoresSinClan(string Tenant, string IdJugador)
+        {
+            database = client.GetDatabase(Tenant);
+            collection = database.GetCollection<ClienteJuego>("usuario");
+
+            var query = from usuario in collection.AsQueryable<ClienteJuego>()
+                        where usuario.clan == null
+                        select usuario;
+
+            List<Shared.Entities.ClienteJuego> res = new List<Shared.Entities.ClienteJuego>();
+            if(query.Count() > 0)
+            {
+                foreach(var q in query)
+                {
+                    Shared.Entities.ClienteJuego cj = new Shared.Entities.ClienteJuego();
+                    cj.nombre = q.nombre;
+                    cj.apellido = q.apellido;
+                    cj.token = q.token;
+                    cj.clienteId = q.id;
+                    cj.username = q.username;
+                    res.Add(cj);
+                }
+            }
+
+            return res;
+        }
+
+        public bool AgregarJugadorClan(Shared.Entities.ClienteJuego Jugador, string Tenant, string IdJugador)
+        {
+            database = client.GetDatabase(Tenant);
+            collection = database.GetCollection<ClienteJuego>("usuario");
+
+            IMongoCollection<Clan> clanCollection = database.GetCollection<Clan>("clan");
+
+
+            string nombreClan = GetClanJugador(Tenant, IdJugador);
+
+            var queryNuevo = from usuario in collection.AsQueryable<ClienteJuego>()
+                        where usuario.id == Jugador.clienteId
+                        select usuario;
+
+            ClienteJuego nuevoMiembro = queryNuevo.First();
+
+            nuevoMiembro.clan = nombreClan;
+
+            ReplaceOneResult resultNuevoMiembro = collection.ReplaceOne(cliente => cliente.id == nuevoMiembro.id, nuevoMiembro);
+
+            var queryClan = from clan in clanCollection.AsQueryable<Clan>()
+                            where clan.Nombre == nombreClan
+                            select clan;
+
+            Clan clanAModificar = queryClan.First();
+
+            clanAModificar.IdJugadores.Add(nuevoMiembro.id);
+
+            ReplaceOneResult resultClan = clanCollection.ReplaceOne(clan => clan.Nombre == clanAModificar.Nombre, clanAModificar);
+
+            return resultNuevoMiembro.IsAcknowledged && resultClan.IsAcknowledged;
+        }
+
+        public List<Shared.Entities.ClienteJuego> GetJugadoresEnElClan(string Tenant, string IdJugador)
+        {
+            database = client.GetDatabase(Tenant);
+            collection = database.GetCollection<ClienteJuego>("usuario");
+            IMongoCollection<Clan> clanCollection = database.GetCollection<Clan>("clan");
+
+            List<Shared.Entities.ClienteJuego> res = new List<Shared.Entities.ClienteJuego>();
+
+            var queryClan = from clan in clanCollection.AsQueryable<Clan>()
+                            where clan.Nombre == GetClanJugador(Tenant, IdJugador)
+                            select clan;
+
+            Clan clanObjeto = queryClan.First();
+
+            var queryUsuarios = from usuario in collection.AsQueryable<ClienteJuego>()
+                                where clanObjeto.IdJugadores.Contains(usuario.id)
+                                select usuario;
+
+            foreach(var q in queryUsuarios)
+            {
+                Shared.Entities.ClienteJuego cj = new Shared.Entities.ClienteJuego();
+                cj.nombre = q.nombre;
+                cj.apellido = q.apellido;
+                cj.token = q.token;
+                cj.clienteId = q.id;
+                cj.username = q.username;
+                res.Add(cj);
+            }
+
+            return res;
+        }
+        
+        public bool EliminarJugadorClan(Shared.Entities.ClienteJuego Jugador, string Tenant, string IdJugador)
+        {
+            database = client.GetDatabase(Tenant);
+            collection = database.GetCollection<ClienteJuego>("usuario");
+            IMongoCollection<Clan> clanCollection = database.GetCollection<Clan>("clan");
+
+            var queryClan = from clan in clanCollection.AsQueryable<Clan>()
+                            where clan.Nombre == GetClanJugador(Tenant, IdJugador)
+                            select clan;
+
+            Clan clanAModificar = queryClan.First();
+            clanAModificar.IdJugadores.Remove(Jugador.clienteId);
+
+            ReplaceOneResult resultClan = clanCollection.ReplaceOne(clan => clan.Nombre == clanAModificar.Nombre, clanAModificar);
+
+            var queryUsuario = from usuario in collection.AsQueryable<ClienteJuego>()
+                               where usuario.id == Jugador.clienteId
+                               select usuario;
+
+            ClienteJuego cj = new ClienteJuego();
+            cj.clan = null;
+
+            ReplaceOneResult resultUsuario = collection.ReplaceOne(cliente => cliente.id == cj.id, cj);
+
+            return resultClan.IsAcknowledged && resultUsuario.IsAcknowledged;
+        }
+
+        public bool SoyAdministrador(string Tenant, string IdJugador)
+        {
+            database = client.GetDatabase(Tenant);
+            collection = database.GetCollection<ClienteJuego>("usuario");
+            IMongoCollection<Clan> clanCollection = database.GetCollection<Clan>("clan");
+
+            var queryClan = from clan in clanCollection.AsQueryable<Clan>()
+                            where clan.Nombre == GetClanJugador(Tenant, IdJugador)
+                            select clan;
+
+            return queryClan.First().AdministradorId == IdJugador;
+        }
+
+        private string GetClanJugador(string Tenant, string IdJugador)
+        {
+            database = client.GetDatabase(Tenant);
+            collection = database.GetCollection<ClienteJuego>("usuario");
+
+            var query = from usuario in collection.AsQueryable<ClienteJuego>()
+                        where usuario.id == IdJugador
+                        select usuario;
+
+            if(query.Count() > 0)
+            {
+                return query.First().clan;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

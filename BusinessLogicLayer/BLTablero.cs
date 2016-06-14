@@ -20,15 +20,14 @@ namespace BusinessLogicLayer
         private static BLTablero instancia = null;
         public static BLTablero getInstancia()
         {
-            if (instancia == null) instancia = new BLTablero(null);
+            if (instancia == null) instancia = new BLTablero();
             return instancia;
         }
 
         private IDALTablero _dal;
 
-        private BLTablero(IDALTablero dal)
+        private BLTablero()
         {
-            _dal = dal;
         }
 
 

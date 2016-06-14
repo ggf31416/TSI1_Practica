@@ -10,7 +10,7 @@ namespace DataAccessLayer
 {
     public interface IDALJuego
     {
-        Juego GetJuego(string tenant);
+        JuegoIndependiente GetJuego(string tenant);
         Juego GetJuegoUsuario(string tenant, string idUsuario);
         Task GuardarJuegoUsuarioAsync(Juego juego);
         bool GuardarJuegoUsuarioEsperar(Juego juego);

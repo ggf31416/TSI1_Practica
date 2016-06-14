@@ -137,7 +137,7 @@ namespace BusinessLogicLayer
 
         public Juego GetAllDataJuego(string tenant)
         {
-            return _dal.GetJuego(tenant);
+            return _dal.GetJuegoUsuario(tenant, "pijaUsuario");
         }
 
         public ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador)

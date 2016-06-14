@@ -121,6 +121,7 @@
     <Compile Include="Batalla.cs" />
     <Compile Include="BLBatalla.cs" />
     <Compile Include="BLConexion.cs" />
+    <Compile Include="BLUsuario.cs" />
     <Compile Include="BLConstruccion.cs" />
     <Compile Include="BLJuego.cs" />
     <Compile Include="BLTablero.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Edificio.cs" />
     <Compile Include="Entidad.cs" />
     <Compile Include="IBLBatalla.cs" />
+    <Compile Include="IBLUsuario.cs" />
     <Compile Include="IBLConexion.cs" />
     <Compile Include="IBLConstruccion.cs" />
     <Compile Include="IBLJuego.cs" />

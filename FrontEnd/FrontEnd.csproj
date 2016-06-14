@@ -285,6 +285,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="ChatHub.cs" />
+    <Compile Include="Models\NombreClanModel.cs" />
     <Compile Include="Models\ListasEntidadesModel.cs" />
     <Compile Include="Models\CEInputDataModel.cs" />
     <Compile Include="Models\DataActualModel.cs" />

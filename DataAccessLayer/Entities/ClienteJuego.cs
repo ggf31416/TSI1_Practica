@@ -16,5 +16,7 @@ namespace DataAccessLayer.Entities
         public string apellido { get; set; }
         public string token { get; set; }
         public DateTime creacion { get; set; }
+        public bool atacable { get; set; }
+        public string clan { get; set; }
     }
 }

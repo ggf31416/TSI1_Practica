@@ -89,6 +89,8 @@ namespace Shared.Entities
         
         private string apellidoField;
         
+        private string clanField;
+        
         private string clienteIdField;
         
         private System.DateTime creacionField;
@@ -123,6 +125,19 @@ namespace Shared.Entities
             set
             {
                 this.apellidoField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string clan
+        {
+            get
+            {
+                return this.clanField;
+            }
+            set
+            {
+                this.clanField = value;
             }
         }
         
@@ -2267,6 +2282,27 @@ public interface IServiceTablero
     
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/DesarrollarTecnologia", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/DesarrollarTecnologiaResponse")]
     bool DesarrollarTecnologia(string tenant, string idJugador, int idTecnologia);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetJugadoresAtacables", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetJugadoresAtacablesResponse")]
+    Shared.Entities.ClienteJuego[] GetJugadoresAtacables(string Tenant, string NombreJugador);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/CrearClan", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/CrearClanResponse")]
+    void CrearClan(string NombreClan, string Tenant, string IdJugador);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/AbandonarClan", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/AbandonarClanResponse")]
+    bool AbandonarClan(string Tenant, string IdJugador);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetJugadoresSinClan", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetJugadoresSinClanResponse")]
+    Shared.Entities.ClienteJuego[] GetJugadoresSinClan(string Tenant, string IdJugador);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/AgregarJugadorClan", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/AgregarJugadorClanResponse")]
+    bool AgregarJugadorClan(Shared.Entities.ClienteJuego Jugador, string Tenant, string IdJugador);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetJugadoresEnElClan", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetJugadoresEnElClanResponse")]
+    Shared.Entities.ClienteJuego[] GetJugadoresEnElClan(string Tenant, string IdJugador);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/SoyAdministrador", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/SoyAdministradorResponse")]
+    bool SoyAdministrador(string Tenant, string IdJugador);
 }
 
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
@@ -2356,5 +2392,40 @@ public partial class ServiceTableroClient : System.ServiceModel.ClientBase<IServ
     public bool DesarrollarTecnologia(string tenant, string idJugador, int idTecnologia)
     {
         return base.Channel.DesarrollarTecnologia(tenant, idJugador, idTecnologia);
+    }
+    
+    public Shared.Entities.ClienteJuego[] GetJugadoresAtacables(string Tenant, string NombreJugador)
+    {
+        return base.Channel.GetJugadoresAtacables(Tenant, NombreJugador);
+    }
+    
+    public void CrearClan(string NombreClan, string Tenant, string IdJugador)
+    {
+        base.Channel.CrearClan(NombreClan, Tenant, IdJugador);
+    }
+    
+    public bool AbandonarClan(string Tenant, string IdJugador)
+    {
+        return base.Channel.AbandonarClan(Tenant, IdJugador);
+    }
+    
+    public Shared.Entities.ClienteJuego[] GetJugadoresSinClan(string Tenant, string IdJugador)
+    {
+        return base.Channel.GetJugadoresSinClan(Tenant, IdJugador);
+    }
+    
+    public bool AgregarJugadorClan(Shared.Entities.ClienteJuego Jugador, string Tenant, string IdJugador)
+    {
+        return base.Channel.AgregarJugadorClan(Jugador, Tenant, IdJugador);
+    }
+    
+    public Shared.Entities.ClienteJuego[] GetJugadoresEnElClan(string Tenant, string IdJugador)
+    {
+        return base.Channel.GetJugadoresEnElClan(Tenant, IdJugador);
+    }
+    
+    public bool SoyAdministrador(string Tenant, string IdJugador)
+    {
+        return base.Channel.SoyAdministrador(Tenant, IdJugador);
     }
 }
