@@ -60,7 +60,7 @@ namespace BusinessLogicLayer
         {
             foreach (ConjuntoUnidades cu in jug.Unidades.Values)
             {
-                Unidad x = getUnidadPorId(cu.UnidadId);
+                Unidad x = getUnidadPorId(cu.UnidadId,jug.Id);
                 IEnumerable<Unidad> lst = Enumerable.Repeat(x, cu.Cantidad).ToList();
                 Random r = new Random();
                 
