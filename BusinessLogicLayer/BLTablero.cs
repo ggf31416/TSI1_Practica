@@ -24,7 +24,7 @@ namespace BusinessLogicLayer
             return instancia;
         }
 
-        private IDALTablero _dal;
+        
 
         private BLTablero()
         {
