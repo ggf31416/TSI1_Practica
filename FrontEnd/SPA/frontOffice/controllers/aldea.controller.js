@@ -298,6 +298,13 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             return rec ? rec.Value : 0;
         }
 
+        function getProduccion(aux, idRecurso) {
+            var rec = jQuery.grep(aux.RecursosAsociados, function (value) {
+                return value.idRecurso === IdRecurso;
+            })[0];
+            return rec ? rec.Produccion : 0;
+        }
+
         $scope.addEdificio = function (id) {
             var fila = $scope.editCasilla.fila;
             var columna = $scope.editCasilla.columna;
@@ -310,6 +317,9 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                 }
                 $scope.editCasilla.Id = -5;
                 $scope.timerConstruccion = $interval(function () {
+                    for (var j = 0; j < $rootScope.dataJugador.EstadoRecursos.length; j++) {
+                        $rootScope.dataJugador.EstadoRecursos[j].Produccion = $rootScope.dataJugador.EstadoRecursos[j].Produccion + getProduccion($scope.aux, $rootScope.dataJugador.EstadoRecursos[j].Id);
+                    }
                     $scope.editCasilla.Id = $scope.aux.Id;
                     $interval.cancel($scope.timerConstruccion);
                     $scope.aux = undefined;
