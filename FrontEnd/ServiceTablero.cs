@@ -300,7 +300,7 @@ namespace Shared.Entities
         
         private int EstadoField;
         
-        private long IdField;
+        private int IdField;
         
         private int IdDisenadorField;
         
@@ -378,7 +378,7 @@ namespace Shared.Entities
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public long Id
+        public int Id
         {
             get
             {
@@ -2303,6 +2303,9 @@ public interface IServiceTablero
     
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/SoyAdministrador", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/SoyAdministradorResponse")]
     bool SoyAdministrador(string Tenant, string IdJugador);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetEstadoBatalla", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetEstadoBatallaResponse")]
+    string GetEstadoBatalla(string tenant, string idJugador);
 }
 
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
@@ -2427,5 +2430,10 @@ public partial class ServiceTableroClient : System.ServiceModel.ClientBase<IServ
     public bool SoyAdministrador(string Tenant, string IdJugador)
     {
         return base.Channel.SoyAdministrador(Tenant, IdJugador);
+    }
+    
+    public string GetEstadoBatalla(string tenant, string idJugador)
+    {
+        return base.Channel.GetEstadoBatalla(tenant, idJugador);
     }
 }

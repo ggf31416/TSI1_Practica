@@ -56,9 +56,8 @@ namespace BusinessLogicLayer
 
         private ITrigger agregarTriggerSimple(int segundosDelay)
         {
-            ITrigger t = TriggerBuilder.Create().StartNow().WithSimpleSchedule(x =>
-                    x.WithInterval(TimeSpan.FromMilliseconds(1000 * segundosDelay)))
-                    .Build();
+            DateTimeOffset tiempo = new DateTimeOffset(DateTime.UtcNow.AddSeconds(segundosDelay));
+            ITrigger t = TriggerBuilder.Create().StartAt(tiempo).Build();
             return t;
 
         }
@@ -72,10 +71,10 @@ namespace BusinessLogicLayer
 
         public void IniciarAtaque(string tenant,InfoAtaque ataque,int segundosDelay)
         {
-            var job = JobBuilder.Create<IniciarBatallaJob>().WithIdentity("job1", "group1").Build();
+            var job = JobBuilder.Create<IniciarBatallaJob>().Build();
             job.JobDataMap.Put("infoAtaque", ataque);
             job.JobDataMap.Put("tenant", tenant);
-
+            unaVez(job, segundosDelay);
 
         }
 

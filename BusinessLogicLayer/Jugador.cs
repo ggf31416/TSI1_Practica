@@ -16,8 +16,11 @@ namespace BusinessLogicLayer
         public List<Edificio> Edificios { get; set; } = new List<Edificio>();
         private Dictionary<int, CantidadRecurso> Recursos { get; set; }  // clave Recurso.ID
         public Dictionary<int, TipoEntidad> tipos = new Dictionary<int, TipoEntidad>();
+        public List<TipoEdificio> tiposEdificio = new List<TipoEdificio>();
+        public List<TipoUnidad> tiposUnidad = new List<TipoUnidad>();
 
-        public void Inicializar(Shared.Entities.Juego juego)
+
+        /*public void Inicializar(Shared.Entities.Juego juego)
         {
             foreach(var entidad in juego.TipoEntidad)
             {
@@ -27,10 +30,12 @@ namespace BusinessLogicLayer
             {
                 this.Recursos.Add(recurso.Id,new CantidadRecurso() { acumulado = 0, porSegundo = 0 });
             }
-        }
+        }*/
 
         public void CargarDesdeJuego(Juego jj)
         {
+            this.Id = jj.IdJugador;
+            this.Clan = jj.IdJugador;
             foreach (var e in jj.TipoEdificios)
             {
                 tipos [e.Id] = e;
@@ -39,10 +44,21 @@ namespace BusinessLogicLayer
             {
                 tipos[e.Id] = e;
             }
+            this.tiposEdificio = jj.TipoEdificios;
+            this.tiposUnidad = jj.TipoUnidades;
+            foreach (var u in jj.DataJugador.EstadoUnidades.Values)
+            {
+                if (u != null && u.Estado == EstadoData.EstadoEnum.A)
+                {
+                    ConjuntoUnidades cu = new ConjuntoUnidades() { Cantidad = u.Cantidad, UnidadId = u.Id };
+                    this.Unidades.Add(cu.UnidadId, cu);
+                }
+            }
         }
 
         public void CargarEdificios(Tablero miBase)
         {
+            if (miBase == null) return; // programacion defensiva....
             var ocupadas = miBase.Celdas.Where(c => c.IdTipoEdificio.HasValue && c.IdTipoEdificio >= 0);
             foreach(TableroCelda tc in ocupadas)
             {

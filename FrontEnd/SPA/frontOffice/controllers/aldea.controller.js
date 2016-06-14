@@ -1,9 +1,9 @@
 ﻿(function () {
 'use strict';
 angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService", "juegoService",
-        "edificiosService", "unidadesService", '$scope', '$rootScope', '$interval',
+        "edificiosService", "unidadesService", '$scope', '$rootScope', '$interval','$window',
 
-    function ($http, $q, aldeasService, juegoService, edificiosService, unidadesService, $scope, $rootScope, $interval) {
+    function ($http, $q, aldeasService, juegoService, edificiosService, unidadesService, $scope, $rootScope, $interval,$window) {
 
         //--------------Inicializacion de variables---------------------
         

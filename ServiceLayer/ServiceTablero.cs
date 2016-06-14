@@ -143,5 +143,10 @@ namespace ServiceLayer
             blConexHandler.agregarConexion(tenant, con);
         }
 
+        public string GetEstadoBatalla(string tenant,string idJugador)
+        {
+            return blBatalla.getJsonBatalla(tenant, idJugador);
+        }
+
     }
 }

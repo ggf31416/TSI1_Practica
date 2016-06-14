@@ -67,6 +67,8 @@ namespace BusinessLogicLayer
             return iDALUsuario.authenticate(cliente);
         }
 
+
+
         /*public List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt)
         {
             Jugador at = jugadores.GetValueOrDefault(jugadorAt);

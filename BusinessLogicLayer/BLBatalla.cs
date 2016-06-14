@@ -10,6 +10,7 @@ using ServiceStack.Redis;
 using Microsoft.AspNet.SignalR.Client.Hubs;
 using System.ServiceModel;
 using Shared.Entities;
+using System.Diagnostics;
 
 namespace BusinessLogicLayer
 {
@@ -40,12 +41,16 @@ namespace BusinessLogicLayer
 
         public void ejecutarBatallasEnCurso()
         {
-            if (todaviaEstoyTrabajando) return;
+            if (todaviaEstoyTrabajando)
+            {
+                Console.WriteLine("[WARNING] Turno todavia en ejecucion, Fecha: " + DateTime.Now.ToString("hh:mm:ss.fff tt"));
+                return;
+            }
 
             try
             {
                 todaviaEstoyTrabajando = true;
-                Console.WriteLine(DateTime.Now.ToString("hh:mm:ss.fff tt"));
+                //Console.WriteLine(DateTime.Now.ToString("hh:mm:ss.fff tt"));
                 var client = getCliente();
                 var encoladas = new List<string>();
                 foreach (Batalla b in batallas)
@@ -58,12 +63,14 @@ namespace BusinessLogicLayer
                         {
                             encoladas.Add(jsonAcciones);
                         }
+                        client.SendLista(b.GetListaJugadores(), jsonAcciones);
                     }
+                    
                 }
-                foreach (var a in encoladas)
-                {
-                    client.Send(a);
-                }
+            }
+            catch( Exception ex)
+            {
+                Console.WriteLine("Error al ejecutar turno: " + ex.ToString());
             }
             finally
             {
@@ -114,15 +121,8 @@ namespace BusinessLogicLayer
             var jsonObj = new { A = "AddUn", Id = tipo_id, PosX = posX, PosY = posY, Unit_id = unit_id };
             string s = JsonConvert.SerializeObject(jsonObj);
 
-            client.Send(s);
+            client.SendLista(b.GetListaJugadores(),s);
 
-
-
-
-            /*var path = b.tablero.ordenMoverUnidad(unit_id, 20, 15);
-            dynamic jsonObj2 = new { A = "MoveUnit", Id = tipo_id, Unit_id = unit_id, PosX = posX, PosY = posY, Path = path.path };
-            string s2 = JsonConvert.SerializeObject(jsonObj2);
-            client.Send(s2);*/
         }
 
 
@@ -162,18 +162,41 @@ namespace BusinessLogicLayer
             {
                 agregarEdificio(obj);
             }
+            else if (accion.Equals("GetEstadoBatalla"))
+            {
+                string jsonBatalla = getJsonBatalla(tenant,obj.Jugador);
+                // mando info batalla por signalr
+                getCliente().SendGrupo(obj.Jugador, jsonBatalla);  
+            }
         }
 
 
         public void IniciarBatalla(string tenant, InfoAtaque info)
         {
             Juego datosAtaq = blJuego.GetJuegoUsuarioSinActualizar(tenant, info.Jugador);
-            Juego datosDef = blJuego.GetJuegoUsuarioSinActualizar(tenant, info.Enemigo);
             Jugador jAt = new Jugador();
+
             jAt.CargarDesdeJuego(datosAtaq);
 
+            Juego datosDef = blJuego.GetJuegoUsuarioSinActualizar(tenant, info.Enemigo);
             Jugador jDef = new Jugador();
-            jDef.CargarDesdeJuego(datosDef);
+            if (datosDef != null)
+            {
+                
+                jDef.CargarDesdeJuego(datosDef);
+            }
+            else
+            {
+                ConjuntoUnidades cu = new ConjuntoUnidades() { Cantidad = 5, UnidadId = jAt.tiposUnidad[0].Id };
+                jDef = new Jugador()
+                {
+                    Id = info.Enemigo,
+                    Clan = info.Enemigo,
+                    tipos = jAt.tipos
+                };
+                jDef.Unidades.Add(cu.UnidadId,cu);
+            }
+            
             Batalla b = new Batalla(jAt, jDef);
             batallas.Add(b);
             batallasPorJugador[info.Jugador] = b;
@@ -221,6 +244,15 @@ namespace BusinessLogicLayer
             Planificador.getInstancia().IniciarAtaque(tenant, info, 15);   
         }
 
+        public string getJsonBatalla(string tenant, string idUsuario)
+        {
+            if (batallasPorJugador.ContainsKey(idUsuario))
+            {
+                Console.WriteLine("getJsonBatalla Tenant: " + tenant + "userId " + idUsuario);
+                return batallasPorJugador[idUsuario].GenerarJson(idUsuario);
+            }
+            return null;
+        }
     }
 
 

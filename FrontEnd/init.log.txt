@@ -2,3 +2,31 @@ SignalR.ReflectedHubDescriptorProvider Warning: 0 : Some of the classes from ass
 Original exception type: ReflectionTypeLoadException
 Original exception message: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property for more information.
 
+SignalR.ReflectedHubDescriptorProvider Warning: 0 : Some of the classes from assembly "WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35" could Not be loaded when searching for Hubs. [C:\Users\Guillermo\AppData\Local\Temp\Temporary ASP.NET Files\vs\cb795ae2\5fc932ae\assembly\dl3\6ae34482\00eb49d4_5318cf01\WebGrease.dll]
+Original exception type: ReflectionTypeLoadException
+Original exception message: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property for more information.
+
+SignalR.ReflectedHubDescriptorProvider Warning: 0 : Some of the classes from assembly "WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35" could Not be loaded when searching for Hubs. [C:\Users\Guillermo\AppData\Local\Temp\Temporary ASP.NET Files\vs\cb795ae2\5fc932ae\assembly\dl3\6ae34482\00eb49d4_5318cf01\WebGrease.dll]
+Original exception type: ReflectionTypeLoadException
+Original exception message: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property for more information.
+
+SignalR.ReflectedHubDescriptorProvider Warning: 0 : Some of the classes from assembly "WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35" could Not be loaded when searching for Hubs. [C:\Users\Guillermo\AppData\Local\Temp\Temporary ASP.NET Files\vs\cb795ae2\5fc932ae\assembly\dl3\6ae34482\00eb49d4_5318cf01\WebGrease.dll]
+Original exception type: ReflectionTypeLoadException
+Original exception message: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property for more information.
+
+SignalR.ReflectedHubDescriptorProvider Warning: 0 : Some of the classes from assembly "WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35" could Not be loaded when searching for Hubs. [C:\Users\Guillermo\AppData\Local\Temp\Temporary ASP.NET Files\vs\cb795ae2\5fc932ae\assembly\dl3\6ae34482\00eb49d4_5318cf01\WebGrease.dll]
+Original exception type: ReflectionTypeLoadException
+Original exception message: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property for more information.
+
+SignalR.ReflectedHubDescriptorProvider Warning: 0 : Some of the classes from assembly "WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35" could Not be loaded when searching for Hubs. [C:\Users\Guillermo\AppData\Local\Temp\Temporary ASP.NET Files\vs\cb795ae2\5fc932ae\assembly\dl3\6ae34482\00eb49d4_5318cf01\WebGrease.dll]
+Original exception type: ReflectionTypeLoadException
+Original exception message: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property for more information.
+
+SignalR.ReflectedHubDescriptorProvider Warning: 0 : Some of the classes from assembly "WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35" could Not be loaded when searching for Hubs. [C:\Users\Guillermo\AppData\Local\Temp\Temporary ASP.NET Files\vs\cb795ae2\5fc932ae\assembly\dl3\6ae34482\00eb49d4_5318cf01\WebGrease.dll]
+Original exception type: ReflectionTypeLoadException
+Original exception message: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property for more information.
+
+SignalR.ReflectedHubDescriptorProvider Warning: 0 : Some of the classes from assembly "WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35" could Not be loaded when searching for Hubs. [C:\Users\Guillermo\AppData\Local\Temp\Temporary ASP.NET Files\vs\cb795ae2\5fc932ae\assembly\dl3\6ae34482\00eb49d4_5318cf01\WebGrease.dll]
+Original exception type: ReflectionTypeLoadException
+Original exception message: Unable to load one or more of the requested types. Retrieve the LoaderExceptions property for more information.
+

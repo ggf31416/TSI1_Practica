@@ -19,6 +19,11 @@
             return postAccion({ "A": "AddEd", "J": jugador, "Id": id, "PosX": input_x, "PosY": input_y });
         }
 
+        this.GetEstadoBatalla = function(){
+            return $http.get('/' + $rootScope.nombreJuego + "/Tablero/obtenerEstadoBatalla")
+            //return postAccion({"A": "GetEstadoBatalla","J" :""});
+        }
+
 
 
         this.posicionarUnidad = function (idTipo, idUnidad,input_x, input_y,jugador){
@@ -30,7 +35,8 @@
         }
 
         this.moverUnidad = function (id, input_x, input_y,jugador){
-            return $http.post('/' + $rootScope.nombreJuego + "/Tablero/Accion", JSON.stringify({ "A": "MoveUnidad", "J": jugador, "Id": id, "PosX": input_x, "PosY": input_y }));
+            //return $http.post('/' + $rootScope.nombreJuego + "/Tablero/Accion", JSON.stringify({ "A": "MoveUnidad", "J": jugador, "Id": id, "PosX": input_x, "PosY": input_y }));
+            return postAccion({ "A": "MoveUnidad", "J": jugador, "Id": id, "PosX": input_x, "PosY": input_y });
         }
 
         this.registrarJugador = function (jugador,juego) {

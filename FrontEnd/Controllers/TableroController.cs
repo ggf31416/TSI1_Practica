@@ -85,6 +85,14 @@ namespace FrontEnd.Controllers
             }
         }
 
+        public ActionResult ObtenerEstadoBatalla(string tenant)
+        {
+            String idJugador = Request.Cookies["ClienteId"].Value;
+            ServiceTableroClient client = new ServiceTableroClient();
+            string res = client.GetEstadoBatalla(tenant, idJugador);
+            return Json(new { success = true, ret = res }, JsonRequestBehavior.AllowGet);
+        }
+
 
         /*[HttpGet]
         public ActionResult GetListaDeJugadoresAtacables(string jugador)

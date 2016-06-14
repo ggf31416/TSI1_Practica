@@ -27,7 +27,7 @@ namespace BusinessLogicLayer
         private static int tablero_size = 10;
         private int sizeX = tablero_size * edificio_size;
         private int sizeY = tablero_size * edificio_size;
-        private float velocidad = 5;
+        
         JumpPointParam param = null;
         private Stopwatch sw;
         private long nanosPrevio;
@@ -357,6 +357,8 @@ namespace BusinessLogicLayer
             }
         
         }
+
+        
 
         string generarJson()
         {

@@ -3,11 +3,11 @@
 
 (function () {
     'use strict';
-    angular.module('juego').controller("juegoCtrl", ["$http", "$q","juegoService",'$scope', '$rootScope',
+    angular.module('juego').controller("juegoCtrl", ["$http", "$q","juegoService",'$scope', '$window','$rootScope',
 
    
 
-    function ($http,$q,juegoService, $scope, $rootScope) {
+    function ($http,$q,juegoService, $scope, $window,$rootScope) {
 
 
         var selectedUnit = null;
@@ -19,6 +19,8 @@
 
         $scope.listaEnemigos = [];
         
+        //juegoService.GetEstadoBatalla();
+
         $scope.posicionarUnidad= function (id) {
             // llama a la funcion iniciarCustomDrag en el CrearCanvas.js
             esUnidad = true;
@@ -33,13 +35,18 @@
 
         
         $q.all([
-            //edificiosService.getAllTipoEdificios(),
-            //unidadesService.getAllTipoUnidades()
+            juegoService.GetEstadoBatalla()
         ]).then(function (data) {
-            $rootScope.listaEdificios = [];//data[0];
-            $rootScope.listaUnidades = [ {Ataque : 10, Defensa : 10, Id : 314159, Nombre : "Arquero", TiempoConstruccion : 10, Vida : 100, Imagen : "/SPA/backoffice/ImagenesSubidas/arquero.jpg" }]
+            var batalla = JSON.parse(data[0].data.ret);
+            if (!batalla) console.error("No hay datos de batalla");
+            nombreJugador = batalla.IdJugador;
+            $rootScope.listaEdificios = batalla.tiposEdificio;
+            //$rootScope.listaUnidades = [ {Ataque : 10, Defensa : 10, Id : 314159, Nombre : "Arquero", TiempoConstruccion : 10, Vida : 100, Imagen : "/SPA/backoffice/ImagenesSubidas/arquero.jpg" }]
+            $rootScope.listaUnidades = batalla.tiposUnidad;
             //data[1];
             window.createGame();
+
+            cargarEstado(batalla); // carga info
         });
 
      
@@ -165,7 +172,7 @@
                 crearUnidadInmediato(e);
                 });
             }
-            $scope.$apply();
+            //$scope.$apply();
         };
 
         function esEsteJugador(json){
@@ -212,7 +219,7 @@
 
         function ejecutarMensaje(msg){
             if (msg.A == MsgA.IniciarAtaque){
-                cargarEstado(msg);
+                //cargarEstado(msg);
             }
             else if(msg.A == MsgA.PosUnit){
                  var unit = unidadesPorId[msg.IdUn];
@@ -714,9 +721,11 @@
             var distancia = $scope.game.physics.arcade.distanceBetween(spriteAt, def);
             if (distancia <= spriteAt.info.rango) {
                 detenerMovimiento(spriteAtaq);
-                if (!spriteAtaq.info.prox_ataque || game.time.now() > spriteAtaq.info.prox_ataque){
-                    disparar(spriteAtaq,def);
-                    spriteAtaq.info.prox_ataque = game.time.now() + 500;
+                if (sprite.info && sprite.info.ataque > 0){
+                    if (!spriteAtaq.info.prox_ataque || game.time.now() > spriteAtaq.info.prox_ataque){
+                        disparar(spriteAtaq,def);
+                        spriteAtaq.info.prox_ataque = game.time.now() + 500;
+                    }
                 }
             }
             

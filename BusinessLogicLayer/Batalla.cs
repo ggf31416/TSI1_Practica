@@ -12,8 +12,8 @@ namespace BusinessLogicLayer
     
     public class Batalla
     {
-        //private Dictionary<int, TipoUnidad> tiposUnidades = new Dictionary<int, TipoUnidad>();
-        //private Dictionary<int, TipoEdificio> tiposEdificios = new Dictionary<int, TipoEdificio>();
+        private List<TipoUnidad> tiposUnidades = new List<TipoUnidad>();
+        private List< TipoEdificio> tiposEdificios = new List< TipoEdificio>();
         public int JuegoId { get; set; }
         private Dictionary<string, Jugador> jugadores = new Dictionary<string, Jugador>();
 
@@ -27,16 +27,11 @@ namespace BusinessLogicLayer
 
     
 
-        public void inicializar()
-        {
-            /*_dalRO = new DataAccessLayer.Relacional.DALEntidades();
-            tiposUnidades = _dalRO.GetAllTipoUnidades().ToDictionary(x => x.Id);
-            tiposEdificios = _dalRO.GetAllTipoEdificios().ToDictionary(x => x.Id);*/
-        }
+        
 
         public Batalla(string atacante,string defensor)
         {
-            inicializar();
+            //inicializar();
             this.tablero = new CampoBatalla();
             this.EnCurso = true;
 
@@ -50,9 +45,11 @@ namespace BusinessLogicLayer
             this.EnCurso = true;
             this.defensor = defensor;
             jugadores.Add(atacante.Id,atacante);
-            jugadores.Add(atacante.Id, defensor);
+            jugadores.Add(defensor.Id, defensor);
+            this.tiposEdificios = atacante.tiposEdificio;
+            this.tiposUnidades = atacante.tiposUnidad;
             this.GrupoSignalR = "bat_" + this.defensor.Id;
-            inicializar();
+            //inicializar();
         }
 
 
@@ -89,6 +86,8 @@ namespace BusinessLogicLayer
             tablero = new CampoBatalla();
             agregarUnidades(atacante);
             agregarUnidades(defensor);
+            this.tiposUnidades = atacante.tiposUnidad;
+            this.tiposEdificios = atacante.tiposEdificio;
             tablero.agregarEdificios(defensor.Edificios);
         }
 
@@ -146,26 +145,36 @@ namespace BusinessLogicLayer
             public bool Finalice { get; set; } = false;
             public List<Unidad>  unidades { get; set; }  = new List<Unidad>();
             public List<Edificio> edificios { get; set; } = new List<Edificio>();
+            public List<TipoUnidad> tiposUnidad { get; set; } = new List<TipoUnidad>();
+            public List<TipoEdificio> tiposEdificio { get; set; } = new List<TipoEdificio>();
             public List<String> jugadores { get; set; } = new List<String>();
+
+            public string IdJugador { get; set; }
 
         }
 
-        public string GenerarJson()
+        public String[] GetListaJugadores()
         {
-            // tipo de retorno anonimo
-            var res = new
-            {
-                A = "IniciarAtaque",
-                unidades = new List<Unidad>(),
-                jugadores = new List<String>()
-            };
-            
+            return jugadores.Keys.ToArray();
+        }
+
+        public string GenerarJson(string IdJugador)
+        {
+
+            var res = new InfoBatalla();
+            res.IdJugador = IdJugador;
             foreach(Jugador j in jugadores.Values)
             {
                 //bool incluirEdificios = j.Equals(defensor);
                 string jsonJugador = j.GenerarJson(false, false);
                 res.jugadores.Add(jsonJugador);
+
             }
+
+        
+            this.tablero.RellenarInfoBatalla(res);
+            res.tiposEdificio = this.tiposEdificios;
+            res.tiposUnidad = this.tiposUnidades;
             return JsonConvert.SerializeObject(res);
         }
 

@@ -67,5 +67,8 @@ namespace ServiceLayer
         List<ClienteJuego> GetJugadoresEnElClan(string Tenant, string IdJugador);
         [OperationContract]
         bool SoyAdministrador(string Tenant, string IdJugador);
+
+        [OperationContract]
+        string GetEstadoBatalla(string tenant, string idJugador);
     }
 }

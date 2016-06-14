@@ -121,21 +121,31 @@ namespace BusinessLogicLayer
 
         public void ActualizarJuegoSinGuardar(Juego j)
         {
-            actualizarEdificios(j);
-            actualizarRecursos(j.DataJugador);
-            actualizarRecursosPorSegundo(j);
-            IBLTecnologia tec = new BLTecnologia(this);
-            tec.CompletarTecnologiasTerminadasSinGuardar(j);
-            j.DataJugador.UltimaActualizacion = DateTime.UtcNow;
-            
+            if (j != null)
+            {
+                actualizarEdificios(j);
+                actualizarRecursos(j.DataJugador);
+                actualizarRecursosPorSegundo(j);
+                IBLTecnologia tec = new BLTecnologia(this);
+                tec.CompletarTecnologiasTerminadasSinGuardar(j);
+                j.DataJugador.UltimaActualizacion = DateTime.UtcNow;
+            }   
         }
 
         public void ActualizarJuego(Juego j)
         {
             if (j != null)
             {
-                ActualizarJuegoSinGuardar(j);
-                GuardarJuego(j);
+                try
+                {
+                    ActualizarJuegoSinGuardar(j);
+                    GuardarJuego(j);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+                
             }
         }
 

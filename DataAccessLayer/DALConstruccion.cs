@@ -293,7 +293,7 @@ namespace DataAccessLayer
                     EstadoData = new Shared.Entities.EstadoData();
                     EstadoData.Cantidad = euid.Cantidad;
                     EstadoData.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
-                    EstadoData.Fin = DateTime.UtcNow.AddHours((int)TipoUnidad.TiempoConstruccion);
+                    EstadoData.Fin = DateTime.UtcNow.AddMilliseconds((int)TipoUnidad.TiempoConstruccion * 100);
                 }
                 juego.DataJugador.EstadoUnidades[TipoUnidad.Id.ToString()] = EstadoData;
                 Shared.Entities.EstadoRecurso EstRec = new Shared.Entities.EstadoRecurso();

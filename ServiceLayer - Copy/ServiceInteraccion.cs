@@ -50,6 +50,7 @@ namespace ServiceLayer
             {
                 if (usoRedis)
                 {
+                    GlobalHost.DependencyResolver.UseRedis("40.84.2.155", 6379, "gabilo2016!", "ChatChannel");
                     var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
                     context.Clients.Group(grupo).broadcastMessage("Service", msg);
                 }
