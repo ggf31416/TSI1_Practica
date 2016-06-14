@@ -185,7 +185,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Modal Construir Edificio-->
+            <!-- Modal Clanes-->
             <div class="modal fade" id="dialogoClanes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -391,10 +391,10 @@
                                         <div class="col-sm-2 col-md-2 col-lg-2">Apellido</div>
                                     </div>
                                     <div class="row" style="padding:10px" ng-repeat="e in $root.listaUsuario">
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.Username}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.Nombre}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.Apellido}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2"><button class="btn btn-danger" ng-click="iniciarAtaque(e.Id)">Atacar</button></div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.username}}</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.nombre}}</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.apellido}}</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2"><button class="btn btn-danger" ng-click="iniciarAtaque(e.clienteId)">Atacar</button></div>
                                     </div>
                                 </div>
                             </div>
