@@ -23,12 +23,17 @@ namespace BusinessLogicLayer
         public Dictionary<string, Jugador> jugadores { get; private set; } = new Dictionary<string, Jugador>();
 
         private static BLBatalla instancia = null;
-
+        private IBLJuego blJuego;
 
         public static BLBatalla getInstancia()
         {
             if (instancia == null) instancia = new BLBatalla();
             return instancia;
+        }
+
+        public void setBLJuego(IBLJuego bl)
+        {
+            blJuego = bl;
         }
 
         private bool todaviaEstoyTrabajando = false;
@@ -53,7 +58,6 @@ namespace BusinessLogicLayer
                         {
                             encoladas.Add(jsonAcciones);
                         }
-
                     }
                 }
                 foreach (var a in encoladas)
@@ -161,18 +165,21 @@ namespace BusinessLogicLayer
         }
 
 
-       
-
         public void IniciarBatalla(string tenant, InfoAtaque info)
         {
-            notificarAsync(info, "IniciarAtaque");
+            Juego datosAtaq = blJuego.GetJuegoUsuarioSinActualizar(tenant, info.Jugador);
+            Juego datosDef = blJuego.GetJuegoUsuarioSinActualizar(tenant, info.Enemigo);
+            Jugador jAt = new Jugador();
+            jAt.CargarDesdeJuego(datosAtaq);
 
-            /*Jugador jAt = jugadores[info.Jugador];
-            Jugador jDef = jugadores[info.Enemigo];
+            Jugador jDef = new Jugador();
+            jDef.CargarDesdeJuego(datosDef);
             Batalla b = new Batalla(jAt, jDef);
             batallas.Add(b);
             batallasPorJugador[info.Jugador] = b;
-            batallasPorJugador[info.Enemigo] = b; */
+            batallasPorJugador[info.Enemigo] = b;
+
+            notificarAsync(info, "IniciarAtaque");
         }
 
     
