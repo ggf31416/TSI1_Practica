@@ -84,7 +84,7 @@
 
         var nombreJugador;
 
-        var estaEnBatalla = false;
+        var estaEnBatalla = true;
        
         $scope.animaciones = {}
 
@@ -110,9 +110,14 @@
             $('#divUnidades').toggle(b);
         }
 
+        function setInfoFromData(entidad,data){
+         entidad.info = new Unidad_Info(data.Unit_id,data.jugador,data.hp,data.rango,data.velocidad,data.ataque,data.defensa,data.target);   
+        }
+
         function crearEdificioInmediato(data) {
             var idSprite =  data.Id;
             var edificio = $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
+            setInfoFromData(unit, data);
             edificio.height = tile_size;
             edificio.width = tile_size;
             edificio.inputEnabled = true;
@@ -124,13 +129,15 @@
 
         function crearUnidadInmediato(data) {
             if (!unidadesPorId[data.Unit_id]) {
+                if (data.hp < 0) return;
                 var idSprite = data.Id;
                 var unit = objetoUnidad(data,idSprite);
                 unit.height = unit_size;
                 unit.width = unit_size;
                 unit.inputEnabled = true;
                 clickVisibleUnidades(unit, true);
-                unit.info = new Unidad_Info(data.Unit_id);
+                
+                setInfoFromData(unit, data)
                 unidades_desplegadas.add(unit);
                 unidadesPorId[unit.info.unit_id] = unit;
                 agregarGraficos($scope.game, unit);
@@ -179,6 +186,8 @@
                 }
             });
             est.unidades_desplegadas = batalla.unidades;
+            est.edificios = batalla.edificios;
+            
             $scope.cargarDesdeEstado();
             console.log("Se termino de cargar batalla");
         }

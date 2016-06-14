@@ -16,6 +16,7 @@ namespace ServiceLayer
         public static IBLTecnologia blTecnologiaHandler;
         public static IBLConstruccion blConstruccionHandler;
         public static IBLUsuario blUsuarioHandler;
+        public static IBLBatalla blBatalla;
 
         static void Main(string[] args)
         {
@@ -33,6 +34,8 @@ namespace ServiceLayer
             blConstruccionHandler = new BLConstruccion(new DataAccessLayer.DALConstruccion());
             blTecnologiaHandler = new BLTecnologia(blJuegoHandler);
             blUsuarioHandler = new BLUsuario(new DataAccessLayer.DALUsuario());
+            blBatalla = BLBatalla.getInstancia();
+            ((BLBatalla)blBatalla).setBLJuego(blJuegoHandler);
         }
 
         private static void SetupService()

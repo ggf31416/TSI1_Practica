@@ -12,7 +12,7 @@ namespace FrontEnd
     {
         public void Configuration(IAppBuilder app)
         {
-            GlobalHost.DependencyResolver.UseRedis("40.84.2.155", 6379, "gabilo2016!", "ChatChannel");
+            //GlobalHost.DependencyResolver.UseRedis("40.84.2.155", 6379, "gabilo2016!", "ChatChannel");
             GlobalHost.DependencyResolver.Register(typeof(IUserIdProvider), () => new Hubs.IdentificadorSignalR());
             app.MapSignalR();
             

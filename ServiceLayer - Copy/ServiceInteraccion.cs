@@ -48,9 +48,15 @@ namespace ServiceLayer
         {
             try
             {
-                var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
-                context.Clients.Group(grupo).broadcastMessage("Service", msg);
-
+                if (usoRedis)
+                {
+                    var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
+                    context.Clients.Group(grupo).broadcastMessage("Service", msg);
+                }
+                else
+                {
+                    proxy.Invoke("SendGrupo", grupo, msg).Wait();
+                }
             }
             catch (TimeoutException toEx)
             {
@@ -66,11 +72,20 @@ namespace ServiceLayer
         {
             try
             {
-                foreach(string user in nombreUsuarios)
+                if (usoRedis)
                 {
                     var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
-                    context.Clients.User(user).broadcastMessage("Service", msg);
+                    foreach (string user in nombreUsuarios)
+                    {
+                        context.Clients.User(user).broadcastMessage("Service", msg);
+                    }
                 }
+                else
+                {
+                    proxy.Invoke("SendLista", nombreUsuarios, msg).Wait();
+
+                }
+
             }
             catch (TimeoutException toEx)
             {
@@ -87,8 +102,15 @@ namespace ServiceLayer
         {
             try
             {
-                var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
-                context.Clients.User(usuario).broadcastMessage("Service", msg);
+                if (usoRedis)
+                {
+                    var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
+                    context.Clients.User(usuario).broadcastMessage("Service", msg);
+                }
+                else
+                {
+                    proxy.Invoke("SendUsuario", usuario, msg).Wait();
+                }             
             }
             catch (TimeoutException toEx)
             {

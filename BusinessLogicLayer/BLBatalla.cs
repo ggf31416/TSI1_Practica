@@ -211,7 +211,7 @@ namespace BusinessLogicLayer
 
                 };
                 string msg = JsonConvert.SerializeObject(informacionAtaque);
-                client.SendUsuario(notificar[i], msg);
+                client.SendGrupo(notificar[i], msg);
             }
         }
 

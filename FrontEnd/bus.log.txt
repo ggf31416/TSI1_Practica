@@ -1,0 +1,38 @@
+SignalR.RedisMessageBus Information: 0 : Connecting...
+SignalR.RedisMessageBus Information: 0 : Connection opened
+SignalR.RedisMessageBus Verbose: 0 : Subscribed to event ChatChannel
+SignalR.ScaleoutMessageBus Information: 0 : Stream(0) - Changed state from Initial to Open
+SignalR.ScaleoutMessageBus Warning: 0 : Exception thrown by Task: System.AggregateException: One or more errors occurred. ---> StackExchange.Redis.RedisConnectionException: No connection is available to service this operation: EVAL
+   at StackExchange.Redis.ConnectionMultiplexer.ThrowFailed[T](TaskCompletionSource`1 source, Exception unthrownException)
+   --- End of inner exception stack trace ---
+---> (Inner Exception #0) StackExchange.Redis.RedisConnectionException: No connection is available to service this operation: EVAL
+   at StackExchange.Redis.ConnectionMultiplexer.ThrowFailed[T](TaskCompletionSource`1 source, Exception unthrownException)<---
+
+SignalR.ScaleoutMessageBus Error: 0 : Stream(0) - Send failed: System.AggregateException: One or more errors occurred. ---> StackExchange.Redis.RedisConnectionException: No connection is available to service this operation: EVAL
+   at StackExchange.Redis.ConnectionMultiplexer.ThrowFailed[T](TaskCompletionSource`1 source, Exception unthrownException)
+   --- End of inner exception stack trace ---
+---> (Inner Exception #0) StackExchange.Redis.RedisConnectionException: No connection is available to service this operation: EVAL
+   at StackExchange.Redis.ConnectionMultiplexer.ThrowFailed[T](TaskCompletionSource`1 source, Exception unthrownException)<---
+
+SignalR.ScaleoutMessageBus Error: 0 : Stream(0) - Error has happened with the following exception: StackExchange.Redis.RedisConnectionException: No connection is available to service this operation: EVAL
+   at StackExchange.Redis.ConnectionMultiplexer.ThrowFailed[T](TaskCompletionSource`1 source, Exception unthrownException).
+SignalR.ScaleoutMessageBus Information: 0 : Stream(0) - Changed state from Open to Buffering
+SignalR.RedisMessageBus Information: 0 : Connecting...
+SignalR.RedisMessageBus Information: 0 : Connection opened
+SignalR.RedisMessageBus Verbose: 0 : Subscribed to event ChatChannel
+SignalR.ScaleoutMessageBus Information: 0 : Stream(0) - Changed state from Initial to Open
+SignalR.ScaleoutMessageBus Warning: 0 : Exception thrown by Task: System.AggregateException: One or more errors occurred. ---> StackExchange.Redis.RedisConnectionException: No connection is available to service this operation: EVAL
+   at StackExchange.Redis.ConnectionMultiplexer.ThrowFailed[T](TaskCompletionSource`1 source, Exception unthrownException)
+   --- End of inner exception stack trace ---
+---> (Inner Exception #0) StackExchange.Redis.RedisConnectionException: No connection is available to service this operation: EVAL
+   at StackExchange.Redis.ConnectionMultiplexer.ThrowFailed[T](TaskCompletionSource`1 source, Exception unthrownException)<---
+
+SignalR.ScaleoutMessageBus Error: 0 : Stream(0) - Send failed: System.AggregateException: One or more errors occurred. ---> StackExchange.Redis.RedisConnectionException: No connection is available to service this operation: EVAL
+   at StackExchange.Redis.ConnectionMultiplexer.ThrowFailed[T](TaskCompletionSource`1 source, Exception unthrownException)
+   --- End of inner exception stack trace ---
+---> (Inner Exception #0) StackExchange.Redis.RedisConnectionException: No connection is available to service this operation: EVAL
+   at StackExchange.Redis.ConnectionMultiplexer.ThrowFailed[T](TaskCompletionSource`1 source, Exception unthrownException)<---
+
+SignalR.ScaleoutMessageBus Error: 0 : Stream(0) - Error has happened with the following exception: StackExchange.Redis.RedisConnectionException: No connection is available to service this operation: EVAL
+   at StackExchange.Redis.ConnectionMultiplexer.ThrowFailed[T](TaskCompletionSource`1 source, Exception unthrownException).
+SignalR.ScaleoutMessageBus Information: 0 : Stream(0) - Changed state from Open to Buffering

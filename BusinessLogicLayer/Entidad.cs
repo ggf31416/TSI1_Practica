@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,25 +20,54 @@ namespace BusinessLogicLayer
             this.tipo_id = te.Id;
             this.ataque = te.Ataque.GetValueOrDefault();
             this.defensa = te.Defensa.GetValueOrDefault();
-            this.vida = te.Vida.GetValueOrDefault();
+            this.hp = te.Vida.GetValueOrDefault();
         }
 
+        [JsonProperty(propertyName: "Unit_id")]
         public string id { get; set; }
+
+        [JsonProperty(propertyName: "Id")]
         public int tipo_id { get; set; }
+
+        [JsonProperty(propertyName: "jugador")]
         public string jugador { get; set; }
+
+        [JsonProperty(propertyName: "ataque")]
         public int ataque { get; set; } = 10;
-        public float vida { get; set; } = 100;
+
+        [JsonProperty(propertyName: "hp")]
+        public float hp { get; set; } = 100;
+
+        [JsonProperty(propertyName: "defensa")]
         public int defensa { get; set; } = 10;
+
+        [JsonProperty(propertyName: "rango")]
         public int rango { get; set; } = 8;
 
-        public float posX { get; set; }
-        public float posY { get; set; }
+        [JsonIgnore()]
+        public float posX { get; set; } // posicion exacta
+
+        [JsonIgnore()]
+        public float posY { get; set; }  // posicion exacta
+
+
+        [JsonProperty(propertyName: "PosX")]
+        public int posXr
+        {
+            get { return (int)Math.Round(posX); }
+        }
+
+        [JsonProperty(propertyName: "PosY")]
+        public int posYr
+        {
+            get { return (int)Math.Round(posY); }
+        }
 
         public string target { get; set; } = null;
 
         public virtual bool estaViva
         {
-            get { return vida >= 0; }
+            get { return hp >= 0; }
         }
 
 
@@ -57,15 +87,5 @@ namespace BusinessLogicLayer
             return distancia2(enemiga) <= this.rango * this.rango;
         }
 
-
-        public int posXr
-        {
-            get { return (int)Math.Round(posX); }
-        }
-
-        public int posYr
-        {
-            get { return (int)Math.Round(posY); }
-        }
     }
 }

@@ -99,7 +99,7 @@ namespace BusinessLogicLayer
             TipoUnidad tu = jugadores[idJugador].tipos.GetValueOrDefault(tipoId) as TipoUnidad;
             if (tu != null)
             {
-                u = new Unidad { ataque = tu.Ataque.GetValueOrDefault(), defensa = tu.Defensa.GetValueOrDefault(), tipo_id = tu.Id, vida = tu.Vida.GetValueOrDefault() };
+                u = new Unidad { ataque = tu.Ataque.GetValueOrDefault(), defensa = tu.Defensa.GetValueOrDefault(), tipo_id = tu.Id, hp = tu.Vida.GetValueOrDefault() };
                 u.rango = 8; // hardcodeado;
             }
             return u;
@@ -140,6 +140,16 @@ namespace BusinessLogicLayer
             return res;
         }
 
+        public class InfoBatalla
+        {
+            public string A { get; set; } = "IniciarAtaque";
+            public bool Finalice { get; set; } = false;
+            public List<Unidad>  unidades { get; set; }  = new List<Unidad>();
+            public List<Edificio> edificios { get; set; } = new List<Edificio>();
+            public List<String> jugadores { get; set; } = new List<String>();
+
+        }
+
         public string GenerarJson()
         {
             // tipo de retorno anonimo
@@ -147,13 +157,13 @@ namespace BusinessLogicLayer
             {
                 A = "IniciarAtaque",
                 unidades = new List<Unidad>(),
-
                 jugadores = new List<String>()
             };
+            
             foreach(Jugador j in jugadores.Values)
             {
-                bool incluirEdificios = j.Equals(defensor);
-                string jsonJugador = j.GenerarJson(incluirEdificios, false);
+                //bool incluirEdificios = j.Equals(defensor);
+                string jsonJugador = j.GenerarJson(false, false);
                 res.jugadores.Add(jsonJugador);
             }
             return JsonConvert.SerializeObject(res);

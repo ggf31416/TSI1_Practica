@@ -27,6 +27,20 @@ namespace FrontEnd
             Groups.Add(idUsuario, grupo);
         }
 
+        public void  SendUsuario(String usuario, String msg)
+        {
+            Clients.User(usuario).broadcastMessage("Service", msg);
+        }
+
+        public void SendLista(List<string> nombreUsuarios, String msg)
+        {
+            foreach (string user in nombreUsuarios)
+            {
+                Clients.User(user).broadcastMessage("Service", msg);
+            }
+        }
+        
+
         public override Task OnConnected()
         {
             var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);

@@ -108,7 +108,8 @@ namespace BusinessLogicLayer
                     edificio.Estado.Estado = EstadoData.EstadoEnum.A;
                     cambio = true;
                     TimeSpan dif = DateTime.UtcNow - edificio.Estado.Fin;
-                    foreach (var prod in juego.TipoEdificios[(int)edificio.IdTipoEdificio].RecursosAsociados)
+                    var tipoEdificio = juego.TipoEdificios.FirstOrDefault(e => e.Id== edificio.IdTipoEdificio);
+                    foreach (var prod in tipoEdificio.RecursosAsociados)
                     {
                         recursos[prod.IdRecurso.ToString()].Total += (float)(prod.Valor * dif.TotalSeconds);
                     }
@@ -131,8 +132,11 @@ namespace BusinessLogicLayer
 
         public void ActualizarJuego(Juego j)
         {
-            ActualizarJuegoSinGuardar(j);
-            GuardarJuego(j);
+            if (j != null)
+            {
+                ActualizarJuegoSinGuardar(j);
+                GuardarJuego(j);
+            }
         }
 
         public Juego GetAllDataJuego(string tenant)

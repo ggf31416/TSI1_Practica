@@ -6,7 +6,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
     function ($http, $q, aldeasService, juegoService, edificiosService, unidadesService, $scope, $rootScope, $interval) {
 
         //--------------Inicializacion de variables---------------------
-        /*
+        
         $scope.iniciarSignalR = function () {
             // Declare a proxy to reference the hub.
             $scope.tablero_signalR = $.connection.chatHub;
@@ -16,31 +16,26 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                 if (msg.Tipo && msg.Tipo == "NotificacionAtaque") {
                     //Mostrar mensaje 
                     if (msg.SoyAtacante && !msg.SoyAliado) {
+                        alert("el ataque empezara en " + msg.TiempoAtaque + " segundos");
                         //el ataque empezara en msg.TiempoAtaque segundos
                     } else if (!msg.SoyAtacante) {
                         //me atacaran en msg.TiempoAtaque segundos
                     }
                 } else if (msg.Tipo && msg.Tipo == "IniciarAtaque") {
-                    //redirigir a la pagina
+                    alert("Inicia el ataque!");
+                    $window.location.href = "/" + $rootScope.NombreJuego + "/Home/Index";
                 }
 
-                //$scope.estadoJuego.edificios = msjJSON.edificios;
-                //$scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;
-                //$scope.estadoJuego.edificios.push(msjJSON);
-                //$scope.cargarDesdeEstado();
+
             };
-            // Get the user name and store it to prepend to messages.
-            // $('#displayname').val(prompt('Enter your name:', ''));
-            // Set initial focus to message input box.
-            // $('#message').focus();
-            // Start the connection.
+
             $.connection.hub.start().done(function () {
 
             });
         };
 
         $scope.iniciarSignalR();
-        */
+        
 
         /*$rootScope.listaRecursos = [
                {
@@ -50,7 +45,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                    Produccion: 1
                },
                {
-                   Nombre: "Madera",
+                   NombreF: "Madera",
                    Imagen: "/SPA/backOffice/ImagenesSubidas/madera.jpg",
                    Valor: 546,
                    Produccion: 2
