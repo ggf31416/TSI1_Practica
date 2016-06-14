@@ -116,13 +116,15 @@ namespace BusinessLogicLayer
         {
             ServiceInteraccionClient client = getCliente();
             Batalla b = obtenerBatalla(jugador);
-            b.agregarUnidad(tipo_id, jugador, unit_id, posX, posY);
+            if (b.agregarUnidad(tipo_id, jugador, unit_id, posX, posY) == 1)
+            {
 
 
-            var jsonObj = new { A = "AddUn", Id = tipo_id, PosX = posX, PosY = posY, Unit_id = unit_id };
-            string s = JsonConvert.SerializeObject(jsonObj);
+                var jsonObj = new { A = "AddUn", Id = tipo_id, PosX = posX, PosY = posY, Unit_id = unit_id };
+                string s = JsonConvert.SerializeObject(jsonObj);
 
-            client.SendLista(b.GetListaJugadores(),s);
+                client.SendLista(b.GetListaJugadores(), s);
+            }
 
         }
 

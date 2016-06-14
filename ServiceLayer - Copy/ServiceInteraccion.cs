@@ -17,7 +17,7 @@ namespace ServiceLayer
     public class ServiceInteraccion : IServiceInteraccion
     {
         IHubProxy proxy;
-        bool usoRedis = false;
+        bool usoRedis = true;
 
         public ServiceInteraccion()
         {

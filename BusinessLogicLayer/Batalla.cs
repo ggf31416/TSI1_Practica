@@ -69,13 +69,19 @@ namespace BusinessLogicLayer
             }
         }
 
-        public int agregarUnidad(int idUnidad,String jugador,string unitId,int posX,int posY)
+        public int agregarUnidad(int id_tipo,String jugador,string unitId,int posX,int posY)
         {
-            Unidad u = getUnidadPorId( idUnidad,jugador);
-            u.id = unitId;
-            u.posX = posX;
-            u.posY = posY;
-             tablero.agregarUnidad(jugador,u);
+            if (!this.jugadores.ContainsKey(jugador) || !(this.jugadores[jugador].Unidades.ContainsKey(id_tipo))) return 0;
+            if (this.jugadores[jugador].Unidades[id_tipo].Cantidad > 0)
+            {
+                Unidad u = getUnidadPorId(id_tipo, jugador);
+                this.jugadores[jugador].Unidades[id_tipo].Cantidad -= 1;
+                u.id = unitId;
+                u.posX = posX;
+                u.posY = posY;
+                tablero.agregarUnidad(jugador, u);
+                return 1;
+            }
             return 0;
         }
 
