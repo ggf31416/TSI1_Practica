@@ -350,7 +350,7 @@ namespace FrontEnd.Controllers
                 //Datos Juegos
                 Models.JuegoModel retJuegoModel = new Models.JuegoModel();
 
-                retJuegoModel.Id = (int)juego.Id;
+                retJuegoModel.Id = juego.Id;
                 retJuegoModel.IdJugador = juego.IdJugador;
                 retJuegoModel.Nombre = juego.Nombre;
                 retJuegoModel.Estado = juego.Estado;
@@ -559,13 +559,17 @@ namespace FrontEnd.Controllers
                 ret.DataJugador.EstadoUnidades = new Dictionary<string, Models.EstadoDataModel>();
                 foreach (var eU in juego.DataJugador.EstadoUnidades)
                 {
-                    Models.EstadoDataModel eDM = new Models.EstadoDataModel();
-                    eDM.Id = int.Parse(eU.Key);// TODO: Modificar cuando cambien las claves
-                    eDM.Estado = eU.Value.Estado;
-                    eDM.Tiempo = (int)eU.Value.Faltante;
-                    eDM.Cantidad = eU.Value.Cantidad;
+                    if (eU.Value.Estado == EstadoData.EstadoEnum.A)
+                    {
+                        Models.EstadoDataModel eDM = new Models.EstadoDataModel();
+                        eDM.Id = eU.Value.Id;// TODO: Modificar cuando cambien las claves
+                        eDM.Estado = eU.Value.Estado;
+                        eDM.Tiempo = (int)eU.Value.Faltante;
+                        eDM.Cantidad = eU.Value.Cantidad;
 
-                    ret.DataJugador.EstadoUnidades.Add(eU.Key, eDM);
+                        ret.DataJugador.EstadoUnidades.Add(eDM.Id.ToString(), eDM);
+                    }
+                   
                 }
                 ret.DataJugador.UltimaActualizacion = juego.DataJugador.UltimaActualizacion;
 

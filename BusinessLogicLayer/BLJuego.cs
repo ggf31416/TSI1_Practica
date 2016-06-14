@@ -80,14 +80,15 @@ namespace BusinessLogicLayer
             foreach (var unidad in estUnidadesEnConstr)
             {
                 if ( unidad.Fin <= DateTime.UtcNow) {
- 
-                    string key = unidad.Id + "#" + EstadoData.EstadoEnum.A;
-                   
+
+                    string key = unidad.Id.ToString()  + "#" + EstadoData.EstadoEnum.A;
+
                     if (!data.EstadoUnidades.ContainsKey(key))
                     {
                         data.EstadoUnidades.Add(key, new EstadoData() { Id = unidad.Id, Cantidad = 0, Estado = EstadoData.EstadoEnum.A, Fin = DateTime.UtcNow });
                     }
                     data.EstadoUnidades[key].Cantidad += unidad.Cantidad;
+                    data.EstadoUnidades[key].Estado = EstadoData.EstadoEnum.A;
                     unidad.Cantidad = 0;
                 } 
             }

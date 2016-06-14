@@ -325,7 +325,10 @@
                 if (e.Imagen != null) {
                     console.log(e);
                     $scope.game.load.image(e.Id, e.Imagen);
-                    $scope.estadoJuego.unidades_desplegables[e.Id] = { cantidad: 0};
+                    /*if (!$scope.estadoJuego.unidades_desplegables[e.Id]){
+                        $scope.estadoJuego.unidades_desplegables[e.Id] = { cantidad: 0};    
+                    }*/
+                    
                     //$scope.estadoJuego.unidades_desplegables[e.Id].cantidad = 10;
                 }
             });

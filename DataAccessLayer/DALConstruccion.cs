@@ -301,6 +301,7 @@ namespace DataAccessLayer
                 else
                 {
                     EstadoData = new Shared.Entities.EstadoData();
+                    EstadoData.Id = euid.IdTipoUnidad;
                     EstadoData.Cantidad = euid.Cantidad;
                     EstadoData.Estado = Shared.Entities.EstadoData.EstadoEnum.C;
                     EstadoData.Fin = DateTime.UtcNow.AddMilliseconds((int)TipoUnidad.TiempoConstruccion * 100);
