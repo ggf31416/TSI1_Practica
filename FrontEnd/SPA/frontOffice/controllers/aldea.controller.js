@@ -242,6 +242,10 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             
         }
 
+        $scope.crearClan = function () {
+
+        }
+
         $scope.listaTecnologias = function () {
             //Abro cuadro de tecnologias
             $('#dialogoDatosTecnologias').modal('show');
