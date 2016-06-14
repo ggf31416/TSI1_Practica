@@ -75,11 +75,11 @@ namespace BusinessLogicLayer
 
         public void actualizarUnidades(DataActual data)
         {
-            var estUnidadesEnConstr = data.EstadoUnidades.Values.Where(x => x != null && x.Estado == EstadoData.EstadoEnum.C);
+            var estUnidadesEnConstr = data.EstadoUnidades.Values.Where(x => x != null && x.Estado == EstadoData.EstadoEnum.C).ToList();
            
             foreach (var unidad in estUnidadesEnConstr)
             {
-                if ( unidad.Fin <= DateTime.Now) {
+                if ( unidad.Fin <= DateTime.UtcNow) {
  
                     string key = unidad.Id + "#" + EstadoData.EstadoEnum.A;
                    
@@ -124,6 +124,7 @@ namespace BusinessLogicLayer
             if (j != null)
             {
                 actualizarEdificios(j);
+                actualizarUnidades(j.DataJugador);
                 actualizarRecursos(j.DataJugador);
                 actualizarRecursosPorSegundo(j);
                 IBLTecnologia tec = new BLTecnologia(this);

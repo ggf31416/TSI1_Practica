@@ -53,7 +53,8 @@ namespace BusinessLogicLayer
                 //Console.WriteLine(DateTime.Now.ToString("hh:mm:ss.fff tt"));
                 var client = getCliente();
                 var encoladas = new List<string>();
-                foreach (Batalla b in batallas)
+                var batallas_copy = new List<Batalla>(batallas);
+                foreach (Batalla b in batallas_copy)
                 {
                     if (b.EnCurso)
                     {
