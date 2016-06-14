@@ -135,7 +135,9 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                         }
                                     }, 1000);
 
-                                    $scope.soyAdmin = false; //|| aldeasService.soyAdministrador();
+                                    if($rootScope.dataJuego.clan != null){
+                                        $scope.soyAdmin = aldeasService.soyAdministrador();
+                                    }
 
                                 })
                                 .catch(function (err) {
@@ -242,8 +244,17 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             
         }
 
-        $scope.crearClan = function () {
+        $scope.abrirCrearClan = function () {
+            //Abro cuadro de tecnologias
+            $('#dialogoCrearClan').modal('show');
+        }
 
+        $scope.crearClan = function () {
+            var json = { NombreClan: $scope.NombreClan };
+            var ret = aldeasService.crearClan(json);
+            $rootScope.dataJuego.clan = ret;
+            $scope.soyAdmin = true;
+            console.debug(ret);
         }
 
         $scope.listaTecnologias = function () {

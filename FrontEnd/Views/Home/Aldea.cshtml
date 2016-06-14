@@ -111,11 +111,11 @@
                 <div class="col-sm-2 col-md-2 col-lg-2">
                     <button class="btn btn-default" ng-click="listaUnidades()">Unidades</button>
                 </div>
-                <div class="col-sm-2 col-md-2 col-lg-2">
-                    <button class="btn btn-default" ng-if="$root.dataJuego.clan != null" ng-click="abrirClan()">Clanes</button>
+                <div class="col-sm-2 col-md-2 col-lg-2" ng-if="$root.dataJuego.clan != null">
+                    <button class="btn btn-default" ng-click="abrirClan()">Clanes</button>
                 </div>
-                <div class="col-sm-2 col-md-2 col-lg-2">
-                    <button class="btn btn-default" ng-if="$root.dataJuego.clan == null" ng-click="crearClan()">Crear clan</button>
+                <div class="col-sm-2 col-md-2 col-lg-2" ng-if="$root.dataJuego.clan == null">
+                    <button class="btn btn-default" ng-click="abrirCrearClan()">Crear clan</button>
                 </div>
                 <div class="col-sm-2 col-md-2 col-lg-2">
                     <button class="btn btn-warning" ng-click="listarUsuarios()">Atacar</button>
@@ -229,7 +229,6 @@
                                         <div class="col-sm-2 col-md-2 col-lg-2">{{e.username}}</div>
                                         <div class="col-sm-2 col-md-2 col-lg-2">{{e.nombre}}</div>
                                         <div class="col-sm-2 col-md-2 col-lg-2">{{e.apellido}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2"><button class="btn btn-default" ng-click="agregarAlClan(e.clienteId)">Agregar</button></div>
                                     </div>
                                 </div>
                             </div>
@@ -428,12 +427,12 @@
             </div>
 
             <!-- Crear Clan -->
-            <div class="modal fade" id="dialogoDatosUsuarios" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal fade" id="dialogoCrearClan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Unidades</h4>
+                            <h4 class="modal-title" id="myModalLabel">Datos nuevo clan</h4>
                         </div>
                         <div class="modal-body">
                             <div class="row">
@@ -441,37 +440,7 @@
                                     <div class="row">
                                         <h4>Nombre</h4>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" ng-model="entidad.nombre" />
-                                        </div>
-                                    </div>
-                                    <div ng-if="!isRecursos && !isTecnologias" class="row">
-                                        <h4>Vida</h4>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" ng-model="entidad.vida" />
-                                        </div>
-                                    </div>
-                                    <div ng-if="!isRecursos && !isTecnologias" class="row">
-                                        <h4>Ptos. ataque</h4>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" ng-model="entidad.ataque" />
-                                        </div>
-                                    </div>
-                                    <div ng-if="!isRecursos && !isTecnologias" class="row">
-                                        <h4>Ptos. defensa</h4>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" ng-model="entidad.defensa" />
-                                        </div>
-                                    </div>
-                                    <div ng-if="!isRecursos" class="row">
-                                        <h4>Tiempo de contruccion</h4>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" ng-model="entidad.tiempoContruccion" />
-                                        </div>
-                                    </div>
-                                    <div ng-if="!isRecursos" ng-repeat="rec in entidad.Costos" class="row">
-                                        <h4>Costo de {{rec.nombreRec}}<img width="50" height="50" ng-src="{{rec.imagenRec}}" /></h4>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" ng-model="rec.costoRec" />
+                                            <input type="text" class="form-control" ng-model="NombreClan" />
                                         </div>
                                     </div>
                                 </div>
@@ -479,6 +448,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="crearClan()">Save</button>
                         </div>
                     </div>
                 </div>
