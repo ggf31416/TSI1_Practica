@@ -22,8 +22,6 @@ namespace BusinessLogicLayer
             _dal = dal;
         }
 
-        
-
 
         private List<TipoEdificio> cargarEdificios(Juego j, EstadoData.EstadoEnum estado)
         {
@@ -37,7 +35,6 @@ namespace BusinessLogicLayer
             }
             return res;
         }
-
         
 
         private void actualizarRecursosPorSegundo(Juego j)
@@ -94,8 +91,6 @@ namespace BusinessLogicLayer
         }
 
         
-
-
         public bool actualizarEdificios(Juego juego)
         {
             bool cambio = true;
@@ -126,7 +121,8 @@ namespace BusinessLogicLayer
             IBLTecnologia tec = new BLTecnologia(this);
             tec.CompletarTecnologiasTerminadasSinGuardar(j);
             j.DataJugador.UltimaActualizacion = DateTime.UtcNow;
-            
+            DALUsuario _dalUsuario = new DALUsuario();
+            j.DataJugador.Clan = _dalUsuario.GetClanJugador(j.Nombre, j.IdJugador);
         }
 
         public void ActualizarJuego(Juego j)
