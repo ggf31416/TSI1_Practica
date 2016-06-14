@@ -138,8 +138,8 @@
                 </div>
                 <div class="col-sm-6 col-md-6 col-lg-6">
                     <div class="row">
-                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="uni in $root.dataJugador.EstadoUnidades">
-                            <img class="recursosTablero" ng-show="uni.Estado == 1" ng-src="{{getImagenUnidad(uni.Id)}}"/>{{uni.Cantidad}}
+                        <div class="col-sm-2 col-md-2 col-lg-2" ng-show="uni.Estado == 1"  ng-repeat="uni in $root.dataJugador.EstadoUnidades">
+                            <img class="recursosTablero" ng-src="{{getImagenUnidad(uni.Id)}}"/>{{uni.Cantidad}}
                         </div>
                     </div>
                 </div>
