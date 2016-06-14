@@ -129,6 +129,26 @@
             return ret;
         }
 
+        this.agregarJugadorClan = function (json) {
+            var ret = "";
+            console.debug(JSON.stringify(json));
+            $.ajax({
+                url: '/' + $rootScope.NombreJuego + '/Juego/AgregarJugadorClan/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(json),
+                async: false,
+                success: function (response) {
+                    ret = response;
+                },
+                error: function (xhr, status, error) {
+                    alert("Error al crear clan");
+                }
+            });
+            return ret;
+        }
+
+
         this.abandonarClan = function () {
             var defered = $q.defer();
             var promise = defered.promise;
@@ -192,6 +212,7 @@
             return promise;
 
         };
+
         
     }
 })();

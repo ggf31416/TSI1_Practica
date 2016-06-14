@@ -111,10 +111,10 @@
                 <div class="col-sm-2 col-md-2 col-lg-2">
                     <button class="btn btn-default" ng-click="listaUnidades()">Unidades</button>
                 </div>
-                <div class="col-sm-2 col-md-2 col-lg-2" ng-if="$root.dataJuego.clan != null">
+                <div class="col-sm-2 col-md-2 col-lg-2" ng-if="$root.dataJugador.Clan != null">
                     <button class="btn btn-default" ng-click="abrirClan()">Clanes</button>
                 </div>
-                <div class="col-sm-2 col-md-2 col-lg-2" ng-if="$root.dataJuego.clan == null">
+                <div class="col-sm-2 col-md-2 col-lg-2" ng-if="$root.dataJugador.Clan == null">
                     <button class="btn btn-default" ng-click="abrirCrearClan()">Crear clan</button>
                 </div>
                 <div class="col-sm-2 col-md-2 col-lg-2">
@@ -139,7 +139,7 @@
                 <div class="col-sm-6 col-md-6 col-lg-6">
                     <div class="row">
                         <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="uni in $root.dataJugador.EstadoUnidades">
-                            <img class="recursosTablero" ng-src="{{getImagenUnidad(uni.Id)}}"/>{{uni.Cantidad}}
+                            <img class="recursosTablero" ng-show="uni.Estado == 1" ng-src="{{getImagenUnidad(uni.Id)}}"/>{{uni.Cantidad}}
                         </div>
                     </div>
                 </div>
@@ -199,6 +199,10 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <h3>{{$root.dataJugador.Clan}}  </h3>
+                                        <button class="btn btn-danger" ng-click="abandonarClan()">Abandonar Clan</button>
+                                    </div>
                                     <div class="row" ng-if="soyAdmin">
                                         <div class="col-sm-12 col-md-12 col-lg-12">
                                             <div class="row">
@@ -213,7 +217,7 @@
                                                 <div class="col-sm-2 col-md-2 col-lg-2">{{e.username}}</div>
                                                 <div class="col-sm-2 col-md-2 col-lg-2">{{e.nombre}}</div>
                                                 <div class="col-sm-2 col-md-2 col-lg-2">{{e.apellido}}</div>
-                                                <div class="col-sm-2 col-md-2 col-lg-2"><button class="btn btn-default" ng-click="agregarAlClan(e.clienteId)">Agregar</button></div>
+                                                <div class="col-sm-2 col-md-2 col-lg-2"><button class="btn btn-default" ng-click="agregarAlClan(e)">Agregar</button></div>
                                             </div>
                                         </div>
                                     </div>
