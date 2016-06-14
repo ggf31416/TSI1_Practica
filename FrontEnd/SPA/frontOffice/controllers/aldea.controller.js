@@ -135,7 +135,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                         }
                                     }, 1000);
 
-                                    
+                                    $scope.soyAdmin = false; //|| aldeasService.soyAdministrador();
 
                                 })
                                 .catch(function (err) {
@@ -226,8 +226,20 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
         }
 
         $scope.abrirClan = function () {
+            aldeasService.getJugadoresSinClan()
+                                .then(function (data) {
+                                    console.debug(data);
+                                    $rootScope.jugadoresSinClan = data;
+                                })
+                                .catch(function (err) {
+                                    alert(err)
+                                });
             //Abro cuadro de clanes
             $('#dialogoClanes').modal('show');
+        }
+
+        $scope.agregarAlClan = function (idUsiario) {
+            
         }
 
         $scope.listaTecnologias = function () {

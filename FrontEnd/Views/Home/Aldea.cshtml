@@ -196,19 +196,37 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-12">
-                                    <div class="row">
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Imagen</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Nombre</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Tiempo de construccion</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">
-                                            <img class="recursosTablero" ng-src="{{rec.Imagen}}" />
+                                    <div class="row" ng-if="{{soyAdmin}}">
+                                        <div class="col-sm-12 col-md-12 col-lg-12">
+                                            <div class="row">
+                                                <h3>Jugadores sin clan</h3>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-2 col-md-2 col-lg-2">Username</div>
+                                                <div class="col-sm-2 col-md-2 col-lg-2">Nombre</div>
+                                                <div class="col-sm-2 col-md-2 col-lg-2">Apellido</div>
+                                            </div>
+                                            <div class="row" style="padding:10px" ng-repeat="e in $root.jugadoresSinClan">
+                                                <div class="col-sm-2 col-md-2 col-lg-2">{{e.username}}</div>
+                                                <div class="col-sm-2 col-md-2 col-lg-2">{{e.nombre}}</div>
+                                                <div class="col-sm-2 col-md-2 col-lg-2">{{e.apellido}}</div>
+                                                <div class="col-sm-2 col-md-2 col-lg-2"><button class="btn btn-default" ng-click="agregarAlClan(e.clienteId)">Agregar</button></div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="row handPointer" ng-click="addEdificio(e.Id)" ng-repeat="e in $root.listaEdificios">
-                                        <div class="col-sm-2 col-md-2 col-lg-2"><img width="50" height="50" ng-src="{{e.Imagen}}" /></div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.Nombre}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.TiempoConstruccion}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">{{getCostoRecurso(e, rec.Id)}}</div>
+                                    <div class="row">
+                                        <h3>Jugadores en el clan</h3>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-2 col-md-2 col-lg-2">Username</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">Nombre</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">Apellido</div>
+                                    </div>
+                                    <div class="row" style="padding:10px" ng-repeat="e in $root.jugadoresEnClan">
+                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.username}}</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.nombre}}</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.apellido}}</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2"><button class="btn btn-default" ng-click="agregarAlClan(e.clienteId)">Agregar</button></div>
                                     </div>
                                 </div>
                             </div>

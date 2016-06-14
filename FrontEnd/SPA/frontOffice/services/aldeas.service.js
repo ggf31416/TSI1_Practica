@@ -176,5 +176,22 @@
             return promise;
 
         };
+
+        this.getJugadoresEnElClan = function () {
+            var defered = $q.defer();
+            var promise = defered.promise;
+
+            $http.get('/' + $rootScope.NombreJuego + '/Juego/GetJugadoresEnElClan/')
+            .success(function (data) {
+                defered.resolve(data.ret);
+            })
+            .error(function (err) {
+                defered.reject("Error")
+            });
+
+            return promise;
+
+        };
+        
     }
 })();
