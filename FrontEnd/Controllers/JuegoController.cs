@@ -24,7 +24,7 @@ namespace FrontEnd.Controllers
             //Datos Juegos
             Models.JuegoModel retJuegoModel = new Models.JuegoModel();
 
-            retJuegoModel.Id = juego.Id;
+            retJuegoModel.Id = (int)juego.Id;
             retJuegoModel.IdJugador = juego.IdJugador;
             retJuegoModel.Nombre = juego.Nombre;
             retJuegoModel.Estado = juego.Estado;
@@ -350,7 +350,7 @@ namespace FrontEnd.Controllers
                 //Datos Juegos
                 Models.JuegoModel retJuegoModel = new Models.JuegoModel();
 
-                retJuegoModel.Id = juego.Id;
+                retJuegoModel.Id = (int)juego.Id;
                 retJuegoModel.IdJugador = juego.IdJugador;
                 retJuegoModel.Nombre = juego.Nombre;
                 retJuegoModel.Estado = juego.Estado;
