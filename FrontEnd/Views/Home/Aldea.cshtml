@@ -114,8 +114,11 @@
                 <div class="col-sm-2 col-md-2 col-lg-2">
                     <button class="btn btn-default" ng-click="listaUnidades()">Unidades</button>
                 </div>
-                <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="col-sm-2 col-md-2 col-lg-2" ng-if="$root.dataJugador.Clan != null">
                     <button class="btn btn-default" ng-click="abrirClan()">Clanes</button>
+                </div>
+                <div class="col-sm-2 col-md-2 col-lg-2" ng-if="$root.dataJugador.Clan == null">
+                    <button class="btn btn-default" ng-click="abrirCrearClan()">Crear clan</button>
                 </div>
                 <div class="col-sm-2 col-md-2 col-lg-2">
                     <button class="btn btn-warning" ng-click="listarUsuarios()">Atacar</button>
@@ -138,7 +141,7 @@
                 </div>
                 <div class="col-sm-6 col-md-6 col-lg-6">
                     <div class="row">
-                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="uni in $root.dataJugador.EstadoUnidades">
+                        <div class="col-sm-2 col-md-2 col-lg-2" ng-show="uni.Estado == 1"  ng-repeat="uni in $root.dataJugador.EstadoUnidades">
                             <img class="recursosTablero" ng-src="{{getImagenUnidad(uni.Id)}}"/>{{uni.Cantidad}}
                         </div>
                     </div>
@@ -200,18 +203,39 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-12">
                                     <div class="row">
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Imagen</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Nombre</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Tiempo de construccion</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">
-                                            <img class="recursosTablero" ng-src="{{rec.Imagen}}" />
+                                        <h3>{{$root.dataJugador.Clan}}  </h3>
+                                        <button class="btn btn-danger" ng-click="abandonarClan()">Abandonar Clan</button>
+                                    </div>
+                                    <div class="row" ng-if="soyAdmin">
+                                        <div class="col-sm-12 col-md-12 col-lg-12">
+                                            <div class="row">
+                                                <h3>Jugadores sin clan</h3>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-2 col-md-2 col-lg-2">Username</div>
+                                                <div class="col-sm-2 col-md-2 col-lg-2">Nombre</div>
+                                                <div class="col-sm-2 col-md-2 col-lg-2">Apellido</div>
+                                            </div>
+                                            <div class="row" style="padding:10px" ng-repeat="e in $root.jugadoresSinClan">
+                                                <div class="col-sm-2 col-md-2 col-lg-2">{{e.username}}</div>
+                                                <div class="col-sm-2 col-md-2 col-lg-2">{{e.nombre}}</div>
+                                                <div class="col-sm-2 col-md-2 col-lg-2">{{e.apellido}}</div>
+                                                <div class="col-sm-2 col-md-2 col-lg-2"><button class="btn btn-default" ng-click="agregarAlClan(e)">Agregar</button></div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="row handPointer" ng-click="addEdificio(e.Id)" ng-repeat="e in $root.listaEdificios">
-                                        <div class="col-sm-2 col-md-2 col-lg-2"><img width="50" height="50" ng-src="{{e.Imagen}}" /></div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.Nombre}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.TiempoConstruccion}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">{{getCostoRecurso(e, rec.Id)}}</div>
+                                    <div class="row">
+                                        <h3>Jugadores en el clan</h3>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-2 col-md-2 col-lg-2">Username</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">Nombre</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">Apellido</div>
+                                    </div>
+                                    <div class="row" style="padding:10px" ng-repeat="e in $root.jugadoresEnClan">
+                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.username}}</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.nombre}}</div>
+                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.apellido}}</div>
                                     </div>
                                 </div>
                             </div>
@@ -404,6 +428,34 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crear Clan -->
+            <div class="modal fade" id="dialogoCrearClan" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Datos nuevo clan</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="row">
+                                        <h4>Nombre</h4>
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" ng-model="NombreClan" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="crearClan()">Save</button>
                         </div>
                     </div>
                 </div>
