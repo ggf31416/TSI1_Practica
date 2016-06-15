@@ -108,7 +108,7 @@ namespace BusinessLogicLayer
                     foreach (var prod in tipoEdificio.RecursosAsociados)
                     {
                         recursos[prod.IdRecurso.ToString()].Total += (float)(prod.Valor * dif.TotalSeconds);
-                    }*/
+                    }
                 }
             }
             return cambio;
