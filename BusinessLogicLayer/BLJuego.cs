@@ -22,8 +22,6 @@ namespace BusinessLogicLayer
             _dal = dal;
         }
 
-        
-
 
         private List<TipoEdificio> cargarEdificios(Juego j, EstadoData.EstadoEnum estado)
         {
@@ -37,7 +35,6 @@ namespace BusinessLogicLayer
             }
             return res;
         }
-
         
 
         private void actualizarRecursosPorSegundo(Juego j)
@@ -95,8 +92,6 @@ namespace BusinessLogicLayer
         }
 
         
-
-
         public bool actualizarEdificios(Juego juego)
         {
             bool cambio = true;
@@ -113,7 +108,7 @@ namespace BusinessLogicLayer
                     foreach (var prod in tipoEdificio.RecursosAsociados)
                     {
                         recursos[prod.IdRecurso.ToString()].Total += (float)(prod.Valor * dif.TotalSeconds);
-                    }
+                    }*/
                 }
             }
             return cambio;
@@ -153,7 +148,7 @@ namespace BusinessLogicLayer
 
         public Juego GetAllDataJuego(string tenant)
         {
-            return _dal.GetJuegoUsuario(tenant, "pijaUsuario");
+            return _dal.GetJuegoUsuario(tenant, "ejemploUsuario");
         }
 
         public ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador)

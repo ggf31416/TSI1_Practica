@@ -318,7 +318,7 @@ namespace DataAccessLayer
             return queryClan.First().AdministradorId == IdJugador;
         }
 
-        private string GetClanJugador(string Tenant, string IdJugador)
+        public string GetClanJugador(string Tenant, string IdJugador)
         {
             database = client.GetDatabase(Tenant);
             collection = database.GetCollection<ClienteJuego>("usuario");
