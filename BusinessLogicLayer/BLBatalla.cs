@@ -49,6 +49,7 @@ namespace BusinessLogicLayer
 
             try
             {
+                Stopwatch sw = Stopwatch.StartNew();
                 todaviaEstoyTrabajando = true;
                 //Console.WriteLine(DateTime.Now.ToString("hh:mm:ss.fff tt"));
                 var client = getCliente();
@@ -58,16 +59,23 @@ namespace BusinessLogicLayer
                 {
                     if (b.EnCurso)
                     {
+                        Stopwatch sw2 = Stopwatch.StartNew();
                         b.ejecutarTurno();
+                        Console.WriteLine("un turno demoro:  " + sw2.ElapsedMilliseconds + " ms");
+                        sw2.Restart();
                         string jsonAcciones = b.generarListaAccionesTurno();
                         if (jsonAcciones.Length > 0)
                         {
                             encoladas.Add(jsonAcciones);
                         }
+                        Console.WriteLine("generar acciones demoro:  " + sw2.ElapsedMilliseconds + " ms");
+                        sw2.Restart();
                         client.SendLista(b.GetListaJugadores(), jsonAcciones);
+                        Console.WriteLine("SendLista demoro:  " + sw2.ElapsedMilliseconds + " ms");
                     }
                     
                 }
+                Console.WriteLine("Ejecutar turno:  " + sw.ElapsedMilliseconds + " ms");
             }
             catch( Exception ex)
             {
@@ -176,12 +184,12 @@ namespace BusinessLogicLayer
 
         public void IniciarBatalla(string tenant, InfoAtaque info)
         {
-            Juego datosAtaq = blJuego.GetJuegoUsuarioSinActualizar(tenant, info.Jugador);
+            Juego datosAtaq = blJuego.GetJuegoUsuarioSinGuardar(tenant, info.Jugador);
             Jugador jAt = new Jugador();
 
             jAt.CargarDesdeJuego(datosAtaq);
 
-            Juego datosDef = blJuego.GetJuegoUsuarioSinActualizar(tenant, info.Enemigo);
+            Juego datosDef = blJuego.GetJuegoUsuarioSinGuardar(tenant, info.Enemigo);
             Jugador jDef = new Jugador();
             if (datosDef != null)
             {

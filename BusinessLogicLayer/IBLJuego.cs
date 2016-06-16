@@ -11,8 +11,9 @@ namespace BusinessLogicLayer
     {
         Juego GetAllDataJuego(string tenant);
         Juego GetJuegoUsuario(string tenant,string idUsuario);
-        Juego GetJuegoUsuarioSinActualizar(string tenant, string idUsuario);
+        Juego GetJuegoUsuarioSinGuardar(string tenant, string idUsuario);
         void GuardarJuego(Juego j);
+        bool GuardarJuegoEsperar(Juego j);
         void ActualizarJuego(Juego j);
 
         ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador);

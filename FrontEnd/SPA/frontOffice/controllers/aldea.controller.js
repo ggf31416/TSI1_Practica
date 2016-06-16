@@ -18,7 +18,8 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                     if (msg.SoyAtacante && !msg.SoyAliado) {
                         alert("el ataque empezara en " + msg.TiempoAtaque + " segundos");
                         //el ataque empezara en msg.TiempoAtaque segundos
-                    } else if (!msg.SoyAtacante) {
+                    } else if (!msg.SoyAtacante && !msg.SoyAliado) {
+                        alert("me van a atacar en " + msg.TiempoAtaque + " segundos!");
                         //me atacaran en msg.TiempoAtaque segundos
                     }
                 } else if (msg.Tipo && msg.Tipo == "IniciarAtaque") {

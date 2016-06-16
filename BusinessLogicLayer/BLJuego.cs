@@ -69,25 +69,36 @@ namespace BusinessLogicLayer
 
         }
 
+        // elimina anomalia por bug que tuvimos en un momento
+        private void eliminarAnomalias(DataActual data)
+        {
+            var eliminar = data.EstadoUnidades.Where(kv => kv.Value.Id == 0).ToList();
+            foreach (var dataErr in eliminar)
+            {
+                Console.WriteLine("Elimino unidades anomalas ");
+                data.EstadoUnidades.Remove(dataErr.Key);
+            }
+        }
 
         public void actualizarUnidades(DataActual data)
         {
+            eliminarAnomalias(data);
             var estUnidadesEnConstr = data.EstadoUnidades.Values.Where(x => x != null && x.Estado == EstadoData.EstadoEnum.C).ToList();
-           
             foreach (var unidad in estUnidadesEnConstr)
             {
                 if ( unidad.Fin <= DateTime.UtcNow) {
 
-                    string key = unidad.Id.ToString()  + "#" + EstadoData.EstadoEnum.A;
+                    string keyCompletada = unidad.Id.ToString()  + "#" + EstadoData.EstadoEnum.A;
+                    string keyConstruccion = unidad.Id.ToString();
 
-                    if (!data.EstadoUnidades.ContainsKey(key))
+                    if (!data.EstadoUnidades.ContainsKey(keyCompletada))
                     {
-                        data.EstadoUnidades.Add(key, new EstadoData() { Id = unidad.Id, Cantidad = 0, Estado = EstadoData.EstadoEnum.A, Fin = DateTime.UtcNow });
+                        data.EstadoUnidades.Add(keyCompletada, new EstadoData() { Id = unidad.Id, Cantidad = 0, Estado = EstadoData.EstadoEnum.A, Fin = DateTime.UtcNow });
                     }
-                    data.EstadoUnidades[key].Cantidad += unidad.Cantidad;
-                    data.EstadoUnidades[key].Estado = EstadoData.EstadoEnum.A;
-                    unidad.Cantidad = 0;
-                } 
+                    data.EstadoUnidades[keyCompletada].Cantidad += unidad.Cantidad;
+                    data.EstadoUnidades[keyCompletada].Estado = EstadoData.EstadoEnum.A;
+                    data.EstadoUnidades.Remove(keyConstruccion);
+                }
             }
         }
 
@@ -163,7 +174,7 @@ namespace BusinessLogicLayer
             return juego;
         }
 
-        public Juego GetJuegoUsuarioSinActualizar(string tenant, string idUsuario)
+        public Juego GetJuegoUsuarioSinGuardar(string tenant, string idUsuario)
         {
             var juego = _dal.GetJuegoUsuario(tenant, idUsuario);
             ActualizarJuegoSinGuardar(juego);
@@ -175,6 +186,11 @@ namespace BusinessLogicLayer
             _dal.GuardarJuegoUsuarioAsync(j);
         }
 
+
+        public bool GuardarJuegoEsperar(Juego j)
+        {
+            return _dal.GuardarJuegoUsuarioEsperar(j);
+        }
 
     }
 }
