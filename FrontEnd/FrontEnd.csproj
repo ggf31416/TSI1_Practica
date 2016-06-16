@@ -308,6 +308,7 @@
     <Compile Include="Models\JuegoModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\TributoModel.cs" />
     <Compile Include="Models\RecursoAsociado.cs" />
     <Compile Include="Models\Reporte.cs" />
     <Compile Include="Models\TableroModel.cs" />

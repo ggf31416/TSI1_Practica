@@ -2319,6 +2319,9 @@ public interface IServiceTablero
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/SoyAdministrador", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/SoyAdministradorResponse")]
     bool SoyAdministrador(string Tenant, string IdJugador);
     
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/EnviarRecursos", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/EnviarRecursosResponse")]
+    int EnviarRecursos(Shared.Entities.RecursoAsociado[] tributos, string IdJugadorDestino, string Tenant, string IdJugador);
+
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetEstadoBatalla", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetEstadoBatallaResponse")]
     string GetEstadoBatalla(string tenant, string idJugador);
 }
@@ -2446,7 +2449,12 @@ public partial class ServiceTableroClient : System.ServiceModel.ClientBase<IServ
     {
         return base.Channel.SoyAdministrador(Tenant, IdJugador);
     }
-    
+
+    public int EnviarRecursos(Shared.Entities.RecursoAsociado[] tributos, string IdJugadorDestino, string Tenant, string IdJugador)
+    {
+        return base.Channel.EnviarRecursos(tributos, IdJugadorDestino, Tenant, IdJugador);
+    }
+
     public string GetEstadoBatalla(string tenant, string idJugador)
     {
         return base.Channel.GetEstadoBatalla(tenant, idJugador);

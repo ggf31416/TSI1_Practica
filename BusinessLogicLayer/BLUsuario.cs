@@ -58,5 +58,10 @@ namespace BusinessLogicLayer
         {
             return _dal.SoyAdministrador(Tenant, IdJugador);
         }
+
+        public int EnviarRecursos(List<RecursoAsociado> tributos, string IdJugadorDestino, string Tenant, string IdJugador)
+        {
+            return _dal.EnviarRecursos(tributos, IdJugadorDestino, Tenant, IdJugador);
+        }
     }
 }
