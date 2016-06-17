@@ -83,12 +83,21 @@ namespace BusinessLogicLayer
 
         }
 
-        public String GenerarJson(bool incluirEdificios,bool incluirRecursos)
+        public InfoJugador GenerarInfo(bool incluirEdificios, bool incluirRecursos)
         {
             InfoJugador copia = new InfoJugador();
             copia.Id = this.Id;
             copia.Clan = this.Clan;
             copia.Unidades = new List<ConjuntoUnidades>(this.Unidades.Values);
+            foreach (var tu in this.tipos.Values)
+            {
+                InfoTipo info = new InfoTipo() { id = tu.Id,
+                    ataque = tu.Ataque.GetValueOrDefault(),
+                    hp = tu.Vida.GetValueOrDefault(),
+                    rango = 8,
+                    esUnidad = tu is TipoUnidad };
+                copia.Tipos.Add(tu.Id, info);
+            }
             if (incluirEdificios)
             {
                 copia.Edificios = this.Edificios;
@@ -97,7 +106,13 @@ namespace BusinessLogicLayer
             {
                 copia.Recursos = this.Recursos;
             }
-            string json  =JsonConvert.SerializeObject(copia);
+            return copia;
+        }
+
+        public String GenerarJson(bool incluirEdificios,bool incluirRecursos)
+        {
+            
+            string json  =JsonConvert.SerializeObject(GenerarInfo(false,false));
             return json;
         }
 
@@ -116,12 +131,23 @@ namespace BusinessLogicLayer
     }
 
 
+
+    public class InfoTipo
+    {
+        public int id { get; set; }
+        public float hp { get; set; }
+        public int ataque { get; set; }
+        public int rango { get; set; }
+        public bool esUnidad { get; set; }
+    }
+
     public class InfoJugador
     {
         public string Id { get; set; }
         public string Clan { get; set; }
         public List< ConjuntoUnidades> Unidades { get; set; } = new List<ConjuntoUnidades>();
         public List<Edificio> Edificios { get; set; } = new List<Edificio>();
+        public Dictionary<int,InfoTipo> Tipos { get; set; } = new Dictionary<int, InfoTipo>();
         public Dictionary<int, CantidadRecurso> Recursos { get; set; }  // clave Recurso.ID
     }
 

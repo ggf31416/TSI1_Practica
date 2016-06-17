@@ -123,10 +123,23 @@ namespace BusinessLogicLayer
             return e;
         }
 
+        
+
+        private bool  perdioUnClan()
+        {
+            Dictionary<string, bool> tieneUnidades = new Dictionary<string, bool>();
+            foreach(Jugador j in this.jugadores.Values)
+            {
+                if (j.Unidades.Count > 0 && j.Unidades.Any(cu => cu.Value.Cantidad > 0)) tieneUnidades[j.Clan] = true;
+                if (tablero.QuedanUnidadesJugador(j.Id)) tieneUnidades[j.Clan] = true;
+            }
+            return tieneUnidades.Values.Any(b => b == false);
+        }
+
         public void ejecutarTurno()
         {
             tablero.tickTiempo();
-            if (tablero.Turno > 300 || tablero.PerdioUnJugador())
+            if (tablero.Turno > 300 || perdioUnClan())
             {
                 this.EnCurso = false;
             }
@@ -153,11 +166,12 @@ namespace BusinessLogicLayer
             public List<Edificio> edificios { get; set; } = new List<Edificio>();
             public List<TipoUnidad> tiposUnidad { get; set; } = new List<TipoUnidad>();
             public List<TipoEdificio> tiposEdificio { get; set; } = new List<TipoEdificio>();
-            public List<String> jugadores { get; set; } = new List<String>();
+            public Dictionary<string,InfoJugador> jugadores { get; set; } = new Dictionary<string,InfoJugador>();
 
             public string IdJugador { get; set; }
 
         }
+
 
         public String[] GetListaJugadores()
         {
@@ -172,8 +186,8 @@ namespace BusinessLogicLayer
             foreach(Jugador j in jugadores.Values)
             {
                 //bool incluirEdificios = j.Equals(defensor);
-                string jsonJugador = j.GenerarJson(false, false);
-                res.jugadores.Add(jsonJugador);
+                InfoJugador infoJ = j.GenerarInfo(false, false);
+                res.jugadores.Add(infoJ.Id,infoJ);
 
             }
 
@@ -183,8 +197,6 @@ namespace BusinessLogicLayer
             res.tiposUnidad = this.tiposUnidades;
             return JsonConvert.SerializeObject(res);
         }
-
-
     }
 }
 
