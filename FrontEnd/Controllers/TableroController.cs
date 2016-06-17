@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using ServiceStack.Redis;
 using Microsoft.AspNet.SignalR;
 using FrontEnd.ServiceTablero;
+using FrontEnd.ServiceReference1;
 using Shared.Entities;
 
 namespace FrontEnd.Controllers
@@ -18,6 +19,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
+                Service1Client cli = new Service1Client();
                 ServiceTableroClient client = new ServiceTableroClient();
                 client.Accion(tenant,data);
                 return Json(new { sucess = true });

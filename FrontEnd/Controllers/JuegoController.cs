@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using ServiceStack.Redis;
 using Microsoft.AspNet.SignalR;
 using FrontEnd.ServiceTablero;
+using FrontEnd.ServiceReference1;
 using Shared.Entities;
 
 namespace FrontEnd.Controllers
@@ -15,7 +16,7 @@ namespace FrontEnd.Controllers
         [HttpGet]
         public ActionResult GetAllDataJuego(string tenant)
         {
-            ServiceTableroClient client = new ServiceTableroClient();
+            Service1Client client = new Service1Client();
 
             Models.AllDataJuegoModel ret = new Models.AllDataJuegoModel();
 
@@ -246,7 +247,7 @@ namespace FrontEnd.Controllers
             try
             {
                 string idJugador = Request.Cookies["clienteId"].Value;
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 ListasEntidades listasEntidades = client.GetEntidadesActualizadas(tenant, idJugador);
 
@@ -340,8 +341,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 Models.AllDataJuegoModel ret = new Models.AllDataJuegoModel();
 
@@ -588,7 +588,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 List<ClienteJuego> jugadores = client.GetJugadoresAtacables(tenant, Request.Cookies["clienteId"].Value).ToList();
 
@@ -623,7 +623,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 client.CrearClan(NombreClanModel.NombreClan, tenant, Request.Cookies["clienteId"].Value);
 
@@ -640,7 +640,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 bool ret = client.AbandonarClan(tenant, Request.Cookies["clienteId"].Value);
 
@@ -657,7 +657,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 List<Models.ClienteJuego> ret = new List<Models.ClienteJuego>();
 
@@ -687,7 +687,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 ClienteJuego cj = new ClienteJuego();
                 cj.clienteId = JugadorModel.clienteId;
@@ -712,7 +712,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 List<Models.ClienteJuego> ret = new List<Models.ClienteJuego>();
 
@@ -742,7 +742,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 bool ret = client.SoyAdministrador(tenant, Request.Cookies["clienteId"].Value);
 
@@ -759,7 +759,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 List<RecursoAsociado> recursosAsociados = new List<RecursoAsociado>();
                 foreach(var ram in tributoModel.Valores)

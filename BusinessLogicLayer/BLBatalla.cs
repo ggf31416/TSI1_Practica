@@ -1,14 +1,6 @@
-﻿using DataAccessLayer;
-using EpPathFinding;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ServiceStack.Redis;
-using Microsoft.AspNet.SignalR.Client.Hubs;
-using System.ServiceModel;
 using Shared.Entities;
 using System.Diagnostics;
 
@@ -26,9 +18,16 @@ namespace BusinessLogicLayer
         private static BLBatalla instancia = null;
         private IBLJuego blJuego;
 
-        public static BLBatalla getInstancia()
+        public BLBatalla(IBLJuego bl)
         {
-            if (instancia == null) instancia = new BLBatalla();
+            setBLJuego(bl);
+        }
+
+        public BLBatalla() {}
+
+        public static BLBatalla getInstancia(IBLJuego bl)
+        {
+            if (instancia == null) instancia = new BLBatalla(bl);
             return instancia;
         }
 

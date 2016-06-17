@@ -34,7 +34,7 @@ namespace ServiceLayer
             blConstruccionHandler = new BLConstruccion(new DataAccessLayer.DALConstruccion());
             blTecnologiaHandler = new BLTecnologia(blJuegoHandler);
             blUsuarioHandler = new BLUsuario(new DataAccessLayer.DALUsuario());
-            blBatalla = BLBatalla.getInstancia();
+            blBatalla = BLBatalla.getInstancia(null);
             ((BLBatalla)blBatalla).setBLJuego(blJuegoHandler);
         }
 

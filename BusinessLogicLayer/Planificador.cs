@@ -17,7 +17,7 @@ namespace BusinessLogicLayer
         {
             // ejecutarTurno
             
-            BLBatalla.getInstancia().ejecutarBatallasEnCurso();
+            BLBatalla.getInstancia(null).ejecutarBatallasEnCurso();
         }
     }
 
@@ -29,7 +29,7 @@ namespace BusinessLogicLayer
             {
                 InfoAtaque ataque = (InfoAtaque)context.MergedJobDataMap.Get("infoAtaque");
                 string tenant = (string)context.MergedJobDataMap.Get("tenant");
-                BLBatalla.getInstancia().IniciarBatalla(tenant, ataque);
+                BLBatalla.getInstancia(null).IniciarBatalla(tenant, ataque);
             }
         }
 

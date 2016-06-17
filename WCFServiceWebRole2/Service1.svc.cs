@@ -1,44 +1,29 @@
 ﻿using BusinessLogicLayer;
 using Shared.Entities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using System.ServiceModel;
 
-namespace ServiceLayer
+namespace WCFServiceWebRole2
 {
-    [ServiceBehavior(IncludeExceptionDetailInFaults = true)]
-    public class ServiceTablero : IServiceTablero
+    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "Service1" in code, svc and config file together.
+    // NOTE: In order to launch WCF Test Client for testing this service, please select Service1.svc or Service1.svc.cs at the Solution Explorer and start debugging.
+    public class Service1 : IService1
     {
-        private static IBLTablero blHandler;
-        private static IBLJuego blJuegoHandler;
-        private static IBLTecnologia blTecnologiaHandler;
-        private static IBLConstruccion blConstruccionHandler;
-        private static IBLUsuario blUsuarioHandler;        
+        private static IBLJuego blJuegoHandler = new BLJuego(new DataAccessLayer.DALJuego());
+        private static IBLTablero blHandler = BLTablero.getInstancia();
+        private static IBLTecnologia blTecnologiaHandler = new BLTecnologia(blJuegoHandler);
+        private static IBLConstruccion blConstruccionHandler = new BLConstruccion(new DataAccessLayer.DALConstruccion());
+        private static IBLUsuario blUsuarioHandler = new BLUsuario(new DataAccessLayer.DALUsuario());
         private static IBLConexion blConexHandler;
-        private static IBLBatalla blBatalla;
+        private static IBLBatalla blBatalla = BLBatalla.getInstancia(blJuegoHandler);
 
-        public ServiceTablero()
+        public void JugarUnidad(InfoCelda infoCelda)
         {
-            blHandler = Program.blHandler;
-            blJuegoHandler = Program.blJuegoHandler;
-            blTecnologiaHandler = Program.blTecnologiaHandler;
-            blConstruccionHandler = Program.blConstruccionHandler;
-            blBatalla = BLBatalla.getInstancia(null);
-            ((BLBatalla)blBatalla).setBLJuego(blJuegoHandler);
-            blUsuarioHandler = Program.blUsuarioHandler;
-        }
-
-        public void JugarUnidad(InfoCelda infoCelda) {
             blHandler.JugarUnidad(infoCelda);
         }
 
-        public void Accion(string tenant,string json)
+        public void Accion(string tenant, string json)
         {
-            blBatalla.Accion(tenant,json);
+            blBatalla.Accion(tenant, json);
         }
 
         public bool login(ClienteJuego cliente, string idJuego)
@@ -53,7 +38,7 @@ namespace ServiceLayer
 
         public void IniciarAtaque(string tenant, InfoAtaque info)
         {
-            blBatalla.IniciarAtaque(tenant,info);
+            blBatalla.IniciarAtaque(tenant, info);
         }
 
         public void register(ClienteJuego cliente, string idJuego)
@@ -87,7 +72,7 @@ namespace ServiceLayer
             return blJuegoHandler.GetJuegoUsuario(tenant, idUsuario);
         }
 
-        public bool DesarrollarTecnologia(string tenant, string idJugador,int idTecnologia)
+        public bool DesarrollarTecnologia(string tenant, string idJugador, int idTecnologia)
         {
             return blTecnologiaHandler.DesarrollarTecnologia(tenant, idJugador, idTecnologia);
         }
@@ -129,7 +114,7 @@ namespace ServiceLayer
             return blUsuarioHandler.SoyAdministrador(Tenant, IdJugador);
         }
 
-        public void ConectarSignalr(string tenant,ConexionSignalr con)
+        public void ConectarSignalr(string tenant, ConexionSignalr con)
         {
             blConexHandler.agregarConexion(tenant, con);
         }
@@ -148,7 +133,7 @@ namespace ServiceLayer
         {
             return blUsuarioHandler.EnviarRecursos(tributos, IdJugadorDestino, Tenant, IdJugador);
         }
-        public string GetEstadoBatalla(string tenant,string idJugador)
+        public string GetEstadoBatalla(string tenant, string idJugador)
         {
             return blBatalla.getJsonBatalla(tenant, idJugador);
         }
