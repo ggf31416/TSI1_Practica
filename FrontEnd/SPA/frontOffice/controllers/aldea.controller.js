@@ -223,6 +223,41 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             }
         }
 
+        $scope.abrirDonarAJugador = function (jugador) {
+            $('#dialogoClanes').modal('hide');
+            console.debug(jugador);
+            $scope.donacion = {
+                IdJugadorDestino: jugador.clienteId,
+                Nombre: jugador.nombre
+            }
+            $scope.donacion.Valores = [];
+            for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
+                var rec = $rootScope.listaRecursos[i];
+                $scope.donacion.Valores.push({
+                    IdRecurso: rec.Id,
+                    Value: 0
+                });
+            }
+            $('#dialogoDonarRecursos').modal('show');
+        }
+
+        function getCosto(aux, IdRecurso) {
+            var rec = jQuery.grep(aux, function (value) {
+                return value.IdRecurso === IdRecurso;
+            })[0];
+            return rec ? rec.Value : 0;
+        }
+
+        $scope.donar = function () {
+            var ret = aldeasService.enviarRecursos($scope.donacion);
+            if (ret.success) {
+                for (var j = 0; j < $rootScope.dataJugador.EstadoRecursos.length; j++) {
+                    $rootScope.dataJugador.EstadoRecursos[j].Total = $rootScope.dataJugador.EstadoRecursos[j].Total - getDonacion($scope.donacion.Valores, $rootScope.dataJugador.EstadoRecursos[j].Id);
+                }
+                $('#dialogoDonarRecursos').modal('hide');
+            }
+        }
+
         $scope.abrirClan = function () {
             aldeasService.getJugadoresSinClan()
                                 .then(function (data) {
@@ -423,7 +458,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                             $interval.cancel($scope.timerUnidad);
                             console.debug($scope.auxUnidad);
                             $scope.auxUnidad.Cantidad = $scope.auxUnidad.Cantidad + $scope.auxUnidad.CantAConstruir;
-                            $scope.auxUnidad.Estado = 1;
+                            $scope.auxUnidad.Estado = 0;
                             $scope.auxUnidad = undefined;
                         }, $scope.modeloUnidad.TiempoConstruccion * 100 * $scope.auxUnidad.CantAConstruir);
                     }
