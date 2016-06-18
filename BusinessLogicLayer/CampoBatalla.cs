@@ -604,5 +604,15 @@ namespace BusinessLogicLayer
             return res;
         }
 
+
+
+        public Entidad GetEntidadDesplegada(string id)
+        {
+            if (entidades.ContainsKey(id))
+            {
+                return entidades[id];
+            }
+            return null;
+        }
     }
 }

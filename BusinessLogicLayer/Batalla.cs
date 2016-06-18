@@ -166,11 +166,12 @@ namespace BusinessLogicLayer
             public List<Edificio> edificios { get; set; } = new List<Edificio>();
             public List<TipoUnidad> tiposUnidad { get; set; } = new List<TipoUnidad>();
             public List<TipoEdificio> tiposEdificio { get; set; } = new List<TipoEdificio>();
-            public List<String> jugadores { get; set; } = new List<String>();
+            public Dictionary<string,InfoJugador> jugadores { get; set; } = new Dictionary<string,InfoJugador>();
 
             public string IdJugador { get; set; }
 
         }
+
 
         public String[] GetListaJugadores()
         {
@@ -185,8 +186,8 @@ namespace BusinessLogicLayer
             foreach(Jugador j in jugadores.Values)
             {
                 //bool incluirEdificios = j.Equals(defensor);
-                string jsonJugador = j.GenerarJson(false, false);
-                res.jugadores.Add(jsonJugador);
+                InfoJugador infoJ = j.GenerarInfo(false, false);
+                res.jugadores.Add(infoJ.Id,infoJ);
 
             }
 

@@ -131,8 +131,8 @@ namespace BusinessLogicLayer
             if (b.agregarUnidad(tipo_id, jugador, unit_id, posX, posY) == 1)
             {
 
-
-                var jsonObj = new { A = "AddUn", Id = tipo_id, PosX = posX, PosY = posY, Unit_id = unit_id };
+                Entidad u = b.tablero.GetEntidadDesplegada(unit_id);
+                var jsonObj = new  AccionMsg{ Accion = "AddUn", Id = tipo_id, PosX = posX, PosY = posY, IdUnidad = unit_id,Jugador = jugador};
                 string s = JsonConvert.SerializeObject(jsonObj);
 
                 client.SendLista(b.GetListaJugadores(), s);
