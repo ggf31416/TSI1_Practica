@@ -269,9 +269,10 @@
             $scope.tablero_signalR = $.connection.chatHub;
             // Create a function that the hub can call to broadcast messages.
             $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
-                var msg = JSON.parse(message);
-                ejecutarMensaje(msg);
-
+                if (message!=""){
+                    var msg = JSON.parse(message);
+                    ejecutarMensaje(msg);
+                }
                 //$scope.estadoJuego.edificios = msjJSON.edificios;
                 //$scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;
                 //$scope.estadoJuego.edificios.push(msjJSON);
