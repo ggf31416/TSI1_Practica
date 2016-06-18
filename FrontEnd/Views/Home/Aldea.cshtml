@@ -495,6 +495,30 @@
                     </div>
                 </div>
             </div>
+
+            <!--Modal Batalla-->
+            <div class="modal fade" id="dialogoBatalla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">Batalla</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <h4>{{batalla.msgBatalla}} {{batalla.tiempo}}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-if="batalla.empiezaAtaque" ng-click="iniciarAtaqueFunc()">Close</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-if="!batalla.empiezaAtaque">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     

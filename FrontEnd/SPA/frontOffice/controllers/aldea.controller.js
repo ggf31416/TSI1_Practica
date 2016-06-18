@@ -12,21 +12,44 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             $scope.tablero_signalR = $.connection.chatHub;
             // Create a function that the hub can call to broadcast messages.
             $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
-                var msg = JSON.parse(message);
-                if (msg.Tipo && msg.Tipo == "NotificacionAtaque") {
-                    //Mostrar mensaje 
-                    if (msg.SoyAtacante && !msg.SoyAliado) {
-                        alert("el ataque empezara en " + msg.TiempoAtaque + " segundos");
-                        //el ataque empezara en msg.TiempoAtaque segundos
-                    } else if (!msg.SoyAtacante && !msg.SoyAliado) {
-                        alert("me van a atacar en " + msg.TiempoAtaque + " segundos!");
-                        //me atacaran en msg.TiempoAtaque segundos
-                    }
-                } else if (msg.Tipo && msg.Tipo == "IniciarAtaque") {
-                    alert("Inicia el ataque!");
-                    $window.location.href = "/" + $rootScope.NombreJuego + "/Home/Index";
-                }
+                if (message!=""){
+                    console.debug(message);
+                    var msg = JSON.parse(message);
+                    if (msg.Tipo && msg.Tipo == "NotificacionAtaque") {
+                        $scope.batalla.empiezaAtaque = false;
+                        //Mostrar mensaje 
+                        $scope.batalla.tiempo = msg.TiempoAtaque;
+                        if (msg.SoyAtacante && !msg.SoyAliado) {
+                            $scope.batalla.msgBatalla = "El ataque empezara en ";
+                            //alert("el ataque empezara en " + msg.TiempoAtaque + " segundos");
+                            //el ataque empezara en msg.TiempoAtaque segundos
+                        } else if (!msg.SoyAtacante && !msg.SoyAliado) {
+                            $scope.batalla.msgBatalla = "Me van a atacar en ";
+                            //alert("me van a atacar en " + msg.TiempoAtaque + " segundos!");
+                            //me atacaran en msg.TiempoAtaque segundos
+                        }
+                    
+                        $scope.batalla.timer = $interval(function () {
+                            if ($scope.batalla.tiempo == 0){
+                                $interval.cancel($scope.batalla.timer);
+                                $('#dialogoBatalla').modal('hide');
+                            }else
+                                $scope.batalla.tiempo--;
+                        }, 1000);
 
+
+                        $('#dialogoBatalla').modal('show');
+                    } else if (msg.Tipo && msg.Tipo == "IniciarAtaque") {
+                        //$scope.batalla.empiezaAtaque = true;
+                        //$scope.batalla.tiempo = "";
+                        //$scope.batalla.msgBatalla = "Inicia el ataque!";
+                        //$('#dialogoBatalla').modal('show');
+                        console.debug(msg);
+                        $window.location.href = "/" + $rootScope.NombreJuego + "/Home/Index";
+                        //alert("Inicia el ataque!");
+                    
+                    }
+                }
 
             };
 
@@ -34,6 +57,10 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
 
             });
         };
+
+        //$scope.iniciarAtaqueFunc = function () {
+        //    $window.location.href = "/" + $rootScope.NombreJuego + "/Home/Index";
+        //}
 
         $scope.iniciarSignalR();
         
@@ -107,6 +134,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
         }
         */
         $scope.initVariables = function () {
+                    $scope.batalla = {};
                     $rootScope.NombreJuego = tenant;
                     console.debug($rootScope.NombreJuego);
                     aldeasService.getAllData()
