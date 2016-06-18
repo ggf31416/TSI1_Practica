@@ -123,10 +123,23 @@ namespace BusinessLogicLayer
             return e;
         }
 
+        
+
+        private bool  perdioUnClan()
+        {
+            Dictionary<string, bool> tieneUnidades = new Dictionary<string, bool>();
+            foreach(Jugador j in this.jugadores.Values)
+            {
+                if (j.Unidades.Count > 0 && j.Unidades.Any(cu => cu.Value.Cantidad > 0)) tieneUnidades[j.Clan] = true;
+                if (tablero.QuedanUnidadesJugador(j.Id)) tieneUnidades[j.Clan] = true;
+            }
+            return tieneUnidades.Values.Any(b => b == false);
+        }
+
         public void ejecutarTurno()
         {
             tablero.tickTiempo();
-            if (tablero.Turno > 300 || tablero.PerdioUnJugador())
+            if (tablero.Turno > 300 || perdioUnClan())
             {
                 this.EnCurso = false;
             }
@@ -183,8 +196,6 @@ namespace BusinessLogicLayer
             res.tiposUnidad = this.tiposUnidades;
             return JsonConvert.SerializeObject(res);
         }
-
-
     }
 }
 

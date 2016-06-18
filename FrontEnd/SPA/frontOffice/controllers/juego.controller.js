@@ -37,7 +37,8 @@
         $q.all([
             juegoService.GetEstadoBatalla()
         ]).then(function (data) {
-            var batalla = JSON.parse(data[0].data.ret);
+            $scope.batalla = JSON.parse(data[0].data.ret);
+            var batalla = $scope.batalla;
             if (!batalla) console.error("No hay datos de batalla");
             nombreJugador = batalla.IdJugador;
             $rootScope.listaEdificios = batalla.tiposEdificio;
@@ -45,8 +46,9 @@
             $rootScope.listaUnidades = batalla.tiposUnidad;
             //data[1];
             window.createGame();
-
-            cargarEstado(batalla); // carga info
+            /*window.setTimeout(function(){ // parece que no esta listo inmediatamente
+                cargarEstado(batalla); // carga info
+            },100);*/
         });
 
      
@@ -97,7 +99,7 @@
 
         window.createGame = function (scope, injector) {
             // Create our phaser $scope.game
-            $scope.game = new Phaser.Game(anchoJuego, altoJuego, Phaser.AUTO, 'divJuego', { preload: $scope.preload, create: create, update: update });
+            $scope.game = new Phaser.Game(anchoJuego, altoJuego, Phaser.CANVAS, 'divJuego', { preload: $scope.preload, create: create, update: update });
             //$scope.game.time.events.add(Phaser.Timer.SECOND * 1, pedirNombre, this);
         };
 
@@ -148,10 +150,13 @@
                 unidades_desplegadas.add(unit);
                 unidadesPorId[unit.info.unit_id] = unit;
                 agregarGraficos($scope.game, unit);
-                console.log("Unidad agregada desde remoto json:" + data);
+
+
+
+                //console.log("Unidad agregada desde remoto json:" + data);
             }
             else {
-                console.log("Unidad ya estaba json:" + data);
+                //console.log("Unidad ya estaba json:" + data);
             }
         }
 
@@ -164,10 +169,14 @@
             if (unidades_desplegadas) {
                 unidades_desplegadas.removeAll(true);
             }
+            else{
+                unidades_desplegadas =  $scope.game.add.physicsGroup();
+            }
            estado.edificios.forEach (function (e) {
                 crearEdificioInmediato(e);
             });
             if (estado.unidades_desplegadas){
+            
                estado.unidades_desplegadas.forEach(function (e) {
                 crearUnidadInmediato(e);
                 });
@@ -179,7 +188,8 @@
             return json.Id == nombreJugador;
         }
 
-        function cargarEstado(batalla ){
+        function cargarEstado( ){
+            var batalla = $scope.batalla;
             $scope.estadoJuego = new EstadoJuego();
             var est = $scope.estadoJuego;
             estaEnBatalla = true;
@@ -218,49 +228,54 @@
         }
 
         function ejecutarMensaje(msg){
-            if (msg.A == MsgA.IniciarAtaque){
-                //cargarEstado(msg);
-            }
-            else if(msg.A == MsgA.PosUnit){
-                 var unit = unidadesPorId[msg.IdUn];
-                 if(unit){
-                    posicionarAbs(unit,msg.PosX,msg.PosY);
-                 }
-            }
-            else if (msg.A == MsgA.AddEdificio) {
-                    crearEdificioInmediato(msg);
-            }
-            else if (msg.A == MsgA.AddUnidad) {
-                crearUnidadInmediato(msg);
-            }
-            else if (msg.A == MsgA.MoveUnit) {
-                var unit = unidadesPorId[msg.IdUn];
-                if (unit) {
-                    unit.info.target = msg.T;
-                    //moverUnidad(unit, msg.Path);
+            if (msg.A){
+                if (msg.A == MsgA.IniciarAtaque){
+                    //cargarEstado(msg);
                 }
-            }
-            else if (msg.A == MsgA.Target) {
-                var unit = unidadesPorId[msg.IdUn];
-                if (unit) {
-                    unit.info.target = msg.T;
+                else if(msg.A == MsgA.PosUnit){
+                     var unit = unidadesPorId[msg.IdUn];
+                     if(unit){
+                        posicionarAbs(unit,msg.PosX,msg.PosY);
+                     }
                 }
-            }
-            else if (msg.A == MsgA.UpdateHP) {
-                var unit = unidadesPorId[msg.IdUn];
-                // setear vida
-                unit.info.hp = msg.VN;
-                if (msg.VN < 0){
-                    // matar
+                else if (msg.A == MsgA.AddEdificio) {
+                        crearEdificioInmediato(msg);
+                }
+                else if (msg.A == MsgA.AddUnidad) {
+                    crearUnidadInmediato(msg);
+                }
+                else if (msg.A == MsgA.MoveUnit) {
+                    var unit = unidadesPorId[msg.IdUn];
+                    if (unit) {
+                        unit.info.target = msg.T;
+                        moverUnidad(unit, msg.Path);
+                    }
+                }
+                else if (msg.A == MsgA.Target) {
+                    var unit = unidadesPorId[msg.IdUn];
+                    if (unit) {
+                        unit.info.target = msg.T;
+                    }
+                }
+                else if (msg.A == MsgA.UpdateHP) {
+                    var unit = unidadesPorId[msg.IdUn];
+                    // setear vida
+                    if (unit){
+                        unit.info.hp = msg.VN;
+                        if (msg.VN < 0){
+                            // matar
 
-                    unit.kill();
+                            unit.kill();
+                        }
+                    }
                 }
+                else if (msg.A == MsgA.ListaAcciones){
+                    msg.L.forEach(function(a){
+                        ejecutarMensaje(a);
+                    });
+                }    
             }
-            else if (msg.A == MsgA.ListaAcciones){
-                msg.L.forEach(function(a){
-                    ejecutarMensaje(a);
-                });
-            }
+            
 
         }
 
@@ -299,7 +314,7 @@
             //  The second parameter is the URL of the image (relative)
             // por ahora harcodeado
             //$scope.game.load.json('jsonEdificios', '/Entidades/GetAllTipoEdificios');
-            console.log("preload");
+            //console.log("preload");
 
             // activa la carga desde cualquier dominio (se puede restringir al dominio del servidor de imagenes)
             $scope.game.load.crossOrigin = 'anonymous';
@@ -332,6 +347,7 @@
                     //$scope.estadoJuego.unidades_desplegables[e.Id].cantidad = 10;
                 }
             });
+
         }
 
 
@@ -376,10 +392,9 @@
             var proyectiles = $scope.game.add.physicsGroup();
             //crearInternalMenu();
 
-            var phaserJSON = $scope.game.cache.getJSON('jsonEdificios');
-            console.log(phaserJSON);
 
-            $scope.cargarDesdeEstado();
+
+            cargarEstado();
         }
 
         function iniciarCustomDrag(nombreEdificio) {
@@ -395,7 +410,7 @@
         var esUnidad = false;
 
         $scope.accionMouseOver = function () {
-            console.log("Mouse Over: spriteDragged=" + spriteDragged);
+            //console.log("Mouse Over: spriteDragged=" + spriteDragged);
             if (nombreEntidadDragged != null) {
                 $scope.game.canvas.focus();
                 if (esUnidad) {
@@ -474,7 +489,7 @@
         }
 
         $scope.aceptarPosicionEdificio = function (sprite, pointer) {
-            console.log("aceptarPosicionEdificio");
+            //console.log("aceptarPosicionEdificio");
             if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
                 var input_x = sprite.x / unit_size;
                 var input_y = sprite.y / unit_size;
@@ -534,7 +549,7 @@
 
 
         $scope.aceptarPosicionUnidad = function (sprite, pointer) {
-            console.log("aceptarPosicionUnidad");
+            //console.log("aceptarPosicionUnidad");
             if (!$scope.game.physics.arcade.overlap(sprite, buildings) && !$scope.game.physics.arcade.overlap(sprite, unidades_desplegadas)) {
                 var input_x = sprite.x / unit_size;
                 var input_y = sprite.y / unit_size;
@@ -567,13 +582,24 @@
             spriteDragged = null;
         }
 
+        function distancia(x1,y1,x2,y2){
+            var dx = x2 - x1; 
+            var dy = y2 - y1;
+            return srqt(dx * dx + dy * dy);
+        }
+
         function moverUnidad(sprite, paths) {
             detenerMovimiento(sprite);
             var tweenAnterior = null;
             var primerTween = null;
+            var x_ant = sprite.x;
+            var y_ant = sprite.y;
             for (var i in paths) {
-                var tiempo = 2000; // paths[i].s * 1000;
-                var tween = $scope.game.add.tween(sprite).to({ x: paths[i].x * unit_size, y: paths[i].y * unit_size }, tiempo , Phaser.Easing.Linear.None, false);
+                var x_new = paths[i].x * unit_size;
+                var y_new = paths[i].y * unit_size;
+                //var distancia = distancia(x_ant,y_ant,x_new,y_new);
+                var tiempo = paths[i].t; 
+                var tween = $scope.game.add.tween(sprite).to({ x: x_new , y: y_new }, tiempo , Phaser.Easing.Linear.None, false);
                 if (tweenAnterior) {
                     tweenAnterior.chain(tween)
                 }
@@ -587,6 +613,8 @@
             //spriteDragged.body.velocity.y = 1;
             primerTween.start();
             $scope.animaciones[sprite.info.unit_id] = primerTween;
+
+
         }
 
         function onDragUpdateBuild(sprite, pointer) {
@@ -639,7 +667,10 @@
             return Phaser.Rectangle.intersects(boundsA, boundsB);
         }
 
+        var contFrames = 0;
+
         function update() {
+            contFrames++;
             // actualizo los circulos de las unidades para que coincidan los centros
             // si lo hago con addChild me escala el circulo y no lo quiero 
             unidades_desplegadas.forEach(function(u){
@@ -651,8 +682,9 @@
                     u.graficos.vidaFaltante.width = u.width * (1 - porcentaje);*/
                     u.graficos.x  = u.x;
                     u.graficos.y = u.y;
-                    $scope.game.debug.text(u.info.hp,u.x,u.y + u.height * 1.4);
+                    //$scope.game.debug.text(u.info.hp,u.x,u.y + u.height * 1.4);
                 }
+                if (contFrames % 5 == 4) animacionAtaque(u);
             });
 
             if (cursors.up.isDown) {
@@ -686,11 +718,11 @@
                     $scope.game.debug.body(spriteDragged);
                 }
             }
-            $scope.game.debug.text($scope.game.input.activePointer.x, 200, 32);
-            $scope.game.debug.text($scope.game.input.activePointer.y, 200, 64);
-            if (spriteDragged != null) {
+            //$scope.game.debug.text($scope.game.input.activePointer.x, 200, 32);
+            //$scope.game.debug.text($scope.game.input.activePointer.y, 200, 64);
+            /*if (spriteDragged != null) {
                 $scope.game.debug.text("isDragged: " + spriteDragged.input.isDragged, 200, 96);
-            }
+            }*/
             $scope.game.physics.arcade.collide(unidades_desplegadas, buildings,function(){console.log("Colision")});
 
         }
@@ -702,7 +734,7 @@
             proyectil.targetSprite = spriteDest;
             //proyectiles.add(proyectil);
 
-            animacionProyectil = $scope.game.add.tween(proyectil);
+            var animacionProyectil = $scope.game.add.tween(proyectil);
             animacionProyectil.to({ x: spriteDest.x, y: spriteDest.y }, 500, 'Linear', true);
 
             // destruye el proyectil cuando alcanza el objetivo
@@ -714,26 +746,29 @@
         function detenerMovimiento(sprite) {
             var tw = $scope.animaciones[sprite.info.unit_id];
             if (tw) {
-                $scope.game.tween.remove(tw);
+                //$scope.game.tweens.remove(tw);
+                tw.stop();
+                if (tw.chainedTween) tw.chainedTween.stop();
                 delete $scope.animaciones[sprite.info.unit_id];
             }
         }
 
         function animacionAtaque(spriteAtaq) {
+            if (! spriteAtaq.info.target) return;
             var def = unidadesPorId[spriteAtaq.info.target];
-            var distancia = $scope.game.physics.arcade.distanceBetween(spriteAt, def);
-            if (distancia <= spriteAt.info.rango) {
-                detenerMovimiento(spriteAtaq);
-                if (sprite.info && sprite.info.ataque > 0){
-                    if (!spriteAtaq.info.prox_ataque || game.time.now() > spriteAtaq.info.prox_ataque){
+            if (!def) return;
+            var game = $scope.game;
+            var distancia = $scope.game.physics.arcade.distanceBetween(spriteAtaq, def);
+            if (distancia <= spriteAtaq.info.rango * unit_size) {
+                //console.info("En rango");
+                //detenerMovimiento(spriteAtaq);
+                if (spriteAtaq.info){ //  && spriteAtaq.info.ataque > 0
+                    if (!spriteAtaq.info.prox_ataque || game.time.now > spriteAtaq.info.prox_ataque){
                         disparar(spriteAtaq,def);
-                        spriteAtaq.info.prox_ataque = game.time.now() + 500;
+                        spriteAtaq.info.prox_ataque = game.time.now + 500;
                     }
                 }
             }
-            
-
-
         }
 
 

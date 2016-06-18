@@ -59,12 +59,30 @@ namespace BusinessLogicLayer
             }
         }
 
+
+
         private void actualizarRecursos(DataActual data)
         {
+            int MAX_RECURSOS = 1000000;
             TimeSpan dif = DateTime.UtcNow - data.UltimaActualizacion;
+            double segundos = dif.TotalSeconds;
+            if (dif.TotalSeconds < 0)
+            {
+                Console.WriteLine("dt recursos es negativo " + dif.TotalSeconds);
+                segundos = 0;
+            }
             foreach (var cant in data.EstadoRecursos.Values)
             {
-                cant.Total += (float)(cant.Produccion * dif.TotalSeconds);
+                cant.Total += (float)(cant.Produccion * segundos);
+                if (cant.Total > MAX_RECURSOS)
+                {
+                    cant.Total = MAX_RECURSOS;
+                }
+                else if (cant.Total < 0)
+                {
+                    cant.Total = 0; // TODO: ELIMINAR EN  PRODUCCION
+                }
+
             }
 
         }
