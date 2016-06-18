@@ -11,8 +11,8 @@ namespace Shared.Entities
     public class EstadoData
     {
         public enum EstadoEnum {
-            A = 0,
-            C = 1,
+            A = 0,//Construido
+            C = 1,//En construccion
             Puedo = 2,
             NoPuedo = 3
         };
