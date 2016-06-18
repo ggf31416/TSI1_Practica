@@ -10,6 +10,7 @@ using System.ServiceModel;
 using FrontEnd;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Client;
+using System.Diagnostics;
 
 namespace ServiceLayer
 {
@@ -17,7 +18,8 @@ namespace ServiceLayer
     public class ServiceInteraccion : IServiceInteraccion
     {
         IHubProxy proxy;
-        bool usoRedis = true;
+        IHubContext HubContext;
+        bool usoRedis = false;
 
         public ServiceInteraccion()
         {
@@ -25,7 +27,8 @@ namespace ServiceLayer
             {
                 if (usoRedis)
                 {
-                    GlobalHost.DependencyResolver.UseRedis("40.84.2.155", 6379, "gabilo2016!", "ChatChannel");
+                   GlobalHost.DependencyResolver.UseRedis("40.84.2.155", 6379, "gabilo2016!", "ChatChannel");
+                   HubContext = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
                 }
                 else
                 {
@@ -46,56 +49,69 @@ namespace ServiceLayer
 
         public void SendGrupo(String grupo, String msg)
         {
-            try
+            Task.Factory.StartNew(() =>
             {
-                if (usoRedis)
+                try
                 {
-                    GlobalHost.DependencyResolver.UseRedis("40.84.2.155", 6379, "gabilo2016!", "ChatChannel");
-                    var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
-                    context.Clients.Group(grupo).broadcastMessage("Service", msg);
+                    if (usoRedis)
+                    {
+                        HubContext.Clients.Group(grupo).broadcastMessage("Service", msg);
+                    }
+                    else
+                    {
+                        proxy.Invoke("SendGrupo", grupo, msg).Wait();
+                    }
                 }
-                else
+                catch (TimeoutException toEx)
                 {
-                    proxy.Invoke("SendGrupo", grupo, msg).Wait();
+                    Console.WriteLine("Timeout signlar Date " + DateTime.Now.ToShortTimeString() + " msg: " + msg);
                 }
-            }
-            catch (TimeoutException toEx)
-            {
-                Console.WriteLine("Timeout signlar Date " + DateTime.Now.ToShortTimeString() + " msg: " + msg);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Ocurrio un error al enviar signalr: " + ex.ToString());
-            }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Ocurrio un error al enviar signalr: " + ex.ToString());
+                }
+            });
         }
+
 
         public void SendLista(List<string> nombreUsuarios, String msg)
         {
-            try
-            {
-                if (usoRedis)
+            
+                try
                 {
-                    var context = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
-                    foreach (string user in nombreUsuarios)
+                    if (usoRedis)
                     {
-                        context.Clients.User(user).broadcastMessage("Service", msg);
+                        Stopwatch sw = Stopwatch.StartNew();
+
+                        Debug.WriteLine("Obtener context demoro " + sw.ElapsedMilliseconds);
+                        sw.Restart();
+                        Stopwatch sw2 = Stopwatch.StartNew();
+                        foreach (string user in nombreUsuarios)
+                        {
+                            sw.Restart();
+
+                            HubContext.Clients.Group(user).broadcastMessage("Service", msg);
+                            Debug.WriteLine("Enviar para  " + user + " demoro " + sw.ElapsedMilliseconds);
+                        }
+                        Debug.WriteLine("Enviar demoro " + sw2.ElapsedMilliseconds);
                     }
+                    else
+                    {
+                        proxy.Invoke("SendLista", nombreUsuarios, msg).Wait();
+
+                    }
+
                 }
-                else
+                catch (TimeoutException toEx)
                 {
-                    proxy.Invoke("SendLista", nombreUsuarios, msg).Wait();
-
+                    Console.WriteLine("Timeout signlar Date " + DateTime.Now.ToShortTimeString() + " msg: " + msg);
                 }
-
-            }
-            catch (TimeoutException toEx)
-            {
-                Console.WriteLine("Timeout signlar Date " + DateTime.Now.ToShortTimeString() + " msg: " + msg);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Ocurrio un error al enviar signalr: " + ex.ToString());
-            }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Ocurrio un error al enviar signalr: " + ex.ToString());
+                }
+            
+           
         }
 
 

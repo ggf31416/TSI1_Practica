@@ -15,7 +15,7 @@ namespace FrontEnd.Hubs
             {
                 var cookie = request.Cookies["clienteId"];
                 string clienteId = cookie.Value;
-                Debug.WriteLine("[WARNING] GetUserId para cliente " + clienteId);
+                //Debug.WriteLine("[OK] GetUserId para cliente " + clienteId);
                 return clienteId;
             }
             Debug.WriteLine("[WARNING] GetUserId para jugador no autenticado");
