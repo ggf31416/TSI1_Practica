@@ -29,7 +29,8 @@ namespace BusinessLogicLayer
         private int sizeY = tablero_size * edificio_size;
 
         private bool[][] matrixEdificios;
-        
+        private bool[][] matrixUnidades;
+
         JumpPointParam param = null;
         private Stopwatch sw;
         private long nanosPrevio;
@@ -145,7 +146,7 @@ namespace BusinessLogicLayer
             {
                 hacerUnwalkableEdificios();
             }
-            bool[][] matrixUnidades = new bool[sizeX][];
+            matrixUnidades = new bool[sizeX][];
             for (int i = 0; i < sizeX; i++)
             {
                 matrixUnidades[i] = new bool[sizeY];
@@ -202,14 +203,15 @@ namespace BusinessLogicLayer
             bool cruzarJuntoObstaculo = false;
             bool cruzarPorDiagonal = false;
             HeuristicMode heuristica_distancia = HeuristicMode.MIXTA15; // Diagonales valen 1.5
-            JumpPointParam param = new JumpPointParam(grilla, new GridPos(0, 0), new GridPos(0, 1), true, cruzarJuntoObstaculo, cruzarPorDiagonal, heuristica_distancia);
+            JumpPointParam param = new JumpPointParam(grilla, true, cruzarJuntoObstaculo, cruzarPorDiagonal, heuristica_distancia);
             return param;
         }
 
         public List<GridPos> buscarPath(Unidad u, GridPos dest)
         {
             GridPos start = new GridPos((int)Math.Round(u.posX), (int)Math.Round(u.posY));
-            this.param = new JumpPointParam(param.SearchGrid, start, dest, param.AllowEndNodeUnWalkable, param.CrossCorner, param.CrossAdjacentPoint, HeuristicMode.MIXTA15);
+            param.Reset(start, dest);
+            //this.param = new JumpPointParam(param.SearchGrid, start, dest, param.AllowEndNodeUnWalkable, param.CrossCorner, param.CrossAdjacentPoint, HeuristicMode.MIXTA15);
             List<GridPos> res = JumpPointFinder.FindPath(param);
             List<Node> nodosUnwalk = ((StaticGrid)this.param.SearchGrid).buscarUnwalkables();
             if (!param.SearchGrid.IsWalkableAt(dest.x, dest.y))
@@ -217,7 +219,7 @@ namespace BusinessLogicLayer
                 Console.WriteLine("Is walkable at " + dest.x + "," + dest.y + "? : " + false);
             }
 
-            param.SearchGrid.Reset();
+            //param.SearchGrid.Reset();
             return res;
         }
 
@@ -613,6 +615,40 @@ namespace BusinessLogicLayer
                 return entidades[id];
             }
             return null;
+        }
+
+        private void DeployAutomatico ( IEnumerable<Unidad> unidades,int centroX,int centroY)
+        {
+            Random rpos = new Random();
+
+            int posX = centroX;
+            int posY = centroY;
+            int iter = unidades.Count() * 100;
+            foreach (Unidad u in unidades)
+            {
+                while (!matrixUnidades[posX][posY] && iter > 0)
+                {
+                    posX += rpos.Next(2);
+                    if (posX >= sizeX) posX = sizeX - 1;
+                    else if (posX < 0) posX = 0;
+
+                    posY += rpos.Next(2);
+                    if (posY >= sizeY) posY = sizeY - 1;
+                    else if (posY < 0) posY = 0;
+
+                    iter--; // para evitar bucle infinito en caso extremo
+                }
+                u.posX = posX;
+                u.posY = posY;
+                matrixUnidades[posX][posY] = false;
+            }
+        }
+
+        public void DeployUnidadesAutomatico(Jugador jugador, IEnumerable<Unidad> unidades)
+        {
+            actualizarTableroFP();
+
+            DeployAutomatico(unidades, sizeX / 2, sizeY / 2);
         }
     }
 }

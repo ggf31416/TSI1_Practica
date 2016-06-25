@@ -77,6 +77,27 @@ namespace DataAccessLayer
             return res.ModifiedCount == 1;
         }
 
+        public bool ModificarRecursos(Juego juego)
+        {
+            try
+            {
+                string tenant = juego.Nombre;
+                IMongoDatabase _database = _client.GetDatabase(tenant);
+                IMongoCollection<Juego> collection = _database.GetCollection<Juego>("juego_usuario");
+                Dictionary<string, EstadoRecurso> recursos = juego.DataJugador.EstadoRecursos;
+                var builder = Builders<Juego>.Update;
+                var update = builder.Set(j => j.DataJugador.EstadoRecursos, recursos).
+                    Set(j => j.DataJugador.UltimaActualizacion, juego.DataJugador.UltimaActualizacion);
+                var res = collection.UpdateOne(j => j.IdJugador == juego.IdJugador, update);
+                return res.ModifiedCount == 1;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }   
+        }
+
 
         public ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador)
         {

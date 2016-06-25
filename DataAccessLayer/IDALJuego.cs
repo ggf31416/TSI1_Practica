@@ -14,6 +14,7 @@ namespace DataAccessLayer
         Juego GetJuegoUsuario(string tenant, string idUsuario);
         Task GuardarJuegoUsuarioAsync(Juego juego);
         bool GuardarJuegoUsuarioEsperar(Juego juego);
+        bool ModificarRecursos(Juego juego);
 
         ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador);
     }

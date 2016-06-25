@@ -694,6 +694,21 @@
             return Phaser.Rectangle.intersects(boundsA, boundsB);
         }
 
+        function dinamicoUnidad(sprite){
+            var bmd = this.game.add.bitmapData(this.config.width, this.config.height);
+            bmd.ctx.fillStyle = this.config.bar.color;
+            bmd.ctx.beginPath();
+            bmd.ctx.rect(0, 0, this.config.width, this.config.height);
+            bmd.ctx.fill();
+
+            this.barSprite = this.game.add.sprite(this.x - this.bgSprite.width/2, this.y, bmd);
+            this.barSprite.anchor.y = 0.5;
+
+            if(this.flipped){
+                this.barSprite.scale.x = -1;
+            }
+        }
+
         var contFrames = 0;
 
         function update() {
@@ -761,7 +776,7 @@
             var proyectil = game.add.sprite( spriteAt.x, spriteAt.y,'def_proy');
             proyectil.targetSprite = spriteDest;
             var angulo = game.physics.arcade.angleToXY(spriteAt,spriteDest.x,spriteDest.y);
-            proyectil.angle = angulo;
+            proyectil.rotation = angulo + (45 * Math.PI /180);
             proyectil.width = unit_size * 0.8;
             proyectil.height = unit_size * 0.8;
             //proyectiles.add(proyectil);
