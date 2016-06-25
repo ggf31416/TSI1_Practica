@@ -102,7 +102,7 @@ namespace BusinessLogicLayer
         public void agregarEdificio(AccionMsg msg)
         {
             BLServiceClient serviceClient = new BLServiceClient();
-            ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
+            ServiceReference1.Service1Client client = new ServiceReference1.Service1Client();
             Batalla b = obtenerBatalla(msg.Jugador);
             if (b == null) return;
             b.tablero.agregarEdificio(new Edificio { tipo_id = msg.Id, jugador = msg.Jugador, posX = msg.PosX, posY = msg.PosY });
@@ -113,10 +113,10 @@ namespace BusinessLogicLayer
 
 
 
-        private static ServiceInteraccionClient getCliente()
+        private static ServiceReference1.Service1Client getCliente()
         {
             BLServiceClient serviceClient = new BLServiceClient();
-            ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
+            ServiceReference1.Service1Client client = new ServiceReference1.Service1Client();
             return client;
         }
 
@@ -124,7 +124,7 @@ namespace BusinessLogicLayer
 
         private void agregarUnidad(string jugador, int tipo_id, string unit_id, int posX, int posY)
         {
-            ServiceInteraccionClient client = getCliente();
+            ServiceReference1.Service1Client client = getCliente();
             Batalla b = obtenerBatalla(jugador);
             if (b == null) return;
             if (b.agregarUnidad(tipo_id, jugador, unit_id, posX, posY) == 1)

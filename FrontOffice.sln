@@ -23,6 +23,10 @@ Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "AzureCloudService1", "Azure
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WCFServiceWebRole2", "WCFServiceWebRole2\WCFServiceWebRole2.csproj", "{7C130729-9699-45D5-B013-995EDEE332AA}"
 EndProject
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "AzureCloudService2", "AzureCloudService2\AzureCloudService2.ccproj", "{58626D90-3837-4282-A3AD-77494C0853E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WCFServiceWebRole1", "WCFServiceWebRole1\WCFServiceWebRole1.csproj", "{7AB04FDA-1C1C-4B2D-850E-ED417AB77C18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +74,14 @@ Global
 		{7C130729-9699-45D5-B013-995EDEE332AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C130729-9699-45D5-B013-995EDEE332AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C130729-9699-45D5-B013-995EDEE332AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58626D90-3837-4282-A3AD-77494C0853E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58626D90-3837-4282-A3AD-77494C0853E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58626D90-3837-4282-A3AD-77494C0853E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58626D90-3837-4282-A3AD-77494C0853E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AB04FDA-1C1C-4B2D-850E-ED417AB77C18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AB04FDA-1C1C-4B2D-850E-ED417AB77C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AB04FDA-1C1C-4B2D-850E-ED417AB77C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AB04FDA-1C1C-4B2D-850E-ED417AB77C18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
