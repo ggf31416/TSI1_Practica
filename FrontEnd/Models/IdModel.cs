@@ -8,5 +8,7 @@ namespace FrontEnd.Models
     public class IdModel
     {
         public Int32 Id { get; set; }
+
+        public EstadoDataModel EstadoData { get; set; }
     }
 }
