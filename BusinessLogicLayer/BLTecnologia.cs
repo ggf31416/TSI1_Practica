@@ -54,7 +54,7 @@ namespace BusinessLogicLayer
             EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Fin = DateTime.UtcNow. AddSeconds(Tec.Tiempo) };
             estadoT[idTecnologia.ToString()] = estado;
             // guardar juego
-            blHandler.GuardarJuego(j);
+            blHandler.GuardarJuegoAsync(j);
             return true;
         }
 

@@ -39,6 +39,17 @@ namespace BusinessLogicLayer
 
         private bool todaviaEstoyTrabajando = false;
 
+        private void reintegrarUnidadesSobrevivientes(Batalla bat)
+        {
+            foreach(String  id in bat.GetListaJugadores())
+            {
+                Dictionary<int,int> sobrevivientes = bat.UnidadesSobrevivientes(id);
+                Juego j = blJuego.GetJuegoUsuarioSinGuardar(bat.Tenant, id);
+                blJuego.AgregarUnidades(j, sobrevivientes);
+                blJuego.GuardarJuegoAsync(j);
+            }
+        }
+
         public void ejecutarBatallasEnCurso()
         {
             if (todaviaEstoyTrabajando)
@@ -273,6 +284,9 @@ namespace BusinessLogicLayer
             }
             return null;
         }
+
+
+        
     }
 
 

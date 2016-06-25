@@ -14,7 +14,7 @@ namespace BusinessLogicLayer
     {
         private List<TipoUnidad> tiposUnidades = new List<TipoUnidad>();
         private List< TipoEdificio> tiposEdificios = new List< TipoEdificio>();
-        public int JuegoId { get; set; }
+        public string Tenant { get; set; }
         private Dictionary<string, Jugador> jugadores = new Dictionary<string, Jugador>();
 
 
@@ -25,9 +25,18 @@ namespace BusinessLogicLayer
         public CampoBatalla tablero;
 
 
+
+
     
 
-        
+        public Dictionary<int,int> UnidadesSobrevivientes(String jugId)
+        {
+            if (jugadores.ContainsKey(jugId))
+            {
+                return tablero.UnidadesSobrevivientes(jugadores[jugId]);
+            }
+            return new Dictionary<int, int>();
+        }
 
         public Batalla(string atacante,string defensor)
         {
@@ -197,6 +206,19 @@ namespace BusinessLogicLayer
             res.tiposUnidad = this.tiposUnidades;
             return JsonConvert.SerializeObject(res);
         }
+
+        public void DeployUnidadesAutomatico(string idUsuario)
+        {
+            if (this.jugadores.ContainsKey(idUsuario)){
+                Jugador jugador = jugadores[idUsuario];
+                if (idUsuario.Equals(this.defensor.Id))
+                {
+                    
+                }
+                //tablero.DeployUnidadesAutomatico()
+            }
+        }
+
     }
 }
 
