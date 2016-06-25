@@ -12,20 +12,44 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             $scope.tablero_signalR = $.connection.chatHub;
             // Create a function that the hub can call to broadcast messages.
             $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
-                var msg = JSON.parse(message);
-                if (msg.Tipo && msg.Tipo == "NotificacionAtaque") {
-                    //Mostrar mensaje 
-                    if (msg.SoyAtacante && !msg.SoyAliado) {
-                        alert("el ataque empezara en " + msg.TiempoAtaque + " segundos");
-                        //el ataque empezara en msg.TiempoAtaque segundos
-                    } else if (!msg.SoyAtacante) {
-                        //me atacaran en msg.TiempoAtaque segundos
-                    }
-                } else if (msg.Tipo && msg.Tipo == "IniciarAtaque") {
-                    alert("Inicia el ataque!");
-                    $window.location.href = "/" + $rootScope.NombreJuego + "/Home/Index";
-                }
+                if (message!=""){
+                    console.debug(message);
+                    var msg = JSON.parse(message);
+                    if (msg.Tipo && msg.Tipo == "NotificacionAtaque") {
+                        $scope.batalla.empiezaAtaque = false;
+                        //Mostrar mensaje 
+                        $scope.batalla.tiempo = msg.TiempoAtaque;
+                        if (msg.SoyAtacante && !msg.SoyAliado) {
+                            $scope.batalla.msgBatalla = "El ataque empezara en ";
+                            //alert("el ataque empezara en " + msg.TiempoAtaque + " segundos");
+                            //el ataque empezara en msg.TiempoAtaque segundos
+                        } else if (!msg.SoyAtacante && !msg.SoyAliado) {
+                            $scope.batalla.msgBatalla = "Me van a atacar en ";
+                            //alert("me van a atacar en " + msg.TiempoAtaque + " segundos!");
+                            //me atacaran en msg.TiempoAtaque segundos
+                        }
+                    
+                        $scope.batalla.timer = $interval(function () {
+                            if ($scope.batalla.tiempo == 0){
+                                $interval.cancel($scope.batalla.timer);
+                                $('#dialogoBatalla').modal('hide');
+                            }else
+                                $scope.batalla.tiempo--;
+                        }, 1000);
 
+
+                        $('#dialogoBatalla').modal('show');
+                    } else if (msg.Tipo && msg.Tipo == "IniciarAtaque") {
+                        //$scope.batalla.empiezaAtaque = true;
+                        //$scope.batalla.tiempo = "";
+                        //$scope.batalla.msgBatalla = "Inicia el ataque!";
+                        //$('#dialogoBatalla').modal('show');
+                        console.debug(msg);
+                        $window.location.href = "/" + $rootScope.NombreJuego + "/Home/Index";
+                        //alert("Inicia el ataque!");
+                    
+                    }
+                }
 
             };
 
@@ -33,6 +57,10 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
 
             });
         };
+
+        //$scope.iniciarAtaqueFunc = function () {
+        //    $window.location.href = "/" + $rootScope.NombreJuego + "/Home/Index";
+        //}
 
         $scope.iniciarSignalR();
         
@@ -106,6 +134,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
         }
         */
         $scope.initVariables = function () {
+                    $scope.batalla = {};
                     $rootScope.NombreJuego = tenant;
                     console.debug($rootScope.NombreJuego);
                     aldeasService.getAllData()
@@ -219,6 +248,41 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                 
                 $scope.unidadesAconstruir = [];
                 $('#dialogoDatosEdificio').modal('show');
+            }
+        }
+
+        $scope.abrirDonarAJugador = function (jugador) {
+            $('#dialogoClanes').modal('hide');
+            console.debug(jugador);
+            $scope.donacion = {
+                IdJugadorDestino: jugador.clienteId,
+                Nombre: jugador.nombre
+            }
+            $scope.donacion.Valores = [];
+            for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
+                var rec = $rootScope.listaRecursos[i];
+                $scope.donacion.Valores.push({
+                    IdRecurso: rec.Id,
+                    Value: 0
+                });
+            }
+            $('#dialogoDonarRecursos').modal('show');
+        }
+
+        function getCosto(aux, IdRecurso) {
+            var rec = jQuery.grep(aux, function (value) {
+                return value.IdRecurso === IdRecurso;
+            })[0];
+            return rec ? rec.Value : 0;
+        }
+
+        $scope.donar = function () {
+            var ret = aldeasService.enviarRecursos($scope.donacion);
+            if (ret.success) {
+                for (var j = 0; j < $rootScope.dataJugador.EstadoRecursos.length; j++) {
+                    $rootScope.dataJugador.EstadoRecursos[j].Total = $rootScope.dataJugador.EstadoRecursos[j].Total - getDonacion($scope.donacion.Valores, $rootScope.dataJugador.EstadoRecursos[j].Id);
+                }
+                $('#dialogoDonarRecursos').modal('hide');
             }
         }
 
@@ -422,7 +486,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                             $interval.cancel($scope.timerUnidad);
                             console.debug($scope.auxUnidad);
                             $scope.auxUnidad.Cantidad = $scope.auxUnidad.Cantidad + $scope.auxUnidad.CantAConstruir;
-                            $scope.auxUnidad.Estado = 1;
+                            $scope.auxUnidad.Estado = 0;
                             $scope.auxUnidad = undefined;
                         }, $scope.modeloUnidad.TiempoConstruccion * 100 * $scope.auxUnidad.CantAConstruir);
                     }

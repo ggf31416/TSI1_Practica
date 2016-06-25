@@ -545,8 +545,8 @@ namespace FrontEnd.Controllers
                 foreach (var eR in juego.DataJugador.EstadoRecursos)
                 {
                     Models.EstadoRecursoModel eRM = new Models.EstadoRecursoModel();
-                    //eRM.Id = int.Parse(eR.Key.Split('#')[0]);
-                    eRM.Id = int.Parse(eR.Key);// TODO: Cambiar por la linea de arrib acuando cambie la clave
+                    eRM.Id = int.Parse(eR.Key.Split('#')[0]);
+                    //eRM.Id = int.Parse(eR.Key);// TODO: Cambiar por la linea de arrib acuando cambie la clave
                     eRM.Total = (int)eR.Value.Total;
                     eRM.Produccion = eR.Value.Produccion;
 
@@ -557,7 +557,8 @@ namespace FrontEnd.Controllers
                 foreach (var eT in juego.DataJugador.EstadoTecnologias)
                 {
                     Models.EstadoDataModel eDM = new Models.EstadoDataModel();
-                    eDM.Id = int.Parse(eT.Key);// TODO: Modificar cuando cambien las claves
+                    eDM.Id = int.Parse(eT.Key.Split('#')[0]);
+                    //eDM.Id = int.Parse(eT.Key);// TODO: Modificar cuando cambien las claves
                     eDM.Estado = eT.Value.Estado;
                     eDM.Fin = eT.Value.Fin;
                     eDM.Faltante = eT.Value.Faltante;

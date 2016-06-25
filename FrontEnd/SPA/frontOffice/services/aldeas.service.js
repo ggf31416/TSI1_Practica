@@ -213,6 +213,27 @@
 
         };
 
+        this.enviarRecursos = function (json) {
+            var ret = "";
+            console.debug(JSON.stringify(json));
+            $.ajax({
+                url: '/' + $rootScope.NombreJuego + '/Juego/EnviarRecursos/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(json),
+                async: false,
+                success: function (response) {
+                    console.debug(response);
+                    ret = response;
+                },
+                error: function (xhr, status, error) {
+                    alert("Error al enviar recursos");
+                }
+            });
+            return ret;
+        }
+        
+
         
     }
 })();

@@ -141,7 +141,7 @@
                 </div>
                 <div class="col-sm-6 col-md-6 col-lg-6">
                     <div class="row">
-                        <div class="col-sm-2 col-md-2 col-lg-2" ng-show="uni.Estado == 1"  ng-repeat="uni in $root.dataJugador.EstadoUnidades">
+                        <div class="col-sm-2 col-md-2 col-lg-2" ng-show="uni.Estado == 0"  ng-repeat="uni in $root.dataJugador.EstadoUnidades">
                             <img class="recursosTablero" ng-src="{{getImagenUnidad(uni.Id)}}"/>{{uni.Cantidad}}
                         </div>
                     </div>
@@ -236,6 +236,7 @@
                                         <div class="col-sm-2 col-md-2 col-lg-2">{{e.username}}</div>
                                         <div class="col-sm-2 col-md-2 col-lg-2">{{e.nombre}}</div>
                                         <div class="col-sm-2 col-md-2 col-lg-2">{{e.apellido}}</div>
+                                        <button ng-click="abrirDonarAJugador(e)" class="btn btn-default">Donar recursos</button>
                                     </div>
                                 </div>
                             </div>
@@ -247,6 +248,40 @@
                 </div>
             </div>
             
+            <!-- Modal Donar Recursos-->
+            <div class="modal fade" id="dialogoDonarRecursos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Donacion</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <h3>Seleccione recursos para donarle a {{donacion.Nombre}}  </h3>
+                                    </div>
+                                    <div class="row" ng-repeat="rec in donacion.Valores">
+                                        <div class="col-sm-2 col-md-2 col-lg-2">
+                                            <img class="recursosTablero" ng-src="{{getImagenRec(rec.IdRecurso)}}" />
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 col-lg-6">
+                                            <input class="form-control" type="text" ng-model="rec.Value" />
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="donar()">Donar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Modal Edificio -->
             <div class="modal fade" id="dialogoDatosEdificio" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
@@ -456,6 +491,30 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="crearClan()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Modal Batalla-->
+            <div class="modal fade" id="dialogoBatalla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">Batalla</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <h4>{{batalla.msgBatalla}} {{batalla.tiempo}}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-if="batalla.empiezaAtaque" ng-click="iniciarAtaqueFunc()">Close</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-if="!batalla.empiezaAtaque">Close</button>
                         </div>
                     </div>
                 </div>

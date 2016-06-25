@@ -59,42 +59,73 @@ namespace BusinessLogicLayer
             }
         }
 
+
+
         private void actualizarRecursos(DataActual data)
         {
+            int MAX_RECURSOS = 1000000;
             TimeSpan dif = DateTime.UtcNow - data.UltimaActualizacion;
+            double segundos = dif.TotalSeconds;
+            if (dif.TotalSeconds < 0)
+            {
+                Console.WriteLine("dt recursos es negativo " + dif.TotalSeconds);
+                segundos = 0;
+            }
             foreach (var cant in data.EstadoRecursos.Values)
             {
-                cant.Total += (float)(cant.Produccion * dif.TotalSeconds);
+                cant.Total += (float)(cant.Produccion * segundos);
+                if (cant.Total > MAX_RECURSOS)
+                {
+                    cant.Total = MAX_RECURSOS;
+                }
+                else if (cant.Total < 0)
+                {
+                    cant.Total = 0; // TODO: ELIMINAR EN  PRODUCCION
+                }
+
             }
 
         }
 
-
-        public void actualizarUnidades(DataActual data)
+        // elimina anomalia por bug que tuvimos en un momento
+        private void eliminarAnomalias(DataActual data)
         {
+            var eliminar = data.EstadoUnidades.Where(kv => kv.Value.Id == 0).ToList();
+            foreach (var dataErr in eliminar)
+            {
+                Console.WriteLine("Elimino unidades anomalas ");
+                data.EstadoUnidades.Remove(dataErr.Key);
+            }
+        }
+
+        public bool actualizarUnidades(DataActual data)
+        {
+            bool cambio = false;
+            eliminarAnomalias(data);
             var estUnidadesEnConstr = data.EstadoUnidades.Values.Where(x => x != null && x.Estado == EstadoData.EstadoEnum.C).ToList();
-           
             foreach (var unidad in estUnidadesEnConstr)
             {
                 if ( unidad.Fin <= DateTime.UtcNow) {
+                    cambio = true;
+                    string keyCompletada = unidad.Id.ToString()  + "#" + EstadoData.EstadoEnum.A;
+                    string keyConstruccion = unidad.Id.ToString();
 
-                    string key = unidad.Id.ToString()  + "#" + EstadoData.EstadoEnum.A;
-
-                    if (!data.EstadoUnidades.ContainsKey(key))
+                    if (!data.EstadoUnidades.ContainsKey(keyCompletada))
                     {
-                        data.EstadoUnidades.Add(key, new EstadoData() { Id = unidad.Id, Cantidad = 0, Estado = EstadoData.EstadoEnum.A, Fin = DateTime.UtcNow });
+                        data.EstadoUnidades.Add(keyCompletada, new EstadoData() { Id = unidad.Id, Cantidad = 0, Estado = EstadoData.EstadoEnum.A, Fin = DateTime.UtcNow });
                     }
-                    data.EstadoUnidades[key].Cantidad += unidad.Cantidad;
-                    data.EstadoUnidades[key].Estado = EstadoData.EstadoEnum.A;
-                    unidad.Cantidad = 0;
-                } 
+                    data.EstadoUnidades[keyCompletada].Cantidad += unidad.Cantidad;
+                    data.EstadoUnidades[keyCompletada].Estado = EstadoData.EstadoEnum.A;
+                    data.EstadoUnidades.Remove(keyConstruccion);
+                }
             }
+            return cambio;
         }
 
         
         public bool actualizarEdificios(Juego juego)
         {
-            bool cambio = true;
+            bool cambio = false;
             var edificiosConstruyendo = juego.Tablero.Celdas.Where(c => c.IdTipoEdificio.HasValue && c.IdTipoEdificio >= 0 && (c.Estado != null && c.Estado.Estado == EstadoData.EstadoEnum.C));
             var recursos = juego.DataJugador.EstadoRecursos;
             foreach (var edificio in edificiosConstruyendo)
@@ -115,35 +146,81 @@ namespace BusinessLogicLayer
         }
 
 
-        public void ActualizarJuegoSinGuardar(Juego j)
+        public bool ActualizarJuegoSinGuardar(Juego j)
         {
             if (j != null)
             {
-                actualizarEdificios(j);
-                actualizarUnidades(j.DataJugador);
+                bool cambioEdificios = actualizarEdificios(j);
+                bool cambioUnidades = actualizarUnidades(j.DataJugador);
                 actualizarRecursos(j.DataJugador);
                 actualizarRecursosPorSegundo(j);
                 IBLTecnologia tec = new BLTecnologia(this);
-                tec.CompletarTecnologiasTerminadasSinGuardar(j);
+                bool cambioTec = tec.CompletarTecnologiasTerminadasSinGuardar(j);
                 j.DataJugador.UltimaActualizacion = DateTime.UtcNow;
-            }   
+                return cambioEdificios || cambioUnidades || cambioTec;
+            }
+            return false;
         }
 
-        public void ActualizarJuego(Juego j)
+        public bool ActualizarJuego(Juego j)
         {
             if (j != null)
             {
                 try
                 {
-                    ActualizarJuegoSinGuardar(j);
-                    GuardarJuego(j);
+                    bool cambio = ActualizarJuegoSinGuardar(j);
+                    if (cambio)
+                    {
+                        Console.WriteLine("cambio algo");
+                        return GuardarJuegoEsperar(j);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Solo recursos");
+                       return _dal.ModificarRecursos(j);
+                    }
                 }
                 catch(Exception ex)
                 {
                     Console.WriteLine(ex);
-                }
-                
+                }   
             }
+            return false;
+        }
+
+        public void AgregarUnidades(Juego j,Dictionary<int,int> unidades)
+        {
+            var dataUnidades = j.DataJugador.EstadoUnidades;
+            foreach(int tipoId in unidades.Keys)
+            {
+                var key = tipoId + "#" + EstadoData.EstadoEnum.A;
+                if (dataUnidades.ContainsKey(key))
+                {
+                    dataUnidades[key].Cantidad += unidades[tipoId];
+                }
+                else
+                {
+                    var estado = new EstadoData() { Id = tipoId, Estado = EstadoData.EstadoEnum.A, Cantidad = unidades[tipoId], Fin = DateTime.UtcNow };
+                    dataUnidades.Add(key, estado);
+                }
+            }
+        }
+
+        public Dictionary<String,int> QuitarUnidades(Juego j,Dictionary<int,int> unidades)
+        {
+            var res = new Dictionary<String, int>();
+            var dataUnidades = j.DataJugador.EstadoUnidades;
+            foreach (int tipoId in unidades.Keys)
+            {
+                var key = tipoId + "#" + EstadoData.EstadoEnum.A;
+                if (dataUnidades.ContainsKey(key))
+                {
+                    int cant = Math.Min(dataUnidades[key].Cantidad, unidades[tipoId]);
+                    res.Add(tipoId.ToString(), cant);
+                }
+            }
+            return res;
+
         }
 
         public Juego GetAllDataJuego(string tenant)
@@ -163,18 +240,32 @@ namespace BusinessLogicLayer
             return juego;
         }
 
-        public Juego GetJuegoUsuarioSinActualizar(string tenant, string idUsuario)
+        public Juego GetJuegoUsuarioSinGuardar(string tenant, string idUsuario)
         {
             var juego = _dal.GetJuegoUsuario(tenant, idUsuario);
             ActualizarJuegoSinGuardar(juego);
             return juego;
         }
 
-        public void GuardarJuego(Juego j)
+        public void GuardarJuegoAsync(Juego j)
         {
             _dal.GuardarJuegoUsuarioAsync(j);
         }
 
+
+        public bool GuardarJuegoEsperar(Juego j)
+        {
+            try
+            {
+                return _dal.GuardarJuegoUsuarioEsperar(j);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+            
+        }
 
     }
 }

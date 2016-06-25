@@ -39,6 +39,17 @@ namespace BusinessLogicLayer
 
         private bool todaviaEstoyTrabajando = false;
 
+        private void reintegrarUnidadesSobrevivientes(Batalla bat)
+        {
+            foreach(String  id in bat.GetListaJugadores())
+            {
+                Dictionary<int,int> sobrevivientes = bat.UnidadesSobrevivientes(id);
+                Juego j = blJuego.GetJuegoUsuarioSinGuardar(bat.Tenant, id);
+                blJuego.AgregarUnidades(j, sobrevivientes);
+                blJuego.GuardarJuegoAsync(j);
+            }
+        }
+
         public void ejecutarBatallasEnCurso()
         {
             if (todaviaEstoyTrabajando)
@@ -49,6 +60,7 @@ namespace BusinessLogicLayer
 
             try
             {
+                //Stopwatch sw = Stopwatch.StartNew();
                 todaviaEstoyTrabajando = true;
                 //Console.WriteLine(DateTime.Now.ToString("hh:mm:ss.fff tt"));
                 var client = getCliente();
@@ -58,16 +70,25 @@ namespace BusinessLogicLayer
                 {
                     if (b.EnCurso)
                     {
+                        Stopwatch sw2 = Stopwatch.StartNew();
                         b.ejecutarTurno();
+                        Console.WriteLine("un turno demoro:  " + sw2.ElapsedMilliseconds + " ms");
+                        sw2.Restart();
                         string jsonAcciones = b.generarListaAccionesTurno();
+                        Console.WriteLine("generar acciones demoro:  " + sw2.ElapsedMilliseconds + " ms");
                         if (jsonAcciones.Length > 0)
                         {
-                            encoladas.Add(jsonAcciones);
+                            sw2.Restart();
+                            client.SendLista(b.GetListaJugadores(), jsonAcciones);
+                            Console.WriteLine("SendLista demoro:  " + sw2.ElapsedMilliseconds + " ms");
+                            Console.WriteLine("Long: " + jsonAcciones.Length);
                         }
-                        client.SendLista(b.GetListaJugadores(), jsonAcciones);
+                        
+
                     }
                     
                 }
+                //Console.WriteLine("Ejecutar turno:  " + sw.ElapsedMilliseconds + " ms");
             }
             catch( Exception ex)
             {
@@ -95,6 +116,7 @@ namespace BusinessLogicLayer
             BLServiceClient serviceClient = new BLServiceClient();
             ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
             Batalla b = obtenerBatalla(msg.Jugador);
+            if (b == null) return;
             b.tablero.agregarEdificio(new Edificio { tipo_id = msg.Id, jugador = msg.Jugador, posX = msg.PosX, posY = msg.PosY });
             AccionMsg msgSend = new AccionMsg { Accion = "AddEd", Id = msg.Id, PosX = msg.PosX, PosY = msg.PosY };
             client.Send(JsonConvert.SerializeObject(msgSend));
@@ -116,11 +138,12 @@ namespace BusinessLogicLayer
         {
             ServiceInteraccionClient client = getCliente();
             Batalla b = obtenerBatalla(jugador);
+            if (b == null) return;
             if (b.agregarUnidad(tipo_id, jugador, unit_id, posX, posY) == 1)
             {
 
-
-                var jsonObj = new { A = "AddUn", Id = tipo_id, PosX = posX, PosY = posY, Unit_id = unit_id };
+                Entidad u = b.tablero.GetEntidadDesplegada(unit_id);
+                var jsonObj = new  AccionMsg{ Accion = "AddUn", Id = tipo_id, PosX = posX, PosY = posY, IdUnidad = unit_id,Jugador = jugador};
                 string s = JsonConvert.SerializeObject(jsonObj);
 
                 client.SendLista(b.GetListaJugadores(), s);
@@ -131,11 +154,10 @@ namespace BusinessLogicLayer
 
         private Batalla obtenerBatalla(string jugador)
         {
-            /*if (!batallasPorJugador.ContainsKey(jugador))
+            if (!batallasPorJugador.ContainsKey(jugador))
             {
-                batallasPorJugador.Add(jugador, new Batalla(jugador, ""));
-                
-            }*/
+                return null;
+            }
             Batalla b = batallasPorJugador[jugador];
             return b;
         }
@@ -176,12 +198,12 @@ namespace BusinessLogicLayer
 
         public void IniciarBatalla(string tenant, InfoAtaque info)
         {
-            Juego datosAtaq = blJuego.GetJuegoUsuarioSinActualizar(tenant, info.Jugador);
+            Juego datosAtaq = blJuego.GetJuegoUsuarioSinGuardar(tenant, info.Jugador);
             Jugador jAt = new Jugador();
 
             jAt.CargarDesdeJuego(datosAtaq);
 
-            Juego datosDef = blJuego.GetJuegoUsuarioSinActualizar(tenant, info.Enemigo);
+            Juego datosDef = blJuego.GetJuegoUsuarioSinGuardar(tenant, info.Enemigo);
             Jugador jDef = new Jugador();
             if (datosDef != null)
             {
@@ -201,10 +223,16 @@ namespace BusinessLogicLayer
             }
             
             Batalla b = new Batalla(jAt, jDef);
-            batallas.Add(b);
+
+            if (batallasPorJugador.ContainsKey(info.Jugador)){
+                batallasPorJugador[info.Jugador].EnCurso = false;
+            }
+            if (batallasPorJugador.ContainsKey(info.Enemigo)){
+                batallasPorJugador[info.Enemigo].EnCurso = false;
+            }
             batallasPorJugador[info.Jugador] = b;
             batallasPorJugador[info.Enemigo] = b;
-
+            batallas.Add(b);
             notificarAsync(info, "IniciarAtaque");
         }
 
@@ -256,6 +284,9 @@ namespace BusinessLogicLayer
             }
             return null;
         }
+
+
+        
     }
 
 

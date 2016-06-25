@@ -44,7 +44,7 @@ namespace BusinessLogicLayer
         public bool DesarrollarTecnologia(string tenant, string idJugador, int idTecnologia)
         {
             // pedir tenant
-            Juego j = blHandler.GetJuegoUsuarioSinActualizar(tenant, idJugador);
+            Juego j = blHandler.GetJuegoUsuarioSinGuardar(tenant, idJugador);
 
             
             var estadoT = j.DataJugador.EstadoTecnologias;
@@ -54,7 +54,7 @@ namespace BusinessLogicLayer
             EstadoData estado = new EstadoData() { Estado = EstadoData.EstadoEnum.C, Fin = DateTime.UtcNow. AddSeconds(Tec.Tiempo) };
             estadoT[idTecnologia.ToString()] = estado;
             // guardar juego
-            blHandler.GuardarJuego(j);
+            blHandler.GuardarJuegoAsync(j);
             return true;
         }
 

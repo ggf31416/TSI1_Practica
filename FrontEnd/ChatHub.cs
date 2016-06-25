@@ -36,7 +36,7 @@ namespace FrontEnd
         {
             foreach (string user in nombreUsuarios)
             {
-                Clients.User(user).broadcastMessage("Service", msg);
+                Clients.Group(user).broadcastMessage("Service", msg);
             }
         }
         

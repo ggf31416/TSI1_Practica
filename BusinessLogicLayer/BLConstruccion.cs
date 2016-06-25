@@ -61,34 +61,86 @@ namespace BusinessLogicLayer
             }
         }
 
+        // retorna min(cantidad que podemos hacer con los recursos existentes, solicitada)
+        private int validarUnidad(Juego j, int idUnidad,int cantidadSolicitada)
+        {
+            //Checkear si tiene recursos suficientes
+            var recursos = j.DataJugador.EstadoRecursos;
+
+            Dictionary<int, int> maxUnidadesPorRecurso = new Dictionary<int, int>();
+            
+            var tipo = j.TipoUnidades.FirstOrDefault(u => u.Id == idUnidad);
+            if (tipo == null) return 0;
+            foreach (var costo in tipo.Costos)
+            {
+                maxUnidadesPorRecurso[costo.IdRecurso] = ((int)recursos[costo.IdRecurso.ToString()].Total) / costo.Valor;
+            }
+            List<int> aux = maxUnidadesPorRecurso.Values.ToList();
+            aux.Add(cantidadSolicitada);
+            return  aux.Min();
+        }
+
+        private bool agregarUnidad_ModificarJuego(Juego j, EUInputData euid)
+        {
+            var estadoUnidades = j.DataJugador.EstadoUnidades;
+            var estadoRecursos = j.DataJugador.EstadoRecursos;
+            TipoUnidad tipo = j.TipoUnidades.FirstOrDefault(t => t.Id == euid.IdTipoUnidad);
+
+            if (tipo == null) return false;
+
+            EstadoData EstadoData;
+            if (estadoUnidades.TryGetValue(euid.IdTipoUnidad.ToString(), out EstadoData))
+            {
+                long msDeberianFaltar = (long)EstadoData.Cantidad * tipo.TiempoConstruccion.Value * 100;
+                if (EstadoData.Faltante > msDeberianFaltar || EstadoData.Faltante < 0) // sanidad
+                {
+                    EstadoData.Fin = DateTime.UtcNow.AddMilliseconds(msDeberianFaltar); ;
+                }
+                EstadoData.Cantidad += euid.Cantidad;
+                EstadoData.Fin = EstadoData.Fin.AddMilliseconds(euid.Cantidad * tipo.TiempoConstruccion.Value * 100);
+            }
+            else
+            {
+                EstadoData = new Shared.Entities.EstadoData() { Id = euid.IdTipoUnidad, Cantidad = euid.Cantidad, Estado = EstadoData.EstadoEnum.C };
+                EstadoData.Fin = DateTime.UtcNow.AddMilliseconds((int)tipo.TiempoConstruccion * 100);
+            }
+            estadoUnidades[tipo.Id.ToString()] = EstadoData;
+            Shared.Entities.EstadoRecurso EstRec = new Shared.Entities.EstadoRecurso();
+            foreach (var costo in tipo.Costos)
+            {
+                estadoRecursos.TryGetValue(costo.IdRecurso.ToString(), out EstRec);
+                EstRec.Total = EstRec.Total - costo.Valor;
+
+                estadoRecursos[costo.IdRecurso.ToString()] = EstRec;
+            }
+            return true;
+
+        }
+
         public int EntrenarUnidad(EUInputData euid, string Tenant, string NombreJugador)
         {
             BLJuego blJuego = new BLJuego(new DALJuego());
-            blJuego.GetJuegoUsuario(Tenant, NombreJugador);
-
-            ValidarUnidad vU = _dal.EntrenarUnidad(euid.IdTipoUnidad, Tenant, NombreJugador);
-
-            //Checkear si tiene recursos suficientes
-            int cantidad = 0;
-            Dictionary<int, int> maxUnidadesPorRecurso = new Dictionary<int, int>();
-            foreach (var costo in vU.TipoUnidad.Costos)
+            Juego juego = blJuego.GetJuegoUsuarioSinGuardar(Tenant, NombreJugador);
+            if (juego == null)
             {
-                maxUnidadesPorRecurso[costo.IdRecurso] = vU.Recursos[costo.IdRecurso.ToString()] / costo.Valor;
+                return 0; // no tenemos datos del jugador, nos pasaron algo mal
             }
-            List<int> aux = maxUnidadesPorRecurso.Values.ToList();
-            aux.Add(euid.Cantidad);
-            cantidad = aux.Min();
+
+
+            int cantidad = validarUnidad(juego, euid.IdTipoUnidad, euid.Cantidad);
             if (cantidad > 0)
             {
                 EUInputData newEUID = new EUInputData();
                 newEUID.IdTipoUnidad = euid.IdTipoUnidad;
                 newEUID.Cantidad = cantidad;
-                if (_dal.PersistirUnidades(newEUID, Tenant, NombreJugador))
+                agregarUnidad_ModificarJuego(juego, newEUID);
+                if (blJuego.GuardarJuegoEsperar(juego))
                 {
                     return cantidad;
                 }
                 else
                 {
+                    Console.WriteLine("Algo salio mal al guardar de vuelta el juego");
                     return 0;
                 }
             }

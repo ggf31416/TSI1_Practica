@@ -41,8 +41,20 @@ namespace BusinessLogicLayer
 
     }
 
+    public class PuntoRuta
+    {
+        [JsonProperty(DefaultValueHandling=DefaultValueHandling.Include)]
+        public int x { get; set; }
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
+        public int y { get; set; }
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
+        public int t { get; set; }
+    }
+
+
     public class AccionMoverUnidad : AccionMsg
     {
-        public EpPathFinding.GridPos[] Path { get; set; }
+        //public EpPathFinding.GridPos[] Path { get; set; }
+        public PuntoRuta[] Path { get; set; }
     }
 }

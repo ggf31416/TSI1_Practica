@@ -163,14 +163,10 @@ namespace DataAccessLayer
                 Shared.Entities.Juego juego = query.First();
                 Shared.Entities.ValidarConstruccion validarConstruccion = new Shared.Entities.ValidarConstruccion();
                 validarConstruccion.Tablero = juego.Tablero;
-                foreach(var tipoEdi in juego.TipoEdificios)
-                {
-                    if (tipoEdi.Id == IdEdificio)
-                    {
-                        validarConstruccion.TipoEdificio = tipoEdi;
-                        break;
-                    }
-                }
+
+                validarConstruccion.TipoEdificio = juego.TipoEdificios.FirstOrDefault(t => t.Id == IdEdificio);
+                if (validarConstruccion.TipoEdificio == null) return null; // el edificio es invalido
+
                 validarConstruccion.Recursos = new Dictionary<string, int>();
                 foreach(var recur in juego.DataJugador.EstadoRecursos)
                 {
@@ -195,15 +191,10 @@ namespace DataAccessLayer
             if (query.Count() > 0)
             {
                 Shared.Entities.Juego juego = query.First();
-                Shared.Entities.TipoEdificio TipoEdificio = new Shared.Entities.TipoEdificio();
-                foreach (var tipoEdi in juego.TipoEdificios)
-                {
-                    if (tipoEdi.Id == ceid.IdTipoEdificio)
-                    {
-                        TipoEdificio = tipoEdi;
-                        break;
-                    }
-                }
+                Shared.Entities.TipoEdificio TipoEdificio = juego.TipoEdificios.FirstOrDefault(e => e.Id == ceid.IdTipoEdificio);
+                if (TipoEdificio == null) return false; // edificio invalido
+
+
                 foreach(var TableroCelda in juego.Tablero.Celdas)
                 {
                     if (TableroCelda.PosColumna == ceid.PosColumna && TableroCelda.PosFila == ceid.PosFila)
@@ -231,7 +222,7 @@ namespace DataAccessLayer
             }
         }
 
-        public Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad, string Tenant, string NombreJugador)
+        /*public Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad, string Tenant, string NombreJugador)
         {
             database = client.GetDatabase(Tenant);
             collection = database.GetCollection<Shared.Entities.Juego>("juego_usuario");
@@ -322,7 +313,7 @@ namespace DataAccessLayer
             {
                 return false;
             }
-        }
+        }*/
 
         //public void AddPrueba(Prueba prueba)
         //{

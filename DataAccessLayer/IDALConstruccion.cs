@@ -24,8 +24,8 @@ namespace DataAccessLayer
 
         bool PersistirEdificio(Shared.Entities.CEInputData ceid, string Tenant, string NombreJugador);
 
-        Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad, string Tenant, string NombreJugador);
+        //Shared.Entities.ValidarUnidad EntrenarUnidad(int IdUnidad, string Tenant, string NombreJugador);
 
-        bool PersistirUnidades(Shared.Entities.EUInputData euid, string Tenant, string NombreJugador);
+        //bool PersistirUnidades(Shared.Entities.EUInputData euid, string Tenant, string NombreJugador);
     }
 }
