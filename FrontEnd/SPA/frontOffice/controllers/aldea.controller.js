@@ -152,6 +152,25 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                     $scope.style = { "background-image": "url('" + $rootScope.tablero.ImagenFondo + "')" };
 
                                     $rootScope.tablero.enConstruccion = "https://storagegabilo.blob.core.windows.net/imagenes/gente_en_obra.png";
+
+                                    for (var i = 0; i < $rootScope.tablero.Columnas.length; i++) {
+                                        for (var j = 0; j < $rootScope.tablero.Columnas[i].Fila.length; j++) {
+                                            var casilla = $rootScope.tablero.Columnas[i].Fila[j];
+                                            if (casilla.EstadoData.Estado = 1 && casilla.Id != -1) {
+                                                var json = { PosFila: i, PosColumna: j, IdTipoEdificio: casilla.Id }
+
+                                                $scope.aux = {};
+                                                $scope.aux.edificio = findEdificioInArray($rootScope.listaEdificios, casilla.Id)[0];
+                                                $scope.aux.casilla = json;
+
+                                                casilla.Id = -5;
+
+                                                var copyEdificio = jQuery.extend(true, {}, $scope.aux);
+
+                                                setTimeout(addEdificioTimeout, casilla.EstadoData.Faltante, copyEdificio);
+                                            }
+                                        }
+                                    }
                                     //timer para actualizar recursos
                                     $interval(function () {
                                         for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
