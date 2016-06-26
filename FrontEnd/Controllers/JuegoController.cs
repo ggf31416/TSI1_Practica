@@ -791,6 +791,22 @@ namespace FrontEnd.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult GetClanJugador(string tenant)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+
+                string ret = client.GetClanJugador(tenant, Request.Cookies["clienteId"].Value);
+
+                return Json(new { success = true, ret = ret }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 
 }

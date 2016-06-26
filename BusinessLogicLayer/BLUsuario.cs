@@ -63,5 +63,10 @@ namespace BusinessLogicLayer
         {
             return _dal.EnviarRecursos(tributos, IdJugadorDestino, Tenant, IdJugador);
         }
+
+        public string GetClanJugador(string Tenant, string IdJugador)
+        {
+            return _dal.GetClanJugador(Tenant, IdJugador);
+        }
     }
 }
