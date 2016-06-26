@@ -419,19 +419,18 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                         }
                         $scope.timerTecnologia = $interval(function () {
                             $interval.cancel($scope.timerTecnologia);
-                            aldeasService.getEntidadesActualizadas()
-                                                    .then(function (data) {
-                                                        console.debug(data);
-                                                        $rootScope.listaEdificios = data.TipoEdificios;
-                                                        console.debug($rootScope.listaEdificios);
-                                                        $rootScope.listaUnidades = data.TipoUnidades;
-
-                                                    })
-                                                    .catch(function (err) {
-                                                        alert(err)
-                                                    });
+                            aldeasService.getAllData()
+                                .then(function (data) {
+                                    console.debug(data);
+                                    $rootScope.listaEdificios = data.TipoEdificios;
+                                    $rootScope.listaUnidades = data.TipoUnidades;
+                                    $rootScope.listaTecnologias = data.Tecnologias;
+                                })
+                                .catch(function (err) {
+                                    alert(err)
+                                });
                             $scope.auxTecnologia = undefined;
-                        }, $scope.modeloTecnologia.TiempoConstruccion * 1000);
+                        }, $scope.modeloTecnologia.TiempoConstruccion * 1000 + 5000);
                     }
                     else
                         alert("No es posible desarrollar la tecnologia");
