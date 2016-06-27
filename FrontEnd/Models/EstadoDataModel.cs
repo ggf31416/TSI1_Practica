@@ -9,7 +9,8 @@ namespace FrontEnd.Models
     {
         public Shared.Entities.EstadoData.EstadoEnum Estado { get; set; }
         public int Id { get; set; }
-        public int Tiempo { get; set; }
+        public DateTime Fin { get; set; }
         public int Cantidad { get; set; }
+        public long Faltante { get; set; }
     }
 }

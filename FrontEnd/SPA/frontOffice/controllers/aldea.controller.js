@@ -1,9 +1,9 @@
 ﻿(function () {
 'use strict';
 angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService", "juegoService",
-        "edificiosService", "unidadesService", '$scope', '$rootScope', '$interval','$window',
+        "edificiosService", "unidadesService", '$scope', '$rootScope', '$interval', '$timeout', '$window',
 
-    function ($http, $q, aldeasService, juegoService, edificiosService, unidadesService, $scope, $rootScope, $interval,$window) {
+    function ($http, $q, aldeasService, juegoService, edificiosService, unidadesService, $scope, $rootScope, $interval, $timeout, $window) {
 
         //--------------Inicializacion de variables---------------------
         
@@ -152,6 +152,25 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                     $scope.style = { "background-image": "url('" + $rootScope.tablero.ImagenFondo + "')" };
 
                                     $rootScope.tablero.enConstruccion = "https://storagegabilo.blob.core.windows.net/imagenes/gente_en_obra.png";
+
+                                    for (var i = 0; i < $rootScope.tablero.Columnas.length; i++) {
+                                        for (var j = 0; j < $rootScope.tablero.Columnas[i].Fila.length; j++) {
+                                            var casilla = $rootScope.tablero.Columnas[i].Fila[j];
+                                            if (casilla.EstadoData.Estado = 1 && casilla.Id != -1) {
+                                                var json = { PosFila: i, PosColumna: j, IdTipoEdificio: casilla.Id }
+
+                                                $scope.aux = {};
+                                                $scope.aux.edificio = findEdificioInArray($rootScope.listaEdificios, casilla.Id)[0];
+                                                $scope.aux.casilla = json;
+
+                                                casilla.Id = -5;
+
+                                                var copyEdificio = jQuery.extend(true, {}, $scope.aux);
+
+                                                setTimeout(addEdificioTimeout, casilla.EstadoData.Faltante, copyEdificio);
+                                            }
+                                        }
+                                    }
                                     //timer para actualizar recursos
                                     $interval(function () {
                                         for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
@@ -228,16 +247,16 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
 
         $scope.editCell = function (fila, columna, casilla) {
             if (casilla.Id == -1) {
-                if ($scope.aux == undefined){
+                //if ($scope.aux == undefined){
                     //Abro cuadro para contruir
                     $scope.editCasilla = casilla;
                     $scope.editCasilla.fila = fila;
                     $scope.editCasilla.columna = columna;
                     var id = casilla.Id;
                     $('#dialogoConstruir').modal('show');
-                } else {
-                    alert("Ya hay un edificio en construccion");
-                }
+                //} else {
+                //    alert("Ya hay un edificio en construccion");
+                //}
             } else {
                 $scope.editCasilla = casilla;
                 var id = casilla.Id;
@@ -340,7 +359,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
         }
 
         $scope.abrirCrearClan = function () {
-            //Abro cuadro de tecnologias
+            //Abro cuadro de clanes
             $('#dialogoCrearClan').modal('show');
         }
 
@@ -428,73 +447,102 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             return rec ? rec.Value : 0;
         }
 
+        function addEdificioTimeout(data) {
+            console.debug(data);
+            var keys = Object.keys($rootScope.dataJugador.EstadoRecursos);
+            for (var j = 0; j < keys.length; j++) {
+                $rootScope.dataJugador.EstadoRecursos[keys[j]].Produccion = $rootScope.dataJugador.EstadoRecursos[keys[j]].Produccion + getProduccion(data.edificio, keys[j]);
+            }
+            console.debug($rootScope.tablero);
+            var casilla = $rootScope.tablero.Columnas[data.casilla.PosFila].Fila[data.casilla.PosColumna];
+            casilla.Id = data.edificio.Id;
+        }
+
         $scope.addEdificio = function (id) {
             var fila = $scope.editCasilla.fila;
             var columna = $scope.editCasilla.columna;
             var json = { PosFila: fila, PosColumna: columna, IdTipoEdificio: id }
             var data = aldeasService.construirEdificio(json);
             if (data.ret) {
-                $scope.aux = findEdificioInArray($rootScope.listaEdificios, id)[0];
+                $scope.aux = {};
+                $scope.aux.edificio = findEdificioInArray($rootScope.listaEdificios, id)[0];
+                $scope.aux.casilla = json;
                 for (var i = 0; i < $rootScope.dataJugador.EstadoRecursos.length; i++) {
                     $rootScope.dataJugador.EstadoRecursos[i].Total = $rootScope.dataJugador.EstadoRecursos[i].Total - getCosto($scope.aux, $rootScope.dataJugador.EstadoRecursos[i].Id);
                 }
                 $scope.editCasilla.Id = -5;
-                $scope.timerConstruccion = $interval(function () {
-                    var keys = Object.keys($rootScope.dataJugador.EstadoRecursos);
-                    for (var j = 0; j < keys.length; j++) {
-                        $rootScope.dataJugador.EstadoRecursos[keys[j]].Produccion = $rootScope.dataJugador.EstadoRecursos[keys[j]].Produccion + getProduccion($scope.aux, keys[j]);
-                    }
-                    $scope.editCasilla.Id = $scope.aux.Id;
-                    $interval.cancel($scope.timerConstruccion);
-                    $scope.aux = undefined;
-                }, $scope.aux.TiempoConstruccion * 1000);
+
+                var copyEdificio = jQuery.extend(true, {}, $scope.aux);
+                console.debug(copyEdificio);
+
+                setTimeout(addEdificioTimeout, $scope.aux.edificio.TiempoConstruccion * 1000, copyEdificio);
+
+                //$scope.timerConstruccion = $interval(function () {
+                //    var keys = Object.keys($rootScope.dataJugador.EstadoRecursos);
+                //    for (var j = 0; j < keys.length; j++) {
+                //        $rootScope.dataJugador.EstadoRecursos[keys[j]].Produccion = $rootScope.dataJugador.EstadoRecursos[keys[j]].Produccion + getProduccion($scope.aux, keys[j]);
+                //    }
+                //    $scope.editCasilla.Id = $scope.aux.Id;
+                //    $interval.cancel($scope.timerConstruccion);
+                //    $scope.aux = undefined;
+                //}, $scope.aux.TiempoConstruccion * 1000);
             }
             else
                 alert("No es posible construir en ese lugar");
             $('#dialogoConstruir').modal('hide');
         }
 
-        $scope.entrenarUnidades = function () {
-            if (!$scope.auxUnidad) {
-                for (var i = 0; i < $scope.unidadesAconstruir.length; i++) {
-                    var json = {
-                        IdTipoUnidad: parseInt($scope.unidadesAconstruir[i].Id),
-                        Cantidad: parseInt( $scope.unidadesAconstruir[i].Cantidad)
-                    };
-                    var data = aldeasService.entrenarUnidades(json);
-                    if (data.ret) {
-                        $scope.auxUnidad = $rootScope.dataJugador.EstadoUnidades[$scope.unidadesAconstruir[i].Id];
-                        
-                        //de donde se saca el tiempo:
-                        $scope.modeloUnidad = findEdificioInArray($rootScope.listaUnidades, $scope.unidadesAconstruir[i].Id)[0];
+        function entrenarUnidadTimeout(unidad) {
+            console.debug(unidad);
+            var unidadAux = $rootScope.dataJugador.EstadoUnidades[unidad.Id];
+            unidadAux.Cantidad = unidadAux.Cantidad + unidad.CantAConstruir;
+            unidadAux.Estado = 0;
+        }
 
-                        if ($scope.auxUnidad == undefined) {
-                            $scope.auxUnidad ={
-                                            Cantidad:0,
-                                            Estado:0,
-                                            Id:$scope.unidadesAconstruir[i].Id,
-                                            Tiempo:$scope.modeloUnidad.TiempoConstruccion
-                            }
-                            $rootScope.dataJugador.EstadoUnidades[$scope.unidadesAconstruir[i].Id] = $scope.auxUnidad;
-                        }
-                        $scope.auxUnidad.CantAConstruir = parseInt($scope.unidadesAconstruir[i].Cantidad);
+        $scope.entrenarUnidades = function () {
+            for (var i = 0; i < $scope.unidadesAconstruir.length; i++) {
+                var json = {
+                    IdTipoUnidad: parseInt($scope.unidadesAconstruir[i].Id),
+                    Cantidad: parseInt( $scope.unidadesAconstruir[i].Cantidad)
+                };
+                var data = aldeasService.entrenarUnidades(json);
+                if (data.ret) {
+                    $scope.auxUnidad = $rootScope.dataJugador.EstadoUnidades[$scope.unidadesAconstruir[i].Id];
                         
-                        for (var j = 0; j < $rootScope.dataJugador.EstadoRecursos.length; j++) {
-                            $rootScope.dataJugador.EstadoRecursos[j].Total = $rootScope.dataJugador.EstadoRecursos[j].Total - getCosto($scope.auxUnidad, $rootScope.dataJugador.EstadoRecursos[j].Id);
+                    //de donde se saca el tiempo:
+                    $scope.modeloUnidad = findEdificioInArray($rootScope.listaUnidades, $scope.unidadesAconstruir[i].Id)[0];
+
+                    if ($scope.auxUnidad == undefined) {
+                        $scope.auxUnidad ={
+                                        Cantidad:0,
+                                        Estado:0,
+                                        Id:$scope.unidadesAconstruir[i].Id,
+                                        Tiempo:$scope.modeloUnidad.TiempoConstruccion
                         }
-                        $scope.timerUnidad = $interval(function () {
-                            $interval.cancel($scope.timerUnidad);
-                            console.debug($scope.auxUnidad);
-                            $scope.auxUnidad.Cantidad = $scope.auxUnidad.Cantidad + $scope.auxUnidad.CantAConstruir;
-                            $scope.auxUnidad.Estado = 0;
-                            $scope.auxUnidad = undefined;
-                        }, $scope.modeloUnidad.TiempoConstruccion * 100 * $scope.auxUnidad.CantAConstruir);
+                        $rootScope.dataJugador.EstadoUnidades[$scope.unidadesAconstruir[i].Id] = $scope.auxUnidad;
                     }
-                    else
-                        alert("No es posible construir la unidad");
+                    $scope.auxUnidad.CantAConstruir = parseInt($scope.unidadesAconstruir[i].Cantidad);
+                        
+                    for (var j = 0; j < $rootScope.dataJugador.EstadoRecursos.length; j++) {
+                        $rootScope.dataJugador.EstadoRecursos[j].Total = $rootScope.dataJugador.EstadoRecursos[j].Total - getCosto($scope.auxUnidad, $rootScope.dataJugador.EstadoRecursos[j].Id);
+                    }
+                    var copyUnidad = jQuery.extend(true, {}, $scope.auxUnidad);
+                    console.debug(copyUnidad);
+
+                    setTimeout(entrenarUnidadTimeout, $scope.modeloUnidad.TiempoConstruccion * 100 * $scope.auxUnidad.CantAConstruir, copyUnidad);
+
+                    //$scope.timerUnidad = $interval(function () {
+                    //    $interval.cancel($scope.timerUnidad);
+                    //    console.debug($scope.auxUnidad);
+                        //$scope.auxUnidad.Cantidad = $scope.auxUnidad.Cantidad + $scope.auxUnidad.CantAConstruir;
+                        //$scope.auxUnidad.Estado = 0;
+                        //$scope.auxUnidad = undefined;
+                    //}, $scope.modeloUnidad.TiempoConstruccion * 100 * $scope.auxUnidad.CantAConstruir);
                 }
-            } else
-                alert("Ya hay otra unidad actualizando");
+                else
+                    alert("No es posible construir la unidad");
+            }
+           
             $('#dialogoDatosEdificio').modal('hide');
         }
 
