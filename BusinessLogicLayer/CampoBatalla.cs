@@ -24,9 +24,11 @@ namespace BusinessLogicLayer
         private Dictionary<string, Entidad> entidades = new Dictionary<string, Entidad>();
         private Dictionary<string, ResultadoBusqPath> paths = new Dictionary<string, ResultadoBusqPath>();
         private static int edificio_size = 4;
-        private static int tablero_size = 10;
-        private int sizeX = tablero_size * edificio_size;
-        private int sizeY = tablero_size * edificio_size;
+        private int tablero_size = 10;
+        private int sizeX; 
+        private int sizeY;
+        private int offsetX;
+        private int offsetY;
 
         private bool[][] matrixEdificios;
         private bool[][] matrixUnidades;
@@ -54,11 +56,16 @@ namespace BusinessLogicLayer
 
         public int Turno { get; private set; }  = 0;
 
-        public CampoBatalla()
+        public CampoBatalla(int sizeX,int sizeY,int offsetX, int offsetY)
         {
+            this.sizeX = 40 + offsetX;//sizeX;
+            this.sizeY = 40 + offsetY; // sizeY;
+            this.offsetX = offsetX;
+            this.offsetY = offsetY;
             param = configurar();
             sw = Stopwatch.StartNew();
             nanosPrevio = sw.ElapsedMilliseconds;
+
         }
 
         public bool QuedanUnidadesJugador(string jugador)
@@ -74,14 +81,21 @@ namespace BusinessLogicLayer
         // agregar edificios masivo
         public void agregarEdificios(IEnumerable<Edificio> lst)
         {
-            edificios.AddRange(lst);
+           foreach(Edificio e in lst)
+            {
+                agregarEdificio(e);
+            }
+            hacerUnwalkableEdificios(); 
 
         }
 
         // agrega edificio (que ya debe tener posicion) y actualiza la grilla
         public void agregarEdificio(Edificio ed)
         {
+            ed.posX +=  offsetX;
+            ed.posY +=  offsetY;
             edificios.Add(ed);
+            this.entidades.Add(ed.posXr + "#" + ed.posYr, ed);
             walkableFalse(ed);  
         }
         
@@ -459,85 +473,94 @@ namespace BusinessLogicLayer
 
         public void tickTiempo()
         {
-            Acciones.Clear();
-            //ResultadoBusqPath[] res = buscarRutaHaciaEnemigosCercanos();
-            // mover unidades
-            long deltaT = sw.ElapsedMilliseconds - nanosPrevio;
-            nanosPrevio += deltaT;
 
-            var muertas = new List<Entidad>();
-
-            foreach (Unidad u in entidades.Values)
+            try
             {
-                if (u.estaViva)
+                Acciones.Clear();
+                //ResultadoBusqPath[] res = buscarRutaHaciaEnemigosCercanos();
+                // mover unidades
+                long deltaT = sw.ElapsedMilliseconds - nanosPrevio;
+                nanosPrevio += deltaT;
+
+                var muertas = new List<Entidad>();
+
+                foreach (Entidad e in entidades.Values)
                 {
-                    long t_restante = deltaT;
-
-                    // buscar target mas cercano
-                    if (!estoyEnRango(u))//(!paths.ContainsKey(u.id) || u.target == null)
+                    Unidad u = e as Unidad;
+                    if (u != null && u.estaViva)
                     {
-                        string t_ant = u.target;
-                        var p = targetMasCercano(u);
-                        if (!String.Equals(u.target, t_ant))
+                        long t_restante = deltaT;
+
+                        // buscar target mas cercano
+                        if (!estoyEnRango(u))//(!paths.ContainsKey(u.id) || u.target == null)
                         {
-                            Console.WriteLine("Cambio target " + t_ant + " -> " + u.target);
+                            string t_ant = u.target;
+                            var p = targetMasCercano(u);
+                            if (!String.Equals(u.target, t_ant))
+                            {
+                                Console.WriteLine("Cambio target " + t_ant + " -> " + u.target);
+                            }
+                            paths[u.id] = p;
                         }
-                        paths[u.id] = p;
+
+                        // simular movimiento hacia el target
+                        if (paths.ContainsKey(u.id))
+                        {
+                            ResultadoBusqPath p = paths[u.id];
+                            // actualizo las posiciones de las unidades en funcion de sus movientos
+                            t_restante = simularMovimiento(deltaT, u, p);
+
+                            // detener si estoy en rango
+                            if (!u.puedeDispararEnMovimiento && estoyEnRango(u))
+                            {
+                                p = detener(u);
+                            }
+
+                            PuntoRuta[] ruta = fromPath(p, u, 1).ToArray();
+                            var accM = new AccionMoverUnidad() { IdUnidad = u.id, Accion = "MoveUnit", PosX = u.posXr, PosY = u.posYr, Path = ruta, Target = u.target };
+                            Acciones.Add(accM);
+                            //var acc = new AccionMsg() { Accion = "PosUnit", IdUnidad = u.id, PosX = u.posXr, PosY = u.posYr };
+                            //Acciones.Add(acc);
+                        }
+
+                        // atacar
+                        if (u.target != null)
+                        {
+                            if (!entidades.ContainsKey(u.target))
+                            {
+                                Console.WriteLine(u.target + " no existe");
+                            }
+                            else if (entidades[u.target].estaViva)
+                            {
+                                Entidad target = entidades[u.target];
+                                atacarEntidad(u, target, t_restante);
+                            }
+                            else
+                            {
+                                Console.WriteLine(u.target + " no esta viva");
+                                u.target = null;
+                            }
+
+                        }
+                        // actualizo posiciones unidades para pathfinding
+                        this.param = configurar();
+                    }
+                    else
+                    {
+                        if (Turno % 10 == 0) // notificamos de la muerte por si se perdio la notificacion en la red
+                        {
+                            AccionMsg notif = new AccionMsg { Accion = "UpdateHP", IdUnidad = e.id, ValorN = e.hp };
+                            Acciones.Add(notif);
+                        }
                     }
 
-                    // simular movimiento hacia el target
-                    if (paths.ContainsKey(u.id))
-                    {
-                        ResultadoBusqPath p = paths[u.id];
-                        // actualizo las posiciones de las unidades en funcion de sus movientos
-                        t_restante = simularMovimiento(deltaT, u, p);
-
-                        // detener si estoy en rango
-                        if (!u.puedeDispararEnMovimiento && estoyEnRango(u))
-                        {
-                            p = detener(u);
-                        }
-
-                        PuntoRuta[] ruta = fromPath(p, u, 1).ToArray();
-                        var accM = new AccionMoverUnidad() { IdUnidad = u.id, Accion = "MoveUnit", PosX = u.posXr, PosY = u.posYr, Path = ruta, Target = u.target };
-                        Acciones.Add(accM);
-                        //var acc = new AccionMsg() { Accion = "PosUnit", IdUnidad = u.id, PosX = u.posXr, PosY = u.posYr };
-                        //Acciones.Add(acc);
-                    }
-
-                    // atacar
-                    if (u.target != null)
-                    {
-                        if (!entidades.ContainsKey(u.target))
-                        {
-                            Console.WriteLine(u.target + " no existe");
-                        }
-                        else if (entidades[u.target].estaViva)
-                        {
-                            Entidad target = entidades[u.target];
-                            atacarEntidad(u, target, t_restante);
-                        }
-                        else 
-                        {
-                            Console.WriteLine(u.target + " no esta viva");
-                            u.target = null;
-                        }
-
-                    }
-                    // actualizo posiciones unidades para pathfinding
-                    this.param = configurar();
                 }
-                else
-                {
-                    if (Turno % 10 == 0) // notificamos de la muerte por si se perdio la notificacion en la red
-                    {
-                        AccionMsg notif = new AccionMsg { Accion = "UpdateHP", IdUnidad = u.id, ValorN = u.hp };
-                        Acciones.Add(notif);
-                    }
-                }
-
+                Turno++;
             }
-            Turno++;
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
 
         

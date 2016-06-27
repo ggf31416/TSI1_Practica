@@ -9,6 +9,12 @@ namespace FrontEnd
 {
     public class ChatHub : Hub
     {
+
+        public ChatHub()
+        {
+            
+        }
+
         public void send(string name, string message)
         {
             Console.WriteLine(name + " -> " + message);
@@ -45,6 +51,7 @@ namespace FrontEnd
         {
             var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);
             Groups.Add(Context.ConnectionId, userName);
+
             return base.OnConnected();
         }
 

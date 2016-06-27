@@ -20,6 +20,7 @@ namespace BusinessLogicLayer
         public List<TipoUnidad> tiposUnidad = new List<TipoUnidad>();
 
 
+
         /*public void Inicializar(Shared.Entities.Juego juego)
         {
             foreach(var entidad in juego.TipoEntidad)
@@ -54,10 +55,12 @@ namespace BusinessLogicLayer
                     this.Unidades.Add(cu.UnidadId, cu);
                 }
             }
+            CargarEdificios(jj.Tablero);
         }
 
         public void CargarEdificios(Tablero miBase)
         {
+            
             if (miBase == null) return; // programacion defensiva....
             var ocupadas = miBase.Celdas.Where(c => c.IdTipoEdificio.HasValue && c.IdTipoEdificio >= 0);
             foreach(TableroCelda tc in ocupadas)
@@ -70,7 +73,9 @@ namespace BusinessLogicLayer
                     e.jugador = this.Id;
                     e.posX = tc.PosColumna.Value * e.sizeX;
                     e.posY = tc.PosFila.Value * e.sizeY;
+                    this.Edificios.Add(e);
                 }
+                
             }
         }
 

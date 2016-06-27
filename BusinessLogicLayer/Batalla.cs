@@ -38,18 +38,14 @@ namespace BusinessLogicLayer
             return new Dictionary<int, int>();
         }
 
-        public Batalla(string atacante,string defensor)
+    
+
+        public Batalla(Tablero t,Jugador atacante,Jugador defensor)
         {
-            //inicializar();
-            this.tablero = new CampoBatalla();
-            this.EnCurso = true;
-
-        }
-
-        public Batalla(Jugador atacante,Jugador defensor)
-        {
-
-            this.tablero = new CampoBatalla();
+            int sizeTableroX = t.CantColumnas.GetValueOrDefault();
+            int sizeTableroY = t.CantFilas.GetValueOrDefault();
+            int offSet = 4;
+            this.tablero = new CampoBatalla(sizeTableroX + 2 * offSet, sizeTableroY + 2 * offSet, offSet, offSet);
             this.tablero.JugadorDefensor = defensor.Id;
             this.EnCurso = true;
             this.defensor = defensor;
@@ -57,6 +53,8 @@ namespace BusinessLogicLayer
             jugadores.Add(defensor.Id, defensor);
             this.tiposEdificios = atacante.tiposEdificio;
             this.tiposUnidades = atacante.tiposUnidad;
+            tablero.agregarEdificios(defensor.Edificios);
+
             this.GrupoSignalR = "bat_" + this.defensor.Id;
             //inicializar();
         }
@@ -92,18 +90,6 @@ namespace BusinessLogicLayer
                 return 1;
             }
             return 0;
-        }
-
-        
-
-        void crearBatalla(Jugador atacante,Jugador defensor)
-        {
-            tablero = new CampoBatalla();
-            agregarUnidades(atacante);
-            agregarUnidades(defensor);
-            this.tiposUnidades = atacante.tiposUnidad;
-            this.tiposEdificios = atacante.tiposEdificio;
-            tablero.agregarEdificios(defensor.Edificios);
         }
 
         private Unidad getUnidadPorId(int tipoId,string idJugador)
@@ -194,8 +180,8 @@ namespace BusinessLogicLayer
             res.IdJugador = IdJugador;
             foreach(Jugador j in jugadores.Values)
             {
-                //bool incluirEdificios = j.Equals(defensor);
-                InfoJugador infoJ = j.GenerarInfo(false, false);
+                bool incluirEdificios = j.Id.Equals(defensor.Id);
+                InfoJugador infoJ = j.GenerarInfo(incluirEdificios, false);
                 res.jugadores.Add(infoJ.Id,infoJ);
 
             }

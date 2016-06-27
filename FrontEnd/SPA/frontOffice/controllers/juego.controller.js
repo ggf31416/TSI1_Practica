@@ -137,7 +137,7 @@
         function crearEdificioInmediato(data) {
             var idSprite =  data.Id;
             var edificio = $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
-            setInfoFromData(unit, data);
+            setInfoFromData(edificio, data);
             edificio.height = tile_size;
             edificio.width = tile_size;
             edificio.inputEnabled = true;
@@ -775,10 +775,10 @@
             var game = $scope.game;
             var proyectil = game.add.sprite( spriteAt.x, spriteAt.y,'def_proy');
             proyectil.targetSprite = spriteDest;
-            var angulo = game.physics.arcade.angleToXY(spriteAt,spriteDest.x,spriteDest.y);
+            var angulo = game.physics.arcade.angleToXY(spriteAt,spriteDest.x+spriteDest.width,spriteDest.y+spriteDest.height);
             proyectil.rotation = angulo + (45 * Math.PI /180);
-            proyectil.width = unit_size * 0.8;
-            proyectil.height = unit_size * 0.8;
+            proyectil.width = unit_size * 1.0;
+            proyectil.height = unit_size * 1.0;
             //proyectiles.add(proyectil);
 
             var animacionProyectil =  game.add.tween(proyectil);

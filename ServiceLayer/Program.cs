@@ -17,6 +17,7 @@ namespace ServiceLayer
         public static IBLConstruccion blConstruccionHandler;
         public static IBLUsuario blUsuarioHandler;
         public static IBLBatalla blBatalla;
+        public static IBLConexion blConexionHandler;
 
         static void Main(string[] args)
         {

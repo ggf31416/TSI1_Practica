@@ -222,7 +222,7 @@ namespace BusinessLogicLayer
                 jDef.Unidades.Add(cu.UnidadId,cu);
             }
             
-            Batalla b = new Batalla(jAt, jDef);
+            Batalla b = new Batalla(datosAtaq.Tablero,jAt, jDef);
 
             if (batallasPorJugador.ContainsKey(info.Jugador)){
                 batallasPorJugador[info.Jugador].EnCurso = false;
