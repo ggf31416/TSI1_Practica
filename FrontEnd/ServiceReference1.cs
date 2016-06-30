@@ -2529,6 +2529,9 @@ public interface IService1
     [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/EnviarRecursos", ReplyAction="http://tempuri.org/IService1/EnviarRecursosResponse")]
     int EnviarRecursos(Shared.Entities.RecursoAsociado[] tributos, string IdJugadorDestino, string Tenant, string IdJugador);
     
+    [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/GetClanJugador", ReplyAction="http://tempuri.org/IService1/GetClanJugadorResponse")]
+    string GetClanJugador(string Tenant, string IdJugador);
+    
     [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/GetEstadoBatalla", ReplyAction="http://tempuri.org/IService1/GetEstadoBatallaResponse")]
     string GetEstadoBatalla(string tenant, string idJugador);
     
@@ -2672,6 +2675,11 @@ public partial class Service1Client : System.ServiceModel.ClientBase<IService1>,
     public int EnviarRecursos(Shared.Entities.RecursoAsociado[] tributos, string IdJugadorDestino, string Tenant, string IdJugador)
     {
         return base.Channel.EnviarRecursos(tributos, IdJugadorDestino, Tenant, IdJugador);
+    }
+    
+    public string GetClanJugador(string Tenant, string IdJugador)
+    {
+        return base.Channel.GetClanJugador(Tenant, IdJugador);
     }
     
     public string GetEstadoBatalla(string tenant, string idJugador)

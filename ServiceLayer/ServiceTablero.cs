@@ -151,6 +151,12 @@ namespace ServiceLayer
         {
             return blUsuarioHandler.EnviarRecursos(tributos, IdJugadorDestino, Tenant, IdJugador);
         }
+
+        public string GetClanJugador(string Tenant, string IdJugador)
+        {
+            return blUsuarioHandler.GetClanJugador(Tenant, IdJugador);
+        }
+
         public string GetEstadoBatalla(string tenant,string idJugador)
         {
             return blBatalla.getJsonBatalla(tenant, idJugador);

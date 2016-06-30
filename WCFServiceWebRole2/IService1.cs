@@ -72,6 +72,9 @@ namespace WCFServiceWebRole2
         int EnviarRecursos(List<RecursoAsociado> tributos, string IdJugadorDestino, string Tenant, string IdJugador);
 
         [OperationContract]
+        string GetClanJugador(string Tenant, string IdJugador);
+
+        [OperationContract]
         string GetEstadoBatalla(string tenant, string idJugador);
 
         [OperationContract]

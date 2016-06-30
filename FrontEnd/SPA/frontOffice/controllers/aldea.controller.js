@@ -177,11 +177,18 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                             $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Total = $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Total + $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Produccion;
                                         }
                                     }, 1000);
-                                    console.debug($rootScope.dataJugador.Clan);
-                                    if ($rootScope.dataJugador.Clan != null) {
-                                        $scope.soyAdmin = aldeasService.soyAdministrador();
-                                    }
-
+                                    aldeasService.GetClanJugador()
+                                        .then(function (data) {
+                                            $rootScope.dataJugador.Clan = data;
+                                            console.debug($rootScope.dataJugador.Clan);
+                                            if ($rootScope.dataJugador.Clan != null) {
+                                                $scope.soyAdmin = aldeasService.soyAdministrador();
+                                            }
+                                        })
+                                        .catch(function (err) {
+                                            alert(err)
+                                        });
+                                   
                                 })
                                 .catch(function (err) {
                                     alert(err)
