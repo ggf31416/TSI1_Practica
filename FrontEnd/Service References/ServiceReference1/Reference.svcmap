@@ -22,7 +22,7 @@
     <MetadataSource Address="http://tsiservicetablero.cloudapp.net/Service1.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="Service1.xsd" MetadataType="Schema" ID="e7752d4b-52ea-411e-aa0b-6b37c147297b" SourceId="1" SourceUrl="http://tsiservicetablero.cloudapp.net/Service1.svc?xsd=xsd3" />
+    <MetadataFile FileName="Service1.xsd" MetadataType="Schema" ID="7748fd13-1b0b-488f-a10b-574e8b8ef2d9" SourceId="1" SourceUrl="http://tsiservicetablero.cloudapp.net/Service1.svc?xsd=xsd3" />
     <MetadataFile FileName="Service11.xsd" MetadataType="Schema" ID="ccf9413b-8c15-4b1c-ba74-1d775c2a498d" SourceId="1" SourceUrl="http://tsiservicetablero.cloudapp.net/Service1.svc?xsd=xsd1" />
     <MetadataFile FileName="Service1.disco" MetadataType="Disco" ID="20638660-195b-45b0-9fac-f6fbe3b32f01" SourceId="1" SourceUrl="http://tsiservicetablero.cloudapp.net/Service1.svc?disco" />
     <MetadataFile FileName="Service12.xsd" MetadataType="Schema" ID="9a434a09-8fc9-4866-adb6-4c33d8b99ea9" SourceId="1" SourceUrl="http://tsiservicetablero.cloudapp.net/Service1.svc?xsd=xsd2" />

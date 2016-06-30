@@ -590,7 +590,7 @@ namespace FrontEnd.Controllers
             catch(Exception e)
             {
 
-                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, ex = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -625,7 +625,7 @@ namespace FrontEnd.Controllers
             }
             catch(Exception e)
             {
-                return Json(new { success = false}, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, ex = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -641,9 +641,9 @@ namespace FrontEnd.Controllers
 
                 return Json(new { success = true }, JsonRequestBehavior.AllowGet);
             }
-            catch
+            catch(Exception e)
             {
-                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, ex = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -658,9 +658,9 @@ namespace FrontEnd.Controllers
 
                 return Json(new { success = true, ret = ret }, JsonRequestBehavior.AllowGet);
             }
-            catch
+            catch(Exception e)
             {
-                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, ex = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -688,9 +688,9 @@ namespace FrontEnd.Controllers
 
                 return Json(new { success = true, ret = ret }, JsonRequestBehavior.AllowGet);
             }
-            catch
+            catch(Exception e)
             {
-                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, ex = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -713,9 +713,9 @@ namespace FrontEnd.Controllers
 
                 return Json(new { success = true, ret = ret}, JsonRequestBehavior.AllowGet);
             }
-            catch
+            catch(Exception e)
             {
-                return Json(new { success = false}, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, ex = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -743,9 +743,9 @@ namespace FrontEnd.Controllers
 
                 return Json(new { success = true, ret = ret }, JsonRequestBehavior.AllowGet);
             }
-            catch
+            catch(Exception e)
             {
-                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, ex = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -760,9 +760,9 @@ namespace FrontEnd.Controllers
 
                 return Json(new { success = true, ret = ret}, JsonRequestBehavior.AllowGet);
             }
-            catch
+            catch(Exception e)
             {
-                return Json(new { success = false}, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, ex = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -785,9 +785,9 @@ namespace FrontEnd.Controllers
 
                 return Json(new { success = true, ret = ret}, JsonRequestBehavior.AllowGet);
             }
-            catch
+            catch(Exception e)
             {
-                return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+                return Json(new { success = false, ex = e.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FrontEnd.ServiceReference1;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -25,7 +26,7 @@ namespace FrontEnd.Controllers
             try
             {
                 string idJugador = Request.Cookies["clienteId"].Value;
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
                 bool puede =  client.DesarrollarTecnologia(tenant, idJugador,data.IdElemento);
                 return Json(new { sucess = puede });
             }
