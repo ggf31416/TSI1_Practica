@@ -54,7 +54,7 @@ namespace BusinessLogicLayer
             {
                 foreach (var prod in e.RecursosAsociados)
                 {
-                    recursos[prod.IdRecurso.ToString()].Produccion = prod.Valor;
+                    recursos[prod.IdRecurso.ToString()].Produccion += prod.Valor;
                 }
             }
         }
