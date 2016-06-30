@@ -192,7 +192,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
 
         $scope.getImgCasilla = function (id) {
             if (id == -1) {
-                return $rootScope.tablero.ImagenTerreno;
+                return "https://storagegabilo.blob.core.windows.net/imagenes/2_transparente.jpg";
             } if(id == -5){
                 return $rootScope.tablero.enConstruccion;
             } else {
@@ -529,7 +529,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                     var copyUnidad = jQuery.extend(true, {}, $scope.auxUnidad);
                     console.debug(copyUnidad);
 
-                    setTimeout(entrenarUnidadTimeout, $scope.modeloUnidad.TiempoConstruccion * 100 * $scope.auxUnidad.CantAConstruir, copyUnidad);
+                    setTimeout(entrenarUnidadTimeout, $scope.modeloUnidad.TiempoConstruccion * 1000 * $scope.auxUnidad.CantAConstruir, copyUnidad);
 
                     //$scope.timerUnidad = $interval(function () {
                     //    $interval.cancel($scope.timerUnidad);
