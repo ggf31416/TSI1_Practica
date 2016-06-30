@@ -16,18 +16,20 @@ namespace BusinessLogicLayer
         private List< TipoEdificio> tiposEdificios = new List< TipoEdificio>();
         public string Tenant { get; set; }
         private Dictionary<string, Jugador> jugadores = new Dictionary<string, Jugador>();
+        public string BatallaId { get; set; }
+        public int idxJugador = 1;
 
+        public HashSet<string > movio = new HashSet<string >();
 
         private Jugador defensor;
-        private DataAccessLayer.Relacional.IDALEntidadesRO _dalRO;
+
         public string GrupoSignalR { get; set; }
         public bool EnCurso { get; set; }
+        public bool EnFinalizacion { get; set; }
         public CampoBatalla tablero;
 
+        public ConfigBatalla Config { get; set; } = new ConfigBatalla();
 
-
-
-    
 
         public Dictionary<int,int> UnidadesSobrevivientes(String jugId)
         {
@@ -38,44 +40,72 @@ namespace BusinessLogicLayer
             return new Dictionary<int, int>();
         }
 
-        public Batalla(string atacante,string defensor)
+        public Dictionary<int,int> UnidadesPerdidas(String jugId)
         {
-            //inicializar();
-            this.tablero = new CampoBatalla();
-            this.EnCurso = true;
-
+            if (jugadores.ContainsKey(jugId))
+            {
+                return tablero.UnidadesPerdidas(jugadores[jugId]);
+            }
+            return new Dictionary<int, int>();
         }
 
-        public Batalla(Jugador atacante,Jugador defensor)
+        public String IdDefensor()
         {
+            return this.defensor.Id;
+        }
 
-            this.tablero = new CampoBatalla();
+    
+
+        public Batalla(Tablero t, Jugador defensor,ConfigBatalla config,String tenant)
+        {
+            this.Tenant = tenant;
+            int sizeTableroX = t.CantColumnas.GetValueOrDefault();
+            int sizeTableroY = t.CantFilas.GetValueOrDefault();
+            int offSet = 4;
+            this.tablero = new CampoBatalla(sizeTableroX + 2 * offSet, sizeTableroY + 2 * offSet, offSet, offSet);
             this.tablero.JugadorDefensor = defensor.Id;
             this.EnCurso = true;
             this.defensor = defensor;
-            jugadores.Add(atacante.Id,atacante);
+           
             jugadores.Add(defensor.Id, defensor);
-            this.tiposEdificios = atacante.tiposEdificio;
-            this.tiposUnidades = atacante.tiposUnidad;
+
+            this.tiposEdificios = defensor.tiposEdificio;
+            this.tiposUnidades = defensor.tiposUnidad;
+            tablero.agregarEdificios(defensor.Edificios);
+
+            tablero.Clanes[defensor.Id] = defensor.Clan;
             this.GrupoSignalR = "bat_" + this.defensor.Id;
-            //inicializar();
+            this.Config = config;
+        }
+
+        public void AgregarJugador(Jugador j)
+        {
+            jugadores[ j.Id]=  j;
+            j.ShortId = this.idxJugador++.ToString();
+            tablero.Clanes[j.Id] = j.Clan;
         }
 
 
-        private void agregarUnidades(Jugador jug)
+        private List<Unidad> obtenerObjetosUnidad(Jugador jug,int max)
         {
+            List<Unidad> res = new List<Unidad>();
             foreach (ConjuntoUnidades cu in jug.Unidades.Values)
             {
-                Unidad x = getUnidadPorId(cu.UnidadId,jug.Id);
-                IEnumerable<Unidad> lst = Enumerable.Repeat(x, cu.Cantidad).ToList();
-                Random r = new Random();
-                
-                foreach(Unidad u in lst)
+                int cant = cu.Cantidad;
+                for(int i = 0; i < cant; i++)
                 {
-                    u.jugador = jug.Id;
+                    if (max > 0)
+                    {
+                        Unidad x = getUnidadPorId(cu.UnidadId, jug.Id);
+                        x.id = jug.ShortId + "*" + max;
+                        res.Add(x);
+                        cu.Cantidad--;
+                        max--;
+                    }
+
                 }
-                tablero.agregarUnidades(jug.Id, lst);
             }
+            return res;
         }
 
         public int agregarUnidad(int id_tipo,String jugador,string unitId,int posX,int posY)
@@ -83,6 +113,7 @@ namespace BusinessLogicLayer
             if (!this.jugadores.ContainsKey(jugador) || !(this.jugadores[jugador].Unidades.ContainsKey(id_tipo))) return 0;
             if (this.jugadores[jugador].Unidades[id_tipo].Cantidad > 0)
             {
+                this.movio.Add(jugador); // desactivo el deploy automatico
                 Unidad u = getUnidadPorId(id_tipo, jugador);
                 this.jugadores[jugador].Unidades[id_tipo].Cantidad -= 1;
                 u.id = unitId;
@@ -94,18 +125,6 @@ namespace BusinessLogicLayer
             return 0;
         }
 
-        
-
-        void crearBatalla(Jugador atacante,Jugador defensor)
-        {
-            tablero = new CampoBatalla();
-            agregarUnidades(atacante);
-            agregarUnidades(defensor);
-            this.tiposUnidades = atacante.tiposUnidad;
-            this.tiposEdificios = atacante.tiposEdificio;
-            tablero.agregarEdificios(defensor.Edificios);
-        }
-
         private Unidad getUnidadPorId(int tipoId,string idJugador)
         {
             Unidad u = null;
@@ -113,7 +132,13 @@ namespace BusinessLogicLayer
             TipoUnidad tu = jugadores[idJugador].tipos.GetValueOrDefault(tipoId) as TipoUnidad;
             if (tu != null)
             {
-                u = new Unidad { ataque = tu.Ataque.GetValueOrDefault(), defensa = tu.Defensa.GetValueOrDefault(), tipo_id = tu.Id, hp = tu.Vida.GetValueOrDefault() };
+                u = new Unidad { ataque = tu.Ataque.GetValueOrDefault(),
+                    defensa = tu.Defensa.GetValueOrDefault(),
+                    tipo_id = tu.Id,
+                    jugador = idJugador,
+                    hp = tu.Vida.GetValueOrDefault()
+
+                };
                 u.rango = 8; // hardcodeado;
             }
             return u;
@@ -131,24 +156,82 @@ namespace BusinessLogicLayer
             }
             return e;
         }
-
         
 
-        private bool  perdioUnClan()
+        private bool perdioUnClan()
+        {
+            return quedanUnidadesClan().Values.Any(b => b == false);
+        }
+
+        private Dictionary<string,bool>  quedanUnidadesClan()
         {
             Dictionary<string, bool> tieneUnidades = new Dictionary<string, bool>();
+
             foreach(Jugador j in this.jugadores.Values)
             {
+                tieneUnidades[j.Clan] = false;
                 if (j.Unidades.Count > 0 && j.Unidades.Any(cu => cu.Value.Cantidad > 0)) tieneUnidades[j.Clan] = true;
                 if (tablero.QuedanUnidadesJugador(j.Id)) tieneUnidades[j.Clan] = true;
             }
-            return tieneUnidades.Values.Any(b => b == false);
+            return tieneUnidades;
         }
+
+        public String obtenerClanGanador()
+        {
+            var tienen = quedanUnidadesClan();
+            var conUnidades = tienen.Where(keyValor => keyValor.Value == true) ;
+
+            if (conUnidades.Count() == 1)
+            {
+                return conUnidades.First().Key;
+                // solo una alianza obtuvo la victoria
+            }
+            else
+            {
+                // ninguno llego a perder o los 2 se destruyeron mutuamente
+                return null;
+            }
+        }
+
+        public List<String> ObtenerGanadores()
+        {
+            
+            var res = new List<String>();
+            var clanGan = obtenerClanGanador();
+            if (clanGan == null) return res;
+            foreach (Jugador j in jugadores.Values)
+            {
+                if (j.Clan.Equals(clanGan)) res.Add(j.Id);
+            }
+            return res;
+        }
+
+        public bool ganoAtacante()
+        {
+            return false == ObtenerGanadores().Contains(this.defensor.Id);
+        }
+
+
 
         public void ejecutarTurno()
         {
             tablero.tickTiempo();
-            if (tablero.Turno > 300 || perdioUnClan())
+            double tiempoTotal = tablero.Turno * Config.MilisTurno / 1000.0;
+            double tiempoCombate = tiempoTotal - Config.TiempoDeploy;
+            if (!this.tablero.EnCombate && tiempoTotal > Config.TiempoDeploy )
+            {
+                foreach(string jId in this.jugadores.Keys)
+                {
+                    if (!movio.Contains(jId))
+                    {
+                        movio.Add(jId);
+                        DeployUnidadesAutomatico(jId);
+
+                    }
+                }
+                this.tablero.EnCombate = true;   
+            }
+            if (tiempoCombate > this.Config.TiempoBatalla   || perdioUnClan())
             {
                 this.EnCurso = false;
             }
@@ -178,6 +261,7 @@ namespace BusinessLogicLayer
             public Dictionary<string,InfoJugador> jugadores { get; set; } = new Dictionary<string,InfoJugador>();
 
             public string IdJugador { get; set; }
+            public string ShortId { get; set; }
 
         }
 
@@ -192,15 +276,15 @@ namespace BusinessLogicLayer
 
             var res = new InfoBatalla();
             res.IdJugador = IdJugador;
+            res.ShortId = jugadores[IdJugador].ShortId;
             foreach(Jugador j in jugadores.Values)
             {
-                //bool incluirEdificios = j.Equals(defensor);
-                InfoJugador infoJ = j.GenerarInfo(false, false);
+                bool incluirEdificios = j.Id.Equals(defensor.Id);
+                InfoJugador infoJ = j.GenerarInfo(incluirEdificios, false);
                 res.jugadores.Add(infoJ.Id,infoJ);
 
             }
 
-        
             this.tablero.RellenarInfoBatalla(res);
             res.tiposEdificio = this.tiposEdificios;
             res.tiposUnidad = this.tiposUnidades;
@@ -211,14 +295,39 @@ namespace BusinessLogicLayer
         {
             if (this.jugadores.ContainsKey(idUsuario)){
                 Jugador jugador = jugadores[idUsuario];
+                var unidadesDesplegables = obtenerObjetosUnidad(jugador,20);
+                int centroTableroX = tablero.sizeX / 2;
+                int centroTableroY = tablero.sizeY / 2;
                 if (idUsuario.Equals(this.defensor.Id))
                 {
-                    
+                    tablero.DeployUnidadesAutomatico(centroTableroX, centroTableroY, unidadesDesplegables);
                 }
-                //tablero.DeployUnidadesAutomatico()
+                else
+                {
+                    Random r = new Random();
+                    int posX = centroTableroX;
+                    int posY = centroTableroY;
+                    // eligo al azar excepto en el centro del tablero
+                    while (Math.Abs(posX - centroTableroX) < tablero.sizeX / 4)
+                    {
+                        posX = r.Next(0, tablero.sizeX);
+                    }
+                    while (Math.Abs(posY - centroTableroY) < tablero.sizeX / 4)
+                    {
+                        posY = r.Next(0, tablero.sizeY);
+                    }
+                    tablero.DeployUnidadesAutomatico(posX, posY, unidadesDesplegables);
+                }
             }
         }
 
+
+
+
+        public void borrarAcciones()
+        {
+            this.tablero.Acciones.Clear();
+        }
     }
 }
 

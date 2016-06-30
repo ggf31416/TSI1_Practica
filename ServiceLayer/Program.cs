@@ -17,6 +17,7 @@ namespace ServiceLayer
         public static IBLConstruccion blConstruccionHandler;
         public static IBLUsuario blUsuarioHandler;
         public static IBLBatalla blBatalla;
+        public static IBLConexion blConexionHandler;
 
         static void Main(string[] args)
         {
@@ -36,6 +37,7 @@ namespace ServiceLayer
             blUsuarioHandler = new BLUsuario(new DataAccessLayer.DALUsuario());
             blBatalla = BLBatalla.getInstancia(null);
             ((BLBatalla)blBatalla).setBLJuego(blJuegoHandler);
+            blConexionHandler = new BLConexion();
         }
 
         private static void SetupService()

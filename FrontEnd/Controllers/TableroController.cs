@@ -5,8 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using ServiceStack.Redis;
 using Microsoft.AspNet.SignalR;
-using FrontEnd.ServiceTablero;
-using FrontEnd.ServiceReference1;
 using Shared.Entities;
 
 namespace FrontEnd.Controllers
@@ -155,6 +153,27 @@ namespace FrontEnd.Controllers
                 return Json(new { sucess = false, ex = e.Message });
             }
         }
+
+
+        /*[HttpPost]
+        public ActionResult ContribuirUnidades(string tenant, Models.InfoContribucionUnidades contr)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+                Contribucion c = new Contribucion();
+                c.UnidadesContribuidas = contr.Unidades;
+                c.IdJugador = Request.Cookies["clienteId"].Value;
+
+                client.ContribuirUnidades(tenant, contr.IdDefensor, c);
+
+                return Json(new { sucess = true });
+            }
+            catch (Exception e)
+            {
+                return Json(new { sucess = false });
+            }
+        }*/
 
     }
 

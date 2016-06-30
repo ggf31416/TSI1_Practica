@@ -13,7 +13,6 @@ namespace WCFServiceWebRole2
     [ServiceContract]
     public interface IService1
     {
-
         [OperationContract]
         void JugarUnidad(InfoCelda infoCelda);
 
@@ -74,5 +73,15 @@ namespace WCFServiceWebRole2
 
         [OperationContract]
         string GetEstadoBatalla(string tenant, string idJugador);
+
+        [OperationContract]
+        void ConectarSignalr(string tenant, String idJugador, String conId);
+        [OperationContract]
+        void DesconectarSignalr(string tenant, String idJugador, String conId);
+        [OperationContract]
+        void ReconectarSignalr(string tenant, String idJugador, String conId);
+
+        [OperationContract]
+        void EnviarUnidades(string tenant, string idDefensor, Contribucion contr);
     }
 }

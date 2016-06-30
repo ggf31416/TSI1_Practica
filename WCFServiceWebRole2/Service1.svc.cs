@@ -15,7 +15,7 @@ namespace WCFServiceWebRole2
         private static IBLTecnologia blTecnologiaHandler = new BLTecnologia(blJuegoHandler);
         private static IBLConstruccion blConstruccionHandler = new BLConstruccion(new DataAccessLayer.DALConstruccion());
         private static IBLUsuario blUsuarioHandler = new BLUsuario(new DataAccessLayer.DALUsuario());
-        private static IBLConexion blConexHandler;
+        private static IBLConexion blConexHandler = new BLConexion();
         private static IBLBatalla blBatalla = BLBatalla.getInstancia(blJuegoHandler);
 
         public void JugarUnidad(InfoCelda infoCelda)
@@ -116,19 +116,19 @@ namespace WCFServiceWebRole2
             return blUsuarioHandler.SoyAdministrador(Tenant, IdJugador);
         }
 
-        public void ConectarSignalr(string tenant, ConexionSignalr con)
+        public void ConectarSignalr(string tenant, string idJugador, string conId)
         {
-            blConexHandler.agregarConexion(tenant, con);
+            blConexHandler.agregarConexion(tenant, idJugador, conId);
         }
 
-        public void DesconectarSignalr(string tenant, ConexionSignalr con)
+        public void ReconectarSignalr(string tenant, string idJugador, string conId)
         {
-            blConexHandler.desconectar(tenant, con);
+            blConexHandler.agregarConexion(tenant, idJugador, conId);
         }
 
-        public void ReconectarSignalr(string tenant, ConexionSignalr con)
+        public void DesconectarSignalr(string tenant, string idJugador, string conId)
         {
-            blConexHandler.agregarConexion(tenant, con);
+            blConexHandler.desconectar(tenant, idJugador, conId);
         }
 
         public int EnviarRecursos(List<RecursoAsociado> tributos, string IdJugadorDestino, string Tenant, string IdJugador)
@@ -138,6 +138,11 @@ namespace WCFServiceWebRole2
         public string GetEstadoBatalla(string tenant, string idJugador)
         {
             return blBatalla.getJsonBatalla(tenant, idJugador);
+        }
+
+        public void EnviarUnidades(string tenant, string idDefensor, Contribucion contr)
+        {
+            blBatalla.agregarContribucion(tenant, idDefensor, contr);
         }
     }
 }

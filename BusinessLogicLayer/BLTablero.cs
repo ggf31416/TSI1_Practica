@@ -40,10 +40,10 @@ namespace BusinessLogicLayer
         }
 
 
-        private static ServiceReference1.Service1Client getCliente()
+        private static Service1Client getCliente()
         {
             BLServiceClient serviceClient = new BLServiceClient();
-            ServiceReference1.Service1Client client = new ServiceReference1.Service1Client();
+            Service1Client client = new Service1Client();
             return client;
         }
 

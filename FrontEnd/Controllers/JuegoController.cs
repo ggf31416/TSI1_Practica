@@ -5,8 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using ServiceStack.Redis;
 using Microsoft.AspNet.SignalR;
-using FrontEnd.ServiceTablero;
-using FrontEnd.ServiceReference1;
 using Shared.Entities;
 
 namespace FrontEnd.Controllers

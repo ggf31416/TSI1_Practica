@@ -29,8 +29,11 @@ namespace BusinessLogicLayer
         [JsonProperty(propertyName: "Id")]
         public int tipo_id { get; set; }
 
+
         [JsonProperty(propertyName: "jugador")]
         public string jugador { get; set; }
+
+
 
         [JsonProperty(propertyName: "ataque")]
         public int ataque { get; set; } = 10;
