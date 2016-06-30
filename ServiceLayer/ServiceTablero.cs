@@ -153,5 +153,10 @@ namespace ServiceLayer
         {
             return blBatalla.getJsonBatalla(tenant, idJugador);
         }
+
+        public void EnviarUnidades(string tenant, string idDefensor,Contribucion contr)
+        {
+            blBatalla.agregarContribucion(tenant, idDefensor, contr);
+        }
     }
 }

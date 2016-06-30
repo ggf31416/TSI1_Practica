@@ -298,6 +298,11 @@
 
         }
 
+        function mostrarFin(mensaje){
+            $scope.finMsg = mensaje.Msg;
+            $('#dialogoFin').modal('show');
+        }
+
         $scope.iniciarSignalR = function () {
             // Declare a proxy to reference the hub.
             $scope.tablero_signalR = $.connection.chatHub;
@@ -305,7 +310,13 @@
             $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
                 if (message!=""){
                     var msg = JSON.parse(message);
-                    ejecutarMensaje(msg);
+                    if ( msg.A){
+                        ejecutarMensaje(msg);    
+                    }
+                    else if (msg.Tipo && msg.Tipo == "FinAtaque"){
+                        mostrarFin(msg);
+                    }
+                    
                 }
                 //$scope.estadoJuego.edificios = msjJSON.edificios;
                 //$scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;

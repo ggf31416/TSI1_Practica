@@ -72,5 +72,15 @@ namespace ServiceLayer
 
         [OperationContract]
         string GetEstadoBatalla(string tenant, string idJugador);
+
+        [OperationContract]
+        void ConectarSignalr(string tenant, ConexionSignalr con);
+        [OperationContract]
+        void DesconectarSignalr(string tenant, ConexionSignalr con);
+        [OperationContract]
+        void ReconectarSignalr(string tenant, ConexionSignalr con);
+
+        [OperationContract]
+        void EnviarUnidades(string tenant, string idDefensor, Contribucion contr);
     }
 }

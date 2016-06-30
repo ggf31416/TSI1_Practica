@@ -39,16 +39,6 @@ namespace BusinessLogicLayer
 
         private bool todaviaEstoyTrabajando = false;
 
-        private void reintegrarUnidadesSobrevivientes(Batalla bat)
-        {
-            foreach(String  id in bat.GetListaJugadores())
-            {
-                Dictionary<int,int> sobrevivientes = bat.UnidadesSobrevivientes(id);
-                Juego j = blJuego.GetJuegoUsuarioSinGuardar(bat.Tenant, id);
-                blJuego.AgregarUnidades(j, sobrevivientes);
-                blJuego.GuardarJuegoAsync(j);
-            }
-        }
 
         public void ejecutarBatallasEnCurso()
         {
@@ -63,7 +53,7 @@ namespace BusinessLogicLayer
                 //Stopwatch sw = Stopwatch.StartNew();
                 todaviaEstoyTrabajando = true;
                 //Console.WriteLine(DateTime.Now.ToString("hh:mm:ss.fff tt"));
-                var client = getCliente();
+                var client = getClienteInteraccion();
                 var encoladas = new List<string>();
                 var batallas_copy = new List<Batalla>(batallas);
                 foreach (Batalla b in batallas_copy)
@@ -84,7 +74,6 @@ namespace BusinessLogicLayer
                             Console.WriteLine("Long: " + jsonAcciones.Length);
                         }
                         
-
                     }
                     
                 }
@@ -125,7 +114,7 @@ namespace BusinessLogicLayer
 
 
 
-        private static ServiceInteraccionClient getCliente()
+        private static ServiceInteraccionClient getClienteInteraccion()
         {
             BLServiceClient serviceClient = new BLServiceClient();
             ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
@@ -136,7 +125,7 @@ namespace BusinessLogicLayer
 
         private void agregarUnidad(string jugador, int tipo_id, string unit_id, int posX, int posY)
         {
-            ServiceInteraccionClient client = getCliente();
+            ServiceInteraccionClient client = getClienteInteraccion();
             Batalla b = obtenerBatalla(jugador);
             if (b == null) return;
             if (b.agregarUnidad(tipo_id, jugador, unit_id, posX, posY) == 1)
@@ -191,7 +180,7 @@ namespace BusinessLogicLayer
             {
                 string jsonBatalla = getJsonBatalla(tenant,obj.Jugador);
                 // mando info batalla por signalr
-                getCliente().SendGrupo(obj.Jugador, jsonBatalla);  
+                getClienteInteraccion().SendGrupo(obj.Jugador, jsonBatalla);  
             }
         }
 
@@ -233,10 +222,43 @@ namespace BusinessLogicLayer
             batallasPorJugador[info.Jugador] = b;
             batallasPorJugador[info.Enemigo] = b;
             batallas.Add(b);
-            notificarAsync(info, "IniciarAtaque");
+            notificar(info, "IniciarAtaque");
         }
 
-    
+        public void IniciarBatalla(string tenant, InfoAtaqueConj info)
+        {
+            Juego datosAtaq = blJuego.GetJuegoUsuarioSinGuardar(tenant, info.Atacante);
+            Jugador jAt = new Jugador();
+
+            jAt.CargarDesdeJuego(datosAtaq);
+
+            Juego datosDef = blJuego.GetJuegoUsuarioSinGuardar(tenant, info.Defensor);
+            Jugador jDef = new Jugador();
+            if (datosDef != null)
+            {
+
+                jDef.CargarDesdeJuego(datosDef);
+            }
+          
+
+            Batalla b = new Batalla(datosAtaq.Tablero, jAt, jDef);
+
+            if (batallasPorJugador.ContainsKey(info.Atacante))
+            {
+                batallasPorJugador[info.Atacante].EnCurso = false;
+            }
+            if (batallasPorJugador.ContainsKey(info.Defensor))
+            {
+                batallasPorJugador[info.Defensor].EnCurso = false;
+            }
+            batallasPorJugador[info.Atacante] = b;
+            batallasPorJugador[info.Defensor] = b;
+            batallas.Add(b);
+            notificar(new InfoAtaque() { Enemigo = info.Defensor, Jugador = info.Atacante, Juego = info.Tenant }, "IniciarAtaque");
+        }
+
+
+
 
         class NotificacionAtaque
         {
@@ -248,9 +270,25 @@ namespace BusinessLogicLayer
             public bool SoyAliado { get; set; }
         }
 
-        private void notificarAsync(InfoAtaque info,string tipo)
+        class Notificacion
         {
-            var client = getCliente();
+            public string Tipo { get; set; }
+            [JsonProperty(PropertyName="Msg")]
+            public string Mensaje { get; set; }
+        }
+
+        private void notificarFin(String jug,string mensaje)
+        {
+            var client = getClienteInteraccion();
+
+                Notificacion msg = new Notificacion() { Tipo = "FinBatalla", Mensaje = mensaje };
+                client.SendGrupo(jug, JsonConvert.SerializeObject(msg));
+            
+        }
+
+        private void notificar(InfoAtaque info,string tipo)
+        {
+            var client = getClienteInteraccion();
             var notificar = new string[] { info.Jugador, info.Enemigo };
             for (int i = 0; i < notificar.Length; i++)
             {
@@ -269,9 +307,40 @@ namespace BusinessLogicLayer
             }
         }
 
+        private bool setAtacabilidadJugador(string tenant,string idJugador,bool atacable)
+        {
+            IDALUsuario dalUsuario = new DALUsuario(tenant);
+            return dalUsuario.SetAtacableJugador(tenant, idJugador, atacable);
+        }
+
+        private Contribucion obtenerUnidades(Juego j)
+        {
+            Contribucion c = new Contribucion() { IdJugador = j.IdJugador };
+            foreach(var u in j.DataJugador.EstadoUnidades.Values)
+            {
+                if (u.Estado == EstadoData.EstadoEnum.A)
+                {
+                    c.UnidadesContribuidas.Add(new ConjuntoUnidades() { UnidadId = u.Id, Cantidad = u.Cantidad });
+                }
+            }
+            return c;
+        }
+
+        // inicia preparativos para ataque
         public void IniciarAtaque(string tenant, InfoAtaque info)
         {
-            notificarAsync(info, "NotificacionAtaque");
+            notificar(info, "NotificacionAtaque");
+            setAtacabilidadJugador(tenant, info.Enemigo,false);
+
+            InfoAtaqueConj conj = new InfoAtaqueConj() { Atacante = info.Jugador, Defensor = info.Enemigo };
+            Juego infoAtacante = blJuego.GetJuegoUsuarioSinGuardar(tenant, conj.Atacante);
+            Contribucion contr = obtenerUnidades(infoAtacante);
+            conj.UnidadesContribuidas.Add(contr);
+            
+
+            blJuego.QuitarUnidades(infoAtacante, contr,true);
+
+
             Planificador.getInstancia().IniciarAtaque(tenant, info, 15);   
         }
 
@@ -285,8 +354,60 @@ namespace BusinessLogicLayer
             return null;
         }
 
+        public bool agregarContribucion(string tenant, string idDefensor, Contribucion contr)
+        {
+            DALAtaqueConj dal = new DALAtaqueConj();
+            return  dal.agregarContribucion(tenant, idDefensor,  contr);
 
-        
+        }
+
+        public void FinBatalla(Batalla b)
+        {   
+            var listaGanadores = b.ObtenerGanadores(); // obtiene jugador o jugadores (si es un clan) ganador
+            Dictionary<string, double> agregar = new Dictionary<string, double>();
+            bool ganoAtacante = b.ganoAtacante();
+            int cantGanadores = listaGanadores.Count;
+            if (b.ganoAtacante())
+            {
+                var datosDefensor = blJuego.GetJuegoUsuarioSinGuardar(b.Tenant, b.IdDefensor());
+                var recursos = datosDefensor.DataJugador.EstadoRecursos;
+
+                foreach (string idRec in recursos.Keys)
+                {
+                    agregar.Add(idRec, Math.Floor(recursos[idRec].Total));
+                }
+            }
+            Dictionary<string, string> mensajes = new Dictionary<string, string>();
+            foreach (string jug in b.GetListaJugadores())
+            {
+                double mult = 0;
+                string msg = "Empató la batalla.";
+                if (ganoAtacante)
+                {
+                    if (listaGanadores.Contains(jug))
+                    {
+                        mult = 1.0 / cantGanadores;
+                        msg = "Ganó la batalla.";
+                    }
+                    else if (jug.Equals(b.IdDefensor()))
+                    {
+                        mult = -1;
+                        msg = "Perdió la batalla.";
+                    }
+                }
+                mensajes[jug] = msg;
+                blJuego.ModificarUnidadesRecursos(b.Tenant, jug, b.UnidadesSobrevivientes(jug), agregar,  b.Config.FraccionRecursos * mult);
+                
+            }
+            setAtacabilidadJugador(b.Tenant, b.IdDefensor(), true);
+            foreach(string jug in mensajes.Keys)
+            {
+                notificarFin(jug, mensajes[jug]);
+            }
+
+        }
+
+
     }
 
 

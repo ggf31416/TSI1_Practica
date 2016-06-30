@@ -13,5 +13,6 @@ namespace BusinessLogicLayer
         void IniciarAtaque(string tenant, InfoAtaque info);
         void IniciarBatalla(string tenant, InfoAtaque info);
         string getJsonBatalla(string tenant, string idUsuario);
+        bool agregarContribucion(string tenant, string idDefensor, Contribucion contr);
     }
 }

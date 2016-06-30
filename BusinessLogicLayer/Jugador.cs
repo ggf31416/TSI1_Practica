@@ -36,7 +36,7 @@ namespace BusinessLogicLayer
         public void CargarDesdeJuego(Juego jj)
         {
             this.Id = jj.IdJugador;
-            this.Clan = jj.IdJugador;
+            this.Clan = jj.DataJugador.Clan ?? jj.IdJugador;
             foreach (var e in jj.TipoEdificios)
             {
                 tipos [e.Id] = e;

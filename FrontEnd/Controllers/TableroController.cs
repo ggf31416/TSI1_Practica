@@ -155,6 +155,27 @@ namespace FrontEnd.Controllers
             }
         }
 
+
+        /*[HttpPost]
+        public ActionResult ContribuirUnidades(string tenant, Models.InfoContribucionUnidades contr)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+                Contribucion c = new Contribucion();
+                c.UnidadesContribuidas = contr.Unidades;
+                c.IdJugador = Request.Cookies["clienteId"].Value;
+
+                client.ContribuirUnidades(tenant, contr.IdDefensor, c);
+
+                return Json(new { sucess = true });
+            }
+            catch (Exception e)
+            {
+                return Json(new { sucess = false });
+            }
+        }*/
+
     }
 
 }

@@ -37,6 +37,7 @@ namespace ServiceLayer
             blUsuarioHandler = new BLUsuario(new DataAccessLayer.DALUsuario());
             blBatalla = BLBatalla.getInstancia();
             ((BLBatalla)blBatalla).setBLJuego(blJuegoHandler);
+            blConexionHandler = new BLConexion();
         }
 
         private static void SetupService()

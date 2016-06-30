@@ -98,6 +98,26 @@ namespace DataAccessLayer
             }   
         }
 
+        public bool ModificarUnidades(Juego juego)
+        {
+            try
+            {
+                string tenant = juego.Nombre;
+                IMongoDatabase _database = _client.GetDatabase(tenant);
+                IMongoCollection<Juego> collection = _database.GetCollection<Juego>("juego_usuario");
+                Dictionary<string, EstadoData> unidades = juego.DataJugador.EstadoUnidades;
+                var builder = Builders<Juego>.Update;
+                var update = builder.Set(j => j.DataJugador.EstadoUnidades, unidades);
+                var res = collection.UpdateOne(j => j.IdJugador == juego.IdJugador, update);
+                return res.ModifiedCount == 1;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+        }
+
 
         public ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador)
         {

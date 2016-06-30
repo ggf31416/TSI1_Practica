@@ -16,6 +16,8 @@ namespace DataAccessLayer
         //SOCIALES
         List<Shared.Entities.ClienteJuego> GetJugadoresAtacables(string Tenant, string IdJuego);
 
+        bool SetAtacableJugador(string Tenant, string IdJugador, bool atacable);
+
         //CLANES
         void CrearClan(string NombreClan, string Tenant, string IdJugador);
         bool AbandonarClan(string Tenant, string IdJugador);

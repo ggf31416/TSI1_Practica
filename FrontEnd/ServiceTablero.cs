@@ -2257,6 +2257,144 @@ namespace Shared.Entities
             }
         }
     }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ConexionSignalr", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    public partial class ConexionSignalr : object, System.Runtime.Serialization.IExtensibleDataObject
+    {
+        
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        private string ConnectionIDField;
+        
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+        {
+            get
+            {
+                return this.extensionDataField;
+            }
+            set
+            {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ConnectionID
+        {
+            get
+            {
+                return this.ConnectionIDField;
+            }
+            set
+            {
+                this.ConnectionIDField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Contribucion", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    public partial class Contribucion : object, System.Runtime.Serialization.IExtensibleDataObject
+    {
+        
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        private string IdJugadorField;
+        
+        private Shared.Entities.ConjuntoUnidades[] UnidadesContribuidasField;
+        
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+        {
+            get
+            {
+                return this.extensionDataField;
+            }
+            set
+            {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdJugador
+        {
+            get
+            {
+                return this.IdJugadorField;
+            }
+            set
+            {
+                this.IdJugadorField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Shared.Entities.ConjuntoUnidades[] UnidadesContribuidas
+        {
+            get
+            {
+                return this.UnidadesContribuidasField;
+            }
+            set
+            {
+                this.UnidadesContribuidasField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="ConjuntoUnidades", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities")]
+    public partial class ConjuntoUnidades : object, System.Runtime.Serialization.IExtensibleDataObject
+    {
+        
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        private int CantidadField;
+        
+        private int UnidadIdField;
+        
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+        {
+            get
+            {
+                return this.extensionDataField;
+            }
+            set
+            {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int Cantidad
+        {
+            get
+            {
+                return this.CantidadField;
+            }
+            set
+            {
+                this.CantidadField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int UnidadId
+        {
+            get
+            {
+                return this.UnidadIdField;
+            }
+            set
+            {
+                this.UnidadIdField = value;
+            }
+        }
+    }
 }
 
 
@@ -2321,9 +2459,21 @@ public interface IServiceTablero
     
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/EnviarRecursos", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/EnviarRecursosResponse")]
     int EnviarRecursos(Shared.Entities.RecursoAsociado[] tributos, string IdJugadorDestino, string Tenant, string IdJugador);
-
+    
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetEstadoBatalla", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetEstadoBatallaResponse")]
     string GetEstadoBatalla(string tenant, string idJugador);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/ConectarSignalr", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/ConectarSignalrResponse")]
+    void ConectarSignalr(string tenant, Shared.Entities.ConexionSignalr con);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/DesconectarSignalr", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/DesconectarSignalrResponse")]
+    void DesconectarSignalr(string tenant, Shared.Entities.ConexionSignalr con);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/ReconectarSignalr", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/ReconectarSignalrResponse")]
+    void ReconectarSignalr(string tenant, Shared.Entities.ConexionSignalr con);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/EnviarUnidades", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/EnviarUnidadesResponse")]
+    void EnviarUnidades(string tenant, string idDefensor, Shared.Entities.Contribucion contr);
 }
 
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
@@ -2449,14 +2599,34 @@ public partial class ServiceTableroClient : System.ServiceModel.ClientBase<IServ
     {
         return base.Channel.SoyAdministrador(Tenant, IdJugador);
     }
-
+    
     public int EnviarRecursos(Shared.Entities.RecursoAsociado[] tributos, string IdJugadorDestino, string Tenant, string IdJugador)
     {
         return base.Channel.EnviarRecursos(tributos, IdJugadorDestino, Tenant, IdJugador);
     }
-
+    
     public string GetEstadoBatalla(string tenant, string idJugador)
     {
         return base.Channel.GetEstadoBatalla(tenant, idJugador);
+    }
+    
+    public void ConectarSignalr(string tenant, Shared.Entities.ConexionSignalr con)
+    {
+        base.Channel.ConectarSignalr(tenant, con);
+    }
+    
+    public void DesconectarSignalr(string tenant, Shared.Entities.ConexionSignalr con)
+    {
+        base.Channel.DesconectarSignalr(tenant, con);
+    }
+    
+    public void ReconectarSignalr(string tenant, Shared.Entities.ConexionSignalr con)
+    {
+        base.Channel.ReconectarSignalr(tenant, con);
+    }
+    
+    public void EnviarUnidades(string tenant, string idDefensor, Shared.Entities.Contribucion contr)
+    {
+        base.Channel.EnviarUnidades(tenant, idDefensor, contr);
     }
 }

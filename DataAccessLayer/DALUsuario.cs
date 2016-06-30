@@ -388,5 +388,15 @@ namespace DataAccessLayer
                 }
             }
         }
+
+        public bool SetAtacableJugador(string Tenant, string IdJugador, bool atacable)
+        {
+            database = client.GetDatabase(Tenant);
+            collection = database.GetCollection<ClienteJuego>("usuario");
+            ClienteJuego cliente = collection.AsQueryable<ClienteJuego>().FirstOrDefault();
+            var builder = Builders<ClienteJuego>.Update;
+            var res = collection.UpdateOne(c => c.id == IdJugador, builder.Set(c => c.atacable, atacable));
+            return res.IsModifiedCountAvailable && res.ModifiedCount == 1;
+        }
     }
 }

@@ -7,7 +7,7 @@ using Shared.Entities;
 
 namespace BusinessLogicLayer
 {
-    public class BLConexion
+    public class BLConexion : IBLConexion
     {
         private DataAccessLayer.DALConexion _dal = new DataAccessLayer.DALConexion();
 

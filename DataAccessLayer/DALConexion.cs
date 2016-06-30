@@ -26,6 +26,10 @@ namespace DataAccessLayer
             JugadorConexion jugCon = collection.AsQueryable().FirstOrDefault(x => x.IdJugador == conn.ConnectionID);
             if (!conn.ConnectionID.Contains(conn.ConnectionID))
             {
+                if (jugCon.ConexionesId.Count >= 5)
+                {
+                    jugCon.ConexionesId.RemoveAt(0);
+                }
                 jugCon.ConexionesId.Add(conn.ConnectionID);
             }
             collection.ReplaceOneAsync(x => x.IdJugador == conn.ConnectionID, jugCon,new UpdateOptions() { IsUpsert = true });

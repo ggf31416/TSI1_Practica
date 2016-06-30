@@ -10,9 +10,11 @@ namespace FrontEnd
     public class ChatHub : Hub
     {
 
+        private ServiceTableroClient cliente;
+
         public ChatHub()
         {
-            
+            cliente = new ServiceTableroClient();
         }
 
         public void send(string name, string message)
@@ -63,6 +65,7 @@ namespace FrontEnd
 
         public override Task OnDisconnected(bool stopCalled)
         {
+            
             return base.OnDisconnected(stopCalled);
         }
 

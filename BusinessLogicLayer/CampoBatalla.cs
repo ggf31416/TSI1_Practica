@@ -23,10 +23,11 @@ namespace BusinessLogicLayer
         private Dictionary<String, List<Unidad>> unidadesPorJugador = new Dictionary<string, List<Unidad>>();
         private Dictionary<string, Entidad> entidades = new Dictionary<string, Entidad>();
         private Dictionary<string, ResultadoBusqPath> paths = new Dictionary<string, ResultadoBusqPath>();
+        public Dictionary<string, string> Clanes = new Dictionary<string, string>();
         private static int edificio_size = 4;
         private int tablero_size = 10;
-        private int sizeX; 
-        private int sizeY;
+        public int sizeX;
+        public int sizeY;
         private int offsetX;
         private int offsetY;
 
@@ -114,22 +115,7 @@ namespace BusinessLogicLayer
              
         }
 
-        public void agregarUnidades(String jugador, IEnumerable<Unidad> unidades)
-        {
-            if (!unidadesPorJugador.ContainsKey(jugador))
-            {
-                unidadesPorJugador.Add(jugador, new List<Unidad>());
-            }
-
-            unidadesPorJugador[jugador].AddRange(unidades);
-
-        }
-
-        
-
-        
-
-      
+   
         void hacerUnwalkableEdificios()
         {
             matrixEdificios = new bool[sizeX][];
@@ -262,7 +248,7 @@ namespace BusinessLogicLayer
             Unidad nearest = null;
             foreach (String j in this.unidadesPorJugador.Keys)
             {
-                if (!j.Equals(u.jugador))
+                if (!Clanes[j].Equals(Clanes[u.jugador])) // son de distinto clan
                 {
                     var enemigos = this.unidadesPorJugador[j];
                     foreach (Unidad e in enemigos.Where(e => e.estaViva))
@@ -285,21 +271,16 @@ namespace BusinessLogicLayer
         {
             float distancia = 0;
             Edificio nearest = null;
-            if (!u.jugador.Equals(JugadorDefensor))
-            {
-                foreach (Edificio ed in this.edificios.Where(e => e.estaViva))
+            if (Clanes[u.jugador].Equals(Clanes[JugadorDefensor])) return null; // el bando defensor no ataca edificios
+            
+            foreach (Edificio ed in this.edificios.Where(e => e.estaViva))
+            {              
+                float d = euclides2(u.posX - ed.posX, u.posY - ed.posY);
+                if (d < distancia)
                 {
-                    if (!ed.jugador.Equals(u.jugador))
-                    {
-                        float d = euclides2(u.posX - ed.posX, u.posY - ed.posY);
-                        if (d < distancia)
-                        {
-                            d = distancia;
-                            nearest = ed;
-                        }
-                    }
+                    d = distancia;
+                    nearest = ed;
                 }
-
             }
             return nearest;
         }
@@ -342,28 +323,6 @@ namespace BusinessLogicLayer
             return new GridPos(u.posXr, u.posYr);
         }
 
-        
-
-
-        /*public ResultadoBusqPath[] buscarRutaHaciaEnemigosCercanos()
-        {
-            Dictionary<Unidad, GridPos> tmp = new Dictionary<Unidad, GridPos>();
-            var unidades = unidadesPorJugador.Values.SelectMany(lst => lst);
-            //JumpPointParam param = configurar();
-
-            var res = new List<ResultadoBusqPath>();
-            foreach (var u in unidades)
-            {
-                Entidad target = buscarMasCercano(u);
-                if (target != null)
-                {
-                    u.target = target.id;
-                    var r = buscarRutaHastaTarget(u, target);
-                    res.Add(r);
-                }
-            }
-            return res.ToArray();
-        }*/
 
         public ResultadoBusqPath buscar(Unidad u, GridPos destino)
         {
@@ -667,11 +626,11 @@ namespace BusinessLogicLayer
             }
         }
 
-        public void DeployUnidadesAutomatico(Jugador jugador, IEnumerable<Unidad> unidades)
+        public void DeployUnidadesAutomatico(int centroX, int centroY, IEnumerable<Unidad> unidades)
         {
             actualizarTableroFP();
 
-            DeployAutomatico(unidades, sizeX / 2, sizeY / 2);
+            DeployAutomatico(unidades, centroX, centroY);
         }
     }
 }
