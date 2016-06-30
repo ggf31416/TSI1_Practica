@@ -384,7 +384,7 @@ namespace BusinessLogicLayer
         }
 
         // inicia preparativos para ataque
-        public string IniciarAtaque(string tenant, InfoAtaque info)
+        public void IniciarAtaque(string tenant, InfoAtaque info)
         {
 
             //setAtacabilidadJugador(tenant, info.Enemigo,false);
@@ -418,9 +418,8 @@ namespace BusinessLogicLayer
             //conj.UnidadesContribuidas.Add(contr);
 
             blJuego.QuitarUnidades(infoAtacante, contr, true);
-            return "pene";
-            //Planificador.getInstancia().IniciarAtaque(tenant, idBatalla, (this.config.SegundosAtaque));
-            //notificar(info, "NotificacionAtaque", this.config.SegundosAtaque);
+            Planificador.getInstancia().IniciarAtaque(tenant, idBatalla, (this.config.SegundosAtaque));
+            notificar(info, "NotificacionAtaque", this.config.SegundosAtaque);
         }
 
         public string getJsonBatalla(string tenant, string idUsuario)

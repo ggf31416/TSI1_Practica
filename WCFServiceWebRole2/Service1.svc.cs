@@ -38,9 +38,9 @@ namespace WCFServiceWebRole2
             return blHandler.GetListaDeJugadoresAtacables(jugadorAt);
         }*/
 
-        public string IniciarAtaque(string tenant, InfoAtaque info)
+        public void IniciarAtaque(string tenant, InfoAtaque info)
         {
-            return blBatalla.IniciarAtaque(tenant, info);
+            blBatalla.IniciarAtaque(tenant, info);
         }
 
         public void register(ClienteJuego cliente, string idJuego)

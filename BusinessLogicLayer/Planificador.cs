@@ -39,12 +39,16 @@ namespace BusinessLogicLayer
     public class Planificador
     {
 
-        private static Planificador instancia;
+        private static Planificador instancia = null;
         private IScheduler scheduler;
 
         public static  Planificador getInstancia()
         {
-            if (instancia == null) instancia = new Planificador();
+            if (instancia == null)
+            {
+                instancia = new Planificador();
+                instancia.iniciar();
+            }
             return instancia;
         }
 
