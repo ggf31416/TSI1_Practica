@@ -7,6 +7,7 @@ using System.Threading;
 using DataAccessLayer;
 using System.Threading.Tasks;
 using System.Linq;
+using System.ServiceModel;
 
 namespace BusinessLogicLayer
 {
@@ -16,6 +17,8 @@ namespace BusinessLogicLayer
         // representa las batallas en curso en este servidor
         public Dictionary<string, Batalla> batallasPorJugador = new Dictionary<string, Batalla>();
         public List<Batalla> batallas = new List<Batalla>();
+
+        public BLServiceClient serviceClient = new BLServiceClient();
 
         public Dictionary<string, Jugador> jugadores { get; private set; } = new Dictionary<string, Jugador>();
 
@@ -132,8 +135,7 @@ namespace BusinessLogicLayer
 
         public void agregarEdificio(AccionMsg msg)
         {
-            //BLServiceClient serviceClient = new BLServiceClient();
-            Service1Client client = new Service1Client();
+            Service1Client client = getClienteInteraccion();
             Batalla b = obtenerBatalla(msg.Jugador);
             if (b == null) return;
             b.tablero.agregarEdificio(new Edificio { tipo_id = msg.Id, jugador = msg.Jugador, posX = msg.PosX, posY = msg.PosY });
@@ -146,8 +148,9 @@ namespace BusinessLogicLayer
 
         private static Service1Client getClienteInteraccion()
         {
-            //BLServiceClient serviceClient = new BLServiceClient();
-            Service1Client client = new Service1Client();
+            BasicHttpBinding binding = new BasicHttpBinding();
+            EndpointAddress address = new EndpointAddress("http://tsiserviceinteraccion.cloudapp.net/Service1.svc");
+            Service1Client client = new Service1Client(binding, address);
             return client;
         }
 
