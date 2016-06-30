@@ -384,12 +384,11 @@ namespace BusinessLogicLayer
         }
 
         // inicia preparativos para ataque
-        public void IniciarAtaque(string tenant, InfoAtaque info)
+        public string IniciarAtaque(string tenant, InfoAtaque info)
         {
-            
+
             //setAtacabilidadJugador(tenant, info.Enemigo,false);
-            
-            AtaqueConjunto conj = new AtaqueConjunto() { Atacante = info.Jugador, Defensor = info.Enemigo,IdBatalla=info.Enemigo,Tenant = tenant };
+            AtaqueConjunto conj = new AtaqueConjunto() { Atacante = info.Jugador, Defensor = info.Enemigo, IdBatalla = info.Enemigo, Tenant = tenant };
             Juego infoAtacante = blJuego.GetJuegoUsuarioSinGuardar(tenant, conj.Atacante);
             conj.ClanAtacante = infoAtacante.DataJugador.Clan;
             Juego infoDefensor = blJuego.GetJuegoUsuarioSinGuardar(tenant, conj.Atacante);
@@ -410,7 +409,7 @@ namespace BusinessLogicLayer
                 Console.WriteLine(ex);
                 idBatalla = _dalAtConj.guardarAtaqueConj(conj);
             }
-            
+
 
             Contribucion contr = obtenerUnidades(infoAtacante);
             contr.NombreDefensor = userName;
@@ -418,10 +417,10 @@ namespace BusinessLogicLayer
             _dalAtConj.agregarContribucion(tenant, idBatalla, contr);
             //conj.UnidadesContribuidas.Add(contr);
 
-            blJuego.QuitarUnidades(infoAtacante, contr,true);
-
-            Planificador.getInstancia().IniciarAtaque(tenant, idBatalla, (this.config.SegundosAtaque));
-            notificar(info, "NotificacionAtaque", this.config.SegundosAtaque);
+            blJuego.QuitarUnidades(infoAtacante, contr, true);
+            return "pene";
+            //Planificador.getInstancia().IniciarAtaque(tenant, idBatalla, (this.config.SegundosAtaque));
+            //notificar(info, "NotificacionAtaque", this.config.SegundosAtaque);
         }
 
         public string getJsonBatalla(string tenant, string idUsuario)

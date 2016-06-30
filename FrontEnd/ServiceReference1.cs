@@ -2485,7 +2485,7 @@ public interface IService1
     void register(Shared.Entities.ClienteJuego cliente, string nombreJuego);
     
     [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/IniciarAtaque", ReplyAction="http://tempuri.org/IService1/IniciarAtaqueResponse")]
-    void IniciarAtaque(string tenant, Shared.Entities.InfoAtaque info);
+    string IniciarAtaque(string tenant, Shared.Entities.InfoAtaque info);
     
     [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IService1/GetAllDataJuego", ReplyAction="http://tempuri.org/IService1/GetAllDataJuegoResponse")]
     Shared.Entities.Juego GetAllDataJuego(string tenant);
@@ -2602,9 +2602,9 @@ public partial class Service1Client : System.ServiceModel.ClientBase<IService1>,
         base.Channel.register(cliente, nombreJuego);
     }
     
-    public void IniciarAtaque(string tenant, Shared.Entities.InfoAtaque info)
+    public string IniciarAtaque(string tenant, Shared.Entities.InfoAtaque info)
     {
-        base.Channel.IniciarAtaque(tenant, info);
+        return base.Channel.IniciarAtaque(tenant, info);
     }
     
     public Shared.Entities.Juego GetAllDataJuego(string tenant)

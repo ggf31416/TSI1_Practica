@@ -10,7 +10,7 @@ namespace BusinessLogicLayer
     public interface IBLBatalla
     {
         void Accion(string tenant, string json);
-        void IniciarAtaque(string tenant, InfoAtaque info);
+        string IniciarAtaque(string tenant, InfoAtaque info);
         void IniciarBatalla(string tenant, string idBatalla);
         string getJsonBatalla(string tenant, string idUsuario);
         bool agregarContribucion(string tenant, string idDefensor, Contribucion contr);

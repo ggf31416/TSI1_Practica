@@ -29,7 +29,7 @@ namespace WCFServiceWebRole2
         List<JugadorBasico> GetListaDeJugadoresAtacables(string jugadorAt);*/
 
         [OperationContract]
-        void IniciarAtaque(string tenant, InfoAtaque info);
+        string IniciarAtaque(string tenant, InfoAtaque info);
 
         //DATA JUEGO
         [OperationContract]
