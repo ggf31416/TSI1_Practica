@@ -75,7 +75,7 @@ namespace FrontEnd.Controllers
                 Service1Client client = new Service1Client();
                 info.Jugador = idJugador;
                 info.Juego = tenant;
-                string pene = client.IniciarAtaque(tenant,info);
+                client.IniciarAtaque(tenant,info);
                 return Json(new { sucess = true });
             }
             catch (Exception e)

@@ -132,7 +132,7 @@ namespace BusinessLogicLayer
 
         public void agregarEdificio(AccionMsg msg)
         {
-            BLServiceClient serviceClient = new BLServiceClient();
+            //BLServiceClient serviceClient = new BLServiceClient();
             Service1Client client = new Service1Client();
             Batalla b = obtenerBatalla(msg.Jugador);
             if (b == null) return;
@@ -146,7 +146,7 @@ namespace BusinessLogicLayer
 
         private static Service1Client getClienteInteraccion()
         {
-            BLServiceClient serviceClient = new BLServiceClient();
+            //BLServiceClient serviceClient = new BLServiceClient();
             Service1Client client = new Service1Client();
             return client;
         }
