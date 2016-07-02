@@ -375,24 +375,24 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-12">
-                                    <div class="row">
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Imagen</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Nombre</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Estado</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Tiempo de construccion</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-1" ng-repeat="rec in $root.listaRecursos">
+                                    <div class="row" style="padding-top:10px">
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Imagen</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Nombre</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Estado</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Tiempo de construccion</div>
+                                        <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1" ng-repeat="rec in $root.listaRecursos">
                                             <img class="recursosTablero" ng-src="{{rec.Imagen}}" />
                                         </div>
                                     </div>
-                                    <div class="row handPointer" ng-click="actualizarTecnologia(e.Id)" ng-repeat="e in $root.listaTecnologias">
-                                        <div class="col-sm-2 col-md-2 col-lg-2"><img width="50" height="50" ng-src="{{e.Imagen}}" /></div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.Nombre}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 3">No es posible</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 2">Posible</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 1">En desarrollo</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 0">Ya desarrollado</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.TiempoConstruccion}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-1" ng-repeat="rec in $root.listaRecursos">{{getCostoRecurso(e, rec.Id)}}</div>
+                                    <div class="row handPointer" style="border-top: 1px dotted; padding-top:10px; padding-bottom:10px" ng-click="actualizarTecnologia(e.Id)" ng-repeat="e in $root.listaTecnologias">
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2"><img width="50" height="50" ng-src="{{e.Imagen}}" /></div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">{{e.Nombre}}</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 3">No es posible</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 2">Posible</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 1">En desarrollo</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 0">Ya desarrollado</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">{{e.TiempoConstruccion}}</div>
+                                        <div class="col-xs-12 col-sm-1  col-md-1  col-lg-1" ng-repeat="rec in $root.listaRecursos">{{getCostoRecurso(e, rec.Id)}}</div>
                                     </div>
                                 </div>
                             </div>
@@ -415,19 +415,19 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-12">
-                                    <div class="row">
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Imagen</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Nombre</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Tiempo de construccion</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">
+                                    <div class="row" style="padding-top:10px">
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Imagen</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Nombre</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Tiempo de construccion</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">
                                             <img class="recursosTablero" ng-src="{{rec.Imagen}}" />
                                         </div>
                                     </div>
-                                    <div class="row" ng-repeat="e in $root.listaUnidades">
-                                        <div class="col-sm-2 col-md-2 col-lg-2"><img width="50" height="50" ng-src="{{e.Imagen}}" /></div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.Nombre}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.TiempoConstruccion}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">{{getCostoRecurso(e, rec.Id)}}</div>
+                                    <div class="row" style="border-top: 1px dotted; padding-top:10px; padding-bottom:10px" ng-repeat="e in $root.listaUnidades">
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2"><img width="50" height="50" ng-src="{{e.Imagen}}" /></div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">{{e.Nombre}}</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">{{e.TiempoConstruccion}}</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">{{getCostoRecurso(e, rec.Id)}}</div>
                                     </div>
                                 </div>
                             </div>
