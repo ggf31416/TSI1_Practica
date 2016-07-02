@@ -152,7 +152,7 @@
                     <div class="row row-eq-height" ng-repeat="row in $root.tablero.Columnas">
                         <div class="col-xs-1 col-md-1 col-sm-1 col-lg-1 col-centered columnasTablero handPointer" ng-repeat="casilla in row.Fila"
                              style="background-image: url('{{ $root.tablero.ImagenTerreno}}')">
-                                <img class="col-xs-12 col-md-12 col-sm-12 col-lg-12 col-centered columnasTablero handPointer" ng-attr-idCasilla="{{casilla.Id}}" ng-src="{{getImgCasilla(casilla.Id)}}"
+                                <img style="max-height:100%; max-width:100%" class="col-xs-12 col-md-12 col-sm-12 col-lg-12 col-centered columnasTablero handPointer" ng-attr-idCasilla="{{casilla.Id}}" ng-src="{{getImgCasilla(casilla.Id)}}"
                                      ng-click="editCell($parent.$index, $index, casilla)" />
                         </div>
                     </div>
@@ -176,7 +176,7 @@
                                         <div class="col-sm-2 col-md-2 col-lg-2">Nombre</div>
                                         <div class="col-sm-2 col-md-2 col-lg-2">Tiempo de construccion</div>
                                         <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">
-                                            <img class="recursosTablero" ng-src="{{rec.Imagen}}" />
+                                            <img style="max-height:100%; max-width:100%" class="recursosTablero" ng-src="{{rec.Imagen}}" />
                                         </div>
                                     </div>
                                     <div class="row handPointer" ng-click="addEdificio(e.Id)" ng-repeat="e in $root.listaEdificios">
@@ -324,7 +324,7 @@
                                 <div class="form-group col-sm-9 col-md-9 col-lg-9">
                                     <div class="row">
                                         <div class="col-sm-12 col-md-12 col-lg-12">
-                                            <img ng-src="{{entidad.Imagen}}" />
+                                            <img style="max-height:100%; max-width:100%" ng-src="{{entidad.Imagen}}" />
                                         </div>
                                     </div>
                                 </div>
