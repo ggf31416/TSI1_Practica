@@ -74,10 +74,19 @@ namespace BusinessLogicLayer
                             Console.WriteLine("generar acciones demoro:  " + sw2.ElapsedMilliseconds + " ms");
                             if (jsonAcciones.Length > 0)
                             {
-                                sw2.Restart();
-                                client.SendLista(b.GetListaJugadores(), jsonAcciones);
-                                Console.WriteLine("SendLista demoro:  " + sw2.ElapsedMilliseconds + " ms");
-                                Console.WriteLine("Long: " + jsonAcciones.Length);
+                                try
+                                {
+                                    sw2.Restart();
+                                    client.SendLista(b.GetListaJugadores(), jsonAcciones);
+                                    Console.WriteLine("SendLista demoro:  " + sw2.ElapsedMilliseconds + " ms");
+                                    Console.WriteLine("Long: " + jsonAcciones.Length);
+                                    b.borrarAcciones();
+                                }
+                                catch (Exception ex)
+                                {
+                                    Console.WriteLine("{0} (code={1})", ex.GetType().ToString(), ex.HResult);
+                                }
+
                             }
                         }
                         catch (Exception ex)
@@ -390,7 +399,17 @@ namespace BusinessLogicLayer
 
             string userName = getNombreJugador(tenant, conj.Defensor);
             conj.NombreDefensor = userName;
-            var idBatalla = _dalAtConj.guardarAtaqueConj(conj);
+            var idBatalla = "";
+            try
+            {
+                idBatalla = _dalAtConj.guardarAtaqueConj(conj);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                idBatalla = _dalAtConj.guardarAtaqueConj(conj);
+            }
+            
 
             Contribucion contr = obtenerUnidades(infoAtacante);
             contr.NombreDefensor = userName;
@@ -464,12 +483,13 @@ namespace BusinessLogicLayer
                 {
                     double mult = 0;
                     string msg = "Empató la batalla.";
+                    
                     if (ganoAtacante)
                     {
                         if (listaGanadores.Contains(jug))
                         {
                             mult = 1.0 / cantGanadores;
-                            msg = "Ganó la batalla.";
+                            //msg = "Ganó la batalla.";
                         }
                         else if (jug.Equals(b.IdDefensor()))
                         {
@@ -477,6 +497,11 @@ namespace BusinessLogicLayer
                             msg = "Perdió la batalla.";
                         }
                     }
+                    if (listaGanadores.Contains(jug))
+                    {
+                        msg = "Ganó la batalla.";
+                    }
+
                     mensajes[jug] = msg;
                     if (jug == b.IdDefensor())
                     {

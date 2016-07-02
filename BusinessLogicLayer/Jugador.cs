@@ -11,6 +11,7 @@ namespace BusinessLogicLayer
     public class Jugador
     {
         public string Id { get; set; }
+        public string ShortId { get; set; }
         public string Clan { get; set; }
         public Dictionary<int,ConjuntoUnidades> Unidades { get; set; } = new Dictionary<int, ConjuntoUnidades>();
         public List<Edificio> Edificios { get; set; } = new List<Edificio>();
@@ -162,6 +163,7 @@ namespace BusinessLogicLayer
     public class InfoJugador
     {
         public string Id { get; set; }
+        public string ShortId { get; set; }
         public string Clan { get; set; }
         public List< ConjuntoUnidades> Unidades { get; set; } = new List<ConjuntoUnidades>();
         public List<Edificio> Edificios { get; set; } = new List<Edificio>();

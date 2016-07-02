@@ -17,6 +17,7 @@ namespace BusinessLogicLayer
         public string Tenant { get; set; }
         private Dictionary<string, Jugador> jugadores = new Dictionary<string, Jugador>();
         public string BatallaId { get; set; }
+        public int idxJugador = 1;
 
         public HashSet<string > movio = new HashSet<string >();
 
@@ -67,6 +68,7 @@ namespace BusinessLogicLayer
             this.defensor = defensor;
            
             jugadores.Add(defensor.Id, defensor);
+
             this.tiposEdificios = defensor.tiposEdificio;
             this.tiposUnidades = defensor.tiposUnidad;
             tablero.agregarEdificios(defensor.Edificios);
@@ -79,6 +81,7 @@ namespace BusinessLogicLayer
         public void AgregarJugador(Jugador j)
         {
             jugadores[ j.Id]=  j;
+            j.ShortId = this.idxJugador++.ToString();
             tablero.Clanes[j.Id] = j.Clan;
         }
 
@@ -88,12 +91,14 @@ namespace BusinessLogicLayer
             List<Unidad> res = new List<Unidad>();
             foreach (ConjuntoUnidades cu in jug.Unidades.Values)
             {
-                int cant = 0;
+                int cant = cu.Cantidad;
                 for(int i = 0; i < cant; i++)
                 {
                     if (max > 0)
                     {
                         Unidad x = getUnidadPorId(cu.UnidadId, jug.Id);
+                        x.id = jug.ShortId + "*" + max;
+                        res.Add(x);
                         cu.Cantidad--;
                         max--;
                     }
@@ -108,6 +113,7 @@ namespace BusinessLogicLayer
             if (!this.jugadores.ContainsKey(jugador) || !(this.jugadores[jugador].Unidades.ContainsKey(id_tipo))) return 0;
             if (this.jugadores[jugador].Unidades[id_tipo].Cantidad > 0)
             {
+                this.movio.Add(jugador); // desactivo el deploy automatico
                 Unidad u = getUnidadPorId(id_tipo, jugador);
                 this.jugadores[jugador].Unidades[id_tipo].Cantidad -= 1;
                 u.id = unitId;
@@ -126,7 +132,13 @@ namespace BusinessLogicLayer
             TipoUnidad tu = jugadores[idJugador].tipos.GetValueOrDefault(tipoId) as TipoUnidad;
             if (tu != null)
             {
-                u = new Unidad { ataque = tu.Ataque.GetValueOrDefault(), defensa = tu.Defensa.GetValueOrDefault(), tipo_id = tu.Id, hp = tu.Vida.GetValueOrDefault() };
+                u = new Unidad { ataque = tu.Ataque.GetValueOrDefault(),
+                    defensa = tu.Defensa.GetValueOrDefault(),
+                    tipo_id = tu.Id,
+                    jugador = idJugador,
+                    hp = tu.Vida.GetValueOrDefault()
+
+                };
                 u.rango = 8; // hardcodeado;
             }
             return u;
@@ -249,6 +261,7 @@ namespace BusinessLogicLayer
             public Dictionary<string,InfoJugador> jugadores { get; set; } = new Dictionary<string,InfoJugador>();
 
             public string IdJugador { get; set; }
+            public string ShortId { get; set; }
 
         }
 
@@ -263,6 +276,7 @@ namespace BusinessLogicLayer
 
             var res = new InfoBatalla();
             res.IdJugador = IdJugador;
+            res.ShortId = jugadores[IdJugador].ShortId;
             foreach(Jugador j in jugadores.Values)
             {
                 bool incluirEdificios = j.Id.Equals(defensor.Id);
@@ -310,7 +324,10 @@ namespace BusinessLogicLayer
 
 
 
-
+        public void borrarAcciones()
+        {
+            this.tablero.Acciones.Clear();
+        }
     }
 }
 

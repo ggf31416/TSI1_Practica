@@ -18,6 +18,8 @@
         $scope.idJuego = 6;
 
         $scope.listaEnemigos = [];
+
+        $scope.finMsg = "";
         
         //juegoService.GetEstadoBatalla();
 
@@ -41,6 +43,7 @@
             var batalla = $scope.batalla;
             if (!batalla) console.error("No hay datos de batalla");
             nombreJugador = batalla.IdJugador;
+            shortId = batalla.ShortId;
             $rootScope.listaEdificios = batalla.tiposEdificio;
             //$rootScope.listaUnidades = [ {Ataque : 10, Defensa : 10, Id : 314159, Nombre : "Arquero", TiempoConstruccion : 10, Vida : 100, Imagen : "/SPA/backoffice/ImagenesSubidas/arquero.jpg" }]
             $rootScope.listaUnidades = batalla.tiposUnidad;
@@ -92,6 +95,7 @@
         var unidadesPorId = {}
 
         var nombreJugador;
+        var shortId;
 
         var estaEnBatalla = true;
        
@@ -334,6 +338,8 @@
 
          function mostrarFin(mensaje){
             $scope.finMsg = mensaje.Msg;
+            $scope.$apply();
+            console.info($scope.finMsg);
             $('#dialogoFin').modal('show');
         }
 
@@ -597,7 +603,7 @@
                 //hacerSeleccionableUnidad(sprite);
                 sprite.info = new Unidad_Info();
                 sprite.info.jugador = nombreJugador;
-                sprite.info.unit_id = nombreJugador + "#" + $scope.contador++;
+                sprite.info.unit_id = shortId + "#" + $scope.contador++;
                 unidadesPorId[sprite.info.unit_id] = sprite;
                 agregarGraficos($scope.game, sprite);
                 //sprite.id_logico = $scope.contador--; // asigno un id automatico que luego cambio}
