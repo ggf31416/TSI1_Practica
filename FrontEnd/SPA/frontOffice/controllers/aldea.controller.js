@@ -192,7 +192,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
 
         $scope.getImgCasilla = function (id) {
             if (id == -1) {
-                return $rootScope.tablero.ImagenTerreno;
+                return "https://storagegabilo.blob.core.windows.net/imagenes/2_transparente.jpg";
             } if(id == -5){
                 return $rootScope.tablero.enConstruccion;
             } else {

@@ -50,3 +50,10 @@ img:disabled {
     padding:40px;
     background-size: cover;
 }
+
+ .row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}

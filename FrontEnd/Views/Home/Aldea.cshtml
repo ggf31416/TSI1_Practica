@@ -2,7 +2,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+    <title>@ViewBag.Tenant</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/modernizr")
@@ -149,9 +149,12 @@
             </div>
             <div class="row">
                 <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12 imagenFondo" ng-style="style">
-                    <div class="row" ng-repeat="row in $root.tablero.Columnas">
-                        <img class="col-xs-1 col-md-1 col-sm-1 col-lg-1 col-centered columnasTablero handPointer" ng-repeat="casilla in row.Fila" ng-attr-idCasilla="{{casilla.Id}}" ng-src="{{getImgCasilla(casilla.Id)}}"
-                             ng-click="editCell($parent.$index, $index, casilla)" />
+                    <div class="row row-eq-height" ng-repeat="row in $root.tablero.Columnas">
+                        <div class="col-xs-1 col-md-1 col-sm-1 col-lg-1 col-centered columnasTablero handPointer" ng-repeat="casilla in row.Fila"
+                             style="background-image: url('{{ $root.tablero.ImagenTerreno}}')">
+                                <img class="col-xs-12 col-md-12 col-sm-12 col-lg-12 col-centered columnasTablero handPointer" ng-attr-idCasilla="{{casilla.Id}}" ng-src="{{getImgCasilla(casilla.Id)}}"
+                                     ng-click="editCell($parent.$index, $index, casilla)" />
+                        </div>
                     </div>
                 </div>
             </div>
