@@ -9,9 +9,9 @@ namespace BusinessLogicLayer
 {
    public interface IBLConexion
     {
-         void agregarConexion(string tenant, ConexionSignalr conn);
-         void desconectar(string tenant, ConexionSignalr conn);
-         List<String> obtenerConexiones(string tenant, string idJugador);
+        void agregarConexion( string tenant, String idJugador, String conId);
+        void desconectar(string tenant, String idJugador, String conId);
+        List<String> obtenerConexiones(string tenant, string idJugador);
         List<string> obtenerConexionesGrupo(string tenant, List<string> listaJugadores);
     }
 }

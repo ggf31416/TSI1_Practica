@@ -33,7 +33,7 @@ namespace BusinessLogicLayer
             }
         }*/
 
-        public void CargarDesdeJuego(Juego jj)
+        public void CargarDesdeJuego(Juego jj,bool cargarUnidades)
         {
             this.Id = jj.IdJugador;
             this.Clan = jj.DataJugador.Clan ?? jj.IdJugador;
@@ -47,15 +47,28 @@ namespace BusinessLogicLayer
             }
             this.tiposEdificio = jj.TipoEdificios;
             this.tiposUnidad = jj.TipoUnidades;
-            foreach (var u in jj.DataJugador.EstadoUnidades.Values)
+            if (cargarUnidades)
             {
-                if (u != null && u.Estado == EstadoData.EstadoEnum.A)
+                foreach (var u in jj.DataJugador.EstadoUnidades.Values)
                 {
-                    ConjuntoUnidades cu = new ConjuntoUnidades() { Cantidad = u.Cantidad, UnidadId = u.Id };
-                    this.Unidades.Add(cu.UnidadId, cu);
+                    if (u != null && u.Estado == EstadoData.EstadoEnum.A)
+                    {
+                        ConjuntoUnidades cu = new ConjuntoUnidades() { Cantidad = u.Cantidad, UnidadId = u.Id };
+                        this.Unidades.Add(cu.UnidadId, cu);
+                    }
                 }
             }
             CargarEdificios(jj.Tablero);
+        }
+
+        public void CargarDesdeContribucion(Contribucion contr)
+        {
+            foreach (ConjuntoUnidades u in contr.UnidadesContribuidas)
+            {
+                ConjuntoUnidades cu = new ConjuntoUnidades() { Cantidad = u.Cantidad, UnidadId = u.UnidadId };
+                this.Unidades.Add(cu.UnidadId, cu);
+            }
+
         }
 
         public void CargarEdificios(Tablero miBase)

@@ -25,11 +25,11 @@ namespace BusinessLogicLayer
     {
         public void Execute(IJobExecutionContext context)
         {
-            if (context.MergedJobDataMap.ContainsKey("infoAtaque"))
+            if (context.MergedJobDataMap.ContainsKey("idBatalla"))
             {
-                InfoAtaque ataque = (InfoAtaque)context.MergedJobDataMap.Get("infoAtaque");
+                var idBatalla = (String)context.MergedJobDataMap.Get("idBatalla");
                 string tenant = (string)context.MergedJobDataMap.Get("tenant");
-                BLBatalla.getInstancia().IniciarBatalla(tenant, ataque);
+                BLBatalla.getInstancia().IniciarBatalla(tenant, idBatalla);
             }
         }
 
@@ -69,10 +69,10 @@ namespace BusinessLogicLayer
         }
 
 
-        public void IniciarAtaque(string tenant,InfoAtaque ataque,int segundosDelay)
+        public void IniciarAtaque(string tenant,string IdBatalla,int segundosDelay)
         {
             var job = JobBuilder.Create<IniciarBatallaJob>().Build();
-            job.JobDataMap.Put("infoAtaque", ataque);
+            job.JobDataMap.Put("idBatalla", IdBatalla);
             job.JobDataMap.Put("tenant", tenant);
             unaVez(job, segundosDelay);
 
@@ -90,7 +90,7 @@ namespace BusinessLogicLayer
 
                 IJobDetail turnosJob = JobBuilder.Create<TurnoJub>().WithIdentity("job1", "group1").Build();
                 ITrigger trigger = TriggerBuilder.Create().WithIdentity("trigger1", "group1").StartNow().WithSimpleSchedule(x =>
-                     x.WithInterval(TimeSpan.FromMilliseconds(1000)).RepeatForever())
+                     x.WithInterval(TimeSpan.FromMilliseconds(500)).RepeatForever())
                      .Build();
                 scheduler.ScheduleJob(turnosJob, trigger);
             }

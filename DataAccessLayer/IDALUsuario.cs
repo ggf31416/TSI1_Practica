@@ -27,5 +27,7 @@ namespace DataAccessLayer
         bool SoyAdministrador(string Tenant, string IdJugador);
 
         int EnviarRecursos(List<Shared.Entities.RecursoAsociado> tributos, string IdJugadorDestino, string Tenant, string IdJugador);
+
+        string GetUserName(string Tenant, string IdJugador);
     }
 }

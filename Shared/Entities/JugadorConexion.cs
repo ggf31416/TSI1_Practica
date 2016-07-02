@@ -11,7 +11,7 @@ namespace Shared.Entities
     public class ConexionSignalr
     {
         public string ConnectionID { get; set; }
-        string IdJugador { get; set; }
+        public string IdJugador { get; set; }
         //public string UserAgent { get; set; }
         //public bool Connected { get; set; }
     }

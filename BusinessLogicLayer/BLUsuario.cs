@@ -63,5 +63,7 @@ namespace BusinessLogicLayer
         {
             return _dal.EnviarRecursos(tributos, IdJugadorDestino, Tenant, IdJugador);
         }
+
+
     }
 }

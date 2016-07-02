@@ -74,11 +74,11 @@ namespace ServiceLayer
         string GetEstadoBatalla(string tenant, string idJugador);
 
         [OperationContract]
-        void ConectarSignalr(string tenant, ConexionSignalr con);
+        void ConectarSignalr(string tenant, String idJugador,String  conId);
         [OperationContract]
-        void DesconectarSignalr(string tenant, ConexionSignalr con);
+        void DesconectarSignalr(string tenant, String idJugador, String conId);
         [OperationContract]
-        void ReconectarSignalr(string tenant, ConexionSignalr con);
+        void ReconectarSignalr(string tenant, String idJugador, String conId);
 
         [OperationContract]
         void EnviarUnidades(string tenant, string idDefensor, Contribucion contr);

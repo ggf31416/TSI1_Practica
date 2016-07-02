@@ -95,7 +95,8 @@ namespace DataAccessLayer
         {
             database = client.GetDatabase(Tenant);
             collection = database.GetCollection<ClienteJuego>("usuario");
-
+            // descomentar para resetear atacabilidad:
+            //collection.UpdateMany(c => c.atacable == false, Builders<ClienteJuego>.Update.Set(c => c.atacable, true));
             var query = from usuario in collection.AsQueryable<ClienteJuego>()
                         where usuario.atacable == true
                         select usuario;
@@ -393,10 +394,18 @@ namespace DataAccessLayer
         {
             database = client.GetDatabase(Tenant);
             collection = database.GetCollection<ClienteJuego>("usuario");
-            ClienteJuego cliente = collection.AsQueryable<ClienteJuego>().FirstOrDefault();
+            
             var builder = Builders<ClienteJuego>.Update;
             var res = collection.UpdateOne(c => c.id == IdJugador, builder.Set(c => c.atacable, atacable));
             return res.IsModifiedCountAvailable && res.ModifiedCount == 1;
+        }
+
+        public string GetUserName(string Tenant,string IdJugador)
+        {
+            database = client.GetDatabase(Tenant);
+            collection = database.GetCollection<ClienteJuego>("usuario");
+            string userName = collection.AsQueryable<ClienteJuego>().Where(c => c.id == IdJugador).Select(c => c.username).FirstOrDefault();
+            return userName;
         }
     }
 }

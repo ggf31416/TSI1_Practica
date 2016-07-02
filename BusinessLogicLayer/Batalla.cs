@@ -16,15 +16,18 @@ namespace BusinessLogicLayer
         private List< TipoEdificio> tiposEdificios = new List< TipoEdificio>();
         public string Tenant { get; set; }
         private Dictionary<string, Jugador> jugadores = new Dictionary<string, Jugador>();
+        public string BatallaId { get; set; }
 
+        public HashSet<string > movio = new HashSet<string >();
 
         private Jugador defensor;
 
         public string GrupoSignalR { get; set; }
         public bool EnCurso { get; set; }
+        public bool EnFinalizacion { get; set; }
         public CampoBatalla tablero;
 
-        public ConfigBatalla Config { get; set; }
+        public ConfigBatalla Config { get; set; } = new ConfigBatalla();
 
 
         public Dictionary<int,int> UnidadesSobrevivientes(String jugId)
@@ -36,6 +39,15 @@ namespace BusinessLogicLayer
             return new Dictionary<int, int>();
         }
 
+        public Dictionary<int,int> UnidadesPerdidas(String jugId)
+        {
+            if (jugadores.ContainsKey(jugId))
+            {
+                return tablero.UnidadesPerdidas(jugadores[jugId]);
+            }
+            return new Dictionary<int, int>();
+        }
+
         public String IdDefensor()
         {
             return this.defensor.Id;
@@ -43,8 +55,9 @@ namespace BusinessLogicLayer
 
     
 
-        public Batalla(Tablero t,Jugador atacante,Jugador defensor)
+        public Batalla(Tablero t, Jugador defensor,ConfigBatalla config,String tenant)
         {
+            this.Tenant = tenant;
             int sizeTableroX = t.CantColumnas.GetValueOrDefault();
             int sizeTableroY = t.CantFilas.GetValueOrDefault();
             int offSet = 4;
@@ -52,25 +65,39 @@ namespace BusinessLogicLayer
             this.tablero.JugadorDefensor = defensor.Id;
             this.EnCurso = true;
             this.defensor = defensor;
-            jugadores.Add(atacante.Id,atacante);
+           
             jugadores.Add(defensor.Id, defensor);
-            this.tiposEdificios = atacante.tiposEdificio;
-            this.tiposUnidades = atacante.tiposUnidad;
+            this.tiposEdificios = defensor.tiposEdificio;
+            this.tiposUnidades = defensor.tiposUnidad;
             tablero.agregarEdificios(defensor.Edificios);
-            tablero.Clanes[atacante.Id] = atacante.Clan;
+
             tablero.Clanes[defensor.Id] = defensor.Clan;
             this.GrupoSignalR = "bat_" + this.defensor.Id;
+            this.Config = config;
+        }
+
+        public void AgregarJugador(Jugador j)
+        {
+            jugadores[ j.Id]=  j;
+            tablero.Clanes[j.Id] = j.Clan;
         }
 
 
-        private List<Unidad> obtenerObjetosUnidad(Jugador jug)
+        private List<Unidad> obtenerObjetosUnidad(Jugador jug,int max)
         {
             List<Unidad> res = new List<Unidad>();
             foreach (ConjuntoUnidades cu in jug.Unidades.Values)
             {
-                for(int i = 0; i < cu.Cantidad; i++)
+                int cant = 0;
+                for(int i = 0; i < cant; i++)
                 {
-                    Unidad x = getUnidadPorId(cu.UnidadId, jug.Id);
+                    if (max > 0)
+                    {
+                        Unidad x = getUnidadPorId(cu.UnidadId, jug.Id);
+                        cu.Cantidad--;
+                        max--;
+                    }
+
                 }
             }
             return res;
@@ -127,8 +154,10 @@ namespace BusinessLogicLayer
         private Dictionary<string,bool>  quedanUnidadesClan()
         {
             Dictionary<string, bool> tieneUnidades = new Dictionary<string, bool>();
+
             foreach(Jugador j in this.jugadores.Values)
             {
+                tieneUnidades[j.Clan] = false;
                 if (j.Unidades.Count > 0 && j.Unidades.Any(cu => cu.Value.Cantidad > 0)) tieneUnidades[j.Clan] = true;
                 if (tablero.QuedanUnidadesJugador(j.Id)) tieneUnidades[j.Clan] = true;
             }
@@ -175,7 +204,22 @@ namespace BusinessLogicLayer
         public void ejecutarTurno()
         {
             tablero.tickTiempo();
-            if (tablero.Turno > this.Config.SegundosAtaque || perdioUnClan())
+            double tiempoTotal = tablero.Turno * Config.MilisTurno / 1000.0;
+            double tiempoCombate = tiempoTotal - Config.TiempoDeploy;
+            if (!this.tablero.EnCombate && tiempoTotal > Config.TiempoDeploy )
+            {
+                foreach(string jId in this.jugadores.Keys)
+                {
+                    if (!movio.Contains(jId))
+                    {
+                        movio.Add(jId);
+                        DeployUnidadesAutomatico(jId);
+
+                    }
+                }
+                this.tablero.EnCombate = true;   
+            }
+            if (tiempoCombate > this.Config.TiempoBatalla   || perdioUnClan())
             {
                 this.EnCurso = false;
             }
@@ -237,7 +281,7 @@ namespace BusinessLogicLayer
         {
             if (this.jugadores.ContainsKey(idUsuario)){
                 Jugador jugador = jugadores[idUsuario];
-                var unidadesDesplegables = obtenerObjetosUnidad(jugador);
+                var unidadesDesplegables = obtenerObjetosUnidad(jugador,20);
                 int centroTableroX = tablero.sizeX / 2;
                 int centroTableroY = tablero.sizeY / 2;
                 if (idUsuario.Equals(this.defensor.Id))

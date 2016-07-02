@@ -9,12 +9,13 @@ namespace FrontEnd
 {
     public class ChatHub : Hub
     {
-
+        private string NO_AUTH;
         private ServiceTableroClient cliente;
 
         public ChatHub()
         {
             cliente = new ServiceTableroClient();
+            NO_AUTH = new Hubs.IdentificadorSignalR().NO_AUTENTICADO;
         }
 
         public void send(string name, string message)
@@ -47,25 +48,42 @@ namespace FrontEnd
                 Clients.Group(user).broadcastMessage("Service", msg);
             }
         }
-        
+
 
         public override Task OnConnected()
         {
             var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);
-            Groups.Add(Context.ConnectionId, userName);
-
+           
+            if (userName != NO_AUTH)
+            {
+                Groups.Add(Context.ConnectionId, userName);
+                /*Task.Factory.StartNew(
+                    () => cliente.ConectarSignalr("", userName, Context.ConnectionId)
+                );*/
+            }
             return base.OnConnected();
         }
 
         public override Task OnReconnected()
         {
-            return base.OnReconnected();
+            var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);
+            if (userName != NO_AUTH)
+            {
+                /*Task.Factory.StartNew(
+                    () => cliente.ReconectarSignalr("", userName, Context.ConnectionId)
+                );*/
+            }
+             return base.OnReconnected();
         }
 
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            
+            var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);
+            if (userName != NO_AUTH)
+            {
+                cliente.DesconectarSignalr("", userName, Context.ConnectionId);
+            }
             return base.OnDisconnected(stopCalled);
         }
 

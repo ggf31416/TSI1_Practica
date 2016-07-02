@@ -11,12 +11,13 @@ using Microsoft.AspNet.SignalR.Client.Hubs;
 using System.ServiceModel;
 using Shared.Entities;
 using System.Diagnostics;
+using System.Threading;
 
 namespace BusinessLogicLayer
 {
     public class BLBatalla : IBLBatalla
     {
-
+        public ConfigBatalla config = new ConfigBatalla();
         // representa las batallas en curso en este servidor
         public Dictionary<string, Batalla> batallasPorJugador = new Dictionary<string, Batalla>();
         public List<Batalla> batallas = new List<Batalla>();
@@ -25,7 +26,9 @@ namespace BusinessLogicLayer
 
         private static BLBatalla instancia = null;
         private IBLJuego blJuego;
+        private DALAtaqueConj _dalAtConj = new DALAtaqueConj();
 
+    
         public static BLBatalla getInstancia()
         {
             if (instancia == null) instancia = new BLBatalla();
@@ -60,20 +63,37 @@ namespace BusinessLogicLayer
                 {
                     if (b.EnCurso)
                     {
-                        Stopwatch sw2 = Stopwatch.StartNew();
-                        b.ejecutarTurno();
-                        Console.WriteLine("un turno demoro:  " + sw2.ElapsedMilliseconds + " ms");
-                        sw2.Restart();
-                        string jsonAcciones = b.generarListaAccionesTurno();
-                        Console.WriteLine("generar acciones demoro:  " + sw2.ElapsedMilliseconds + " ms");
-                        if (jsonAcciones.Length > 0)
+                        try
                         {
+
+                            Stopwatch sw2 = Stopwatch.StartNew();
+                            b.ejecutarTurno();
+                            Console.WriteLine("un turno demoro:  " + sw2.ElapsedMilliseconds + " ms");
                             sw2.Restart();
-                            client.SendLista(b.GetListaJugadores(), jsonAcciones);
-                            Console.WriteLine("SendLista demoro:  " + sw2.ElapsedMilliseconds + " ms");
-                            Console.WriteLine("Long: " + jsonAcciones.Length);
+                            string jsonAcciones = b.generarListaAccionesTurno();
+                            Console.WriteLine("generar acciones demoro:  " + sw2.ElapsedMilliseconds + " ms");
+                            if (jsonAcciones.Length > 0)
+                            {
+                                sw2.Restart();
+                                client.SendLista(b.GetListaJugadores(), jsonAcciones);
+                                Console.WriteLine("SendLista demoro:  " + sw2.ElapsedMilliseconds + " ms");
+                                Console.WriteLine("Long: " + jsonAcciones.Length);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                            b.EnCurso = false;
                         }
                         
+                    }
+                    else if (!b.EnFinalizacion)
+                    {
+                        Task.Factory.StartNew(() =>
+                        {
+                            FinBatalla(b);
+                            this.batallas.Remove(b);
+                        });
                     }
                     
                 }
@@ -185,7 +205,7 @@ namespace BusinessLogicLayer
         }
 
 
-        public void IniciarBatalla(string tenant, InfoAtaque info)
+        /*public void IniciarBatalla(string tenant, InfoAtaque info)
         {
             Juego datosAtaq = blJuego.GetJuegoUsuarioSinGuardar(tenant, info.Jugador);
             Jugador jAt = new Jugador();
@@ -223,38 +243,45 @@ namespace BusinessLogicLayer
             batallasPorJugador[info.Enemigo] = b;
             batallas.Add(b);
             notificar(info, "IniciarAtaque");
+        }*/
+
+        public void IniciarBatalla(string tenant,string IdBatalla)
+        {
+            AtaqueConjunto info =  _dalAtConj.obtenerAtaqueConj(tenant, IdBatalla);
+            IniciarBatalla(tenant, info);
         }
 
-        public void IniciarBatalla(string tenant, InfoAtaqueConj info)
+        private void IniciarBatalla(string tenant, AtaqueConjunto info)
         {
-            Juego datosAtaq = blJuego.GetJuegoUsuarioSinGuardar(tenant, info.Atacante);
-            Jugador jAt = new Jugador();
-
-            jAt.CargarDesdeJuego(datosAtaq);
+            Console.WriteLine("Inicia Batalla!");
+            var contribuciones = _dalAtConj.obtenerContribuciones(tenant,info.IdBatalla);
+            var jugadores = new List<Jugador>();
 
             Juego datosDef = blJuego.GetJuegoUsuarioSinGuardar(tenant, info.Defensor);
             Jugador jDef = new Jugador();
             if (datosDef != null)
             {
 
-                jDef.CargarDesdeJuego(datosDef);
+                jDef.CargarDesdeJuego(datosDef, true);
+                jugadores.Add(jDef);
             }
-          
 
-            Batalla b = new Batalla(datosAtaq.Tablero, jAt, jDef);
-
-            if (batallasPorJugador.ContainsKey(info.Atacante))
-            {
-                batallasPorJugador[info.Atacante].EnCurso = false;
-            }
-            if (batallasPorJugador.ContainsKey(info.Defensor))
-            {
-                batallasPorJugador[info.Defensor].EnCurso = false;
-            }
-            batallasPorJugador[info.Atacante] = b;
+            Batalla b = new Batalla(datosDef.Tablero, jDef, this.config, tenant);
+            b.BatallaId = info.IdBatalla;
             batallasPorJugador[info.Defensor] = b;
+
+            foreach (Contribucion contr in contribuciones)
+            {
+                Juego datosContr = blJuego.GetJuegoUsuarioSinGuardar(tenant, info.Atacante);
+                Jugador jug = new Jugador();
+                jug.CargarDesdeJuego(datosContr, false);
+                jug.CargarDesdeContribucion(contr);
+                b.AgregarJugador(jug);
+                batallasPorJugador[jug.Id] = b;
+            }
+
             batallas.Add(b);
-            notificar(new InfoAtaque() { Enemigo = info.Defensor, Jugador = info.Atacante, Juego = info.Tenant }, "IniciarAtaque");
+           NotificarInicioAtaque(b.GetListaJugadores(), "IniciarAtaque");
         }
 
 
@@ -286,7 +313,19 @@ namespace BusinessLogicLayer
             
         }
 
-        private void notificar(InfoAtaque info,string tipo)
+        private void NotificarInicioAtaque(String[] jugadores,string tipo)
+        {
+            var client = getClienteInteraccion();
+            var informacionAtaque = new NotificacionAtaque()
+            {
+                Tipo = tipo,
+            };
+            string msg = JsonConvert.SerializeObject(informacionAtaque);
+            
+            client.SendLista(jugadores , msg);
+        }
+
+        private void notificar(InfoAtaque info,string tipo,int segundos)
         {
             var client = getClienteInteraccion();
             var notificar = new string[] { info.Jugador, info.Enemigo };
@@ -295,7 +334,7 @@ namespace BusinessLogicLayer
                 var informacionAtaque = new NotificacionAtaque()
                 {
                     Tipo = tipo,
-                    TiempoAtaque = 15,
+                    TiempoAtaque = segundos,
                     Atacante = "Atacante", // cambiar
                     Defensor = "Defensor",
                     SoyAliado = false,
@@ -313,6 +352,12 @@ namespace BusinessLogicLayer
             return dalUsuario.SetAtacableJugador(tenant, idJugador, atacable);
         }
 
+        private string getNombreJugador(string tenant,string idJugador)
+        {
+            IDALUsuario dalUsuario = new DALUsuario(tenant);
+            return dalUsuario.GetUserName(tenant, idJugador);
+        }
+
         private Contribucion obtenerUnidades(Juego j)
         {
             Contribucion c = new Contribucion() { IdJugador = j.IdJugador };
@@ -323,25 +368,40 @@ namespace BusinessLogicLayer
                     c.UnidadesContribuidas.Add(new ConjuntoUnidades() { UnidadId = u.Id, Cantidad = u.Cantidad });
                 }
             }
+            c.CantUnidades = c.UnidadesContribuidas.Sum(cu => cu.Cantidad);
+            c.SoyAtacante = true;
             return c;
         }
 
         // inicia preparativos para ataque
         public void IniciarAtaque(string tenant, InfoAtaque info)
         {
-            notificar(info, "NotificacionAtaque");
-            setAtacabilidadJugador(tenant, info.Enemigo,false);
-
-            InfoAtaqueConj conj = new InfoAtaqueConj() { Atacante = info.Jugador, Defensor = info.Enemigo };
-            Juego infoAtacante = blJuego.GetJuegoUsuarioSinGuardar(tenant, conj.Atacante);
-            Contribucion contr = obtenerUnidades(infoAtacante);
-            conj.UnidadesContribuidas.Add(contr);
             
+            //setAtacabilidadJugador(tenant, info.Enemigo,false);
+            
+            AtaqueConjunto conj = new AtaqueConjunto() { Atacante = info.Jugador, Defensor = info.Enemigo,IdBatalla=info.Enemigo,Tenant = tenant };
+            Juego infoAtacante = blJuego.GetJuegoUsuarioSinGuardar(tenant, conj.Atacante);
+            conj.ClanAtacante = infoAtacante.DataJugador.Clan;
+            Juego infoDefensor = blJuego.GetJuegoUsuarioSinGuardar(tenant, conj.Atacante);
+            conj.ClanDefensor = infoDefensor.DataJugador.Clan;
+            conj.FechaAtaque = DateTime.UtcNow.AddSeconds(this.config.SegundosAtaque);
+            conj.Jugadores.Add(conj.Atacante);
+            conj.Jugadores.Add(conj.Defensor);
+
+            string userName = getNombreJugador(tenant, conj.Defensor);
+            conj.NombreDefensor = userName;
+            var idBatalla = _dalAtConj.guardarAtaqueConj(conj);
+
+            Contribucion contr = obtenerUnidades(infoAtacante);
+            contr.NombreDefensor = userName;
+            contr.IdBatalla = idBatalla;
+            _dalAtConj.agregarContribucion(tenant, idBatalla, contr);
+            //conj.UnidadesContribuidas.Add(contr);
 
             blJuego.QuitarUnidades(infoAtacante, contr,true);
 
-
-            Planificador.getInstancia().IniciarAtaque(tenant, info, 15);   
+            Planificador.getInstancia().IniciarAtaque(tenant, idBatalla, (this.config.SegundosAtaque));
+            notificar(info, "NotificacionAtaque", this.config.SegundosAtaque);
         }
 
         public string getJsonBatalla(string tenant, string idUsuario)
@@ -354,57 +414,109 @@ namespace BusinessLogicLayer
             return null;
         }
 
-        public bool agregarContribucion(string tenant, string idDefensor, Contribucion contr)
+        public bool agregarContribucion(string tenant, string idBatalla, Contribucion contr)
         {
+
             DALAtaqueConj dal = new DALAtaqueConj();
-            return  dal.agregarContribucion(tenant, idDefensor,  contr);
+            AtaqueConjunto atConj = dal.obtenerAtaqueConj(tenant, idBatalla);
+            if (atConj.Habilitado == false) return false;
+            contr.FechaAtaque = atConj.FechaAtaque;
+            dal.agregarContribucion(tenant, idBatalla,  contr);
+            dal.guardarAtaqueConj(atConj);
+            return true;
 
         }
 
+        public List<InfoAtaqConj> GetSolicitudesAtaqueConjunto(string tenant, string IdJugador,string Clan)
+        {
+            var info = _dalAtConj.obtenerAtaquesClan(tenant, Clan, IdJugador);
+            return info;
+        }
+
+        public List<InfoContribucion> GetEnviosEjercitos(string tenant,string IdJugador)
+        {
+            var lista = _dalAtConj.obtenerContribucionesUsuario(tenant, IdJugador);
+            return lista;
+        }
+
         public void FinBatalla(Batalla b)
-        {   
-            var listaGanadores = b.ObtenerGanadores(); // obtiene jugador o jugadores (si es un clan) ganador
-            Dictionary<string, double> agregar = new Dictionary<string, double>();
-            bool ganoAtacante = b.ganoAtacante();
-            int cantGanadores = listaGanadores.Count;
-            if (b.ganoAtacante())
+        {
+            Console.WriteLine("Inicia Fin Batalla");
+            try
             {
-                var datosDefensor = blJuego.GetJuegoUsuarioSinGuardar(b.Tenant, b.IdDefensor());
-                var recursos = datosDefensor.DataJugador.EstadoRecursos;
+                b.EnFinalizacion = true;
+                var listaGanadores = b.ObtenerGanadores(); // obtiene jugador o jugadores (si es un clan) ganador
+                Dictionary<string, double> agregar = new Dictionary<string, double>();
+                bool ganoAtacante = b.ganoAtacante();
+                int cantGanadores = listaGanadores.Count;
+                if (b.ganoAtacante())
+                {
+                    var datosDefensor = blJuego.GetJuegoUsuarioSinGuardar(b.Tenant, b.IdDefensor());
+                    var recursos = datosDefensor.DataJugador.EstadoRecursos;
 
-                foreach (string idRec in recursos.Keys)
-                {
-                    agregar.Add(idRec, Math.Floor(recursos[idRec].Total));
-                }
-            }
-            Dictionary<string, string> mensajes = new Dictionary<string, string>();
-            foreach (string jug in b.GetListaJugadores())
-            {
-                double mult = 0;
-                string msg = "Empató la batalla.";
-                if (ganoAtacante)
-                {
-                    if (listaGanadores.Contains(jug))
+                    foreach (string idRec in recursos.Keys)
                     {
-                        mult = 1.0 / cantGanadores;
-                        msg = "Ganó la batalla.";
-                    }
-                    else if (jug.Equals(b.IdDefensor()))
-                    {
-                        mult = -1;
-                        msg = "Perdió la batalla.";
+                        agregar.Add(idRec, Math.Floor(recursos[idRec].Total));
                     }
                 }
-                mensajes[jug] = msg;
-                blJuego.ModificarUnidadesRecursos(b.Tenant, jug, b.UnidadesSobrevivientes(jug), agregar,  b.Config.FraccionRecursos * mult);
-                
+                Dictionary<string, string> mensajes = new Dictionary<string, string>();
+                foreach (string jug in b.GetListaJugadores())
+                {
+                    double mult = 0;
+                    string msg = "Empató la batalla.";
+                    if (ganoAtacante)
+                    {
+                        if (listaGanadores.Contains(jug))
+                        {
+                            mult = 1.0 / cantGanadores;
+                            msg = "Ganó la batalla.";
+                        }
+                        else if (jug.Equals(b.IdDefensor()))
+                        {
+                            mult = -1;
+                            msg = "Perdió la batalla.";
+                        }
+                    }
+                    mensajes[jug] = msg;
+                    if (jug == b.IdDefensor())
+                    {
+                        blJuego.ModificarUnidadesRecursos(b.Tenant, jug, b.UnidadesPerdidas(jug), agregar, b.Config.FraccionRecursos * mult);
+                    }
+                    else
+                    {
+                        blJuego.ModificarUnidadesRecursos(b.Tenant, jug, b.UnidadesSobrevivientes(jug), agregar, b.Config.FraccionRecursos * mult);
+                    }
+                    
+                }
+                //setAtacabilidadJugador(b.Tenant, b.IdDefensor(), true);
+                foreach (string jug in mensajes.Keys)
+                {
+                    notificarFin(jug, mensajes[jug]);
+                }
+                _dalAtConj.eliminarAtaqueConjunto(b.Tenant, b.BatallaId);
+                Console.WriteLine("Termina Fin Batalla");
             }
-            setAtacabilidadJugador(b.Tenant, b.IdDefensor(), true);
-            foreach(string jug in mensajes.Keys)
+            catch (Exception ex)
             {
-                notificarFin(jug, mensajes[jug]);
+                Console.WriteLine("Error Fin Batalla");
+                Console.WriteLine(ex.ToString());
+                CancelarBatalla(b.Tenant, b.BatallaId);
             }
+            
+        }
 
+        public void CancelarBatalla(string tenant,string idBatalla)
+        {
+            Console.WriteLine("Inicia Cancelar Batalla");
+            var contribuciones = _dalAtConj.obtenerContribuciones(tenant, idBatalla);
+            foreach(var contr in contribuciones)
+            {
+                Dictionary<int, int> unidades = new Dictionary<int, int>();
+                contr.UnidadesContribuidas.ForEach(cu => unidades.Add(cu.UnidadId, cu.Cantidad));
+                blJuego.ModificarUnidadesRecursos(tenant, contr.IdJugador, unidades, new Dictionary<string, double>(), 0);
+            }
+            _dalAtConj.eliminarAtaqueConjunto(tenant,idBatalla);
+            Console.WriteLine("Termina Cancelar Batalla");
         }
 
 

@@ -130,20 +130,22 @@ namespace ServiceLayer
             return blUsuarioHandler.SoyAdministrador(Tenant, IdJugador);
         }
 
-        public void ConectarSignalr(string tenant,ConexionSignalr con)
+        public void ConectarSignalr(string tenant, String idJugador, String conId)
         {
-            blConexHandler.agregarConexion(tenant, con);
+            blConexHandler.agregarConexion(tenant, idJugador, conId);
         }
 
-        public void DesconectarSignalr(string tenant, ConexionSignalr con)
+        public void ReconectarSignalr(string tenant, String idJugador, String conId)
         {
-            blConexHandler.desconectar(tenant, con);
+            blConexHandler.agregarConexion(tenant, idJugador, conId);
         }
 
-        public void ReconectarSignalr(string tenant, ConexionSignalr con)
+        public void DesconectarSignalr(string tenant, String idJugador, String conId)
         {
-            blConexHandler.agregarConexion(tenant, con);
+            blConexHandler.desconectar(tenant, idJugador, conId);
         }
+
+
 
         public int EnviarRecursos(List<RecursoAsociado> tributos, string IdJugadorDestino, string Tenant, string IdJugador)
         {

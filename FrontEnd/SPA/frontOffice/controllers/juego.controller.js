@@ -298,9 +298,8 @@
 
         }
 
-        function mostrarFin(mensaje){
-            $scope.finMsg = mensaje.Msg;
-            $('#dialogoFin').modal('show');
+        $scope.VolverBase = function(){
+            $window.location.href = "/" + tenant + "/Home/Aldea";
         }
 
         $scope.iniciarSignalR = function () {
@@ -313,7 +312,7 @@
                     if ( msg.A){
                         ejecutarMensaje(msg);    
                     }
-                    else if (msg.Tipo && msg.Tipo == "FinAtaque"){
+                    else if (msg.Tipo && msg.Tipo == "FinBatalla"){
                         mostrarFin(msg);
                     }
                     
@@ -332,6 +331,11 @@
                 
             });
         };
+
+         function mostrarFin(mensaje){
+            $scope.finMsg = mensaje.Msg;
+            $('#dialogoFin').modal('show');
+        }
 
         $scope.iniciarSignalR();
 
@@ -550,13 +554,13 @@
             crearGraficoUnidad(sprite, graphics);
             sprite.graficos = graphics;
             sprite.events.onKilled.add(function(f) {
-                console.info(f);
+                //console.info(f);
                 if (sprite.graficos) sprite.graficos.destroy();
                 console.info(sprite.info.unit_id + " was kiled");
             });
             sprite.events.onDestroy.add(function(f) {
                 if (sprite.graficos) sprite.graficos.destroy();
-                console.info(sprite.info.unit_id + " was destroyed");
+                //console.info(sprite.info.unit_id + " was destroyed");
             });
         }
 
@@ -776,7 +780,7 @@
             /*if (spriteDragged != null) {
                 $scope.game.debug.text("isDragged: " + spriteDragged.input.isDragged, 200, 96);
             }*/
-            $scope.game.physics.arcade.collide(unidades_desplegadas, buildings,function(){console.log("Colision")});
+            //$scope.game.physics.arcade.collide(unidades_desplegadas, buildings,function(){ });
 
         }
 

@@ -68,7 +68,7 @@
 
 
             <!--Modal Fin Batalla-->
-            <div class="modal fade" id="dialogoBatalla" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal fade" id="dialogoFin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -78,13 +78,13 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-12">
                                     <div class="row">
-                                        <h4>{{fin.msg}</h4>
+                                        <h4>{{$scope.finMsg}</h4>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Volver a la base.</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="VolverBase()">Volver a la aldea.</button>
                         </div>
                     </div>
                 </div>

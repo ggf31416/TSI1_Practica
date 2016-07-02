@@ -18,8 +18,10 @@ namespace FrontEnd.Hubs
                 //Debug.WriteLine("[OK] GetUserId para cliente " + clienteId);
                 return clienteId;
             }
-            Debug.WriteLine("[WARNING] GetUserId para jugador no autenticado");
-            return "NO_AUTENTICADO";
+            //Debug.WriteLine("[WARNING] GetUserId para jugador no autenticado");
+            return NO_AUTENTICADO;
         }
+
+        public string NO_AUTENTICADO { get; set; } = "NO_AUTENTICADO";
     }
 }
