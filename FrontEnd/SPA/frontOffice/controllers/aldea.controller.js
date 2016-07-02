@@ -529,7 +529,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                     var copyUnidad = jQuery.extend(true, {}, $scope.auxUnidad);
                     console.debug(copyUnidad);
 
-                    setTimeout(entrenarUnidadTimeout, $scope.modeloUnidad.TiempoConstruccion * 100 * $scope.auxUnidad.CantAConstruir, copyUnidad);
+                    setTimeout(entrenarUnidadTimeout, $scope.modeloUnidad.TiempoConstruccion * 1000 * $scope.auxUnidad.CantAConstruir, copyUnidad);
 
                     //$scope.timerUnidad = $interval(function () {
                     //    $interval.cancel($scope.timerUnidad);
