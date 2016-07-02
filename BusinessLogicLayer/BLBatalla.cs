@@ -430,9 +430,22 @@ namespace BusinessLogicLayer
                 Console.WriteLine("getJsonBatalla Tenant: " + tenant + "userId " + idUsuario);
                 var res = batallasPorJugador[idUsuario].GenerarJson(idUsuario);
                 var info = new AccionMsg() { Accion = "IniciarAtaque", Data = res };
-                ServiceInteraccionClient client = getClienteInteraccion();
+                /* Descomentar para enviar por signalr
+                 * ServiceInteraccionClient client = getClienteInteraccion();
                 string txt = JsonConvert.SerializeObject(info, new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore });
-                client.SendGrupo(idUsuario, txt);
+                client.SendGrupo(idUsuario, txt);*/
+                return res;
+            }
+            return null;
+        }
+
+        public Shared.Entities.DataBatalla.InfoBatalla getEstadoBatalla(string tenant, string idUsuario)
+        {
+            if (batallasPorJugador.ContainsKey(idUsuario))
+            {
+                Console.WriteLine("getJsonBatalla Tenant: " + tenant + "userId " + idUsuario);
+                var res = batallasPorJugador[idUsuario].GenerarInfoBatalla(idUsuario);
+ 
                 return res;
             }
             return null;

@@ -10,6 +10,7 @@ using ServiceStack.Redis;
 using Microsoft.AspNet.SignalR.Client.Hubs;
 using System.ServiceModel;
 using System.Diagnostics;
+using Shared.Entities.DataBatalla;
 
 namespace BusinessLogicLayer
 {
@@ -43,16 +44,20 @@ namespace BusinessLogicLayer
 
 
 
-        public void RellenarInfoBatalla(Batalla.InfoBatalla info )
+        public void RellenarInfoBatalla( InfoBatalla info )
         {
             foreach (var ent in entidades.Values)
             {
                 if (ent is Unidad) {
-                    info.unidades.Add(ent as Unidad);
+                    Unidad u = ent as Unidad;
+                    String s = JsonConvert.SerializeObject(u, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+                    info.unidades.Add(s);
                 }
                 else
                 {
-                    info.edificios.Add(ent as Edificio);
+                    Edificio e = ent as Edificio;
+                    String s = JsonConvert.SerializeObject(e, new JsonSerializerSettings() { NullValueHandling = NullValueHandling.Ignore });
+                    info.edificios.Add(s);
                 }
                 
             }

@@ -2266,7 +2266,21 @@ namespace Shared.Entities
         
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
+        private int CantUnidadesField;
+        
+        private System.DateTime FechaAtaqueField;
+        
+        private string IdField;
+        
+        private string IdBatallaField;
+        
         private string IdJugadorField;
+        
+        private string NombreDefensorField;
+        
+        private bool SoyAtacanteField;
+        
+        private string TenantField;
         
         private Shared.Entities.ConjuntoUnidades[] UnidadesContribuidasField;
         
@@ -2283,6 +2297,58 @@ namespace Shared.Entities
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public int CantUnidades
+        {
+            get
+            {
+                return this.CantUnidadesField;
+            }
+            set
+            {
+                this.CantUnidadesField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.DateTime FechaAtaque
+        {
+            get
+            {
+                return this.FechaAtaqueField;
+            }
+            set
+            {
+                this.FechaAtaqueField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Id
+        {
+            get
+            {
+                return this.IdField;
+            }
+            set
+            {
+                this.IdField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdBatalla
+        {
+            get
+            {
+                return this.IdBatallaField;
+            }
+            set
+            {
+                this.IdBatallaField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string IdJugador
         {
             get
@@ -2292,6 +2358,45 @@ namespace Shared.Entities
             set
             {
                 this.IdJugadorField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string NombreDefensor
+        {
+            get
+            {
+                return this.NombreDefensorField;
+            }
+            set
+            {
+                this.NombreDefensorField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool SoyAtacante
+        {
+            get
+            {
+                return this.SoyAtacanteField;
+            }
+            set
+            {
+                this.SoyAtacanteField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Tenant
+        {
+            get
+            {
+                return this.TenantField;
+            }
+            set
+            {
+                this.TenantField = value;
             }
         }
         
@@ -2356,6 +2461,359 @@ namespace Shared.Entities
             set
             {
                 this.UnidadIdField = value;
+            }
+        }
+    }
+}
+namespace Shared.Entities.DataBatalla
+{
+    using System.Runtime.Serialization;
+    
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="InfoBatalla", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities.DataBatalla")]
+    public partial class InfoBatalla : object, System.Runtime.Serialization.IExtensibleDataObject
+    {
+        
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        private string AField;
+        
+        private bool FinaliceField;
+        
+        private string IdJugadorField;
+        
+        private string ShortIdField;
+        
+        private string[] edificiosField;
+        
+        private System.Collections.Generic.Dictionary<string, Shared.Entities.DataBatalla.InfoJugador> jugadoresField;
+        
+        private Shared.Entities.TipoEdificio[] tiposEdificioField;
+        
+        private Shared.Entities.TipoUnidad[] tiposUnidadField;
+        
+        private string[] unidadesField;
+        
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+        {
+            get
+            {
+                return this.extensionDataField;
+            }
+            set
+            {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string A
+        {
+            get
+            {
+                return this.AField;
+            }
+            set
+            {
+                this.AField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool Finalice
+        {
+            get
+            {
+                return this.FinaliceField;
+            }
+            set
+            {
+                this.FinaliceField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string IdJugador
+        {
+            get
+            {
+                return this.IdJugadorField;
+            }
+            set
+            {
+                this.IdJugadorField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ShortId
+        {
+            get
+            {
+                return this.ShortIdField;
+            }
+            set
+            {
+                this.ShortIdField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string[] edificios
+        {
+            get
+            {
+                return this.edificiosField;
+            }
+            set
+            {
+                this.edificiosField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.Dictionary<string, Shared.Entities.DataBatalla.InfoJugador> jugadores
+        {
+            get
+            {
+                return this.jugadoresField;
+            }
+            set
+            {
+                this.jugadoresField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Shared.Entities.TipoEdificio[] tiposEdificio
+        {
+            get
+            {
+                return this.tiposEdificioField;
+            }
+            set
+            {
+                this.tiposEdificioField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Shared.Entities.TipoUnidad[] tiposUnidad
+        {
+            get
+            {
+                return this.tiposUnidadField;
+            }
+            set
+            {
+                this.tiposUnidadField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string[] unidades
+        {
+            get
+            {
+                return this.unidadesField;
+            }
+            set
+            {
+                this.unidadesField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="InfoJugador", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities.DataBatalla")]
+    public partial class InfoJugador : object, System.Runtime.Serialization.IExtensibleDataObject
+    {
+        
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        private string ClanField;
+        
+        private string IdField;
+        
+        private string ShortIdField;
+        
+        private System.Collections.Generic.Dictionary<string, Shared.Entities.DataBatalla.InfoTipo> TiposField;
+        
+        private Shared.Entities.ConjuntoUnidades[] UnidadesField;
+        
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+        {
+            get
+            {
+                return this.extensionDataField;
+            }
+            set
+            {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Clan
+        {
+            get
+            {
+                return this.ClanField;
+            }
+            set
+            {
+                this.ClanField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Id
+        {
+            get
+            {
+                return this.IdField;
+            }
+            set
+            {
+                this.IdField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string ShortId
+        {
+            get
+            {
+                return this.ShortIdField;
+            }
+            set
+            {
+                this.ShortIdField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Collections.Generic.Dictionary<string, Shared.Entities.DataBatalla.InfoTipo> Tipos
+        {
+            get
+            {
+                return this.TiposField;
+            }
+            set
+            {
+                this.TiposField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public Shared.Entities.ConjuntoUnidades[] Unidades
+        {
+            get
+            {
+                return this.UnidadesField;
+            }
+            set
+            {
+                this.UnidadesField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "3.0.0.0")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="InfoTipo", Namespace="http://schemas.datacontract.org/2004/07/Shared.Entities.DataBatalla")]
+    public partial class InfoTipo : object, System.Runtime.Serialization.IExtensibleDataObject
+    {
+        
+        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
+        
+        private int ataqueField;
+        
+        private bool esUnidadField;
+        
+        private float hpField;
+        
+        private int idField;
+        
+        private int rangoField;
+        
+        public System.Runtime.Serialization.ExtensionDataObject ExtensionData
+        {
+            get
+            {
+                return this.extensionDataField;
+            }
+            set
+            {
+                this.extensionDataField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int ataque
+        {
+            get
+            {
+                return this.ataqueField;
+            }
+            set
+            {
+                this.ataqueField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public bool esUnidad
+        {
+            get
+            {
+                return this.esUnidadField;
+            }
+            set
+            {
+                this.esUnidadField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public float hp
+        {
+            get
+            {
+                return this.hpField;
+            }
+            set
+            {
+                this.hpField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int id
+        {
+            get
+            {
+                return this.idField;
+            }
+            set
+            {
+                this.idField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int rango
+        {
+            get
+            {
+                return this.rangoField;
+            }
+            set
+            {
+                this.rangoField = value;
             }
         }
     }
@@ -2425,7 +2883,7 @@ public interface IServiceTablero
     int EnviarRecursos(Shared.Entities.RecursoAsociado[] tributos, string IdJugadorDestino, string Tenant, string IdJugador);
     
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/GetEstadoBatalla", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/GetEstadoBatallaResponse")]
-    string GetEstadoBatalla(string tenant, string idJugador);
+    Shared.Entities.DataBatalla.InfoBatalla GetEstadoBatalla(string tenant, string idJugador);
     
     [System.ServiceModel.OperationContractAttribute(Action="http://localhost:8836/tsi1/IServiceTablero/ConectarSignalr", ReplyAction="http://localhost:8836/tsi1/IServiceTablero/ConectarSignalrResponse")]
     void ConectarSignalr(string tenant, string idJugador, string conId);
@@ -2569,7 +3027,7 @@ public partial class ServiceTableroClient : System.ServiceModel.ClientBase<IServ
         return base.Channel.EnviarRecursos(tributos, IdJugadorDestino, Tenant, IdJugador);
     }
     
-    public string GetEstadoBatalla(string tenant, string idJugador)
+    public Shared.Entities.DataBatalla.InfoBatalla GetEstadoBatalla(string tenant, string idJugador)
     {
         return base.Channel.GetEstadoBatalla(tenant, idJugador);
     }

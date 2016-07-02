@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Shared.Entities.DataBatalla;
 
 namespace BusinessLogicLayer
 {
@@ -250,20 +251,7 @@ namespace BusinessLogicLayer
             return res;
         }
 
-        public class InfoBatalla
-        {
-            public string A { get; set; } = "IniciarAtaque";
-            public bool Finalice { get; set; } = false;
-            public List<Unidad>  unidades { get; set; }  = new List<Unidad>();
-            public List<Edificio> edificios { get; set; } = new List<Edificio>();
-            public List<TipoUnidad> tiposUnidad { get; set; } = new List<TipoUnidad>();
-            public List<TipoEdificio> tiposEdificio { get; set; } = new List<TipoEdificio>();
-            public Dictionary<string,InfoJugador> jugadores { get; set; } = new Dictionary<string,InfoJugador>();
 
-            public string IdJugador { get; set; }
-            public string ShortId { get; set; }
-
-        }
 
 
         public String[] GetListaJugadores()
@@ -274,21 +262,27 @@ namespace BusinessLogicLayer
         public string GenerarJson(string IdJugador)
         {
 
+            InfoBatalla res = GenerarInfoBatalla(IdJugador);
+            return JsonConvert.SerializeObject(res);
+        }
+
+        public InfoBatalla GenerarInfoBatalla(string IdJugador)
+        {
             var res = new InfoBatalla();
             res.IdJugador = IdJugador;
             res.ShortId = jugadores[IdJugador].ShortId;
-            foreach(Jugador j in jugadores.Values)
+            foreach (Jugador j in jugadores.Values)
             {
                 bool incluirEdificios = j.Id.Equals(defensor.Id);
                 InfoJugador infoJ = j.GenerarInfo(incluirEdificios, false);
-                res.jugadores.Add(infoJ.Id,infoJ);
+                res.jugadores.Add(infoJ.Id, infoJ);
 
             }
 
             this.tablero.RellenarInfoBatalla(res);
             res.tiposEdificio = this.tiposEdificios;
             res.tiposUnidad = this.tiposUnidades;
-            return JsonConvert.SerializeObject(res);
+            return res;
         }
 
         public void DeployUnidadesAutomatico(string idUsuario)
