@@ -480,8 +480,11 @@ namespace BusinessLogicLayer
                                 }
 
                                 PuntoRuta[] ruta = fromPath(p, u, 1).ToArray();
-                                var accM = new AccionMoverUnidad() { IdUnidad = u.id, Accion = "MoveUnit", PosX = u.posXr, PosY = u.posYr, Path = ruta, Target = u.target };
-                                Acciones.Add(accM);
+                                if (ruta.Length > 1 || ruta.Length > 0 && Math.Abs(ruta[0].x - u.posX) > 0.1)
+                                {
+                                    var accM = new AccionMoverUnidad() { IdUnidad = u.id, Accion = "MoveUnit", PosX = u.posXr, PosY = u.posYr, Path = ruta, Target = u.target };
+                                    Acciones.Add(accM);
+                                }
                                 //var acc = new AccionMsg() { Accion = "PosUnit", IdUnidad = u.id, PosX = u.posXr, PosY = u.posYr };
                                 //Acciones.Add(acc);
                             }
@@ -626,16 +629,16 @@ namespace BusinessLogicLayer
             Random rpos = new Random();
             int posX = centroX;
             int posY = centroY;
-            int iter = unidades.Count() * 100;
+            int iter = unidades.Count() * 10;
             foreach (Unidad u in unidades)
             {
                 while (!matrixUnidades[posX][posY] && iter > 0)
                 {
-                    posX += rpos.Next(2);
+                    posX += rpos.Next(-2,3);
                     if (posX >= sizeX) posX = sizeX - 1;
                     else if (posX < 0) posX = 0;
 
-                    posY += rpos.Next(2);
+                    posY += rpos.Next(-2,3);
                     if (posY >= sizeY) posY = sizeY - 1;
                     else if (posY < 0) posY = 0;
 
@@ -643,7 +646,9 @@ namespace BusinessLogicLayer
                 }
                 u.posX = posX;
                 u.posY = posY;
+                agregarUnidad(u.jugador, u);
                 matrixUnidades[posX][posY] = false;
+                
                 var jsonObj = new AccionMsg { Accion = "AddUn", Id = u.tipo_id, PosX = posX, PosY = posY, IdUnidad = u.id, Jugador = u.jugador };
                 Acciones.Add(jsonObj);
             }

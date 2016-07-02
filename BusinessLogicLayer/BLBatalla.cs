@@ -428,7 +428,12 @@ namespace BusinessLogicLayer
             if (batallasPorJugador.ContainsKey(idUsuario))
             {
                 Console.WriteLine("getJsonBatalla Tenant: " + tenant + "userId " + idUsuario);
-                return batallasPorJugador[idUsuario].GenerarJson(idUsuario);
+                var res = batallasPorJugador[idUsuario].GenerarJson(idUsuario);
+                var info = new AccionMsg() { Accion = "IniciarAtaque", Data = res };
+                ServiceInteraccionClient client = getClienteInteraccion();
+                string txt = JsonConvert.SerializeObject(info, new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore });
+                client.SendGrupo(idUsuario, txt);
+                return res;
             }
             return null;
         }

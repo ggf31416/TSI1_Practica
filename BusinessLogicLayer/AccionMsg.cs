@@ -39,6 +39,9 @@ namespace BusinessLogicLayer
         [JsonProperty(propertyName: "T")]
         public string Target { get; set; }
 
+        [JsonProperty(propertyName: "Data", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Data { get; set; } = null;
+
     }
 
     public class PuntoRuta

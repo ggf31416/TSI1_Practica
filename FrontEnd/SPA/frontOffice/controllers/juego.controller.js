@@ -39,7 +39,12 @@
         $q.all([
             juegoService.GetEstadoBatalla()
         ]).then(function (data) {
-            $scope.batalla = JSON.parse(data[0].data.ret);
+            var data = data[0].data.ret;
+            $scope.inicializar(data);
+        });
+
+        $scope.inicializar = function(data){
+            $scope.batalla = JSON.parse(data);//JSON.parse(data[0].data.ret);
             var batalla = $scope.batalla;
             if (!batalla) console.error("No hay datos de batalla");
             nombreJugador = batalla.IdJugador;
@@ -49,11 +54,7 @@
             $rootScope.listaUnidades = batalla.tiposUnidad;
             //data[1];
             window.createGame();
-            /*window.setTimeout(function(){ // parece que no esta listo inmediatamente
-                cargarEstado(batalla); // carga info
-            },100);*/
-        });
-
+        }
      
 
         $rootScope.listaRecursos = [
@@ -253,7 +254,7 @@
         function ejecutarMensaje(msg){
             if (msg.A){
                 if (msg.A == MsgA.IniciarAtaque){
-                    //cargarEstado(msg);
+                    $scope.inicializar(msg.Data);//cargarEstado(msg);
                 }
                 else if(msg.A == MsgA.PosUnit){
                      var unit = unidadesPorId[msg.IdUn];
@@ -312,6 +313,7 @@
             // Create a function that the hub can call to broadcast messages.
             $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
                 if (message!=""){
+                    console.info(message);
                     var msg = JSON.parse(message);
                     if ( msg.A){
                         ejecutarMensaje(msg);    
