@@ -310,6 +310,13 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             return rec ? rec.Value : 0;
         }
 
+        function getDonacion(aux, IdRecurso) {
+            var rec = jQuery.grep(aux, function (value) {
+                return value.IdRecurso === IdRecurso;
+            })[0];
+            return rec ? rec.Value : 0;
+        }
+
         $scope.donar = function () {
             var ret = aldeasService.enviarRecursos($scope.donacion);
             if (ret.success) {
