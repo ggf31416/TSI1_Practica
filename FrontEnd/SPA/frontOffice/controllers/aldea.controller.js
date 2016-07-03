@@ -174,7 +174,7 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                     //timer para actualizar recursos
                                     $interval(function () {
                                         for (var i = 0; i < $rootScope.listaRecursos.length; i++) {
-                                            $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Total = $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Total + $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Produccion;
+                                            $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Total = $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Total + $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Produccion / 2;
                                         }
                                     }, 1000);
                                     aldeasService.GetClanJugador()
