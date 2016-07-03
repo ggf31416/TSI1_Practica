@@ -252,6 +252,14 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             return edificio.Imagen;
         }
 
+        $scope.verUnidad = function (id) {
+            //abro cuadro del edificio
+            $scope.entidad = findEdificioInArray($rootScope.listaUnidades, id)[0];
+            console.debug($scope.entidad);
+
+            $('#dialogoDatosUnid').modal('show');
+        }
+
         $scope.editCell = function (fila, columna, casilla) {
             if (casilla.Id == -1) {
                 //if ($scope.aux == undefined){

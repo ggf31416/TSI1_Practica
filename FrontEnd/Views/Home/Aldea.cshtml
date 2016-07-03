@@ -142,7 +142,7 @@
                 <div class="col-sm-6 col-md-6 col-lg-6">
                     <div class="row">
                         <div class="col-sm-2 col-md-2 col-lg-2" ng-show="uni.Estado == 0"  ng-repeat="uni in $root.dataJugador.EstadoUnidades">
-                            <img class="recursosTablero" ng-src="{{getImagenUnidad(uni.Id)}}"/>{{uni.Cantidad}}
+                            <img class="recursosTablero handPointer" ng-click="verUnidad(uni.Id)" ng-src="{{getImagenUnidad(uni.Id)}}"/>{{uni.Cantidad}}
                         </div>
                     </div>
                 </div>
@@ -172,18 +172,18 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-12">
                                     <div class="row">
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Imagen</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Nombre</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">Tiempo de construccion</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">
+                                        <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">Imagen</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Nombre</div>
+                                        <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">Tiempo</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">
                                             <img style="max-height:100%; max-width:100%" class="recursosTablero" ng-src="{{rec.Imagen}}" />
                                         </div>
                                     </div>
                                     <div class="row handPointer" ng-click="addEdificio(e.Id)" ng-repeat="e in $root.listaEdificios">
-                                        <div class="col-sm-2 col-md-2 col-lg-2"><img width="50" height="50" ng-src="{{e.Imagen}}" /></div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.Nombre}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2">{{e.TiempoConstruccion}}</div>
-                                        <div class="col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">{{getCostoRecurso(e, rec.Id)}}</div>
+                                        <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1"><img width="50" height="50" ng-src="{{e.Imagen}}" /></div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">{{e.Nombre}}</div>
+                                        <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">{{e.TiempoConstruccion}}</div>
+                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">{{getCostoRecurso(e, rec.Id)}}</div>
                                     </div>
                                 </div>
                             </div>
@@ -215,15 +215,15 @@
                                                 <h3>Jugadores sin clan</h3>
                                             </div>
                                             <div class="row">
-                                                <div class="col-sm-2 col-md-2 col-lg-2">Username</div>
-                                                <div class="col-sm-2 col-md-2 col-lg-2">Nombre</div>
-                                                <div class="col-sm-2 col-md-2 col-lg-2">Apellido</div>
+                                                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Username</div>
+                                                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Nombre</div>
+                                                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Apellido</div>
                                             </div>
                                             <div class="row" style="padding:10px" ng-repeat="e in $root.jugadoresSinClan">
-                                                <div class="col-sm-2 col-md-2 col-lg-2">{{e.username}}</div>
-                                                <div class="col-sm-2 col-md-2 col-lg-2">{{e.nombre}}</div>
-                                                <div class="col-sm-2 col-md-2 col-lg-2">{{e.apellido}}</div>
-                                                <div class="col-sm-2 col-md-2 col-lg-2"><button class="btn btn-default" ng-click="agregarAlClan(e)">Agregar</button></div>
+                                                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">{{e.username}}</div>
+                                                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">{{e.nombre}}</div>
+                                                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">{{e.apellido}}</div>
+                                                <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2"><button class="btn btn-default" ng-click="agregarAlClan(e)">Agregar</button></div>
                                             </div>
                                         </div>
                                     </div>
@@ -366,6 +366,59 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Modal Unidades -->
+            <div class="modal fade" id="dialogoDatosUnid" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Unidad</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row modalRows">
+                                <div class="col-sm-3 col-md-3 col-lg-3">
+                                    <div class="row">
+                                        <h4>Nombre</h4>
+                                        <div class="col-sm-9 col-md-9 col-lg-9">
+                                            <span class="">{{entidad.Nombre}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <h4>Vida</h4>
+                                        <div class="col-md-9">
+                                            <span>{{entidad.Vida}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <h4>Ptos. ataque</h4>
+                                        <div class="col-md-9">
+                                            <span>{{entidad.Ataque}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <h4>Ptos. defensa</h4>
+                                        <div class="col-md-9">
+                                            <span>{{entidad.Defensa}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-9 col-md-9 col-lg-9">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-12 col-lg-12">
+                                            <img style="max-height:100%; max-width:100%" ng-src="{{entidad.Imagen}}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Modal Tecnologias -->
             <div class="modal fade" id="dialogoDatosTecnologias" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
@@ -381,7 +434,7 @@
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Imagen</div>
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Nombre</div>
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Estado</div>
-                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Tiempo de construccion</div>
+                                        <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">Tiempo</div>
                                         <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1" ng-repeat="rec in $root.listaRecursos">
                                             <img class="recursosTablero" ng-src="{{rec.Imagen}}" />
                                         </div>
@@ -393,7 +446,7 @@
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 2">Posible</div>
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 1">En desarrollo</div>
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" ng-if="getEstadoTecnologia(e) == 0">Ya desarrollado</div>
-                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">{{e.TiempoConstruccion}}</div>
+                                        <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">{{e.TiempoConstruccion}}</div>
                                         <div class="col-xs-12 col-sm-1  col-md-1  col-lg-1" ng-repeat="rec in $root.listaRecursos">{{getCostoRecurso(e, rec.Id)}}</div>
                                     </div>
                                 </div>
@@ -406,7 +459,7 @@
                 </div>
             </div>
 
-            <!-- Modal Unidades -->
+            <!-- Modal Unidades Costos -->
             <div class="modal fade" id="dialogoDatosUnidades" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -418,17 +471,17 @@
                             <div class="row">
                                 <div class="col-sm-12 col-md-12 col-lg-12">
                                     <div class="row" style="padding-top:10px">
-                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Imagen</div>
+                                        <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">Imagen</div>
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Nombre</div>
-                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">Tiempo de construccion</div>
+                                        <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">Tiempo</div>
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">
                                             <img class="recursosTablero" ng-src="{{rec.Imagen}}" />
                                         </div>
                                     </div>
                                     <div class="row" style="border-top: 1px dotted; padding-top:10px; padding-bottom:10px" ng-repeat="e in $root.listaUnidades">
-                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2"><img width="50" height="50" ng-src="{{e.Imagen}}" /></div>
+                                        <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1"><img width="50" height="50" ng-src="{{e.Imagen}}" /></div>
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">{{e.Nombre}}</div>
-                                        <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">{{e.TiempoConstruccion}}</div>
+                                        <div class="col-xs-12 col-sm-1 col-md-1 col-lg-1">{{e.TiempoConstruccion}}</div>
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2" ng-repeat="rec in $root.listaRecursos">{{getCostoRecurso(e, rec.Id)}}</div>
                                     </div>
                                 </div>
