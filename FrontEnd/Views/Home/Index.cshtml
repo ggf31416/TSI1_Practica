@@ -51,18 +51,7 @@
         });*/
     </script>
 
-<!--<div id="divEdificios" class="barraLateralJuego">
-    <ul ng-repeat="e in listaEdificios | filter:{Imagen: ''}">
-    <li>
-        <div draggable="true" ng-click="posicionarEdificio(e.Id)" ng-mousedown="posicionarEdificio(e.Id)">
-            <img width="50" height="50" ng-src="{{e.Imagen}}" alt="{{e.Id}}"  />
-            <span class="caption">{{e.Nombre}}</span>
-            <span class="caption">{{e.TiempoConstruccion}}s</span>
-        </div>
-    </li>
-    </ul>
-</div>
-    -->
+
 
 
 <div id="divUnidades" class="barraLateralJuego">
@@ -76,27 +65,30 @@
         </li>
     </ul>
 </div>
-<!--
-<div>
-    <input type="button" value="Atacar" ng-click="mostrarEnemigos()" />
-</div>
 
 
-<ul id="listaEnemigos" ng-repeat="e in listaEnemigos" >
-    <li>
-        <p ng-mousedown="iniciarAtaque(e.Id)">{{e.Id}}</p>
-    </li>
-   
-</ul>
-    -->
-
-
-<div
-  class="fb-like"
-  data-share="true"
-  data-width="450"
-  data-show-faces="true">
-</div>
+            <!--Modal Fin Batalla-->
+            <div class="modal fade" id="dialogoFin" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">Termino la batalla</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <h4>{{finMsg}}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="VolverBase()">Volver a la aldea.</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 <script> 
     $(document).ready(function () {

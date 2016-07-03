@@ -15,8 +15,8 @@ namespace BusinessLogicLayer
         void GuardarJuegoAsync(Juego j);
         bool GuardarJuegoEsperar(Juego j);
         bool ActualizarJuego(Juego j);
-        void AgregarUnidades(Juego j, Dictionary<int, int> unidades);
-
+        Dictionary<String, int> QuitarUnidades(Juego j, Contribucion contr, bool guardar);
         ListasEntidades GetEntidadesActualizadas(string tenant, string nombreJugador);
+        void ModificarUnidadesRecursos(string tenant, string idUsuario, Dictionary<int, int> unidades, Dictionary<string, double> agregarRecursos, double mult);
     }
 }

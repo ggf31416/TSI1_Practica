@@ -18,6 +18,8 @@
         $scope.idJuego = 6;
 
         $scope.listaEnemigos = [];
+
+        $scope.finMsg = "";
         
         //juegoService.GetEstadoBatalla();
 
@@ -37,20 +39,22 @@
         $q.all([
             juegoService.GetEstadoBatalla()
         ]).then(function (data) {
-            $scope.batalla = JSON.parse(data[0].data.ret);
+            var data = data[0].data.ret;
+            $scope.inicializar(data);
+        });
+
+        $scope.inicializar = function(data){
+            $scope.batalla = JSON.parse(data);//JSON.parse(data[0].data.ret);
             var batalla = $scope.batalla;
             if (!batalla) console.error("No hay datos de batalla");
             nombreJugador = batalla.IdJugador;
+            shortId = batalla.ShortId;
             $rootScope.listaEdificios = batalla.tiposEdificio;
             //$rootScope.listaUnidades = [ {Ataque : 10, Defensa : 10, Id : 314159, Nombre : "Arquero", TiempoConstruccion : 10, Vida : 100, Imagen : "/SPA/backoffice/ImagenesSubidas/arquero.jpg" }]
             $rootScope.listaUnidades = batalla.tiposUnidad;
             //data[1];
             window.createGame();
-            /*window.setTimeout(function(){ // parece que no esta listo inmediatamente
-                cargarEstado(batalla); // carga info
-            },100);*/
-        });
-
+        }
      
 
         $rootScope.listaRecursos = [
@@ -92,6 +96,7 @@
         var unidadesPorId = {}
 
         var nombreJugador;
+        var shortId;
 
         var estaEnBatalla = true;
        
@@ -137,7 +142,7 @@
         function crearEdificioInmediato(data) {
             var idSprite =  data.Id;
             var edificio = $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
-            setInfoFromData(unit, data);
+            setInfoFromData(edificio, data);
             edificio.height = tile_size;
             edificio.width = tile_size;
             edificio.inputEnabled = true;
@@ -249,7 +254,7 @@
         function ejecutarMensaje(msg){
             if (msg.A){
                 if (msg.A == MsgA.IniciarAtaque){
-                    //cargarEstado(msg);
+                    $scope.inicializar(msg.Data);//cargarEstado(msg);
                 }
                 else if(msg.A == MsgA.PosUnit){
                      var unit = unidadesPorId[msg.IdUn];
@@ -298,14 +303,25 @@
 
         }
 
+        $scope.VolverBase = function(){
+            $window.location.href = "/" + tenant + "/Home/Aldea";
+        }
+
         $scope.iniciarSignalR = function () {
             // Declare a proxy to reference the hub.
             $scope.tablero_signalR = $.connection.chatHub;
             // Create a function that the hub can call to broadcast messages.
             $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
                 if (message!=""){
+                    console.info(message);
                     var msg = JSON.parse(message);
-                    ejecutarMensaje(msg);
+                    if ( msg.A){
+                        ejecutarMensaje(msg);    
+                    }
+                    else if (msg.Tipo && msg.Tipo == "FinBatalla"){
+                        mostrarFin(msg);
+                    }
+                    
                 }
                 //$scope.estadoJuego.edificios = msjJSON.edificios;
                 //$scope.estadoJuego.unidades_desplegadas = msjJSON.unidades;
@@ -321,6 +337,13 @@
                 
             });
         };
+
+         function mostrarFin(mensaje){
+            $scope.finMsg = mensaje.Msg;
+            $scope.$apply();
+            console.info($scope.finMsg);
+            $('#dialogoFin').modal('show');
+        }
 
         $scope.iniciarSignalR();
 
@@ -539,13 +562,13 @@
             crearGraficoUnidad(sprite, graphics);
             sprite.graficos = graphics;
             sprite.events.onKilled.add(function(f) {
-                console.info(f);
+                //console.info(f);
                 if (sprite.graficos) sprite.graficos.destroy();
                 console.info(sprite.info.unit_id + " was kiled");
             });
             sprite.events.onDestroy.add(function(f) {
                 if (sprite.graficos) sprite.graficos.destroy();
-                console.info(sprite.info.unit_id + " was destroyed");
+                //console.info(sprite.info.unit_id + " was destroyed");
             });
         }
 
@@ -582,7 +605,7 @@
                 //hacerSeleccionableUnidad(sprite);
                 sprite.info = new Unidad_Info();
                 sprite.info.jugador = nombreJugador;
-                sprite.info.unit_id = nombreJugador + "#" + $scope.contador++;
+                sprite.info.unit_id = shortId + "#" + $scope.contador++;
                 unidadesPorId[sprite.info.unit_id] = sprite;
                 agregarGraficos($scope.game, sprite);
                 //sprite.id_logico = $scope.contador--; // asigno un id automatico que luego cambio}
@@ -765,7 +788,7 @@
             /*if (spriteDragged != null) {
                 $scope.game.debug.text("isDragged: " + spriteDragged.input.isDragged, 200, 96);
             }*/
-            $scope.game.physics.arcade.collide(unidades_desplegadas, buildings,function(){console.log("Colision")});
+            //$scope.game.physics.arcade.collide(unidades_desplegadas, buildings,function(){ });
 
         }
 
@@ -775,10 +798,10 @@
             var game = $scope.game;
             var proyectil = game.add.sprite( spriteAt.x, spriteAt.y,'def_proy');
             proyectil.targetSprite = spriteDest;
-            var angulo = game.physics.arcade.angleToXY(spriteAt,spriteDest.x,spriteDest.y);
+            var angulo = game.physics.arcade.angleToXY(spriteAt,spriteDest.x+spriteDest.width,spriteDest.y+spriteDest.height);
             proyectil.rotation = angulo + (45 * Math.PI /180);
-            proyectil.width = unit_size * 0.8;
-            proyectil.height = unit_size * 0.8;
+            proyectil.width = unit_size * 1.0;
+            proyectil.height = unit_size * 1.0;
             //proyectiles.add(proyectil);
 
             var animacionProyectil =  game.add.tween(proyectil);

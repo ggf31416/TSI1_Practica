@@ -188,7 +188,7 @@ namespace BusinessLogicLayer
             return false;
         }
 
-        public void AgregarUnidades(Juego j,Dictionary<int,int> unidades)
+        private void AgregarUnidades(Juego j,Dictionary<int,int> unidades)
         {
             var dataUnidades = j.DataJugador.EstadoUnidades;
             foreach(int tipoId in unidades.Keys)
@@ -206,21 +206,44 @@ namespace BusinessLogicLayer
             }
         }
 
-        public Dictionary<String,int> QuitarUnidades(Juego j,Dictionary<int,int> unidades)
+        private void ModificarUnidadesRecursos(Juego j, Dictionary<int,int> unidades,Dictionary<string ,double> agregarRecursos,double mult)
+        {
+            AgregarUnidades(j, unidades);
+            foreach(var idRec in agregarRecursos.Keys)
+            {
+                j.DataJugador.EstadoRecursos[idRec ].Total += (float)Math.Round(agregarRecursos[idRec] * mult);
+            }
+            
+        }
+
+        public void ModificarUnidadesRecursos(string tenant, string idUsuario,Dictionary<int, int> unidades, Dictionary<string, double> agregarRecursos, double mult)
+        {
+            var dataJuego = this.GetJuegoUsuarioSinGuardar(tenant, idUsuario);
+            ModificarUnidadesRecursos(dataJuego, unidades, agregarRecursos, mult);
+            GuardarJuegoAsync(dataJuego);
+        }
+
+
+        public Dictionary<String,int> QuitarUnidades(Juego j, Contribucion contr,bool guardar)
         {
             var res = new Dictionary<String, int>();
             var dataUnidades = j.DataJugador.EstadoUnidades;
-            foreach (int tipoId in unidades.Keys)
+            foreach (var cu in contr.UnidadesContribuidas)
             {
+                int tipoId = cu.UnidadId;
                 var key = tipoId + "#" + EstadoData.EstadoEnum.A;
                 if (dataUnidades.ContainsKey(key))
                 {
-                    int cant = Math.Min(dataUnidades[key].Cantidad, unidades[tipoId]);
+                    int cant = Math.Min(dataUnidades[key].Cantidad,cu.Cantidad);
                     res.Add(tipoId.ToString(), cant);
+                    dataUnidades[key].Cantidad -= cant;
                 }
             }
+            if (guardar)
+            {
+                _dal.ModificarUnidades(j);
+            }
             return res;
-
         }
 
         public Juego GetAllDataJuego(string tenant)
@@ -251,6 +274,8 @@ namespace BusinessLogicLayer
         {
             _dal.GuardarJuegoUsuarioAsync(j);
         }
+
+
 
 
         public bool GuardarJuegoEsperar(Juego j)

@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using ServiceStack.Redis;
 using Microsoft.AspNet.SignalR;
-using FrontEnd.ServiceTablero;
 using Shared.Entities;
 
 namespace FrontEnd.Controllers
@@ -18,13 +17,13 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
                 client.Accion(tenant,data);
                 return Json(new { sucess = true });
             }
             catch (Exception e)
             {
-                return Json(new { sucess = false });
+                return Json(new { sucess = false, ex = e.Message });
             }
         }
 
@@ -34,7 +33,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 Shared.Entities.InfoCelda sharedInfoCelda = new Shared.Entities.InfoCelda();
 
@@ -73,7 +72,7 @@ namespace FrontEnd.Controllers
             try
             {
                 String idJugador = Request.Cookies["ClienteId"].Value;
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
                 info.Jugador = idJugador;
                 info.Juego = tenant;
                 client.IniciarAtaque(tenant,info);
@@ -81,14 +80,14 @@ namespace FrontEnd.Controllers
             }
             catch (Exception e)
             {
-                return Json(new { sucess = false });
+                return Json(new { sucess = false, ex = e.Message });
             }
         }
 
         public ActionResult ObtenerEstadoBatalla(string tenant)
         {
             String idJugador = Request.Cookies["ClienteId"].Value;
-            ServiceTableroClient client = new ServiceTableroClient();
+            Service1Client client = new Service1Client();
             string res = client.GetEstadoBatalla(tenant, idJugador);
             return Json(new { success = true, ret = res }, JsonRequestBehavior.AllowGet);
         }
@@ -99,7 +98,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
                 var res = client.GetListaDeJugadoresAtacables(jugador);
                 return Json(new { success = true, ret = res }, JsonRequestBehavior.AllowGet);
             }
@@ -115,7 +114,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 CEInputData ceInputData = new CEInputData();
 
@@ -129,7 +128,7 @@ namespace FrontEnd.Controllers
             }
             catch(Exception e)
             {
-                return Json(new { sucess = false });
+                return Json(new { sucess = false, ex = e.Message });
             }
         }
 
@@ -138,7 +137,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 EUInputData euInputData = new EUInputData();
 
@@ -151,9 +150,30 @@ namespace FrontEnd.Controllers
             }
             catch (Exception e)
             {
-                return Json(new { sucess = false });
+                return Json(new { sucess = false, ex = e.Message });
             }
         }
+
+
+        /*[HttpPost]
+        public ActionResult ContribuirUnidades(string tenant, Models.InfoContribucionUnidades contr)
+        {
+            try
+            {
+                ServiceTableroClient client = new ServiceTableroClient();
+                Contribucion c = new Contribucion();
+                c.UnidadesContribuidas = contr.Unidades;
+                c.IdJugador = Request.Cookies["clienteId"].Value;
+
+                client.ContribuirUnidades(tenant, contr.IdDefensor, c);
+
+                return Json(new { sucess = true });
+            }
+            catch (Exception e)
+            {
+                return Json(new { sucess = false });
+            }
+        }*/
 
     }
 

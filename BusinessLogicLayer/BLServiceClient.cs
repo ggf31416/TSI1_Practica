@@ -28,7 +28,7 @@ namespace BusinessLogicLayer
             binding.TransferMode = TransferMode.Buffered;
             binding.UseDefaultWebProxy = true;
 
-            address = new EndpointAddress("http://localhost:8837/tsi/ServiceInteraccion");
+            address = new EndpointAddress("http://tsiserviceinteraccion.cloudapp.net/Service1.svc");
         }
     }
 }

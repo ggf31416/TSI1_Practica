@@ -1,5 +1,4 @@
 ﻿using FrontEnd.Models;
-using FrontEnd.ServiceTablero;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,7 +37,7 @@ namespace FrontEnd.Controllers
             {
                 //clienteJuego.idJuego = tenant;
                 clienteJuego.idJuego = clienteJuego.idJuego;
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
                 Shared.Entities.ClienteJuego cli = new Shared.Entities.ClienteJuego();
                 cli.clienteId = clienteJuego.clienteId;
                 cli.token = clienteJuego.token;
@@ -75,7 +74,7 @@ namespace FrontEnd.Controllers
             {
                 clienteJuego.idJuego = clienteJuego.idJuego;
                 //clienteJuego.idJuego = tenant;
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
                 Shared.Entities.ClienteJuego cli = new Shared.Entities.ClienteJuego();
                 cli.clienteId = clienteJuego.clienteId;
                 cli.token = clienteJuego.token;

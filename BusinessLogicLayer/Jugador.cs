@@ -11,6 +11,7 @@ namespace BusinessLogicLayer
     public class Jugador
     {
         public string Id { get; set; }
+        public string ShortId { get; set; }
         public string Clan { get; set; }
         public Dictionary<int,ConjuntoUnidades> Unidades { get; set; } = new Dictionary<int, ConjuntoUnidades>();
         public List<Edificio> Edificios { get; set; } = new List<Edificio>();
@@ -18,6 +19,7 @@ namespace BusinessLogicLayer
         public Dictionary<int, TipoEntidad> tipos = new Dictionary<int, TipoEntidad>();
         public List<TipoEdificio> tiposEdificio = new List<TipoEdificio>();
         public List<TipoUnidad> tiposUnidad = new List<TipoUnidad>();
+
 
 
         /*public void Inicializar(Shared.Entities.Juego juego)
@@ -32,10 +34,10 @@ namespace BusinessLogicLayer
             }
         }*/
 
-        public void CargarDesdeJuego(Juego jj)
+        public void CargarDesdeJuego(Juego jj,bool cargarUnidades)
         {
             this.Id = jj.IdJugador;
-            this.Clan = jj.IdJugador;
+            this.Clan = jj.DataJugador.Clan ?? jj.IdJugador;
             foreach (var e in jj.TipoEdificios)
             {
                 tipos [e.Id] = e;
@@ -46,18 +48,33 @@ namespace BusinessLogicLayer
             }
             this.tiposEdificio = jj.TipoEdificios;
             this.tiposUnidad = jj.TipoUnidades;
-            foreach (var u in jj.DataJugador.EstadoUnidades.Values)
+            if (cargarUnidades)
             {
-                if (u != null && u.Estado == EstadoData.EstadoEnum.A)
+                foreach (var u in jj.DataJugador.EstadoUnidades.Values)
                 {
-                    ConjuntoUnidades cu = new ConjuntoUnidades() { Cantidad = u.Cantidad, UnidadId = u.Id };
-                    this.Unidades.Add(cu.UnidadId, cu);
+                    if (u != null && u.Estado == EstadoData.EstadoEnum.A)
+                    {
+                        ConjuntoUnidades cu = new ConjuntoUnidades() { Cantidad = u.Cantidad, UnidadId = u.Id };
+                        this.Unidades.Add(cu.UnidadId, cu);
+                    }
                 }
             }
+            CargarEdificios(jj.Tablero);
+        }
+
+        public void CargarDesdeContribucion(Contribucion contr)
+        {
+            foreach (ConjuntoUnidades u in contr.UnidadesContribuidas)
+            {
+                ConjuntoUnidades cu = new ConjuntoUnidades() { Cantidad = u.Cantidad, UnidadId = u.UnidadId };
+                this.Unidades.Add(cu.UnidadId, cu);
+            }
+
         }
 
         public void CargarEdificios(Tablero miBase)
         {
+            
             if (miBase == null) return; // programacion defensiva....
             var ocupadas = miBase.Celdas.Where(c => c.IdTipoEdificio.HasValue && c.IdTipoEdificio >= 0);
             foreach(TableroCelda tc in ocupadas)
@@ -70,7 +87,9 @@ namespace BusinessLogicLayer
                     e.jugador = this.Id;
                     e.posX = tc.PosColumna.Value * e.sizeX;
                     e.posY = tc.PosFila.Value * e.sizeY;
+                    this.Edificios.Add(e);
                 }
+                
             }
         }
 
@@ -144,6 +163,7 @@ namespace BusinessLogicLayer
     public class InfoJugador
     {
         public string Id { get; set; }
+        public string ShortId { get; set; }
         public string Clan { get; set; }
         public List< ConjuntoUnidades> Unidades { get; set; } = new List<ConjuntoUnidades>();
         public List<Edificio> Edificios { get; set; } = new List<Edificio>();
