@@ -42,6 +42,9 @@ namespace ServiceLayer
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Trace.TraceError("Error en ServiceInteraccion ctor" );
+                System.Diagnostics.Trace.TraceError(ex.ToString());
+
 
             }
 
@@ -65,10 +68,14 @@ namespace ServiceLayer
                 catch (TimeoutException toEx)
                 {
                     Console.WriteLine("Timeout signlar Date " + DateTime.Now.ToShortTimeString() + " msg: " + msg);
+                    System.Diagnostics.Trace.TraceError("Timeout en ServiceInteraccion.SendGrupo ");
+                    System.Diagnostics.Trace.TraceError(toEx.ToString());
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("Ocurrio un error al enviar signalr: " + ex.ToString());
+                    System.Diagnostics.Trace.TraceError("Error en ServiceInteraccion.SendGrupo ");
+                    System.Diagnostics.Trace.TraceError(ex.ToString());
                 }
             });
         }
@@ -105,11 +112,14 @@ namespace ServiceLayer
                 catch (TimeoutException toEx)
                 {
                     Console.WriteLine("Timeout signlar Date " + DateTime.Now.ToShortTimeString() + " msg: " + msg);
-                }
+                    System.Diagnostics.Trace.TraceError("Timeout en ServiceInteraccion.SendLista ");
+            }
                 catch (Exception ex)
                 {
                     Console.WriteLine("Ocurrio un error al enviar signalr: " + ex.ToString());
-                }
+                    System.Diagnostics.Trace.TraceError("Error en ServiceInteraccion.SendLista ");
+                    System.Diagnostics.Trace.TraceError(ex.ToString());
+            }
             
            
         }
@@ -132,10 +142,13 @@ namespace ServiceLayer
             catch (TimeoutException toEx)
             {
                 Console.WriteLine("Timeout signlar Date " + DateTime.Now.ToShortTimeString() + " msg: " + msg);
+                System.Diagnostics.Trace.TraceError("Timeout en ServiceInteraccion.SendUsuario ");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Ocurrio un error al enviar signalr: " + ex.ToString());
+                System.Diagnostics.Trace.TraceError("Error en ServiceInteraccion.SendUsuario ");
+                System.Diagnostics.Trace.TraceError(ex.ToString());
             }
 
         }
