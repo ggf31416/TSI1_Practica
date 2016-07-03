@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.ServiceModel;
+using Shared.Entities.DataBatalla;
 
 namespace ServiceLayer
 {
@@ -143,9 +144,7 @@ namespace ServiceLayer
         public void DesconectarSignalr(string tenant, String idJugador, String conId)
         {
             blConexHandler.desconectar(tenant, idJugador, conId);
-        }
-
-
+        }  
 
         public int EnviarRecursos(List<RecursoAsociado> tributos, string IdJugadorDestino, string Tenant, string IdJugador)
         {
@@ -157,14 +156,17 @@ namespace ServiceLayer
             return blUsuarioHandler.GetClanJugador(Tenant, IdJugador);
         }
 
-        public string GetEstadoBatalla(string tenant,string idJugador)
+   
+        public InfoBatalla  GetEstadoBatalla(string tenant, string idJugador)
         {
-            return blBatalla.getJsonBatalla(tenant, idJugador);
+            return blBatalla.getEstadoBatalla(tenant, idJugador);
         }
 
         public void EnviarUnidades(string tenant, string idDefensor,Contribucion contr)
         {
             blBatalla.agregarContribucion(tenant, idDefensor, contr);
         }
+
+ 
     }
 }

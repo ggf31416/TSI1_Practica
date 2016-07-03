@@ -22,56 +22,103 @@ namespace FrontEnd
         {
             Console.WriteLine(name + " -> " + message);
             Clients.All.broadcastMessage(name, message);
+
             //Clients.Caller.broadcastMessage(name, "mensaje enivado");
         }
 
         public void SendGrupo(string grupo,string mensaje)
         {
-            string nombre = grupo;
-            Clients.Group(grupo).broadcastMessage(nombre, mensaje);
+            try
+            {
+                string nombre = grupo;
+                Clients.Group(grupo).broadcastMessage(nombre, mensaje);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("Error en ChatHub.SendGrupo");
+                System.Diagnostics.Trace.TraceError(ex.ToString());
+            }
         }
 
         public void agregarUsuarioGrupo(string idUsuario,string grupo)
         {
-            Groups.Add(idUsuario, grupo);
-        }
+            try { 
+                Groups.Add(idUsuario, grupo);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("Error en ChatHub.agregarUsuarioGrupo");
+                System.Diagnostics.Trace.TraceError(ex.ToString());
+            }
+}
 
         public void  SendUsuario(String usuario, String msg)
         {
-            Clients.User(usuario).broadcastMessage("Service", msg);
+
+            try
+            {
+                Clients.User(usuario).broadcastMessage("Service", msg);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("Error en ChatHub.SendUsuario");
+                System.Diagnostics.Trace.TraceError(ex.ToString());
+            }
         }
 
         public void SendLista(List<string> nombreUsuarios, String msg)
         {
-            foreach (string user in nombreUsuarios)
-            {
-                Clients.Group(user).broadcastMessage("Service", msg);
+            try { 
+                foreach (string user in nombreUsuarios)
+                {
+                    Clients.Group(user).broadcastMessage("Service", msg);
+                }
             }
-        }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("Error en ChatHub.SendLista");
+                System.Diagnostics.Trace.TraceError(ex.ToString());
+            }
+}
 
 
         public override Task OnConnected()
         {
-            var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);
+            try { 
+                var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);
            
-            if (userName != NO_AUTH)
+                if (userName != NO_AUTH)
+                {
+                    Groups.Add(Context.ConnectionId, userName);
+                    /*Task.Factory.StartNew(
+                        () => cliente.ConectarSignalr("", userName, Context.ConnectionId)
+                    );*/
+                }
+            }
+            catch (Exception ex)
             {
-                Groups.Add(Context.ConnectionId, userName);
-                /*Task.Factory.StartNew(
-                    () => cliente.ConectarSignalr("", userName, Context.ConnectionId)
-                );*/
+                System.Diagnostics.Trace.TraceError("Error en ChatHub.OnConnected");
+                System.Diagnostics.Trace.TraceError(ex.ToString());
             }
             return base.OnConnected();
         }
 
         public override Task OnReconnected()
         {
-            var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);
-            if (userName != NO_AUTH)
+            try
             {
-                /*Task.Factory.StartNew(
-                    () => cliente.ReconectarSignalr("", userName, Context.ConnectionId)
-                );*/
+                var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);
+                if (userName != NO_AUTH)
+                {
+                    /*Task.Factory.StartNew(
+                        () => cliente.ReconectarSignalr("", userName, Context.ConnectionId)
+                    );*/
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("Error en ChatHub.OnConnected");
+                System.Diagnostics.Trace.TraceError(ex.ToString());
             }
              return base.OnReconnected();
         }
@@ -79,10 +126,18 @@ namespace FrontEnd
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);
-            if (userName != NO_AUTH)
+            try
             {
-                cliente.DesconectarSignalr("", userName, Context.ConnectionId);
+                var userName = new Hubs.IdentificadorSignalR().GetUserId(Context.Request);
+                if (userName != NO_AUTH)
+                {
+                    cliente.DesconectarSignalr("", userName, Context.ConnectionId);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("Error en ChatHub.OnConnected");
+                System.Diagnostics.Trace.TraceError(ex.ToString());
             }
             return base.OnDisconnected(stopCalled);
         }

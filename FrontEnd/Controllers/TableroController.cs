@@ -88,7 +88,7 @@ namespace FrontEnd.Controllers
         {
             String idJugador = Request.Cookies["ClienteId"].Value;
             Service1Client client = new Service1Client();
-            string res = client.GetEstadoBatalla(tenant, idJugador);
+            var res = client.GetEstadoBatalla(tenant, idJugador);
             return Json(new { success = true, ret = res }, JsonRequestBehavior.AllowGet);
         }
 

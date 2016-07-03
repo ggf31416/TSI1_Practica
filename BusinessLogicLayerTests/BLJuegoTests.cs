@@ -22,12 +22,14 @@ namespace BusinessLogicLayer
             juego.TipoEdificios = new List<TipoEdificio>();
             juego.TipoRecurso = new List<TipoRecurso>();
             juego.TipoRecurso.Add(new TipoRecurso() { Id = 5, Nombre = "Oro" });
-            juego.TipoEdificios.Add(new TipoEdificio() { Ataque = 10, Defensa = 10, Vida = 10, RecursosAsociados = new List<RecursoAsociado>() });
+            juego.TipoEdificios.Add(new TipoEdificio() {Id = 99, Ataque = 10, Defensa = 10, Vida = 10, RecursosAsociados = new List<RecursoAsociado>() });
             juego.Tecnologias = new List<Tecnologia>();
             juego.Tecnologias.Add(new Tecnologia() { Id = 1 });
             juego.DataJugador = new DataActual();
             Tecnologia dep = new Tecnologia() { Id = 2, TecnologiaDependencias = new List<TecnologiaDependencia>() };
             dep.TecnologiaDependencias.Add(new TecnologiaDependencia() { IdTecnologiaDepende = 1, IdTecnologia = dep.Id });
+            Accion aumentoHP = new Accion() { NombreAtributo = "vida", IdEntidad = 99, Valor = 20 };
+            dep.AccionesAsociadas.Add(aumentoHP);
             juego.Tecnologias.Add(dep);
             tec.CompletarTecnologiasTerminadasSinGuardar(juego);
             var estado = juego.DataJugador.EstadoTecnologias;
@@ -45,6 +47,11 @@ namespace BusinessLogicLayer
             tec.CompletarTecnologiasTerminadasSinGuardar(juego);
             Assert.AreEqual(EstadoData.EstadoEnum.A, estado["1"].Estado, "Tec 1 deberia estar construido");
             Assert.AreEqual(EstadoData.EstadoEnum.Puedo, estado["2"].Estado, "Tec 2  deberia poder desarrollarse ahora");
+            juego.DataJugador.EstadoTecnologias["2"].Estado = EstadoData.EstadoEnum.C;
+            juego.DataJugador.EstadoTecnologias["2"].Fin = DateTime.UtcNow.AddSeconds(-1);
+            tec.CompletarTecnologiasTerminadasSinGuardar(juego);
+            Assert.AreEqual(EstadoData.EstadoEnum.A, estado["2"].Estado, "Tec 2 deberia estar construido");
+            Assert.AreEqual(30,juego.TipoEdificios[0].Vida , "Vida deberia ser 30");
         }
     }
 }

@@ -27,6 +27,6 @@ namespace Shared.Entities
         [DataMember]
         public List<TecnologiaDependencia> TecnologiaDependencias { get; set; }
         [DataMember]
-        public List<Accion> AccionesAsociadas { get; set; }
+        public List<Accion> AccionesAsociadas { get; set; } = new List<Accion>();
     }
 }

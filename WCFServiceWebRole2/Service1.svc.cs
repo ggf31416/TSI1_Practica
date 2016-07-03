@@ -2,6 +2,7 @@
 using Shared.Entities;
 using System.Collections.Generic;
 using System.ServiceModel;
+using Shared.Entities.DataBatalla;
 
 namespace WCFServiceWebRole2
 {
@@ -143,9 +144,9 @@ namespace WCFServiceWebRole2
             return blUsuarioHandler.GetClanJugador(Tenant, IdJugador);
         }
 
-        public string GetEstadoBatalla(string tenant, string idJugador)
+        public InfoBatalla GetEstadoBatalla(string tenant, string idJugador)
         {
-            return blBatalla.getJsonBatalla(tenant, idJugador);
+            return blBatalla.getEstadoBatalla(tenant, idJugador);
         }
 
         public void EnviarUnidades(string tenant, string idDefensor, Contribucion contr)

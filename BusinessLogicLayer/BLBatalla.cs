@@ -7,6 +7,7 @@ using System.Threading;
 using DataAccessLayer;
 using System.Threading.Tasks;
 using System.Linq;
+using System.ServiceModel;
 
 namespace BusinessLogicLayer
 {
@@ -16,6 +17,8 @@ namespace BusinessLogicLayer
         // representa las batallas en curso en este servidor
         public Dictionary<string, Batalla> batallasPorJugador = new Dictionary<string, Batalla>();
         public List<Batalla> batallas = new List<Batalla>();
+
+        public BLServiceClient serviceClient = new BLServiceClient();
 
         public Dictionary<string, Jugador> jugadores { get; private set; } = new Dictionary<string, Jugador>();
 
@@ -132,11 +135,10 @@ namespace BusinessLogicLayer
 
         public void agregarEdificio(AccionMsg msg)
         {
-            BLServiceClient serviceClient = new BLServiceClient();
-            Service1Client client = new Service1Client();
+            Service1Client client = getClienteInteraccion();
             Batalla b = obtenerBatalla(msg.Jugador);
             if (b == null) return;
-            b.tablero.agregarEdificio(new Edificio { tipo_id = msg.Id, jugador = msg.Jugador, posX = msg.PosX, posY = msg.PosY });
+            b.campo.agregarEdificio(new Edificio { tipo_id = msg.Id, jugador = msg.Jugador, posX = msg.PosX, posY = msg.PosY });
             AccionMsg msgSend = new AccionMsg { Accion = "AddEd", Id = msg.Id, PosX = msg.PosX, PosY = msg.PosY };
             client.Send(JsonConvert.SerializeObject(msgSend));
 
@@ -146,8 +148,9 @@ namespace BusinessLogicLayer
 
         private static Service1Client getClienteInteraccion()
         {
-            BLServiceClient serviceClient = new BLServiceClient();
-            Service1Client client = new Service1Client();
+            BasicHttpBinding binding = new BasicHttpBinding();
+            EndpointAddress address = new EndpointAddress("http://tsiserviceinteraccion.cloudapp.net/Service1.svc");
+            Service1Client client = new Service1Client(binding, address);
             return client;
         }
 
@@ -161,7 +164,7 @@ namespace BusinessLogicLayer
             if (b.agregarUnidad(tipo_id, jugador, unit_id, posX, posY) == 1)
             {
 
-                Entidad u = b.tablero.GetEntidadDesplegada(unit_id);
+                Entidad u = b.campo.GetEntidadDesplegada(unit_id);
                 var jsonObj = new  AccionMsg{ Accion = "AddUn", Id = tipo_id, PosX = posX, PosY = posY, IdUnidad = unit_id,Jugador = jugador};
                 string s = JsonConvert.SerializeObject(jsonObj);
 
@@ -386,10 +389,9 @@ namespace BusinessLogicLayer
         // inicia preparativos para ataque
         public void IniciarAtaque(string tenant, InfoAtaque info)
         {
-            
+
             //setAtacabilidadJugador(tenant, info.Enemigo,false);
-            
-            AtaqueConjunto conj = new AtaqueConjunto() { Atacante = info.Jugador, Defensor = info.Enemigo,IdBatalla=info.Enemigo,Tenant = tenant };
+            AtaqueConjunto conj = new AtaqueConjunto() { Atacante = info.Jugador, Defensor = info.Enemigo, IdBatalla = info.Enemigo, Tenant = tenant };
             Juego infoAtacante = blJuego.GetJuegoUsuarioSinGuardar(tenant, conj.Atacante);
             conj.ClanAtacante = infoAtacante.DataJugador.Clan;
             Juego infoDefensor = blJuego.GetJuegoUsuarioSinGuardar(tenant, conj.Atacante);
@@ -410,7 +412,7 @@ namespace BusinessLogicLayer
                 Console.WriteLine(ex);
                 idBatalla = _dalAtConj.guardarAtaqueConj(conj);
             }
-            
+
 
             Contribucion contr = obtenerUnidades(infoAtacante);
             contr.NombreDefensor = userName;
@@ -418,8 +420,7 @@ namespace BusinessLogicLayer
             _dalAtConj.agregarContribucion(tenant, idBatalla, contr);
             //conj.UnidadesContribuidas.Add(contr);
 
-            blJuego.QuitarUnidades(infoAtacante, contr,true);
-
+            blJuego.QuitarUnidades(infoAtacante, contr, true);
             Planificador.getInstancia().IniciarAtaque(tenant, idBatalla, (this.config.SegundosAtaque));
             notificar(info, "NotificacionAtaque", this.config.SegundosAtaque);
         }
@@ -432,8 +433,22 @@ namespace BusinessLogicLayer
                 var res = batallasPorJugador[idUsuario].GenerarJson(idUsuario);
                 var info = new AccionMsg() { Accion = "IniciarAtaque", Data = res };
                 Service1Client client = getClienteInteraccion();
+                /* Descomentar para enviar por signalr
+                 * ServiceInteraccionClient client = getClienteInteraccion();
                 string txt = JsonConvert.SerializeObject(info, new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore });
-                client.SendGrupo(idUsuario, txt);
+                client.SendGrupo(idUsuario, txt);*/
+                return res;
+            }
+            return null;
+        }
+
+        public Shared.Entities.DataBatalla.InfoBatalla getEstadoBatalla(string tenant, string idUsuario)
+        {
+            if (batallasPorJugador.ContainsKey(idUsuario))
+            {
+                Console.WriteLine("getJsonBatalla Tenant: " + tenant + "userId " + idUsuario);
+                var res = batallasPorJugador[idUsuario].GenerarInfoBatalla(idUsuario);
+ 
                 return res;
             }
             return null;

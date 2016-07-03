@@ -13,6 +13,7 @@ namespace BusinessLogicLayer
         void IniciarAtaque(string tenant, InfoAtaque info);
         void IniciarBatalla(string tenant, string idBatalla);
         string getJsonBatalla(string tenant, string idUsuario);
+        Shared.Entities.DataBatalla.InfoBatalla getEstadoBatalla(string tenant, string idUsuario);
         bool agregarContribucion(string tenant, string idDefensor, Contribucion contr);
         void CancelarBatalla(string tenant, string idBatalla);
     }

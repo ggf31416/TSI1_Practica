@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Shared.Entities;
 using Newtonsoft.Json;
+using Shared.Entities.DataBatalla;
 
 namespace BusinessLogicLayer
 {
@@ -87,6 +88,7 @@ namespace BusinessLogicLayer
                     e.jugador = this.Id;
                     e.posX = tc.PosColumna.Value * e.sizeX;
                     e.posY = tc.PosFila.Value * e.sizeY;
+                    e.id = "Ed:" + e.posXr + "*" + e.posYr;
                     this.Edificios.Add(e);
                 }
                 
@@ -115,15 +117,15 @@ namespace BusinessLogicLayer
                     hp = tu.Vida.GetValueOrDefault(),
                     rango = 8,
                     esUnidad = tu is TipoUnidad };
-                copia.Tipos.Add(tu.Id, info);
+                copia.Tipos.Add(tu.Id.ToString(), info);
             }
             if (incluirEdificios)
             {
-                copia.Edificios = this.Edificios;
+                //copia.Edificios = this.Edificios;
             }
             if (incluirRecursos)
             {
-                copia.Recursos = this.Recursos;
+                //copia.Recursos = this.Recursos;
             }
             return copia;
         }
@@ -151,25 +153,6 @@ namespace BusinessLogicLayer
 
 
 
-    public class InfoTipo
-    {
-        public int id { get; set; }
-        public float hp { get; set; }
-        public int ataque { get; set; }
-        public int rango { get; set; }
-        public bool esUnidad { get; set; }
-    }
-
-    public class InfoJugador
-    {
-        public string Id { get; set; }
-        public string ShortId { get; set; }
-        public string Clan { get; set; }
-        public List< ConjuntoUnidades> Unidades { get; set; } = new List<ConjuntoUnidades>();
-        public List<Edificio> Edificios { get; set; } = new List<Edificio>();
-        public Dictionary<int,InfoTipo> Tipos { get; set; } = new Dictionary<int, InfoTipo>();
-        public Dictionary<int, CantidadRecurso> Recursos { get; set; }  // clave Recurso.ID
-    }
 
 
 

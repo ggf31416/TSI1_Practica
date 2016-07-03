@@ -1,4 +1,5 @@
 ﻿using Shared.Entities;
+using Shared.Entities.DataBatalla;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,7 +75,7 @@ namespace ServiceLayer
         string GetClanJugador(string Tenant, string IdJugador);
 
         [OperationContract]
-        string GetEstadoBatalla(string tenant, string idJugador);
+        InfoBatalla GetEstadoBatalla(string tenant, string idJugador);
 
         [OperationContract]
         void ConectarSignalr(string tenant, String idJugador,String  conId);
