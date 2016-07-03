@@ -73,7 +73,15 @@ namespace BusinessLogicLayer
             if (tipo == null) return 0;
             foreach (var costo in tipo.Costos)
             {
-                maxUnidadesPorRecurso[costo.IdRecurso] = ((int)recursos[costo.IdRecurso.ToString()].Total) / costo.Valor;
+                if (costo.Valor > 0)
+                {
+                    maxUnidadesPorRecurso[costo.IdRecurso] = ((int)recursos[costo.IdRecurso.ToString()].Total) / costo.Valor;
+                }
+                else
+                {
+                    maxUnidadesPorRecurso[costo.IdRecurso] = cantidadSolicitada;
+                }
+
             }
             List<int> aux = maxUnidadesPorRecurso.Values.ToList();
             aux.Add(cantidadSolicitada);

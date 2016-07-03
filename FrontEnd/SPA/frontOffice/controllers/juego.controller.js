@@ -473,7 +473,7 @@
             }
             else{
                 var tile = $scope.game.add.tileSprite(0, 0,  game.world.width,  game.world.height, "grass");
-                tiel.tileScale = new PIXI.Point(1,1);
+                tile.tileScale = new PIXI.Point(1,1);
             }
             
            
