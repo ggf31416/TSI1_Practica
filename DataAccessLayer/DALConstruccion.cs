@@ -47,7 +47,7 @@ namespace DataAccessLayer
                         }
                     }
                 }
-                EstadoRecurso.Total = 20000;
+                EstadoRecurso.Total = 300;
                 juego.DataJugador.EstadoRecursos.Add(recurso.Id.ToString(), EstadoRecurso);
             }
             foreach (var celda in juego.Tablero.Celdas)
