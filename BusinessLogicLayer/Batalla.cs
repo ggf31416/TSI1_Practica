@@ -239,7 +239,8 @@ namespace BusinessLogicLayer
 
         public bool ganoAtacante()
         {
-            return false == ObtenerGanadores().Contains(this.defensor.Id);
+            var ganadores = ObtenerGanadores();
+            return ganadores.Count > 0 &&  false == ganadores.Contains(this.defensor.Id);
         }
 
 

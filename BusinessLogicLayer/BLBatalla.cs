@@ -503,7 +503,18 @@ namespace BusinessLogicLayer
                 foreach (string jug in b.GetListaJugadores())
                 {
                     double mult = 0;
-                    string msg = "Empató la batalla.";
+                    string msg = "";
+                    if (listaGanadores.Count == 0)
+                    {
+                        msg = "Empató la batalla.";
+                    }
+                    else if (!ganoAtacante)
+                    {
+                        if (!listaGanadores.Contains(jug))
+                        {
+                            msg = "Perdió la batalla.";
+                        }
+                    }
                     
                     if (ganoAtacante)
                     {
@@ -518,6 +529,7 @@ namespace BusinessLogicLayer
                             msg = "Perdió la batalla.";
                         }
                     }
+
                     if (listaGanadores.Contains(jug))
                     {
                         msg = "Ganó la batalla.";
