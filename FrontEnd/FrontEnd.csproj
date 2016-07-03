@@ -184,6 +184,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\img\arquero.jpg" />
     <Content Include="Content\img\Barracks4.png" />
+    <Content Include="Content\img\Crystal_Arrow.gif" />
     <Content Include="Content\img\cuartel.jpg" />
     <Content Include="Content\img\granja.jpg" />
     <Content Include="Content\img\grass.jpg" />

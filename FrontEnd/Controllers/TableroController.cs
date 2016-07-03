@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using ServiceStack.Redis;
 using Microsoft.AspNet.SignalR;
 using Shared.Entities;
-using Shared.Entities.DataBatalla;
 
 namespace FrontEnd.Controllers
 {
@@ -89,7 +88,7 @@ namespace FrontEnd.Controllers
         {
             String idJugador = Request.Cookies["ClienteId"].Value;
             Service1Client client = new Service1Client();
-            InfoBatalla res = client.GetEstadoBatalla(tenant, idJugador);
+            var res = client.GetEstadoBatalla(tenant, idJugador);
             return Json(new { success = true, ret = res }, JsonRequestBehavior.AllowGet);
         }
 
