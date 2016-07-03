@@ -40,10 +40,10 @@ namespace BusinessLogicLayer
         }
 
 
-        private static ServiceInteraccionClient getCliente()
+        private static Service1Client getCliente()
         {
             BLServiceClient serviceClient = new BLServiceClient();
-            ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
+            Service1Client client = new Service1Client();
             return client;
         }
 

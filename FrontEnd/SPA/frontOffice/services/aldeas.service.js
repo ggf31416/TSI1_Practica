@@ -110,6 +110,21 @@
         };
 
         //CLANES
+
+        this.GetClanJugador = function (json) {
+            var defered = $q.defer();
+            var promise = defered.promise;
+
+            $http.get('/' + $rootScope.NombreJuego + '/Juego/GetClanJugador/')
+            .success(function (data) {
+                defered.resolve(data.ret);
+            })
+            .error(function (err) {
+                defered.reject("Error al obtener clan")
+            });
+
+            return promise;
+        }
         this.crearClan = function (json) {
             var ret = "";
             console.debug(JSON.stringify(json));

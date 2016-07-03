@@ -1,17 +1,13 @@
-﻿using DataAccessLayer;
-using EpPathFinding;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ServiceStack.Redis;
-using Microsoft.AspNet.SignalR.Client.Hubs;
-using System.ServiceModel;
 using Shared.Entities;
 using System.Diagnostics;
 using System.Threading;
+using DataAccessLayer;
+using System.Threading.Tasks;
+using System.Linq;
+using System.ServiceModel;
 
 namespace BusinessLogicLayer
 {
@@ -22,16 +18,24 @@ namespace BusinessLogicLayer
         public Dictionary<string, Batalla> batallasPorJugador = new Dictionary<string, Batalla>();
         public List<Batalla> batallas = new List<Batalla>();
 
+        public BLServiceClient serviceClient = new BLServiceClient();
+
         public Dictionary<string, Jugador> jugadores { get; private set; } = new Dictionary<string, Jugador>();
 
         private static BLBatalla instancia = null;
         private IBLJuego blJuego;
         private DALAtaqueConj _dalAtConj = new DALAtaqueConj();
 
-    
-        public static BLBatalla getInstancia()
+        public BLBatalla(IBLJuego bl)
         {
-            if (instancia == null) instancia = new BLBatalla();
+            setBLJuego(bl);
+        }
+
+        public BLBatalla() {}
+
+        public static BLBatalla getInstancia(IBLJuego bl)
+        {
+            if (instancia == null) instancia = new BLBatalla(bl);
             return instancia;
         }
 
@@ -131,8 +135,7 @@ namespace BusinessLogicLayer
 
         public void agregarEdificio(AccionMsg msg)
         {
-            BLServiceClient serviceClient = new BLServiceClient();
-            ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
+            Service1Client client = getClienteInteraccion();
             Batalla b = obtenerBatalla(msg.Jugador);
             if (b == null) return;
             b.campo.agregarEdificio(new Edificio { tipo_id = msg.Id, jugador = msg.Jugador, posX = msg.PosX, posY = msg.PosY });
@@ -143,10 +146,11 @@ namespace BusinessLogicLayer
 
 
 
-        private static ServiceInteraccionClient getClienteInteraccion()
+        private static Service1Client getClienteInteraccion()
         {
-            BLServiceClient serviceClient = new BLServiceClient();
-            ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
+            BasicHttpBinding binding = new BasicHttpBinding();
+            EndpointAddress address = new EndpointAddress("http://tsiserviceinteraccion.cloudapp.net/Service1.svc");
+            Service1Client client = new Service1Client(binding, address);
             return client;
         }
 
@@ -154,7 +158,7 @@ namespace BusinessLogicLayer
 
         private void agregarUnidad(string jugador, int tipo_id, string unit_id, int posX, int posY)
         {
-            ServiceInteraccionClient client = getClienteInteraccion();
+            Service1Client client = getClienteInteraccion();
             Batalla b = obtenerBatalla(jugador);
             if (b == null) return;
             if (b.agregarUnidad(tipo_id, jugador, unit_id, posX, posY) == 1)
@@ -385,10 +389,9 @@ namespace BusinessLogicLayer
         // inicia preparativos para ataque
         public void IniciarAtaque(string tenant, InfoAtaque info)
         {
-            
+
             //setAtacabilidadJugador(tenant, info.Enemigo,false);
-            
-            AtaqueConjunto conj = new AtaqueConjunto() { Atacante = info.Jugador, Defensor = info.Enemigo,IdBatalla=info.Enemigo,Tenant = tenant };
+            AtaqueConjunto conj = new AtaqueConjunto() { Atacante = info.Jugador, Defensor = info.Enemigo, IdBatalla = info.Enemigo, Tenant = tenant };
             Juego infoAtacante = blJuego.GetJuegoUsuarioSinGuardar(tenant, conj.Atacante);
             conj.ClanAtacante = infoAtacante.DataJugador.Clan;
             Juego infoDefensor = blJuego.GetJuegoUsuarioSinGuardar(tenant, conj.Atacante);
@@ -409,7 +412,7 @@ namespace BusinessLogicLayer
                 Console.WriteLine(ex);
                 idBatalla = _dalAtConj.guardarAtaqueConj(conj);
             }
-            
+
 
             Contribucion contr = obtenerUnidades(infoAtacante);
             contr.NombreDefensor = userName;
@@ -417,8 +420,7 @@ namespace BusinessLogicLayer
             _dalAtConj.agregarContribucion(tenant, idBatalla, contr);
             //conj.UnidadesContribuidas.Add(contr);
 
-            blJuego.QuitarUnidades(infoAtacante, contr,true);
-
+            blJuego.QuitarUnidades(infoAtacante, contr, true);
             Planificador.getInstancia().IniciarAtaque(tenant, idBatalla, (this.config.SegundosAtaque));
             notificar(info, "NotificacionAtaque", this.config.SegundosAtaque);
         }
@@ -430,6 +432,7 @@ namespace BusinessLogicLayer
                 Console.WriteLine("getJsonBatalla Tenant: " + tenant + "userId " + idUsuario);
                 var res = batallasPorJugador[idUsuario].GenerarJson(idUsuario);
                 var info = new AccionMsg() { Accion = "IniciarAtaque", Data = res };
+                Service1Client client = getClienteInteraccion();
                 /* Descomentar para enviar por signalr
                  * ServiceInteraccionClient client = getClienteInteraccion();
                 string txt = JsonConvert.SerializeObject(info, new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore });

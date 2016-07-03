@@ -105,6 +105,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -155,8 +156,8 @@
     <Compile Include="Pathfinding\PathFinder\NodePool.cs" />
     <Compile Include="Planificador.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceInteraccion.cs" />
     <Compile Include="CampoBatalla.cs" />
+    <Compile Include="ServiceReference1.cs" />
     <Compile Include="Unidad.cs" />
   </ItemGroup>
   <ItemGroup>

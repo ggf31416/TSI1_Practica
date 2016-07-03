@@ -177,11 +177,18 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                                             $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Total = $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Total + $rootScope.dataJugador.EstadoRecursos[$rootScope.listaRecursos[i].Id].Produccion;
                                         }
                                     }, 1000);
-                                    console.debug($rootScope.dataJugador.Clan);
-                                    if ($rootScope.dataJugador.Clan != null) {
-                                        $scope.soyAdmin = aldeasService.soyAdministrador();
-                                    }
-
+                                    aldeasService.GetClanJugador()
+                                        .then(function (data) {
+                                            $rootScope.dataJugador.Clan = data;
+                                            console.debug($rootScope.dataJugador.Clan);
+                                            if ($rootScope.dataJugador.Clan != null) {
+                                                $scope.soyAdmin = aldeasService.soyAdministrador();
+                                            }
+                                        })
+                                        .catch(function (err) {
+                                            alert(err)
+                                        });
+                                   
                                 })
                                 .catch(function (err) {
                                     alert(err)
@@ -243,6 +250,14 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
         $scope.getImagenUnidad = function (id) {
             var edificio = findEdificioInArray($rootScope.listaUnidades, id)[0];
             return edificio.Imagen;
+        }
+
+        $scope.verUnidad = function (id) {
+            //abro cuadro del edificio
+            $scope.entidad = findEdificioInArray($rootScope.listaUnidades, id)[0];
+            console.debug($scope.entidad);
+
+            $('#dialogoDatosUnid').modal('show');
         }
 
         $scope.editCell = function (fila, columna, casilla) {
@@ -412,19 +427,18 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
                         }
                         $scope.timerTecnologia = $interval(function () {
                             $interval.cancel($scope.timerTecnologia);
-                            aldeasService.getEntidadesActualizadas()
-                                                    .then(function (data) {
-                                                        console.debug(data);
-                                                        $rootScope.listaEdificios = data.TipoEdificios;
-                                                        console.debug($rootScope.listaEdificios);
-                                                        $rootScope.listaUnidades = data.TipoUnidades;
-
-                                                    })
-                                                    .catch(function (err) {
-                                                        alert(err)
-                                                    });
+                            aldeasService.getAllData()
+                                .then(function (data) {
+                                    console.debug(data);
+                                    $rootScope.listaEdificios = data.TipoEdificios;
+                                    $rootScope.listaUnidades = data.TipoUnidades;
+                                    $rootScope.listaTecnologias = data.Tecnologias;
+                                })
+                                .catch(function (err) {
+                                    alert(err)
+                                });
                             $scope.auxTecnologia = undefined;
-                        }, $scope.modeloTecnologia.TiempoConstruccion * 1000);
+                        }, $scope.modeloTecnologia.TiempoConstruccion * 1000 + 5000);
                     }
                     else
                         alert("No es posible desarrollar la tecnologia");

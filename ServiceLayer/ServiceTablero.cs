@@ -28,7 +28,7 @@ namespace ServiceLayer
             blJuegoHandler = Program.blJuegoHandler;
             blTecnologiaHandler = Program.blTecnologiaHandler;
             blConstruccionHandler = Program.blConstruccionHandler;
-            blBatalla = BLBatalla.getInstancia();
+            blBatalla = BLBatalla.getInstancia(null);
             ((BLBatalla)blBatalla).setBLJuego(blJuegoHandler);
             blUsuarioHandler = Program.blUsuarioHandler;
             blConexHandler = Program.blConexionHandler;
@@ -150,6 +150,12 @@ namespace ServiceLayer
         {
             return blUsuarioHandler.EnviarRecursos(tributos, IdJugadorDestino, Tenant, IdJugador);
         }
+
+        public string GetClanJugador(string Tenant, string IdJugador)
+        {
+            return blUsuarioHandler.GetClanJugador(Tenant, IdJugador);
+        }
+
    
         public InfoBatalla  GetEstadoBatalla(string tenant, string idJugador)
         {

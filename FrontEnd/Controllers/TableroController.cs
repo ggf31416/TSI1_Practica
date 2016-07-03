@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using ServiceStack.Redis;
 using Microsoft.AspNet.SignalR;
-using FrontEnd.ServiceTablero;
 using Shared.Entities;
 using Shared.Entities.DataBatalla;
 
@@ -19,13 +18,13 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
                 client.Accion(tenant,data);
                 return Json(new { sucess = true });
             }
             catch (Exception e)
             {
-                return Json(new { sucess = false });
+                return Json(new { sucess = false, ex = e.Message });
             }
         }
 
@@ -35,7 +34,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 Shared.Entities.InfoCelda sharedInfoCelda = new Shared.Entities.InfoCelda();
 
@@ -74,7 +73,7 @@ namespace FrontEnd.Controllers
             try
             {
                 String idJugador = Request.Cookies["ClienteId"].Value;
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
                 info.Jugador = idJugador;
                 info.Juego = tenant;
                 client.IniciarAtaque(tenant,info);
@@ -82,14 +81,14 @@ namespace FrontEnd.Controllers
             }
             catch (Exception e)
             {
-                return Json(new { sucess = false });
+                return Json(new { sucess = false, ex = e.Message });
             }
         }
 
         public ActionResult ObtenerEstadoBatalla(string tenant)
         {
             String idJugador = Request.Cookies["ClienteId"].Value;
-            ServiceTableroClient client = new ServiceTableroClient();
+            Service1Client client = new Service1Client();
             InfoBatalla res = client.GetEstadoBatalla(tenant, idJugador);
             return Json(new { success = true, ret = res }, JsonRequestBehavior.AllowGet);
         }
@@ -100,7 +99,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
                 var res = client.GetListaDeJugadoresAtacables(jugador);
                 return Json(new { success = true, ret = res }, JsonRequestBehavior.AllowGet);
             }
@@ -116,7 +115,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 CEInputData ceInputData = new CEInputData();
 
@@ -130,7 +129,7 @@ namespace FrontEnd.Controllers
             }
             catch(Exception e)
             {
-                return Json(new { sucess = false });
+                return Json(new { sucess = false, ex = e.Message });
             }
         }
 
@@ -139,7 +138,7 @@ namespace FrontEnd.Controllers
         {
             try
             {
-                ServiceTableroClient client = new ServiceTableroClient();
+                Service1Client client = new Service1Client();
 
                 EUInputData euInputData = new EUInputData();
 
@@ -152,7 +151,7 @@ namespace FrontEnd.Controllers
             }
             catch (Exception e)
             {
-                return Json(new { sucess = false });
+                return Json(new { sucess = false, ex = e.Message });
             }
         }
 

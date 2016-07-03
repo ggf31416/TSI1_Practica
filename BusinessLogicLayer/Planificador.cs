@@ -17,7 +17,7 @@ namespace BusinessLogicLayer
         {
             // ejecutarTurno
             
-            BLBatalla.getInstancia().ejecutarBatallasEnCurso();
+            BLBatalla.getInstancia(null).ejecutarBatallasEnCurso();
         }
     }
 
@@ -29,7 +29,7 @@ namespace BusinessLogicLayer
             {
                 var idBatalla = (String)context.MergedJobDataMap.Get("idBatalla");
                 string tenant = (string)context.MergedJobDataMap.Get("tenant");
-                BLBatalla.getInstancia().IniciarBatalla(tenant, idBatalla);
+                BLBatalla.getInstancia(null).IniciarBatalla(tenant, idBatalla);
             }
         }
 
@@ -39,12 +39,16 @@ namespace BusinessLogicLayer
     public class Planificador
     {
 
-        private static Planificador instancia;
+        private static Planificador instancia = null;
         private IScheduler scheduler;
 
         public static  Planificador getInstancia()
         {
-            if (instancia == null) instancia = new Planificador();
+            if (instancia == null)
+            {
+                instancia = new Planificador();
+                instancia.iniciar();
+            }
             return instancia;
         }
 

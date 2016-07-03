@@ -10,11 +10,11 @@ namespace FrontEnd
     public class ChatHub : Hub
     {
         private string NO_AUTH;
-        private ServiceTableroClient cliente;
+        private Service1Client cliente;
 
         public ChatHub()
         {
-            cliente = new ServiceTableroClient();
+            cliente = new Service1Client();
             NO_AUTH = new Hubs.IdentificadorSignalR().NO_AUTENTICADO;
         }
 
