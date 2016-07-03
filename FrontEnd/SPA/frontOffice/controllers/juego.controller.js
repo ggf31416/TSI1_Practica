@@ -20,6 +20,8 @@
         $scope.listaEnemigos = [];
 
         $scope.finMsg = "";
+
+        var dataExtra = {};
         
         //juegoService.GetEstadoBatalla();
 
@@ -47,6 +49,7 @@
         $scope.inicializar = function(data){
             
             $scope.batalla = data;//JSON.parse(data[0].data.ret);
+            dataExtra = JSON.parse(data.Data);
             var batalla = $scope.batalla;
             if (!batalla) console.error("No hay datos de batalla");
             nombreJugador = batalla.IdJugador;
@@ -91,7 +94,8 @@
         
         var unit_size = 20;
         var tile_size = unit_size * 4;
-        var tablero_size = 10 * tile_size;
+        var tablero_sizeX = 10 * tile_size;
+        var tablero_sizeY = 10 * tile_size;
         var mouse_sprite;
         var buildings;
         var unidades_desplegadas;
@@ -106,6 +110,11 @@
 
         window.createGame = function (scope, injector) {
             // Create our phaser $scope.game
+            if ($scope.batalla){
+                anchoJuego = $scope.batalla.SizeX * unit_size;
+                altoJuego = $scope.batalla.SizeY * unit_size;
+            }
+            console.info("ancho: " + anchoJuego + ", alto: " + altoJuego);
             $scope.game = new Phaser.Game(anchoJuego, altoJuego, Phaser.CANVAS, 'divJuego', { preload: $scope.preload, create: create, update: update });
             //$scope.game.time.events.add(Phaser.Timer.SECOND * 1, pedirNombre, this);
         };
@@ -126,9 +135,18 @@
             $('#divUnidades').toggle(b);
         }
 
+        function setInfoFromTipo(entidad,jugador,unitId){
+
+            var tipo = $scope.batalla.jugadores[jugador].Tipos[entidad.id];
+            var velocidad = 8;
+            var defensa = 0;
+            entidad.info = new Unidad_Info(unitId,jugador,tipo.hp,tipo.rango, velocidad,tipo.ataque,defensa,null);   
+        }
+
         function setInfoFromData(entidad,data){
             
             var tipo = $scope.batalla.jugadores[data.jugador].Tipos[data.Id];
+
             entidad.info = new Unidad_Info(data.Unit_id,data.jugador,tipo.hp,tipo.rango,data.velocidad,tipo.ataque,data.defensa,data.target);   
         }
 
@@ -142,13 +160,15 @@
         
 
         function crearEdificioInmediato(data) {
+            if (data.hp < 0) return;
             var idSprite =  data.Id;
             var edificio = $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
             setInfoFromData(edificio, data);
             edificio.height = tile_size;
             edificio.width = tile_size;
             edificio.inputEnabled = true;
-            clickVisibleUnidades(edificio, true);
+            //clickVisibleUnidades(edificio, true);
+            unidadesPorId[edificio.info.unit_id] = edificio;
             buildings.add(edificio);
         }
 
@@ -160,7 +180,12 @@
                 unit.height = unit_size;
                 unit.width = unit_size;
                 unit.inputEnabled = true;
-                
+                if (unit.jugador == nombreJugador){
+                    if (desplegable(sprite_id).cantidad){
+                        desplegable(idSprite).cantidad -= 1;
+                        $scope.contador++;
+                    }
+                }
                 setInfoFromMensaje(unit, data)
                 unidades_desplegadas.add(unit);
                 unidadesPorId[unit.info.unit_id] = unit;
@@ -371,8 +396,13 @@
 
             // activa la carga desde cualquier dominio (se puede restringir al dominio del servidor de imagenes)
             $scope.game.load.crossOrigin = 'anonymous';
-
-            $scope.game.load.image('grass', '/Content/img/grass.jpg');
+            if (dataExtra.Pasto){
+                $scope.game.load.image('grass', dataExtra.Pasto);
+            }
+            else{
+                $scope.game.load.image('grass', '/Content/img/grass.jpg');
+            }
+            
             $scope.game.load.image('cuartel', '/Content/img/Barracks4.png');
             $scope.game.load.image('cuartelMenu', '/Content/img/cuartel.jpg');
             $scope.game.load.image('def_proy', '/Content/img/Crystal_Arrow.gif');
@@ -409,14 +439,17 @@
         }
 
         function create() {
-            $scope.game.physics.startSystem(Phaser.Physics.ARCADE)
+            var game = $scope.game;
+            game.physics.startSystem(Phaser.Physics.ARCADE)
             // setea el tamaño del tablero en pixeles en 2000x2000 
-            $scope.game.world.resize(tablero_size, tablero_size);
+            tablero_sizeX = $scope.batalla.SizeX * unit_size;
+            tablero_sizeY = $scope.batalla.SizeY * unit_size;
+             game.world.resize(tablero_sizeX, tablero_sizeY);
 
             // disableVisibilityChange intenta que el juego siga corriendo aunque pierda el foco
             // no es posible en todos los casos (por ejemplo puede no funcionar al cambiar a otro tab dependiendo del navegador)
             // pero deberia permitir que siga funcionando al hacer click afuera, lo que reduce problemas de UI
-            $scope.game.stage.disableVisibilityChange = true;
+             game.stage.disableVisibilityChange = true;
 
             //  The deadzone is a Rectangle that defines the limits at which the camera will start to scroll
             //  It does NOT keep the target sprite within the rectangle, all it does is control the boundary
@@ -425,15 +458,26 @@
 
 
 
-            mouse_sprite = $scope.game.add.sprite($scope.game.world.centerX, $scope.game.world.centerY, "grass");
+            mouse_sprite = game.add.sprite( game.world.centerX,  game.world.centerY, "grass");
             mouse_sprite.alpha = 0;
-            $scope.game.physics.arcade.enable(mouse_sprite,this);
+             game.physics.arcade.enable(mouse_sprite,this);
 
             //seguirMouse();
-
-            var tile = $scope.game.add.tileSprite(0, 0, $scope.game.world.width, $scope.game.world.height, "grass");
-            tile.tileScale = new PIXI.Point(0.25, 0.25);
-            tile.inputEnabled = true;
+            var imagenPasto = game.cache.getImage("grass");
+            var bitmap =   game.add.bitmapData(2 * tile_size,2 * tile_size);
+            if (imagenPasto.width > 2 * tile_size && imagenPasto.height > 2 * tile_size){
+                var r = new Phaser.Rectangle(0,0,2 * tile_size, 2 * tile_size);
+                bitmap.copyRect(imagenPasto,r,0,0);
+                var tile = $scope.game.add.tileSprite(0, 0,  game.world.width,  game.world.height, bitmap);
+                tile.tileScale = new PIXI.Point(0.5,0.5);
+            }
+            else{
+                var tile = $scope.game.add.tileSprite(0, 0,  game.world.width,  game.world.height, "grass");
+                tiel.tileScale = new PIXI.Point(1,1);
+            }
+            
+           
+            //tile.inputEnabled = true;
             //clickVisibleUnidades(tile, false);
 
 
@@ -448,6 +492,16 @@
 
 
             cargarEstado();
+
+             game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+ 
+            //have the game centered horizontally
+             game.scale.pageAlignHorizontally = true;
+            game.scale.pageAlignVertically = true;
+         
+            //screen size will be set automatically
+         
+            game.scale.updateLayout();
         }
 
         function iniciarCustomDrag(nombreEdificio) {
@@ -612,10 +666,11 @@
                 $scope.game.debug.reset();
                 sprite.alpha = 1.0;
                 sprite.tint = 0xFFFFFF;
-                //hacerSeleccionableUnidad(sprite);
-                sprite.info = new Unidad_Info();
-                sprite.info.jugador = nombreJugador;
-                sprite.info.unit_id = shortId + "#" + $scope.contador++;
+ 
+                while(unidadesPorId[shortId + "#" + $scope.contador]){
+                    $scope.contador++;
+                }
+                setInfoFromTipo(sprite,nombreJugador,shortId + "#" + $scope.contador);
                 unidadesPorId[sprite.info.unit_id] = sprite;
                 agregarGraficos($scope.game, sprite);
                 //sprite.id_logico = $scope.contador--; // asigno un id automatico que luego cambio}
@@ -636,8 +691,9 @@
                 
             }
             else {
-                sprite.destroy();
-                $scope.game.debug.reset();
+                continuo = true;
+                //sprite.destroy();
+                //$scope.game.debug.reset();
             }
             if (!continuo) spriteDragged = null;
         }

@@ -135,7 +135,7 @@ namespace BusinessLogicLayer
             ServiceInteraccionClient client = new ServiceInteraccionClient(serviceClient.binding, serviceClient.address);
             Batalla b = obtenerBatalla(msg.Jugador);
             if (b == null) return;
-            b.tablero.agregarEdificio(new Edificio { tipo_id = msg.Id, jugador = msg.Jugador, posX = msg.PosX, posY = msg.PosY });
+            b.campo.agregarEdificio(new Edificio { tipo_id = msg.Id, jugador = msg.Jugador, posX = msg.PosX, posY = msg.PosY });
             AccionMsg msgSend = new AccionMsg { Accion = "AddEd", Id = msg.Id, PosX = msg.PosX, PosY = msg.PosY };
             client.Send(JsonConvert.SerializeObject(msgSend));
 
@@ -160,7 +160,7 @@ namespace BusinessLogicLayer
             if (b.agregarUnidad(tipo_id, jugador, unit_id, posX, posY) == 1)
             {
 
-                Entidad u = b.tablero.GetEntidadDesplegada(unit_id);
+                Entidad u = b.campo.GetEntidadDesplegada(unit_id);
                 var jsonObj = new  AccionMsg{ Accion = "AddUn", Id = tipo_id, PosX = posX, PosY = posY, IdUnidad = unit_id,Jugador = jugador};
                 string s = JsonConvert.SerializeObject(jsonObj);
 

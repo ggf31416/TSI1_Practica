@@ -2480,11 +2480,17 @@ namespace Shared.Entities.DataBatalla
         
         private string AField;
         
+        private string DataField;
+        
         private bool FinaliceField;
         
         private string IdJugadorField;
         
         private string ShortIdField;
+        
+        private int SizeXField;
+        
+        private int SizeYField;
         
         private string[] edificiosField;
         
@@ -2518,6 +2524,19 @@ namespace Shared.Entities.DataBatalla
             set
             {
                 this.AField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Data
+        {
+            get
+            {
+                return this.DataField;
+            }
+            set
+            {
+                this.DataField = value;
             }
         }
         
@@ -2557,6 +2576,32 @@ namespace Shared.Entities.DataBatalla
             set
             {
                 this.ShortIdField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int SizeX
+        {
+            get
+            {
+                return this.SizeXField;
+            }
+            set
+            {
+                this.SizeXField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public int SizeY
+        {
+            get
+            {
+                return this.SizeYField;
+            }
+            set
+            {
+                this.SizeYField = value;
             }
         }
         

@@ -19,8 +19,14 @@ namespace Shared.Entities.DataBatalla
         public string IdJugador { get; set; }
         public string ShortId { get; set; }
 
+
+        public int SizeX { get; set; }
+        public int SizeY { get; set; }
+        public string Data { get; set; }
+
     }
 
+  
     public class InfoJugador
     {
         public string Id { get; set; }

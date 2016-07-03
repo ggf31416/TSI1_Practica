@@ -27,7 +27,8 @@ namespace BusinessLogicLayer
         public string GrupoSignalR { get; set; }
         public bool EnCurso { get; set; }
         public bool EnFinalizacion { get; set; }
-        public CampoBatalla tablero;
+        public CampoBatalla campo;
+        public Tablero tableroOriginal { get; set; }
 
         public ConfigBatalla Config { get; set; } = new ConfigBatalla();
 
@@ -36,7 +37,7 @@ namespace BusinessLogicLayer
         {
             if (jugadores.ContainsKey(jugId))
             {
-                return tablero.UnidadesSobrevivientes(jugadores[jugId]);
+                return campo.UnidadesSobrevivientes(jugadores[jugId]);
             }
             return new Dictionary<int, int>();
         }
@@ -45,7 +46,7 @@ namespace BusinessLogicLayer
         {
             if (jugadores.ContainsKey(jugId))
             {
-                return tablero.UnidadesPerdidas(jugadores[jugId]);
+                return campo.UnidadesPerdidas(jugadores[jugId]);
             }
             return new Dictionary<int, int>();
         }
@@ -55,16 +56,45 @@ namespace BusinessLogicLayer
             return this.defensor.Id;
         }
 
-    
+        private void offsetRecomendado(int sizeX,int sizeY,out int offsetX, out int offsetY,out int newSizeX,out int newSizeY)
+        {
+            int maxSize = Math.Max(sizeX,sizeY);
+            int offset = 0;
+            if (maxSize < 7)
+            {
+                offset = 2;
+            }
+            else
+            {
+                offset = 1;
+            }
+            int half = Math.Abs(sizeX - sizeY) / 2;
+            if (sizeX > sizeY)
+            {
+                offsetX = offset;
+                offsetY = offset + half;
+            }
+            else
+            {
+                offsetX = offset + half;
+                offsetY = offset;
+            }
+            
+            offsetY = offset;
+            newSizeX = maxSize + 2 * offset;
+            newSizeY = maxSize + 2 * offset;
+        }
 
         public Batalla(Tablero t, Jugador defensor,ConfigBatalla config,String tenant)
         {
             this.Tenant = tenant;
+            this.tableroOriginal = t;
             int sizeTableroX = t.CantColumnas.GetValueOrDefault();
             int sizeTableroY = t.CantFilas.GetValueOrDefault();
-            int offSet = 4;
-            this.tablero = new CampoBatalla(sizeTableroX + 2 * offSet, sizeTableroY + 2 * offSet, offSet, offSet);
-            this.tablero.JugadorDefensor = defensor.Id;
+            int offSetX, offSetY, sizeCampoX, sizeCampoY;
+            offsetRecomendado(sizeTableroX, sizeTableroY, out offSetX, out offSetY,out sizeCampoX,out sizeCampoY);
+            this.campo = new CampoBatalla(sizeCampoX, sizeCampoY, offSetX, offSetY);
+            this.campo.JugadorDefensor = defensor.Id;
             this.EnCurso = true;
             this.defensor = defensor;
            
@@ -72,9 +102,9 @@ namespace BusinessLogicLayer
 
             this.tiposEdificios = defensor.tiposEdificio;
             this.tiposUnidades = defensor.tiposUnidad;
-            tablero.agregarEdificios(defensor.Edificios);
+            campo.agregarEdificios(defensor.Edificios);
 
-            tablero.Clanes[defensor.Id] = defensor.Clan;
+            campo.Clanes[defensor.Id] = defensor.Clan;
             this.GrupoSignalR = "bat_" + this.defensor.Id;
             this.Config = config;
         }
@@ -83,7 +113,7 @@ namespace BusinessLogicLayer
         {
             jugadores[ j.Id]=  j;
             j.ShortId = this.idxJugador++.ToString();
-            tablero.Clanes[j.Id] = j.Clan;
+            campo.Clanes[j.Id] = j.Clan;
         }
 
 
@@ -120,7 +150,7 @@ namespace BusinessLogicLayer
                 u.id = unitId;
                 u.posX = posX;
                 u.posY = posY;
-                tablero.agregarUnidad(jugador, u);
+                campo.agregarUnidad(jugador, u);
                 return 1;
             }
             return 0;
@@ -172,7 +202,7 @@ namespace BusinessLogicLayer
             {
                 tieneUnidades[j.Clan] = false;
                 if (j.Unidades.Count > 0 && j.Unidades.Any(cu => cu.Value.Cantidad > 0)) tieneUnidades[j.Clan] = true;
-                if (tablero.QuedanUnidadesJugador(j.Id)) tieneUnidades[j.Clan] = true;
+                if (campo.QuedanUnidadesJugador(j.Id)) tieneUnidades[j.Clan] = true;
             }
             return tieneUnidades;
         }
@@ -216,10 +246,10 @@ namespace BusinessLogicLayer
 
         public void ejecutarTurno()
         {
-            tablero.tickTiempo();
-            double tiempoTotal = tablero.Turno * Config.MilisTurno / 1000.0;
+            campo.tickTiempo();
+            double tiempoTotal = campo.Turno * Config.MilisTurno / 1000.0;
             double tiempoCombate = tiempoTotal - Config.TiempoDeploy;
-            if (!this.tablero.EnCombate && tiempoTotal > Config.TiempoDeploy )
+            if (!this.campo.EnCombate && tiempoTotal > Config.TiempoDeploy )
             {
                 foreach(string jId in this.jugadores.Keys)
                 {
@@ -230,7 +260,7 @@ namespace BusinessLogicLayer
 
                     }
                 }
-                this.tablero.EnCombate = true;   
+                this.campo.EnCombate = true;   
             }
             if (tiempoCombate > this.Config.TiempoBatalla   || perdioUnClan())
             {
@@ -240,7 +270,7 @@ namespace BusinessLogicLayer
 
         public string generarListaAccionesTurno()
         {
-            List<AccionMsg> list = tablero.Acciones;
+            List<AccionMsg> list = campo.Acciones;
             if (list.Count == 0) return "";
             var obj = new
             {
@@ -279,9 +309,17 @@ namespace BusinessLogicLayer
 
             }
 
-            this.tablero.RellenarInfoBatalla(res);
+            this.campo.RellenarInfoBatalla(res);
             res.tiposEdificio = this.tiposEdificios;
             res.tiposUnidad = this.tiposUnidades;
+            res.SizeX = this.campo.sizeX;
+            res.SizeY = this.campo.sizeY;
+            var dataExtra = new
+            {
+                Pasto = tableroOriginal.ImagenTerreno,
+                Fondo = tableroOriginal.ImagenFondo,
+            };
+            res.Data = JsonConvert.SerializeObject(dataExtra);
             return res;
         }
 
@@ -290,11 +328,11 @@ namespace BusinessLogicLayer
             if (this.jugadores.ContainsKey(idUsuario)){
                 Jugador jugador = jugadores[idUsuario];
                 var unidadesDesplegables = obtenerObjetosUnidad(jugador,20);
-                int centroTableroX = tablero.sizeX / 2;
-                int centroTableroY = tablero.sizeY / 2;
+                int centroTableroX = campo.sizeX / 2;
+                int centroTableroY = campo.sizeY / 2;
                 if (idUsuario.Equals(this.defensor.Id))
                 {
-                    tablero.DeployUnidadesAutomatico(centroTableroX, centroTableroY, unidadesDesplegables);
+                    campo.DeployUnidadesAutomatico(centroTableroX, centroTableroY, unidadesDesplegables);
                 }
                 else
                 {
@@ -302,15 +340,15 @@ namespace BusinessLogicLayer
                     int posX = centroTableroX;
                     int posY = centroTableroY;
                     // eligo al azar excepto en el centro del tablero
-                    while (Math.Abs(posX - centroTableroX) < tablero.sizeX / 4)
+                    while (Math.Abs(posX - centroTableroX) < campo.sizeX / 4)
                     {
-                        posX = r.Next(0, tablero.sizeX);
+                        posX = r.Next(0, campo.sizeX);
                     }
-                    while (Math.Abs(posY - centroTableroY) < tablero.sizeX / 4)
+                    while (Math.Abs(posY - centroTableroY) < campo.sizeX / 4)
                     {
-                        posY = r.Next(0, tablero.sizeY);
+                        posY = r.Next(0, campo.sizeY);
                     }
-                    tablero.DeployUnidadesAutomatico(posX, posY, unidadesDesplegables);
+                    campo.DeployUnidadesAutomatico(posX, posY, unidadesDesplegables);
                 }
             }
         }
@@ -320,7 +358,7 @@ namespace BusinessLogicLayer
 
         public void borrarAcciones()
         {
-            this.tablero.Acciones.Clear();
+            this.campo.Acciones.Clear();
         }
     }
 }

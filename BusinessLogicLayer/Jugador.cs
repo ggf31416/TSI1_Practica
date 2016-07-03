@@ -88,6 +88,7 @@ namespace BusinessLogicLayer
                     e.jugador = this.Id;
                     e.posX = tc.PosColumna.Value * e.sizeX;
                     e.posY = tc.PosFila.Value * e.sizeY;
+                    e.id = "Ed:" + e.posXr + "*" + e.posYr;
                     this.Edificios.Add(e);
                 }
                 
