@@ -303,25 +303,12 @@ angular.module('aldeas').controller("aldeaCtrl", ["$http", "$q", "aldeasService"
             $('#dialogoDonarRecursos').modal('show');
         }
 
-        function getCosto(aux, IdRecurso) {
-            var rec = jQuery.grep(aux, function (value) {
-                return value.IdRecurso === IdRecurso;
-            })[0];
-            return rec ? rec.Value : 0;
-        }
-
-        function getDonacion(aux, IdRecurso) {
-            var rec = jQuery.grep(aux, function (value) {
-                return value.IdRecurso === IdRecurso;
-            })[0];
-            return rec ? rec.Value : 0;
-        }
-
         $scope.donar = function () {
             var ret = aldeasService.enviarRecursos($scope.donacion);
             if (ret.success) {
                 for (var j = 0; j < $rootScope.dataJugador.EstadoRecursos.length; j++) {
-                    $rootScope.dataJugador.EstadoRecursos[j].Total = $rootScope.dataJugador.EstadoRecursos[j].Total - getDonacion($scope.donacion.Valores, $rootScope.dataJugador.EstadoRecursos[j].Id);
+                    console.debug($scope.donacion.Valores[$rootScope.dataJugador.EstadoRecursos[j].Id].Value);
+                    $rootScope.dataJugador.EstadoRecursos[j].Total = $rootScope.dataJugador.EstadoRecursos[j].Total - $scope.donacion.Valores[$rootScope.dataJugador.EstadoRecursos[j].Id].Value;
                 }
                 $('#dialogoDonarRecursos').modal('hide');
             }
