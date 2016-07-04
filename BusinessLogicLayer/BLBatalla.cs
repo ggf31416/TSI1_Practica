@@ -18,7 +18,7 @@ namespace BusinessLogicLayer
         public Dictionary<string, Batalla> batallasPorJugador = new Dictionary<string, Batalla>();
         public List<Batalla> batallas = new List<Batalla>();
 
-        public BLServiceClient serviceClient = new BLServiceClient();
+        //public BLServiceClient serviceClient = new BLServiceClient();
 
         public Dictionary<string, Jugador> jugadores { get; private set; } = new Dictionary<string, Jugador>();
 
@@ -481,7 +481,7 @@ namespace BusinessLogicLayer
 
         public void FinBatalla(Batalla b)
         {
-            Console.WriteLine("Inicia Fin Batalla");
+            System.Diagnostics.Trace.TraceInformation("Inicia Fin Batalla");
             try
             {
                 b.EnFinalizacion = true;
@@ -550,14 +550,18 @@ namespace BusinessLogicLayer
                 foreach (string jug in mensajes.Keys)
                 {
                     notificarFin(jug, mensajes[jug]);
+                    System.Diagnostics.Trace.TraceInformation("{0}: {1})"  , jug,mensajes[jug]);
+                    System.Diagnostics.Trace.TraceInformation("sobrevivientes" + ":  " + JsonConvert.SerializeObject(b.UnidadesSobrevivientes(jug)));
                 }
                 _dalAtConj.eliminarAtaqueConjunto(b.Tenant, b.BatallaId);
-                Console.WriteLine("Termina Fin Batalla");
+                System.Diagnostics.Trace.TraceInformation("Termina Fin Batalla");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error Fin Batalla");
+                System.Diagnostics.Trace.TraceError("Error Fin Batalla");
                 Console.WriteLine(ex.ToString());
+                System.Diagnostics.Trace.TraceError("Error en BLBatalla.FinBatalla");
+                System.Diagnostics.Trace.TraceError(ex.ToString());
                 CancelarBatalla(b.Tenant, b.BatallaId);
             }
             
@@ -565,16 +569,26 @@ namespace BusinessLogicLayer
 
         public void CancelarBatalla(string tenant,string idBatalla)
         {
-            Console.WriteLine("Inicia Cancelar Batalla");
-            var contribuciones = _dalAtConj.obtenerContribuciones(tenant, idBatalla);
-            foreach(var contr in contribuciones)
+            try
             {
-                Dictionary<int, int> unidades = new Dictionary<int, int>();
-                contr.UnidadesContribuidas.ForEach(cu => unidades.Add(cu.UnidadId, cu.Cantidad));
-                blJuego.ModificarUnidadesRecursos(tenant, contr.IdJugador, unidades, new Dictionary<string, double>(), 0);
+                System.Diagnostics.Trace.TraceInformation("Inicia Cancelar Batalla");
+                var contribuciones = _dalAtConj.obtenerContribuciones(tenant, idBatalla);
+                foreach (var contr in contribuciones)
+                {
+                    Dictionary<int, int> unidades = new Dictionary<int, int>();
+                    contr.UnidadesContribuidas.ForEach(cu => unidades.Add(cu.UnidadId, cu.Cantidad));
+                    blJuego.ModificarUnidadesRecursos(tenant, contr.IdJugador, unidades, new Dictionary<string, double>(), 0);
+                }
+                _dalAtConj.eliminarAtaqueConjunto(tenant, idBatalla);
+                System.Diagnostics.Trace.TraceInformation("Termina Cancelar Batalla");
             }
-            _dalAtConj.eliminarAtaqueConjunto(tenant,idBatalla);
-            Console.WriteLine("Termina Cancelar Batalla");
+            catch(Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError("Error Cancelar Batalla");
+                Console.WriteLine(ex.ToString());
+                CancelarBatalla(   tenant,   idBatalla);
+            }
+
         }
 
 

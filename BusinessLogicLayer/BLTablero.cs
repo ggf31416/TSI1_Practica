@@ -42,7 +42,7 @@ namespace BusinessLogicLayer
 
         private static Service1Client getCliente()
         {
-            BLServiceClient serviceClient = new BLServiceClient();
+            //BLServiceClient serviceClient = new BLServiceClient();
             Service1Client client = new Service1Client();
             return client;
         }

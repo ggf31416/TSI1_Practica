@@ -322,7 +322,7 @@
                     var unit = unidadesPorId[msg.IdUn];
                     // setear vida
                     if (unit){
-                        if (unit.info.hp > 0){
+                        if (unit.info.hp > msg.VN && unit.info.hp > 0){
                             unit.info.hp = msg.VN;
                         }
                         if (msg.VN < 0){
@@ -900,7 +900,7 @@
             if (!def) return;
             var game = $scope.game;
             var distancia = $scope.game.physics.arcade.distanceBetween(spriteAtaq, def);
-            if (distancia <= spriteAtaq.info.rango * unit_size) {
+            if (distancia <= (spriteAtaq.info.rango + 1) * unit_size) {
                 //console.info("En rango");
                 //detenerMovimiento(spriteAtaq);
                 if (spriteAtaq.info && def.info.hp > 0){ //  && spriteAtaq.info.ataque > 0
