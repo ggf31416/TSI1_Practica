@@ -86,6 +86,7 @@ namespace BusinessLogicLayer
         {
             try
             {
+                long milis = new ConfigBatalla().MilisTurno;
                 // Grab the Scheduler instance from the Factory 
                 scheduler = StdSchedulerFactory.GetDefaultScheduler();
 
@@ -94,7 +95,7 @@ namespace BusinessLogicLayer
 
                 IJobDetail turnosJob = JobBuilder.Create<TurnoJub>().WithIdentity("job1", "group1").Build();
                 ITrigger trigger = TriggerBuilder.Create().WithIdentity("trigger1", "group1").StartNow().WithSimpleSchedule(x =>
-                     x.WithInterval(TimeSpan.FromMilliseconds(500)).RepeatForever())
+                     x.WithInterval(TimeSpan.FromMilliseconds(milis)).RepeatForever())
                      .Build();
                 scheduler.ScheduleJob(turnosJob, trigger);
             }

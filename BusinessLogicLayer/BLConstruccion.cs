@@ -95,11 +95,11 @@ namespace BusinessLogicLayer
             TipoUnidad tipo = j.TipoUnidades.FirstOrDefault(t => t.Id == euid.IdTipoUnidad);
 
             if (tipo == null) return false;
-
+            long mil = 100;
             EstadoData EstadoData;
             if (estadoUnidades.TryGetValue(euid.IdTipoUnidad.ToString(), out EstadoData))
             {
-                long msDeberianFaltar = (long)EstadoData.Cantidad * tipo.TiempoConstruccion.Value * 100;
+                long msDeberianFaltar = (long)EstadoData.Cantidad * tipo.TiempoConstruccion.Value * mil;
                 if (EstadoData.Faltante > msDeberianFaltar || EstadoData.Faltante < 0) // sanidad
                 {
                     EstadoData.Fin = DateTime.UtcNow.AddMilliseconds(msDeberianFaltar); ;
@@ -110,7 +110,7 @@ namespace BusinessLogicLayer
             else
             {
                 EstadoData = new Shared.Entities.EstadoData() { Id = euid.IdTipoUnidad, Cantidad = euid.Cantidad, Estado = EstadoData.EstadoEnum.C };
-                EstadoData.Fin = DateTime.UtcNow.AddMilliseconds((int)tipo.TiempoConstruccion * 100);
+                EstadoData.Fin = DateTime.UtcNow.AddMilliseconds((int)tipo.TiempoConstruccion * mil * EstadoData.Cantidad);
             }
             estadoUnidades[tipo.Id.ToString()] = EstadoData;
             Shared.Entities.EstadoRecurso EstRec = new Shared.Entities.EstadoRecurso();

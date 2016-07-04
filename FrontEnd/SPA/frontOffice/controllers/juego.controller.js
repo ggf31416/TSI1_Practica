@@ -50,6 +50,8 @@
             
             $scope.batalla = data;//JSON.parse(data[0].data.ret);
             dataExtra = JSON.parse(data.Data);
+            console.info("Datos batalla");
+            console.info($scope.batalla);
             var batalla = $scope.batalla;
             if (!batalla) console.error("No hay datos de batalla");
             nombreJugador = batalla.IdJugador;
@@ -160,7 +162,7 @@
         
 
         function crearEdificioInmediato(data) {
-            if (data.hp < 0) return;
+            if (data.hp <= 0) return;
             var idSprite =  data.Id;
             var edificio = $scope.game.add.sprite(data.PosX * unit_size, data.PosY * unit_size, idSprite);
             setInfoFromData(edificio, data);
@@ -174,7 +176,7 @@
 
         function crearUnidadFromMensaje(data){
             if (!unidadesPorId[data.IdUn]) {
-                if (data.hp < 0) return;
+                if (data.hp <= 0) return;
                 var idSprite = data.Id;
                 var unit = objetoUnidad(data,idSprite);
                 unit.height = unit_size;
@@ -320,7 +322,9 @@
                     var unit = unidadesPorId[msg.IdUn];
                     // setear vida
                     if (unit){
-                        unit.info.hp = msg.VN;
+                        if (unit.info.hp > msg.VN && unit.info.hp > 0){
+                            unit.info.hp = msg.VN;
+                        }
                         if (msg.VN < 0){
                             // matar
 
@@ -348,7 +352,7 @@
             // Create a function that the hub can call to broadcast messages.
             $scope.tablero_signalR.client.broadcastMessage = function (name, message) {
                 if (message!=""){
-                    
+                    console.debug(message);
                     var msg = JSON.parse(message);
                     if ( msg.A){
                         ejecutarMensaje(msg);    
@@ -862,9 +866,9 @@
 
         function disparar(spriteAt, spriteDest) {
             var game = $scope.game;
-            var proyectil = game.add.sprite( spriteAt.x, spriteAt.y,'def_proy');
+            var proyectil = game.add.sprite( spriteAt.x+spriteAt.width/2, spriteAt.y+spriteAt.height/2,'def_proy');
             proyectil.targetSprite = spriteDest;
-            var angulo = game.physics.arcade.angleToXY(spriteAt,spriteDest.x+spriteDest.width,spriteDest.y+spriteDest.height);
+            var angulo = game.physics.arcade.angleToXY(spriteAt,spriteDest.x+spriteDest.width/2,spriteDest.y+spriteDest.height/2);
             proyectil.rotation = angulo + (45 * Math.PI /180);
             proyectil.width = unit_size * 1.0;
             proyectil.height = unit_size * 1.0;
@@ -896,7 +900,7 @@
             if (!def) return;
             var game = $scope.game;
             var distancia = $scope.game.physics.arcade.distanceBetween(spriteAtaq, def);
-            if (distancia <= spriteAtaq.info.rango * unit_size) {
+            if (distancia <= (spriteAtaq.info.rango + 1) * unit_size) {
                 //console.info("En rango");
                 //detenerMovimiento(spriteAtaq);
                 if (spriteAtaq.info && def.info.hp > 0){ //  && spriteAtaq.info.ataque > 0
